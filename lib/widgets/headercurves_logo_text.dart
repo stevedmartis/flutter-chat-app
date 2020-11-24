@@ -15,7 +15,9 @@ class HeaderCurvesText extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 270,
-          child: CustomPaint(painter: _HeaderTwoCurvesPainter(color: this.color, opacity: 1.0)),
+          child: CustomPaint(
+              painter:
+                  _HeaderTwoCurvesPainter(color: this.color, opacity: 1.0)),
         ),
         Container(
           padding: EdgeInsets.only(top: 70, left: 20),
@@ -25,7 +27,10 @@ class HeaderCurvesText extends StatelessWidget {
           padding: EdgeInsets.only(top: 150, left: 20),
           child: Text(
             this.title,
-            style: TextStyle(fontSize: 32, color: Colors.black87, fontWeight: FontWeight.w800),
+            style: TextStyle(
+                fontSize: 32,
+                color: Colors.black87,
+                fontWeight: FontWeight.w800),
           ),
         ),
         Container(
@@ -64,7 +69,7 @@ class StyledLogo extends StatelessWidget {
                   flex: 0,
                   child: Padding(
                       padding: const EdgeInsets.only(left: 5),
-                      child: Text('eveny',
+                      child: Text('Logo',
                           style:
                               TextStyle(fontSize: 24, color: Colors.black)))),
             ]));
@@ -76,33 +81,24 @@ class _HeaderTwoCurvesPainter extends CustomPainter {
   final double opacity;
 
   _HeaderTwoCurvesPainter({
-    @required this.color, 
+    @required this.color,
     @required this.opacity,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     final pencil = Paint();
-     var rect = Offset.zero & size;
+    var rect = Offset.zero & size;
 
     pencil.shader = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-
-  
-
- Color(0xffF5E40A),
-
-           Color(0xffEFD40B),
-
- Color(0xffBE9109),
-           
-           
-
-
+        Color(0xffF5E40A),
+        Color(0xffEFD40B),
+        Color(0xffBE9109),
       ],
-    ).createShader(rect); 
+    ).createShader(rect);
     // properties
     pencil.color = this.color.withOpacity(opacity);
     pencil.style = PaintingStyle.fill; // .stroke = bordes, .fill = relleno
@@ -130,43 +126,46 @@ class _HeaderTwoCurvesPainter extends CustomPainter {
 
 class HeaderMultiCurvesText extends StatelessWidget {
   final Color color;
-    final String title;
+  final String title;
   final String subtitle;
 
-  HeaderMultiCurvesText({
-    @required this.color,
-    @required this.title, 
-    @required this.subtitle
-  });
+  HeaderMultiCurvesText(
+      {@required this.color, @required this.title, @required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-
-        
         Container(
-          width: double.infinity,
-          height: 270,
-          child: CustomPaint(painter: _HeaderTwoCurvesPainter(color: this.color, opacity: 0.80))
-        ),
-         Container(
-          width: double.infinity,
-          height: 220,
-           child: CustomPaint(painter: _HeaderTwoCurvesPainter(color: this.color, opacity: 1.0))),
-                    Container(
-          width: double.infinity,
-          height: 290,
-           child: CustomPaint(painter: _HeaderTwoCurvesPainter(color: this.color, opacity: 0.1))),
-          Container(
+            width: double.infinity,
+            height: 270,
+            child: CustomPaint(
+                painter:
+                    _HeaderTwoCurvesPainter(color: this.color, opacity: 0.80))),
+        Container(
+            width: double.infinity,
+            height: 220,
+            child: CustomPaint(
+                painter:
+                    _HeaderTwoCurvesPainter(color: this.color, opacity: 1.0))),
+        Container(
+            width: double.infinity,
+            height: 290,
+            child: CustomPaint(
+                painter:
+                    _HeaderTwoCurvesPainter(color: this.color, opacity: 0.1))),
+        Container(
           padding: EdgeInsets.only(top: 40, left: 275),
           child: StyledLogo(),
         ),
-                Container(
+        Container(
           padding: EdgeInsets.only(top: 150, left: 20),
           child: Text(
             this.title,
-            style: TextStyle(fontSize: 40, color: Colors.black87, fontWeight: FontWeight.w800),
+            style: TextStyle(
+                fontSize: 40,
+                color: Colors.black87,
+                fontWeight: FontWeight.w800),
           ),
         ),
         Container(

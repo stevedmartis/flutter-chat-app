@@ -35,6 +35,8 @@ dependencies:
   socket_io_client: ^0.9.11
   carousel_slider: ^2.3.1
   font_awesome_flutter: 8.8.1
+  flutter_swiper: ^1.1.6
+  flutter_staggered_grid_view: ^0.3.2
   
 
 dev_dependencies:
@@ -55,6 +57,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/banners/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

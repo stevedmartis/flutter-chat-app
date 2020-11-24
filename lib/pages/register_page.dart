@@ -24,9 +24,9 @@ class RegisterPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 HeaderMultiCurvesText(
-                  title: 'Sign Up!',
-                  subtitle: 'Hello,',
-                  color: Color(0xffD9B310)),
+                    title: 'Sign Up!',
+                    subtitle: 'Hello,',
+                    color: Color(0xffD9B310)),
                 _Form(),
                 Labels(
                   rute: 'login',
@@ -108,12 +108,17 @@ class __FormState extends State<_Form> {
                         nameCtrl.text.trim(),
                         emailCtrl.text.trim(),
                         passCtrl.text.trim());
-
-                    if (registroOk == true) {
-                      socketService.connect();
-                      Navigator.pushReplacementNamed(context, 'usuarios');
+                    if (registroOk != null) {
+                      if (registroOk == true) {
+                        socketService.connect();
+                        Navigator.pushReplacementNamed(context, 'usuarios');
+                      } else {
+                        mostrarAlerta(
+                            context, 'Registro incorrecto', registroOk);
+                      }
                     } else {
-                      mostrarAlerta(context, 'Registro incorrecto', registroOk);
+                      mostrarAlerta(context, 'Error del servidor',
+                          'lo sentimos, Intentelo mas tarde');
                     }
                   },
           )

@@ -13,13 +13,10 @@ import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/custom_input.dart';
 
 class LoginPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-        final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-print('${currentTheme}');
     return Scaffold(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         body: SingleChildScrollView(
@@ -30,10 +27,9 @@ print('${currentTheme}');
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 HeaderMultiCurvesText(
-                  title: 'Log In!',
-                  subtitle: 'Welcome back,',
-                 
-                  color: currentTheme.accentColor),
+                    title: 'Log In!',
+                    subtitle: 'Welcome back,',
+                    color: currentTheme.accentColor),
                 _Form(),
                 Labels(
                     rute: 'register',
@@ -42,10 +38,10 @@ print('${currentTheme}');
                     colortText1: Colors.white70,
                     colortText2: Color(0xffD9B310)),
                 Text(
-                    'Términos y condiciones de uso',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w800, color: Colors.white70),
-                  )
+                  'Términos y condiciones de uso',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w800, color: Colors.white70),
+                )
               ],
             ),
           ),
@@ -59,11 +55,8 @@ class _Form extends StatefulWidget {
 }
 
 class __FormState extends State<_Form> {
-
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -71,12 +64,10 @@ class __FormState extends State<_Form> {
     final socketService = Provider.of<SocketService>(context);
 
     return Container(
-    
       padding: EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: <Widget>[
           CustomInput(
-            
             icon: Icons.mail_outline,
             placeholder: 'Correo',
             keyboardType: TextInputType.emailAddress,
@@ -112,7 +103,4 @@ class __FormState extends State<_Form> {
       ),
     );
   }
-
-
 }
-

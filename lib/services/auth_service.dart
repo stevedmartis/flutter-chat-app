@@ -10,14 +10,13 @@ import 'package:chat/models/login_response.dart';
 import 'package:chat/models/usuario.dart';
 
 class AuthService with ChangeNotifier {
-
-  Usuario user;
+  User user;
   bool _authenticated = false;
-  
+
   final _storage = new FlutterSecureStorage();
 
   bool get authenticated => this._authenticated;
-  set authenticated( bool valor ) {
+  set authenticated(bool valor) {
     this._authenticated = valor;
     notifyListeners();
   }
@@ -34,28 +33,19 @@ class AuthService with ChangeNotifier {
     await _storage.delete(key: 'token');
   }
 
-
-  Future<bool> login( String email, String password ) async {
-    
+  Future<bool> login(String email, String password) async {
     this.authenticated = true;
 
-    final data = {
-      'email': email,
-      'password': password
-    };
+    final data = {'email': email, 'password': password};
 
-    final resp = await http.post('${ Environment.apiUrl }/login', 
-      body: jsonEncode(data),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    );
+    final resp = await http.post('${Environment.apiUrl}/login',
+        body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
 
     this.authenticated = false;
 
-    if ( resp.statusCode == 200 ) {
-      final loginResponse = loginResponseFromJson( resp.body );
-      this.user = loginResponse.usuario;
+    if (resp.statusCode == 200) {
+      final loginResponse = loginResponseFromJson(resp.body);
+      this.user = loginResponse.user;
 
       await this._guardarToken(loginResponse.token);
 
@@ -65,26 +55,19 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future register(String nombre, String email, String password ) async {
-
+  Future register(String name, String email, String password) async {
     this.authenticated = true;
 
-    final data = {
-      'nombre': nombre,
-      'email': email,
-      'password': password
-    };
+    final data = {'name': name, 'email': email, 'password': password};
 
-    final resp = await http.post('${ Environment.apiUrl }/login/new', 
-      body: jsonEncode(data),
-      headers: { 'Content-Type': 'application/json' }
-    );
+    final resp = await http.post('${Environment.apiUrl}/login/new',
+        body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
 
     this.authenticated = false;
+    if (resp.statusCode == 200) {
+      final loginResponse = loginResponseFromJson(resp.body);
 
-    if ( resp.statusCode == 200 ) {
-      final loginResponse = loginResponseFromJson( resp.body );
-      this.user = loginResponse.usuario;
+      this.user = loginResponse.user;
       await this._guardarToken(loginResponse.token);
 
       return true;
@@ -92,41 +75,30 @@ class AuthService with ChangeNotifier {
       final respBody = jsonDecode(resp.body);
       return respBody['msg'];
     }
-
   }
 
   Future<bool> isLoggedIn() async {
-
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.get('${ Environment.apiUrl }/login/renew', 
-      headers: { 
-        'Content-Type': 'application/json',
-        'x-token': token
-      }
-    );
+    final resp = await http.get('${Environment.apiUrl}/login/renew',
+        headers: {'Content-Type': 'application/json', 'x-token': token});
 
-    if ( resp.statusCode == 200 ) {
-      final loginResponse = loginResponseFromJson( resp.body );
-      this.user = loginResponse.usuario;
+    if (resp.statusCode == 200) {
+      final loginResponse = loginResponseFromJson(resp.body);
+      this.user = loginResponse.user;
       await this._guardarToken(loginResponse.token);
       return true;
     } else {
       this.logout();
       return false;
     }
-
   }
 
-
-
-  Future _guardarToken( String token ) async {
-    return await _storage.write(key: 'token', value: token );
+  Future _guardarToken(String token) async {
+    return await _storage.write(key: 'token', value: token);
   }
 
   Future logout() async {
     await _storage.delete(key: 'token');
   }
-
 }
-

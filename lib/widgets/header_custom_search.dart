@@ -1,5 +1,4 @@
 import 'package:chat/services/auth_service.dart';
-import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -12,27 +11,22 @@ class CustomAppBarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
- final authService   = Provider.of<AuthService>(context);
- final user = authService.user;
+    final authService = Provider.of<AuthService>(context);
+    final user = authService.user;
 
     return Container(
       child: Row(
         children: [
-                    Container(
-            margin: EdgeInsets.only(left:10),
-
-                      child: CircleAvatar(
-            
-              child: Text( user.nombre .substring(0,2).toUpperCase()),
-            backgroundColor: Colors.blue[100],
-        ),
+          Container(
+            margin: EdgeInsets.only(left: 20),
+            child: CircleAvatar(
+              child: Text(user.name.substring(0, 2).toUpperCase()),
+              backgroundColor: Colors.blue[100],
+            ),
           ),
-         
           Center(
               child: Container(
-                            margin: EdgeInsets.only(left:30),
-
+                  margin: EdgeInsets.symmetric(horizontal: 30),
                   width: 250,
                   height: 40,
                   decoration: BoxDecoration(
@@ -54,12 +48,9 @@ class CustomAppBarHeader extends StatelessWidget {
                     ],
                   ),
                   child: _SearchContent())),
-                                 Container(
-            margin: EdgeInsets.only(left:20),
-                          padding: EdgeInsets.all(4.0),
-
-                      child: FaIcon(FontAwesomeIcons.slidersH, size: 29)
-          ),
+          Container(
+              padding: EdgeInsets.all(5.0),
+              child: FaIcon(FontAwesomeIcons.slidersH, size: 25)),
         ],
       ),
     );
@@ -81,7 +72,7 @@ class _SearchContent extends StatelessWidget {
             SizedBox(width: 20),
             Container(
                 margin: EdgeInsets.only(top: 0),
-                child: Text('Que quieres hacer hoy?',
+                child: Text('Buscar contacto...',
                     style: TextStyle(
                         color: color,
                         fontSize: 16,
@@ -100,9 +91,6 @@ class CustomAppBarIcons extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: <Widget>[
-
-    
-
               IconButton(
                 icon: Icon(
                   Icons.arrow_drop_down_circle,
@@ -125,7 +113,6 @@ class CustomAppBarIcons extends StatelessWidget {
                   //globalKey.currentState.openEndDrawer();
                 },
               ),
-              
             ],
           )),
     );

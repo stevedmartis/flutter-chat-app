@@ -1,38 +1,46 @@
-
 // To parse this JSON data, do
 //
 //     final usuario = usuarioFromJson(jsonString);
 
 import 'dart:convert';
 
-Usuario usuarioFromJson(String str) => Usuario.fromJson(json.decode(str));
+import 'package:chat/theme/theme.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-String usuarioToJson(Usuario data) => json.encode(data.toJson());
+User usuarioFromJson(String str) => User.fromJson(json.decode(str));
 
-class Usuario {
-    Usuario({
-        this.online,
-        this.nombre,
-        this.email,
-        this.uid,
-    });
+String usuarioToJson(User data) => json.encode(data.toJson());
 
-    bool online;
-    String nombre;
-    String email;
-    String uid;
+class User {
+  User({this.online, this.name, this.email, this.uid, this.image});
 
-    factory Usuario.fromJson(Map<String, dynamic> json) => Usuario(
-        online: json["online"],
-        nombre: json["nombre"],
-        email: json["email"],
-        uid: json["uid"],
-    );
+  bool online;
+  String name;
+  String email;
+  String uid;
+  String image;
 
-    Map<String, dynamic> toJson() => {
+  factory User.fromJson(Map<String, dynamic> json) => User(
+      online: json["online"],
+      name: json["name"],
+      email: json["email"],
+      uid: json["uid"],
+      image: json["image"]);
+
+  Map<String, dynamic> toJson() => {
         "online": online,
-        "nombre": nombre,
+        "name": name,
         "email": email,
         "uid": uid,
-    };
+        "image": image
+      };
+
+  getPosterImg() {
+    if (image == "") {
+      return "";
+    } else {
+      return image;
+    }
+  }
 }

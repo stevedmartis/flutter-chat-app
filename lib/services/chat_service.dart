@@ -6,30 +6,18 @@ import 'package:http/http.dart' as http;
 import 'package:chat/global/environment.dart';
 import 'package:chat/models/usuario.dart';
 
-
-
 class ChatService with ChangeNotifier {
+  User userFor;
 
-  Usuario usuarioPara;
+  Future<List<Message>> getChat(String userID) async {
+    final resp = await http.get('${Environment.apiUrl}/messages/$userID',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-token': await AuthService.getToken()
+        });
 
+    final messageResponse = messageResponseFromJson(resp.body);
 
-  Future<List<Mensaje>> getChat( String usuarioID ) async {
-
-    final resp = await http.get('${ Environment.apiUrl }/mensajes/$usuarioID',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-token': await AuthService.getToken()
-      }
-    );
-
-    final mensajesResp = mensajesResponseFromJson(resp.body);
-
-    return mensajesResp.mensajes;
-
-
+    return messageResponse.messages;
   }
-
-
-
 }
-
