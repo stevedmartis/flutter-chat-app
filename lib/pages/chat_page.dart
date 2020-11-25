@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:chat/models/usuario.dart';
+import 'package:chat/pages/users_page.dart';
+import 'package:chat/theme/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +13,64 @@ import 'package:chat/services/socket_service.dart';
 
 import 'package:chat/models/mensajes_response.dart';
 import 'package:chat/widgets/chat_message.dart';
+
+class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+  @override
+  final Size preferredSize;
+
+  final String title;
+  final User user;
+
+  CustomAppBar({
+    @required this.user,
+    this.title,
+    Key key,
+  })  : preferredSize = Size.fromHeight(60.0),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.black,
+      actions: [
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: Icon(
+            Icons.more_vert,
+            color: Colors.white,
+          ),
+        ),
+      ],
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(100.0)),
+            child: Container(
+              width: 55,
+              height: 55,
+              child: Hero(tag: user.uid, child: ImageUserChat(user: user)),
+            ),
+          ),
+          Container(
+            child: Text(
+              user.name,
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ],
+      ),
+      leading: IconButton(
+        icon: Icon(Icons.chevron_left),
+        iconSize: 30,
+        onPressed: () => Navigator.pop(context),
+        color: Colors.white,
+      ),
+      automaticallyImplyLeading: true,
+    );
+  }
+}
 
 class ChatPage extends StatefulWidget {
   @override
@@ -73,26 +134,38 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     final userFor = chatService.userFor;
     return Scaffold(
-      appBar: AppBar(
+      backgroundColor: currentTheme.scaffoldBackgroundColor,
+      appBar: CustomAppBar(user: userFor),
+
+      /* AppBar(
         backgroundColor: Colors.white,
-        title: Column(
-          children: <Widget>[
-            CircleAvatar(
-              child: Text(userFor.name.substring(0, 2),
-                  style: TextStyle(fontSize: 12)),
-              backgroundColor: Colors.blue[100],
-              maxRadius: 14,
-            ),
-            SizedBox(height: 3),
-            Text(userFor.name,
-                style: TextStyle(color: Colors.black87, fontSize: 12))
-          ],
-        ),
+        leadingWidth: 60,
+        leading: Container(
+            padding: EdgeInsets.all(5),
+            child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(100.0)),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: 100,
+                        height: 100,
+                        child: Hero(
+                            tag: userFor.uid,
+                            child: ImageUserChat(user: userFor)),
+                      ),
+                      Text(
+                        'helloooo',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ]))),
         centerTitle: true,
         elevation: 1,
-      ),
+      ), */
       body: Container(
         child: Column(
           children: <Widget>[

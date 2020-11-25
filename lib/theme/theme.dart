@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class ThemeChanger with ChangeNotifier {
@@ -14,11 +12,7 @@ class ThemeChanger with ChangeNotifier {
 
   ThemeData get currentTheme => this._currentTheme;
 
-
   ThemeChanger(int theme) {
-
-    print('${theme}');
-
     switch (theme) {
       case 1:
         _darkTheme = false;
@@ -32,7 +26,6 @@ class ThemeChanger with ChangeNotifier {
         _customTheme = false;
         _currentTheme = ThemeData.dark().copyWith(
           accentColor: Colors.black,
-          
         );
         break;
       case 3:
@@ -41,17 +34,14 @@ class ThemeChanger with ChangeNotifier {
         _currentTheme = ThemeData.dark().copyWith(
           accentColor: Color(0xffE8C213),
           primaryColorLight: Colors.white,
-          
-          scaffoldBackgroundColor:  Color(0xff101010),
-          textTheme: TextTheme(
-            bodyText1: TextStyle(color: Colors.white)
-          ), 
+          scaffoldBackgroundColor: Color(0xff101010),
+          textTheme: TextTheme(bodyText1: TextStyle(color: Colors.white)),
         );
         break;
-      default: 
-      _darkTheme = false;
-      _customTheme = false;
-      _currentTheme = ThemeData.light();
+      default:
+        _darkTheme = false;
+        _customTheme = false;
+        _currentTheme = ThemeData.light();
     }
   }
 
@@ -61,19 +51,14 @@ class ThemeChanger with ChangeNotifier {
 
     if (value) {
       _currentTheme = ThemeData.dark().copyWith(
-          accentColor: Colors.black,
-          primaryColorLight: Colors.white,
-
-          
-          
-        );
+        accentColor: Colors.black,
+        primaryColorLight: Colors.white,
+      );
     } else {
-
-      
       _currentTheme = ThemeData.light().copyWith(
-          accentColor: Color(0xff16202B),
-          primaryColorLight: Colors.white,
-        );
+        accentColor: Color(0xff16202B),
+        primaryColorLight: Colors.white,
+      );
     }
     notifyListeners();
   }
@@ -83,15 +68,12 @@ class ThemeChanger with ChangeNotifier {
     _darkTheme = false;
 
     if (value) {
-      
       _currentTheme = ThemeData.dark().copyWith(
-          accentColor: Color(0xffD9B310),
-          primaryColorLight: Colors.white,
-          scaffoldBackgroundColor:  Color(0xff101010),
-          textTheme: TextTheme(
-            bodyText1: TextStyle(color: Colors.white)
-          ), 
-        );
+        accentColor: Color(0xffD9B310),
+        primaryColorLight: Colors.white,
+        scaffoldBackgroundColor: Color(0xff101010),
+        textTheme: TextTheme(bodyText1: TextStyle(color: Colors.white)),
+      );
     } else {
       _currentTheme = ThemeData.light();
     }

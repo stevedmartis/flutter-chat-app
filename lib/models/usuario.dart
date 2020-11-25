@@ -4,10 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:chat/theme/theme.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 User usuarioFromJson(String str) => User.fromJson(json.decode(str));
 
 String usuarioToJson(User data) => json.encode(data.toJson());

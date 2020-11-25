@@ -67,30 +67,4 @@ class MovieHorizontal extends StatelessWidget {
           Navigator.pushNamed(context, 'detail', arguments: movie);
         });
   }
-
-  List<Widget> _cards(context) {
-    final _screenSize = MediaQuery.of(context).size;
-
-    return movies.map((movie) {
-      return Container(
-        margin: EdgeInsets.only(right: 15.0),
-        child: Column(
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: FadeInImage(
-                  image: AssetImage('assets/user_empty.png'),
-                  placeholder: AssetImage('assets/user_empty.png'),
-                  fit: BoxFit.cover,
-                  height: _screenSize.height * 0.20),
-            ),
-            SizedBox(height: 5.0),
-            Text(movie.name,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.caption)
-          ],
-        ),
-      );
-    }).toList();
-  }
 }

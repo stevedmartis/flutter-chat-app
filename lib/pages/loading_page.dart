@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/socket_service.dart';
@@ -9,8 +8,6 @@ import 'package:chat/pages/login_page.dart';
 import 'package:chat/pages/users_page.dart';
 
 class LoadingPage extends StatelessWidget {
-  final _storage = new FlutterSecureStorage();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

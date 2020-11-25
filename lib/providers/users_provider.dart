@@ -10,7 +10,6 @@ class UsersProvider {
   String _url = 'api.themoviedb.org';
   String _language = 'es-ES';
 
-  int _popularPage = 0;
   bool _loading = false;
 
   List<User> _popular = new List();
@@ -42,8 +41,6 @@ class UsersProvider {
     if (_loading) return [];
 
     _loading = true;
-
-    _popularPage++;
 
     final users = await usuarioService.getUsers();
 

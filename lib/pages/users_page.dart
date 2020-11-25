@@ -1,20 +1,16 @@
-import 'dart:math';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
-import 'package:chat/pages/users_list_page.dart';
-import 'package:chat/providers/users_provider.dart';
+import 'package:chat/pages/chat_page.dart';
+
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/card_swipe.dart';
 import 'package:chat/widgets/header_custom_search.dart';
-import 'package:chat/widgets/pageview_horizontal.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/users_service.dart';
-import 'package:chat/services/socket_service.dart';
 import 'dart:math' as math;
 import 'package:chat/models/usuario.dart';
 
@@ -54,8 +50,6 @@ class CarouselSliderCustom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     return CarouselSlider.builder(
       options: CarouselOptions(
         height: 100,
@@ -75,101 +69,144 @@ class CarouselSliderCustom extends StatelessWidget {
         onTap: () {
           final chatService = Provider.of<ChatService>(context, listen: false);
           chatService.userFor = users[index];
-          Navigator.pushNamed(context, 'chat');
+
+          Navigator.push(context,
+              MaterialPageRoute(builder: (BuildContext context) => ChatPage()));
         },
-        child: Container(
-          padding: EdgeInsets.all(5),
-          child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              child: Stack(
-                children: <Widget>[
-                  (users[index].image.isEmpty)
-                      ? Container(
-                          width: 120,
-                          height: 120,
-                          child: Container(
-                            padding: EdgeInsets.all(15),
-                            child: CircleAvatar(
-                              minRadius: 120,
-                              child: Text(users[index]
-                                  .name
-                                  .substring(0, 2)
-                                  .toUpperCase()),
-                              backgroundColor: currentTheme.accentColor,
+        child: Preview(user: users[index]),
+      ),
+    );
+  }
+}
+
+class Preview extends StatefulWidget {
+  const Preview({
+    Key key,
+    @required this.user,
+  }) : super(key: key);
+
+  final User user;
+
+  @override
+  _PreviewState createState() => _PreviewState();
+}
+
+class _PreviewState extends State<Preview> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(5),
+      child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          child: Stack(
+            children: <Widget>[
+              Container(
+                width: 100,
+                height: 100,
+                child: Hero(
+                    tag: widget.user.uid,
+                    child: ImageUserChat(user: widget.user)),
+              ),
+              Positioned(
+                bottom: 0.0,
+                left: 0.0,
+                right: 0.0,
+                child: Container(
+                    decoration: BoxDecoration(
+                        gradient: (widget.user.online)
+                            ? LinearGradient(
+                                colors: [
+                                  Colors.green[300],
+                                  Color.fromARGB(0, 0, 0, 0),
+                                  Color.fromARGB(0, 0, 0, 0)
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                              )
+                            : LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.30),
+                                  Color.fromARGB(0, 0, 0, 0),
+                                  Color.fromARGB(0, 0, 0, 0)
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                              )),
+                    child: Container(
+                      margin: EdgeInsets.all(5.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 13.0,
+                            height: 13.0,
+                            decoration: new BoxDecoration(
+                              color: widget.user.online
+                                  ? Colors.green[300]
+                                  : Colors.white.withOpacity(0.10),
+                              shape: BoxShape.circle,
                             ),
                           ),
-                        )
-                      : Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          child: FadeInImage(
-                              image: NetworkImage(users[index].getPosterImg()),
-                              placeholder: AssetImage('assets/tag-logo.png'),
-                              fit: BoxFit.cover),
-                        ),
-                  Positioned(
-                    bottom: 0.0,
-                    left: 0.0,
-                    right: 0.0,
-                    child: Container(
-                        decoration: BoxDecoration(
-                            gradient: (users[index].online)
-                                ? LinearGradient(
-                                    colors: [
-                                      Colors.green[300],
-                                      Color.fromARGB(0, 0, 0, 0),
-                                      Color.fromARGB(0, 0, 0, 0)
-                                    ],
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.topCenter,
-                                  )
-                                : LinearGradient(
-                                    colors: [
-                                      Colors.white.withOpacity(0.30),
-                                      Color.fromARGB(0, 0, 0, 0),
-                                      Color.fromARGB(0, 0, 0, 0)
-                                    ],
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.topCenter,
-                                  )),
-                        child: Container(
-                          margin: EdgeInsets.all(5.0),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 13.0,
-                                height: 13.0,
-                                decoration: new BoxDecoration(
-                                  color: users[index].online
-                                      ? Colors.green[300]
-                                      : Colors.white.withOpacity(0.10),
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Container(
-                                constraints: BoxConstraints(maxWidth: 90),
-                                child: Text(
-                                  users[index].name,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 5,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              )
-                            ],
+                          SizedBox(
+                            width: 5,
                           ),
-                        )),
-                  ),
-                ],
-              )),
-        ),
-      ),
+                          Container(
+                            constraints: BoxConstraints(maxWidth: 60),
+                            child: Text(
+                              (widget.user.name.length >= 10)
+                                  ? widget.user.name.substring(0, 10) + '...'
+                                  : widget.user.name,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 5,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
+              ),
+            ],
+          )),
+    );
+  }
+}
+
+class ImageUserChat extends StatefulWidget {
+  const ImageUserChat({
+    Key key,
+    @required this.user,
+  }) : super(key: key);
+
+  final User user;
+
+  @override
+  _ImageUserChatState createState() => _ImageUserChatState();
+}
+
+class _ImageUserChatState extends State<ImageUserChat> {
+  @override
+  Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(100.0)),
+      child: (widget.user.image != "")
+          ? Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: FadeInImage(
+                  image: NetworkImage(widget.user.getPosterImg()),
+                  placeholder: AssetImage('assets/tag-logo.png'),
+                  fit: BoxFit.cover),
+            )
+          : CircleAvatar(
+              minRadius: 120,
+              child: Text(widget.user.name.substring(0, 2).toUpperCase()),
+              backgroundColor: currentTheme.accentColor,
+            ),
     );
   }
 }
@@ -287,17 +324,27 @@ class _CollapsingListState extends State<CollapsingList>
     return SliverPersistentHeader(
       pinned: true,
       delegate: _SliverAppBarDelegate(
-        minHeight: 60.0,
-        maxHeight: 60.0,
+        minHeight: 50.0,
+        maxHeight: 50.0,
         child: DefaultTabController(
           length: 2,
           child: Scaffold(
             appBar: AppBar(
+              backgroundColor: Colors.black,
               bottom: TabBar(
+                  indicatorWeight: 3.0,
                   indicatorColor: currentTheme.accentColor,
                   tabs: [
-                    Tab(icon: Icon(Icons.my_location)),
-                    Tab(icon: Icon(Icons.favorite)),
+                    Tab(
+                        icon: Icon(Icons.my_location,
+                            color: (_tabController.index == 0)
+                                ? currentTheme.accentColor
+                                : Colors.white)),
+                    Tab(
+                        icon: Icon(Icons.favorite,
+                            color: (_tabController.index == 1)
+                                ? currentTheme.accentColor
+                                : Colors.white)),
                   ],
                   onTap: (value) => {
                         _tabController
@@ -315,7 +362,6 @@ class _CollapsingListState extends State<CollapsingList>
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     return CustomScrollView(
       physics:
           const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
@@ -339,7 +385,10 @@ class _CollapsingListState extends State<CollapsingList>
                 future: this.usuarioService.getUsers(),
                 builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
                   if (snapshot.hasData) {
-                    return CarouselSliderCustom(users: users); // image is ready
+                    return Container(
+                        margin: EdgeInsets.only(top: 10),
+                        child: CarouselSliderCustom(
+                            users: users)); // image is ready
                   } else {
                     return Container(
                         height: 400.0,
@@ -351,36 +400,20 @@ class _CollapsingListState extends State<CollapsingList>
             ],
           ),
         ),
-        SliverFixedExtentList(
-          itemExtent: 10.0,
-          delegate: SliverChildListDelegate(
-            [
-              Container(color: currentTheme.scaffoldBackgroundColor),
-            ],
-          ),
-        ),
 
         SliverGrid.count(
-          crossAxisCount: 4,
+          crossAxisCount: 3,
           children: [
-            _BtnOption(title: 'Market', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(title: 'Market', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(title: 'Market', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(title: 'Market', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(title: 'Market', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(title: 'Market', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(title: 'Market', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(title: 'Market', image: 'assets/banners/cart_image.jpg'),
+            _BtnOption(
+                title: 'Restaurant', image: 'assets/banners/cart_image.jpg'),
+            _BtnOption(
+                title: 'Markets', image: 'assets/banners/cart_image.jpg'),
+            _BtnOption(title: 'Tienda', image: 'assets/banners/cart_image.jpg'),
+            _BtnOption(title: 'Club', image: 'assets/banners/cart_image.jpg'),
+            _BtnOption(
+                title: 'Historial', image: 'assets/banners/cart_image.jpg'),
+            _BtnOption(title: 'Mas', image: 'assets/banners/cart_image.jpg'),
           ],
-        ),
-
-        SliverFixedExtentList(
-          itemExtent: 10.0,
-          delegate: SliverChildListDelegate(
-            [
-              Container(color: currentTheme.scaffoldBackgroundColor),
-            ],
-          ),
         ),
 
         makeHeaderTabs(context),
@@ -470,7 +503,7 @@ class _BtnOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(25),
       child: ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           child: Stack(
@@ -490,9 +523,9 @@ class _BtnOption extends StatelessWidget {
                     boxShadow: [
                       BoxShadow(
                           color: Colors.black54,
-                          spreadRadius: -5,
-                          blurRadius: 10,
-                          offset: Offset(0, 10))
+                          spreadRadius: 20,
+                          blurRadius: 20,
+                          offset: Offset(0, 20))
                     ],
                     gradient: LinearGradient(
                       colors: [
@@ -505,54 +538,20 @@ class _BtnOption extends StatelessWidget {
                   ),
                   padding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                  child: Text(
-                    this.title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+                  child: Center(
+                    child: Text(
+                      this.title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
             ],
           )),
-    );
-  }
-}
-
-class _BtnShadow extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final text;
-  final double left;
-
-  const _BtnShadow(
-      {this.icon = Icons.ac_unit, @required this.text, this.color, this.left});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          child: Icon(this.icon, size: 30, color: Colors.white),
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-              color: this.color,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black54,
-                    spreadRadius: -5,
-                    blurRadius: 20,
-                    offset: Offset(0, 10))
-              ]),
-        ),
-        Container(
-            margin: EdgeInsets.only(top: 75, left: this.left),
-            child: Text(this.text))
-      ],
     );
   }
 }
