@@ -23,46 +23,43 @@ class CustomInput extends StatefulWidget {
 }
 
 class _CustomInputState extends State<CustomInput> {
+  FocusNode _focusNode;
 
-    FocusNode _focusNode;
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode.dispose();
+  }
 
-@override
-void dispose() {
-  super.dispose();
-  _focusNode.dispose();
-}
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = new FocusNode();
+    _focusNode.addListener(_onOnFocusNodeEvent);
+  }
 
-@override
-void initState() {
-  super.initState();
-  _focusNode = new FocusNode();
-  _focusNode.addListener(_onOnFocusNodeEvent);
-}
-
-_onOnFocusNodeEvent() {
-  setState(() {
-    // Re-renders
-  });
-}
+  _onOnFocusNodeEvent() {
+    setState(() {
+      // Re-renders
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-
-        final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Container(
       padding: EdgeInsets.only(top: 5, left: 5, bottom: 5, right: 20),
       margin: EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-       Color(0xff202020),
-            Color(0xff1D1D1D),
-          Color(0xff161616),
-        ]),
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xff202020),
+                Color(0xff1D1D1D),
+                Color(0xff161616),
+              ]),
           borderRadius: BorderRadius.circular(30),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -72,22 +69,20 @@ _onOnFocusNodeEvent() {
           ]),
       child: TextField(
         style: TextStyle(color: Colors.white),
-focusNode: this._focusNode,
+        focusNode: this._focusNode,
         controller: this.widget.textController,
         autocorrect: false,
         keyboardType: this.widget.keyboardType,
         obscureText: this.widget.isPassword,
         decoration: InputDecoration(
-            
             prefixIcon: Icon(this.widget.icon,
-            color: this._focusNode.hasFocus
-                ? currentTheme.accentColor
-                : Colors.white.withOpacity(0.30)),
-            
+                color: this._focusNode.hasFocus
+                    ? currentTheme.accentColor
+                    : Colors.white.withOpacity(0.30)),
             focusedBorder: InputBorder.none,
             border: InputBorder.none,
             hintText: this.widget.placeholder,
-            hintStyle: TextStyle(color:Colors.white.withOpacity(0.30) )),
+            hintStyle: TextStyle(color: Colors.white.withOpacity(0.30))),
       ),
     );
   }

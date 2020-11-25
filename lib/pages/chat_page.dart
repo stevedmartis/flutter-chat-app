@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/users_page.dart';
 import 'package:chat/theme/theme.dart';
@@ -50,7 +48,9 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             child: Container(
               width: 55,
               height: 55,
-              child: Hero(tag: user.uid, child: ImageUserChat(user: user)),
+              child: Hero(
+                  tag: user.uid,
+                  child: ImageUserChat(user: user, fontsize: 30)),
             ),
           ),
           Container(
@@ -96,7 +96,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     this.socketService = Provider.of<SocketService>(context, listen: false);
     this.authService = Provider.of<AuthService>(context, listen: false);
 
-    this.socketService.socket.on('mensaje-personal', _listenMessage);
+    this.socketService.socket.on('personal-message', _listenMessage);
 
     _chargeRecord(this.chatService.userFor.uid);
   }
@@ -167,6 +167,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
         elevation: 1,
       ), */
       body: Container(
+        padding: EdgeInsets.all(0),
         child: Column(
           children: <Widget>[
             Flexible(
@@ -178,7 +179,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
             )),
             Divider(height: 1),
             Container(
-              color: Colors.white,
+              color: Colors.black,
               child: _inputChat(),
             )
           ],
@@ -190,6 +191,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   Widget _inputChat() {
     return SafeArea(
         child: Container(
+      padding: EdgeInsets.all(10),
       margin: EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         children: <Widget>[
@@ -211,19 +213,14 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
           )),
 
           // Botón de enviar
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 4.0),
-            child: Platform.isIOS
-                ? CupertinoButton(
-                    child: Text('Enviar'),
-                    onPressed: _isWriting
-                        ? () => _handleSubmit(_textController.text.trim())
-                        : null,
-                  )
-                : Container(
+
+          (_isWriting)
+              ? Container(
+                  margin: EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 4.0),
                     child: IconTheme(
-                      data: IconThemeData(color: Colors.blue[400]),
+                      data: IconThemeData(color: Color(0xffE8C213)),
                       child: IconButton(
                         highlightColor: Colors.transparent,
                         splashColor: Colors.transparent,
@@ -234,7 +231,24 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-          )
+                )
+              : Container(
+                  margin: EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 4.0),
+                    child: IconTheme(
+                      data: IconThemeData(color: Color(0xffE87213)),
+                      child: IconButton(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        icon: Icon(Icons.camera_alt),
+                        onPressed: _isWriting
+                            ? () => _handleSubmit(_textController.text.trim())
+                            : null,
+                      ),
+                    ),
+                  ),
+                )
         ],
       ),
     ));
@@ -262,7 +276,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     this.socketService.emit('personal-message', {
       'by': this.authService.user.uid,
       'for': this.chatService.userFor.uid,
-      'mensaje': text
+      'message': text
     });
   }
 

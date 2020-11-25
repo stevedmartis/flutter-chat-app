@@ -1,12 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/pages/chat_page.dart';
+import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/socket_service.dart';
 
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/header_custom_search.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/chat_service.dart';
@@ -35,8 +38,78 @@ class _UsersPageState extends State<UsersPage> {
 
     return SafeArea(
         child: Scaffold(
+            drawer: PrincipalMenu(),
             // appBar: AppBarBase(user: user, socketService: socketService),
             body: CollapsingList()));
+  }
+}
+
+class PrincipalMenu extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final appTheme = Provider.of<ThemeChanger>(context);
+    final accentColor = appTheme.currentTheme.accentColor;
+
+    final socketService = Provider.of<SocketService>(context);
+    final authService = Provider.of<AuthService>(context);
+    final user = authService.user;
+    return Drawer(
+      child: Container(
+        child: Column(
+          children: [
+            SafeArea(
+              child: Container(
+                padding: EdgeInsets.all(20),
+                width: double.infinity,
+                height: 200,
+                child: ImageUserChat(user: user, fontsize: 50),
+              ),
+            ),
+/*               Expanded(
+                child: _OptionsList(),
+              ), */
+            ListTile(
+              leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
+              title: Text('Dark mode'),
+              trailing: Switch.adaptive(
+                value: appTheme.darkTheme,
+                onChanged: (value) {
+                  appTheme.darkTheme = value;
+                },
+              ),
+            ),
+            SafeArea(
+              bottom: true,
+              top: false,
+              left: false,
+              right: false,
+              child: ListTile(
+                leading: Icon(Icons.add_to_home_screen, color: accentColor),
+                title: Text('Custom theme'),
+                trailing: Switch.adaptive(
+                  value: appTheme.customTheme,
+                  activeColor: Colors.blue,
+                  onChanged: (value) {
+                    appTheme.customTheme = value;
+                  },
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                socketService.disconnect();
+                Navigator.pushReplacementNamed(context, 'login');
+                AuthService.deleteToken();
+              },
+              child: ListTile(
+                leading: Icon(Icons.exit_to_app, color: accentColor),
+                title: Text('Sign off'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -70,13 +143,30 @@ class CarouselSliderCustom extends StatelessWidget {
           final chatService = Provider.of<ChatService>(context, listen: false);
           chatService.userFor = users[index];
 
-          Navigator.push(context,
-              MaterialPageRoute(builder: (BuildContext context) => ChatPage()));
+          Navigator.of(context).push(_createRoute());
         },
         child: Preview(user: users[index]),
       ),
     );
   }
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => ChatPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }
 
 class Preview extends StatefulWidget {
@@ -94,66 +184,41 @@ class Preview extends StatefulWidget {
 class _PreviewState extends State<Preview> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(5),
-      child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                width: 100,
-                height: 100,
-                child: Hero(
-                    tag: widget.user.uid,
-                    child: ImageUserChat(user: widget.user)),
-              ),
-              Positioned(
-                bottom: 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: Container(
-                    decoration: BoxDecoration(
-                        gradient: (widget.user.online)
-                            ? LinearGradient(
-                                colors: [
-                                  Colors.green[300],
-                                  Color.fromARGB(0, 0, 0, 0),
-                                  Color.fromARGB(0, 0, 0, 0)
-                                ],
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                              )
-                            : LinearGradient(
-                                colors: [
-                                  Colors.white.withOpacity(0.30),
-                                  Color.fromARGB(0, 0, 0, 0),
-                                  Color.fromARGB(0, 0, 0, 0)
-                                ],
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                              )),
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.all(5),
+          child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(100.0)),
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    width: 90,
+                    height: 100,
+                    child: Hero(
+                        tag: widget.user.uid,
+                        child: ImageUserChat(
+                          user: widget.user,
+                          fontsize: 20,
+                        )),
+                  ),
+                  Positioned(
+                    bottom: 0.0,
+                    left: 0.0,
+                    right: 0.0,
                     child: Container(
-                      margin: EdgeInsets.all(5.0),
+                        child: Container(
+                      margin: EdgeInsets.all(15.0),
                       child: Row(
                         children: [
-                          Container(
-                            width: 13.0,
-                            height: 13.0,
-                            decoration: new BoxDecoration(
-                              color: widget.user.online
-                                  ? Colors.green[300]
-                                  : Colors.white.withOpacity(0.10),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
                           SizedBox(
                             width: 5,
                           ),
                           Container(
-                            constraints: BoxConstraints(maxWidth: 60),
+                            constraints: BoxConstraints(maxWidth: 50),
                             child: Text(
                               (widget.user.name.length >= 10)
-                                  ? widget.user.name.substring(0, 10) + '...'
+                                  ? widget.user.name.substring(0, 5) + '...'
                                   : widget.user.name,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 5,
@@ -163,13 +228,24 @@ class _PreviewState extends State<Preview> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     )),
-              ),
-            ],
-          )),
+                  ),
+                ],
+              )),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 75, top: 60),
+          width: 20.0,
+          height: 20.0,
+          decoration: new BoxDecoration(
+            color: widget.user.online ? Colors.green[300] : Color(0xff969B9B),
+            shape: BoxShape.circle,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -178,9 +254,11 @@ class ImageUserChat extends StatefulWidget {
   const ImageUserChat({
     Key key,
     @required this.user,
+    @required this.fontsize,
   }) : super(key: key);
 
   final User user;
+  final double fontsize;
 
   @override
   _ImageUserChatState createState() => _ImageUserChatState();
@@ -203,8 +281,11 @@ class _ImageUserChatState extends State<ImageUserChat> {
                   fit: BoxFit.cover),
             )
           : CircleAvatar(
-              minRadius: 120,
-              child: Text(widget.user.name.substring(0, 2).toUpperCase()),
+              minRadius: 20,
+              child: Text(
+                widget.user.name.substring(0, 2).toUpperCase(),
+                style: TextStyle(fontSize: widget.fontsize),
+              ),
               backgroundColor: currentTheme.accentColor,
             ),
     );

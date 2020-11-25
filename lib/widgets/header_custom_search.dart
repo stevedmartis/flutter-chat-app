@@ -1,3 +1,4 @@
+import 'package:chat/pages/users_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,11 +18,19 @@ class CustomAppBarHeader extends StatelessWidget {
     return Container(
       child: Row(
         children: [
-          Container(
-            margin: EdgeInsets.only(left: 20),
-            child: CircleAvatar(
-              child: Text(user.name.substring(0, 2).toUpperCase()),
-              backgroundColor: Colors.blue[100],
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                Scaffold.of(context).openDrawer();
+                //globalKey.currentState.openEndDrawer();
+              },
+              child: Container(
+                margin: EdgeInsets.only(left: 20),
+                child: ImageUserChat(
+                  user: user,
+                  fontsize: 15,
+                ),
+              ),
             ),
           ),
           Center(
