@@ -1,6 +1,6 @@
 import 'package:chat/models/usuario.dart';
-import 'package:chat/pages/users_page.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,11 +46,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(100.0)),
             child: Container(
-              width: 55,
-              height: 55,
+              width: 50,
+              height: 50,
               child: Hero(
                   tag: user.uid,
-                  child: ImageUserChat(user: user, fontsize: 30)),
+                  child: ImageUserChat(
+                      width: 100, height: 100, user: user, fontsize: 20)),
             ),
           ),
           Container(

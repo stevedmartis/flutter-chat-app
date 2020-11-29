@@ -1,10 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
-import 'package:chat/pages/chat_page.dart';
+import 'package:chat/pages/user_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/socket_service.dart';
 
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/header_custom_search.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -23,10 +24,6 @@ class UsersPage extends StatefulWidget {
 }
 
 class _UsersPageState extends State<UsersPage> {
-  final usuarioService = new UsuariosService();
-
-  List<User> users = [];
-
   @override
   Widget build(BuildContext context) {
     // final authService = Provider.of<AuthService>(context);
@@ -38,7 +35,7 @@ class _UsersPageState extends State<UsersPage> {
 
     return SafeArea(
         child: Scaffold(
-            drawer: PrincipalMenu(),
+            //drawer: PrincipalMenu(),
             // appBar: AppBarBase(user: user, socketService: socketService),
             body: CollapsingList()));
   }
@@ -56,13 +53,21 @@ class PrincipalMenu extends StatelessWidget {
     return Drawer(
       child: Container(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SafeArea(
               child: Container(
-                padding: EdgeInsets.all(20),
-                width: double.infinity,
-                height: 200,
-                child: ImageUserChat(user: user, fontsize: 50),
+                margin: EdgeInsets.only(top: 30, bottom: 30),
+                width: 150,
+                height: 150,
+                child: Hero(
+                    tag: user.uid,
+                    child: ImageUserChat(
+                      width: 200,
+                      height: 200,
+                      user: user,
+                      fontsize: 20,
+                    )),
               ),
             ),
 /*               Expanded(
@@ -143,30 +148,16 @@ class CarouselSliderCustom extends StatelessWidget {
           final chatService = Provider.of<ChatService>(context, listen: false);
           chatService.userFor = users[index];
 
-          Navigator.of(context).push(_createRoute());
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      UserPage(user: users[index])));
         },
         child: Preview(user: users[index]),
       ),
     );
   }
-}
-
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => ChatPage(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
 }
 
 class Preview extends StatefulWidget {
@@ -193,32 +184,35 @@ class _PreviewState extends State<Preview> {
               child: Stack(
                 children: <Widget>[
                   Container(
-                    width: 90,
+                    width: 100,
                     height: 100,
                     child: Hero(
                         tag: widget.user.uid,
                         child: ImageUserChat(
+                          width: 100,
+                          height: 100,
                           user: widget.user,
                           fontsize: 20,
                         )),
                   ),
                   Positioned(
                     bottom: 0.0,
-                    left: 0.0,
+                    left: 20.0,
+                    top: 60.0,
                     right: 0.0,
                     child: Container(
                         child: Container(
-                      margin: EdgeInsets.all(15.0),
+                      margin: EdgeInsets.all(0.0),
                       child: Row(
                         children: [
                           SizedBox(
                             width: 5,
                           ),
                           Container(
-                            constraints: BoxConstraints(maxWidth: 50),
+                            constraints: BoxConstraints(maxWidth: 80),
                             child: Text(
                               (widget.user.name.length >= 10)
-                                  ? widget.user.name.substring(0, 5) + '...'
+                                  ? widget.user.name.substring(0, 7) + '...'
                                   : widget.user.name,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 5,
@@ -237,9 +231,9 @@ class _PreviewState extends State<Preview> {
               )),
         ),
         Container(
-          margin: EdgeInsets.only(left: 75, top: 60),
-          width: 20.0,
-          height: 20.0,
+          margin: EdgeInsets.only(left: 10, top: 65),
+          width: 17.0,
+          height: 17.0,
           decoration: new BoxDecoration(
             color: widget.user.online ? Colors.green[300] : Color(0xff969B9B),
             shape: BoxShape.circle,
@@ -250,54 +244,12 @@ class _PreviewState extends State<Preview> {
   }
 }
 
-class ImageUserChat extends StatefulWidget {
-  const ImageUserChat({
-    Key key,
-    @required this.user,
-    @required this.fontsize,
-  }) : super(key: key);
-
-  final User user;
-  final double fontsize;
-
-  @override
-  _ImageUserChatState createState() => _ImageUserChatState();
-}
-
-class _ImageUserChatState extends State<ImageUserChat> {
-  @override
-  Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-    return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(100.0)),
-      child: (widget.user.image != "")
-          ? Container(
-              width: double.infinity,
-              height: double.infinity,
-              child: FadeInImage(
-                  image: NetworkImage(widget.user.getPosterImg()),
-                  placeholder: AssetImage('assets/tag-logo.png'),
-                  fit: BoxFit.cover),
-            )
-          : CircleAvatar(
-              minRadius: 20,
-              child: Text(
-                widget.user.name.substring(0, 2).toUpperCase(),
-                style: TextStyle(fontSize: widget.fontsize),
-              ),
-              backgroundColor: currentTheme.accentColor,
-            ),
-    );
-  }
-}
-
-class _SliverCustomHeaderDelegate extends SliverPersistentHeaderDelegate {
+class SliverCustomHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final double maxHeight;
   final Widget child;
 
-  _SliverCustomHeaderDelegate(
+  SliverCustomHeaderDelegate(
       {@required this.minHeight,
       @required this.maxHeight,
       @required this.child});
@@ -315,15 +267,15 @@ class _SliverCustomHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => minHeight;
 
   @override
-  bool shouldRebuild(covariant _SliverCustomHeaderDelegate oldDelegate) {
+  bool shouldRebuild(covariant SliverCustomHeaderDelegate oldDelegate) {
     return maxHeight != oldDelegate.maxHeight ||
         minHeight != oldDelegate.minHeight ||
         child != oldDelegate.child;
   }
 }
 
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate({
+class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  SliverAppBarDelegate({
     @required this.minHeight,
     @required this.maxHeight,
     @required this.child,
@@ -331,6 +283,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final double maxHeight;
   final Widget child;
+
   @override
   double get minExtent => minHeight;
   @override
@@ -342,7 +295,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+  bool shouldRebuild(SliverAppBarDelegate oldDelegate) {
     return maxHeight != oldDelegate.maxHeight ||
         minHeight != oldDelegate.minHeight ||
         child != oldDelegate.child;
@@ -391,7 +344,7 @@ class _CollapsingListState extends State<CollapsingList>
   SliverPersistentHeader makeHeaderCustom() {
     return SliverPersistentHeader(
         floating: true,
-        delegate: _SliverCustomHeaderDelegate(
+        delegate: SliverCustomHeaderDelegate(
             minHeight: 60,
             maxHeight: 60,
             child: Container(
@@ -404,7 +357,7 @@ class _CollapsingListState extends State<CollapsingList>
 
     return SliverPersistentHeader(
       pinned: true,
-      delegate: _SliverAppBarDelegate(
+      delegate: SliverAppBarDelegate(
         minHeight: 50.0,
         maxHeight: 50.0,
         child: DefaultTabController(

@@ -1,5 +1,8 @@
-import 'package:chat/pages/users_page.dart';
+import 'package:chat/models/usuario.dart';
+import 'package:chat/pages/profile_page.dart';
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +15,8 @@ class CustomAppBarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     final authService = Provider.of<AuthService>(context);
     final user = authService.user;
 
@@ -21,14 +26,24 @@ class CustomAppBarHeader extends StatelessWidget {
           Center(
             child: GestureDetector(
               onTap: () {
-                Scaffold.of(context).openDrawer();
-                //globalKey.currentState.openEndDrawer();
+                {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              SliverAppBarProfilepPage()));
+                }
               },
               child: Container(
                 margin: EdgeInsets.only(left: 20),
-                child: ImageUserChat(
-                  user: user,
-                  fontsize: 15,
+                child: Hero(
+                  tag: user.uid,
+                  child: ImageUserChat(
+                    width: 50,
+                    height: 50,
+                    user: user,
+                    fontsize: 18,
+                  ),
                 ),
               ),
             ),
@@ -59,13 +74,112 @@ class CustomAppBarHeader extends StatelessWidget {
                   child: _SearchContent())),
           Container(
               padding: EdgeInsets.all(5.0),
-              child: FaIcon(FontAwesomeIcons.slidersH, size: 25)),
+              child: FaIcon(
+                FontAwesomeIcons.slidersH,
+                size: 25,
+                color: currentTheme.accentColor,
+              )),
         ],
       ),
     );
   }
 }
 
+class CustomSliverAppBarHeader extends StatelessWidget {
+  CustomSliverAppBarHeader({this.user});
+  final User user;
+  @override
+  Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          /*        GestureDetector(
+            onTap: () {
+              Scaffold.of(context).openDrawer();
+              //globalKey.currentState.openEndDrawer();
+            },
+/*             child: Container(
+              child: Hero(
+                  tag: userAuth.uid + '+1',
+                  child: ImageUserChat(
+                    width: 50,
+                    height: 50,
+                    user: userAuth,
+                    fontsize: 20,
+                  )),
+            ), */
+          ), */
+          Center(
+            child: Container(
+                margin: EdgeInsets.only(left: 30),
+                width: 250,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: currentTheme.scaffoldBackgroundColor.withOpacity(0.80),
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black54,
+                        spreadRadius: -5,
+                        blurRadius: 10,
+                        offset: Offset(0, 5))
+                  ],
+                ),
+                child: _SearchContent()),
+          ),
+          Container(
+              padding: EdgeInsets.all(0.0),
+              child: FaIcon(
+                FontAwesomeIcons.slidersH,
+                size: 25,
+                color: currentTheme.accentColor,
+              )),
+        ],
+      ),
+    );
+  }
+}
+
+/* 
+class _ItemCircular extends StatelessWidget {
+  final IconData icon;
+  const _ItemCircular({Key key, @required this.icon}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final color = Colors.white.withOpacity(0.30);
+
+    return Container(
+        margin: EdgeInsets.symmetric(horizontal: 20),
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xff202020),
+                Color(0xff1D1D1D),
+                Color(0xff161616),
+              ]),
+          borderRadius: BorderRadius.all(Radius.circular(30)),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black54,
+                spreadRadius: -5,
+                blurRadius: 10,
+                offset: Offset(0, 5))
+          ],
+        ),
+        child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            child: Icon(icon, color: color)));
+  }
+}
+ */
 class _SearchContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -81,7 +195,7 @@ class _SearchContent extends StatelessWidget {
             SizedBox(width: 20),
             Container(
                 margin: EdgeInsets.only(top: 0),
-                child: Text('Buscar contacto...',
+                child: Text('¿Qué quieres hoy?',
                     style: TextStyle(
                         color: color,
                         fontSize: 16,
