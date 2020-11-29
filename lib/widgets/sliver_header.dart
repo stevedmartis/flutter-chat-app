@@ -10,11 +10,13 @@ class Header extends StatelessWidget {
   final double maxHeight;
   final double minHeight;
   final User user;
+  final bool isUserAuth;
 
   const Header({
     Key key,
     this.maxHeight,
     this.minHeight,
+    this.isUserAuth,
     @required this.user,
   }) : super(key: key);
 
@@ -28,7 +30,9 @@ class Header extends StatelessWidget {
             centerTitle: true,
             title: Container(
                 margin: EdgeInsets.only(top: 200),
-                child: Container(child: ItemsUnderSliverAppBar(user: user))),
+                child: Container(
+                    child: ItemsUnderSliverAppBar(
+                        user: user, isUserAuth: isUserAuth))),
             background: Image.network(
               'https://images.pexels.com/photos/443356/pexels-photo-443356.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
               fit: BoxFit.cover,
@@ -40,8 +44,9 @@ class Header extends StatelessWidget {
 
 class ItemsUnderSliverAppBar extends StatelessWidget {
   final User user;
+  final bool isUserAuth;
 
-  ItemsUnderSliverAppBar({this.user});
+  ItemsUnderSliverAppBar({this.user, this.isUserAuth});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +60,7 @@ class ItemsUnderSliverAppBar extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(_createRoute());
+                    if (!isUserAuth) Navigator.of(context).push(_createRoute());
                   },
                   child: Container(
                     width: 50,

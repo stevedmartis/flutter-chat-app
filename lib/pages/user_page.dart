@@ -19,7 +19,9 @@ class _UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SliverAppBarSnap(user: widget.user),
+        child: SliverAppBarSnap(
+          user: widget.user,
+        ),
       ),
     );
   }

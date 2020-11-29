@@ -24,6 +24,7 @@ class SliverAppBarProfilepPageState extends State<SliverAppBarProfilepPage> {
       body: Center(
         child: SliverAppBarSnap(
           user: userAuth,
+          isUserAuth: true,
         ),
       ),
     );

@@ -8,9 +8,11 @@ import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
 class SliverAppBarSnap extends StatefulWidget {
-  SliverAppBarSnap({@required this.user});
+  SliverAppBarSnap({@required this.user, this.isUserAuth = false});
 
   final User user;
+
+  final bool isUserAuth;
 
   @override
   _SliverAppBarSnapState createState() => _SliverAppBarSnapState();
@@ -105,6 +107,7 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
               pinned: true,
               stretch: true,
               flexibleSpace: Header(
+                isUserAuth: widget.isUserAuth,
                 user: widget.user,
                 maxHeight: 250,
                 minHeight: 250,
