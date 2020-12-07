@@ -43,7 +43,7 @@ class _ImageUserChatState extends State<ImageUserChat> {
             )
           : CircleAvatar(
               child: Text(
-                widget.user.name.substring(0, 2).toUpperCase(),
+                widget.user.username.substring(0, 2).toUpperCase(),
                 style: TextStyle(fontSize: widget.fontsize),
               ),
               backgroundColor: currentTheme.accentColor,

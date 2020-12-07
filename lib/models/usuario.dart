@@ -9,24 +9,24 @@ User usuarioFromJson(String str) => User.fromJson(json.decode(str));
 String usuarioToJson(User data) => json.encode(data.toJson());
 
 class User {
-  User({this.online, this.name, this.email, this.uid, this.image});
+  User({this.online, this.username, this.email, this.uid, this.image});
 
   bool online;
-  String name;
+  String username;
   String email;
   String uid;
   String image;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
       online: json["online"],
-      name: json["name"],
+      username: json["username"],
       email: json["email"],
       uid: json["uid"],
       image: json["image"]);
 
   Map<String, dynamic> toJson() => {
         "online": online,
-        "name": name,
+        "username": username,
         "email": email,
         "uid": uid,
         "image": image

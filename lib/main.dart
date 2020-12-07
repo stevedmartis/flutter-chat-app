@@ -1,3 +1,4 @@
+import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/models/shoes.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,9 @@ void main() => runApp(MultiProvider(providers: [
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    changeStatusLight();
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return MaterialApp(
       theme: currentTheme,
       debugShowCheckedModeBanner: false,

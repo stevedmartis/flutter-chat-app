@@ -1,5 +1,6 @@
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/profile_page.dart';
+import 'package:chat/pages/tabs.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
@@ -27,11 +28,7 @@ class CustomAppBarHeader extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              SliverAppBarProfilepPage()));
+                  Navigator.push(context, _createRoute());
                 }
               },
               child: Container(
@@ -71,19 +68,62 @@ class CustomAppBarHeader extends StatelessWidget {
                           offset: Offset(0, 5))
                     ],
                   ),
-                  child: _SearchContent())),
-          Container(
-              padding: EdgeInsets.all(5.0),
-              child: FaIcon(
-                FontAwesomeIcons.slidersH,
-                size: 25,
-                color: currentTheme.accentColor,
-              )),
+                  child: SearchContent())),
+          GestureDetector(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => TabsCustom())),
+            child: Container(
+                padding: EdgeInsets.all(5.0),
+                child: FaIcon(
+                  FontAwesomeIcons.slidersH,
+                  size: 25,
+                  color: currentTheme.accentColor,
+                )),
+          )
         ],
       ),
     );
   }
 }
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        SliverAppBarProfilepPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(-0.5, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+/* Route _createRute() {
+  return PageRouteBuilder(
+      pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) =>
+          SliverAppBarProfilepPage(),
+      transitionDuration: Duration(seconds: 1),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedAnimation =
+            CurvedAnimation(parent: animation, curve: Curves.easeInOut);
+
+        return SlideTransition(
+          position: Tween<Offset>(begin: Offset(-1.0, 10.0), end: Offset.zero)
+              .animate(curvedAnimation),
+          child: child,
+        );
+      });
+} */
 
 class CustomSliverAppBarHeader extends StatelessWidget {
   CustomSliverAppBarHeader({this.user});
@@ -128,7 +168,7 @@ class CustomSliverAppBarHeader extends StatelessWidget {
                         offset: Offset(0, 5))
                   ],
                 ),
-                child: _SearchContent()),
+                child: SearchContent()),
           ),
           Container(
               padding: EdgeInsets.all(0.0),
@@ -180,7 +220,7 @@ class _ItemCircular extends StatelessWidget {
   }
 }
  */
-class _SearchContent extends StatelessWidget {
+class SearchContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = Colors.white.withOpacity(0.30);

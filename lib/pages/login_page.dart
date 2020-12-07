@@ -1,3 +1,6 @@
+import 'package:chat/controllers/slide_controler.dart';
+import 'package:chat/helpers/ui_overlay_style.dart';
+import 'package:chat/pages/principal_page.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
@@ -12,11 +15,16 @@ import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/custom_input.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
+    changeStatusDark();
     return Scaffold(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         body: SingleChildScrollView(
@@ -37,11 +45,7 @@ class LoginPage extends StatelessWidget {
                     subTitulo: 'Crea una ahora!',
                     colortText1: Colors.white70,
                     colortText2: Color(0xffD9B310)),
-                Text(
-                  'Términos y condiciones de uso',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w800, color: Colors.white70),
-                )
+                StyledLogoCustom()
               ],
             ),
           ),
@@ -62,6 +66,7 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
     final socketService = Provider.of<SocketService>(context);
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -80,6 +85,7 @@ class __FormState extends State<_Form> {
             isPassword: true,
           ),
           ButtonGold(
+            color: currentTheme.accentColor,
             text: 'Ingresar',
             onPressed: authService.authenticated
                 ? null
@@ -91,7 +97,7 @@ class __FormState extends State<_Form> {
 
                     if (loginOk) {
                       socketService.connect();
-                      Navigator.pushReplacementNamed(context, 'usuarios');
+                      Navigator.push(context, _createRute());
                     } else {
                       // Mostara alerta
                       mostrarAlerta(context, 'Login incorrecto',
@@ -103,4 +109,21 @@ class __FormState extends State<_Form> {
       ),
     );
   }
+}
+
+Route _createRute() {
+  return PageRouteBuilder(
+      pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) =>
+          UsersPage(),
+      transitionDuration: Duration(milliseconds: 1500),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedAnimation =
+            CurvedAnimation(parent: animation, curve: Curves.easeInOut);
+
+        return FadeTransition(
+            child: child,
+            opacity:
+                Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation));
+      });
 }

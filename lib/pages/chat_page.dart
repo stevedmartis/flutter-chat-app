@@ -56,7 +56,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
           ),
           Container(
             child: Text(
-              user.name,
+              user.username,
               style: TextStyle(color: Colors.white),
             ),
           )
@@ -141,32 +141,6 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       appBar: CustomAppBar(user: userFor),
-
-      /* AppBar(
-        backgroundColor: Colors.white,
-        leadingWidth: 60,
-        leading: Container(
-            padding: EdgeInsets.all(5),
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(100.0)),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        width: 100,
-                        height: 100,
-                        child: Hero(
-                            tag: userFor.uid,
-                            child: ImageUserChat(user: userFor)),
-                      ),
-                      Text(
-                        'helloooo',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ]))),
-        centerTitle: true,
-        elevation: 1,
-      ), */
       body: Container(
         padding: EdgeInsets.all(0),
         child: Column(

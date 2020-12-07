@@ -1,79 +1,110 @@
 import 'package:chat/controllers/slide_controler.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
+import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/headercurves_logo_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/socket_service.dart';
-
 import 'package:chat/helpers/mostrar_alerta.dart';
-
 import 'package:chat/widgets/custom_input.dart';
-import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/button_gold.dart';
 
-class RegisterPage extends StatelessWidget {
+class MyProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+    final userAuth = authService.user;
+
     changeStatusDark();
+
     return Scaffold(
         backgroundColor: Color(0xff0F0F0F),
-        body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.95,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                HeaderMultiCurvesText(
-                    title: 'Sign Up!',
-                    subtitle: 'Hello,',
-                    color: Color(0xffD9B310)),
-                _Form(),
-                Labels(
-                  rute: 'login',
-                  title: '¿Ya tienes una cuenta?',
-                  subTitulo: 'Ingresa ahora!',
-                  colortText1: Colors.white70,
-                  colortText2: Color(0xffD9B310),
+        body: Container(
+          height: MediaQuery.of(context).size.height * 0.95,
+          child: Stack(
+            children: <Widget>[
+              HeaderMultiCurvesText(
+                  title: '', subtitle: 'Mi Perfil', color: Color(0xffD9B310)),
+              Positioned(
+                left: 140,
+                top: 160,
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  child: Hero(
+                      tag: userAuth.uid,
+                      child: ImageUserChat(
+                          width: 150,
+                          height: 150,
+                          user: userAuth,
+                          fontsize: 20)),
                 ),
-                StyledLogoCustom()
-              ],
-            ),
+              ),
+              Container(
+                  margin: EdgeInsets.only(top: 350),
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [_Form(userAuth), StyledLogoCustom()],
+                    ),
+                  )),
+            ],
           ),
         ));
   }
 }
 
 class _Form extends StatefulWidget {
+  final User user;
+  _Form(this.user);
+
   @override
   __FormState createState() => __FormState();
 }
 
 class __FormState extends State<_Form> {
+  final usernameCtrl = TextEditingController();
   final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final authService = Provider.of<AuthService>(context);
     final socketService = Provider.of<SocketService>(context);
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final profile = authService.profile;
+
+    print('${profile}');
+
+    usernameCtrl.text = widget.user.username;
+    emailCtrl.text = widget.user.email;
+    nameCtrl.text = profile.name;
 
     return Container(
-      margin: EdgeInsets.only(top: 20),
       padding: EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: <Widget>[
           Theme(
             data: Theme.of(context).copyWith(primaryColor: Color(0xffD9B310)),
             child: CustomInput(
-              icon: Icons.perm_identity,
+              icon: Icons.alternate_email,
               placeholder: 'Username',
+              keyboardType: TextInputType.text,
+              textController: usernameCtrl,
+            ),
+          ),
+          Theme(
+            data: Theme.of(context).copyWith(primaryColor: Color(0xffD9B310)),
+            child: CustomInput(
+              icon: Icons.perm_identity,
+              placeholder: 'Name',
               keyboardType: TextInputType.text,
               textController: nameCtrl,
             ),
@@ -98,7 +129,7 @@ class __FormState extends State<_Form> {
           ),
           ButtonGold(
             color: currentTheme.accentColor,
-            text: 'Crear cuenta',
+            text: 'Guardar',
             onPressed: authService.authenticated
                 ? null
                 : () async {
@@ -123,6 +154,24 @@ class __FormState extends State<_Form> {
                       mostrarAlerta(context, 'Error del servidor',
                           'lo sentimos, Intentelo mas tarde');
                     }
+                  },
+          ),
+          SizedBox(
+            height: 50,
+          ),
+          ButtonGold(
+            textColor: currentTheme.secondaryHeaderColor,
+            color: currentTheme.scaffoldBackgroundColor,
+            text: 'Log out',
+            onPressed: authService.authenticated
+                ? null
+                : () async {
+                    final socketService =
+                        Provider.of<SocketService>(context, listen: false);
+
+                    socketService.disconnect();
+                    Navigator.pushReplacementNamed(context, 'login');
+                    AuthService.deleteToken();
                   },
           )
         ],

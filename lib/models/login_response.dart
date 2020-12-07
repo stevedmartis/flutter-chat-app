@@ -3,6 +3,7 @@
 //  final loginResponse = loginResponseFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:chat/models/profile.dart';
 import 'package:chat/models/usuario.dart';
 
 LoginResponse loginResponseFromJson(String str) =>
@@ -25,11 +26,10 @@ class LoginResponse {
         ok: json["ok"],
         user: User.fromJson(json["user"]),
         token: json["token"],
+        //json['profile'].cast<String>()
+
+//        Profile.fromJson(json["profile"]),
       );
 
-  Map<String, dynamic> toJson() => {
-        "ok": ok,
-        "user": user.toJson(),
-        "token": token,
-      };
+  Map<String, dynamic> toJson() => {"ok": ok, "user": user.toJson()};
 }

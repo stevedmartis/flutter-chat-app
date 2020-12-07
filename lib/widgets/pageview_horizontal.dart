@@ -54,7 +54,7 @@ class MovieHorizontal extends StatelessWidget {
             ),
           ),
           SizedBox(height: 5.0),
-          Text(movie.name,
+          Text(movie.username,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.caption)
         ],

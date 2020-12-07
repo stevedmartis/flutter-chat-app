@@ -1,11 +1,11 @@
+import 'package:chat/pages/onBoarding_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/services/auth_service.dart';
 
-import 'package:chat/pages/login_page.dart';
-import 'package:chat/pages/users_page.dart';
+import 'package:chat/pages/principal_page.dart';
 
 class LoadingPage extends StatelessWidget {
   @override
@@ -51,7 +51,7 @@ class LoadingPage extends StatelessWidget {
         transitionDuration: Duration(milliseconds: 600),
         pageBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secondaryAnimation) {
-          return LoginPage();
+          return OnBoardingScreen();
         },
         transitionsBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secondaryAnimation, Widget child) {

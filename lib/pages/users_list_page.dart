@@ -34,7 +34,7 @@ class _UserListState extends State<UserList> {
                       padding: EdgeInsets.all(0),
                       itemCount: _users.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Text(_users[index].name);
+                        return Text(_users[index].username);
                       }),
                 )
               ],
