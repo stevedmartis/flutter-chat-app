@@ -4,8 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:chat/models/room.dart';
-
 Profile profileFromJson(String str) => Profile.fromJson(json.decode(str));
 
 String profileToJson(Profile data) => json.encode(data.toJson());

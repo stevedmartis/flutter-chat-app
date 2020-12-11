@@ -1,3 +1,4 @@
+import 'package:chat/bloc/provider.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/models/shoes.dart';
 import 'package:chat/theme/theme.dart';
@@ -24,12 +25,14 @@ class MyApp extends StatelessWidget {
     changeStatusLight();
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    return MaterialApp(
-      theme: currentTheme,
-      debugShowCheckedModeBanner: false,
-      title: 'Chat App',
-      initialRoute: 'loading',
-      routes: appRoutes,
+    return CustomProvider(
+      child: MaterialApp(
+        theme: currentTheme,
+        debugShowCheckedModeBanner: false,
+        title: 'Chat App',
+        initialRoute: 'loading',
+        routes: appRoutes,
+      ),
     );
   }
 }

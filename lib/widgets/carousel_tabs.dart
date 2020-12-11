@@ -3,6 +3,7 @@ import 'package:chat/theme/theme.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../utils//extension.dart';
 
 class TabsScrollCustom extends StatefulWidget {
   const TabsScrollCustom({
@@ -28,18 +29,22 @@ class _TabsScrollCustomState extends State<TabsScrollCustom> {
       child: DefaultTabController(
           length: widget.users.length,
           child: PreferredSize(
-            preferredSize: Size.fromHeight(100.0),
+            preferredSize: Size.fromHeight(600.0),
             child: TabBar(
               isScrollable: true,
               unselectedLabelColor: Colors.white.withOpacity(0.3),
               indicatorColor: currentTheme.accentColor,
               tabs: List<Widget>.generate(widget.users.length, (int index) {
                 final user = widget.users[index];
+
+                final username = user.username;
+                final usernameCapitalized = username.capitalize();
+
                 return new Tab(
                   child: Text(
-                    (user.username.length >= 15)
-                        ? user.username.substring(0, 15) + '...'
-                        : user.username,
+                    (usernameCapitalized.length >= 15)
+                        ? usernameCapitalized.substring(0, 15) + '...'
+                        : usernameCapitalized,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 5,
                     style: TextStyle(

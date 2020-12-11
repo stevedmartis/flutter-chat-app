@@ -1,4 +1,5 @@
 import 'package:chat/models/usuario.dart';
+import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/my_profile.dart';
 import 'package:chat/theme/theme.dart';
@@ -76,9 +77,9 @@ class ItemsUnderSliverAppBar extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 if (!isUserAuth)
-                  Navigator.of(context).push(_createRouteChat());
+                  Navigator.of(context).push(createRouteChat());
                 else
-                  Navigator.of(context).push(_createRouteMyProfile());
+                  Navigator.of(context).push(createRouteMyProfile());
               },
               child: Container(
                 width: 70,
@@ -155,7 +156,7 @@ class ItemsUnderSliverAppBar extends StatelessWidget {
   }
 }
 
-Route _createRouteChat() {
+Route createRouteChat() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => ChatPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -173,11 +174,30 @@ Route _createRouteChat() {
   );
 }
 
-Route _createRouteMyProfile() {
+Route createRouteMyProfile() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => MyProfilePage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, -1.0);
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.fastLinearToSlowEaseIn;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+Route createRouteAvatarProfile(User user) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        AvatarImagePage(user),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.fastLinearToSlowEaseIn;
 

@@ -3,8 +3,8 @@ import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/avatar_user_chat.dart';
-import 'package:chat/widgets/headercurves_logo_text.dart';
+
+import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +23,16 @@ class MyProfilePage extends StatelessWidget {
     changeStatusDark();
 
     return Scaffold(
+      body: Center(
+        child: SliverAppBarSnap(
+          user: userAuth,
+          isUserAuth: true,
+          isUserEdit: true,
+        ),
+      ),
+    );
+
+    /* Scaffold(
         backgroundColor: Color(0xff0F0F0F),
         body: Container(
           height: MediaQuery.of(context).size.height * 0.95,
@@ -57,18 +67,19 @@ class MyProfilePage extends StatelessWidget {
             ],
           ),
         ));
+   */
   }
 }
 
-class _Form extends StatefulWidget {
+class FormEditUserprofile extends StatefulWidget {
   final User user;
-  _Form(this.user);
+  FormEditUserprofile(this.user);
 
   @override
-  __FormState createState() => __FormState();
+  _FormEditUserprofileState createState() => _FormEditUserprofileState();
 }
 
-class __FormState extends State<_Form> {
+class _FormEditUserprofileState extends State<FormEditUserprofile> {
   final usernameCtrl = TextEditingController();
   final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
@@ -80,8 +91,6 @@ class __FormState extends State<_Form> {
     final authService = Provider.of<AuthService>(context);
     final socketService = Provider.of<SocketService>(context);
     final profile = authService.profile;
-
-    print('${profile}');
 
     usernameCtrl.text = widget.user.username;
     emailCtrl.text = widget.user.email;

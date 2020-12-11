@@ -3,7 +3,6 @@
 //  final loginResponse = loginResponseFromJson(jsonString);
 
 import 'dart:convert';
-import 'package:chat/models/profile.dart';
 import 'package:chat/models/usuario.dart';
 
 LoginResponse loginResponseFromJson(String str) =>

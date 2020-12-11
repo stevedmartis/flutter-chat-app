@@ -1,13 +1,14 @@
 import 'dart:typed_data';
 
 import 'package:chat/models/usuario.dart';
+import 'package:chat/pages/avatar_image.dart';
+import 'package:chat/pages/my_profile.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/users_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
-import 'package:chat/widgets/header_custom_search.dart';
 import 'package:chat/widgets/headercurves_logo_text.dart';
 import 'package:chat/widgets/sliver_header.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +19,16 @@ import 'dart:ui' as ui;
 import 'dart:async';
 
 class SliverAppBarSnap extends StatefulWidget {
-  SliverAppBarSnap({@required this.user, this.isUserAuth = false});
+  SliverAppBarSnap({
+    @required this.user,
+    this.isUserAuth = false,
+    this.isUserEdit = false,
+  });
 
   final User user;
 
   final bool isUserAuth;
+  final bool isUserEdit;
 
   @override
   _SliverAppBarSnapState createState() => _SliverAppBarSnapState();
@@ -53,22 +59,7 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
 
   List<User> users = [];
 
-  @override
-  void initState() {
-    this._chargeUsers();
-    this.authService = Provider.of<AuthService>(context, listen: false);
-
-    super.initState();
-  }
-
-  _chargeUsers() async {
-    this.users = await usuarioService.getUsers();
-
-    setState(() {});
-
-    // await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
-  }
+  String name = '';
 
   final _controller = ScrollController();
 
@@ -79,6 +70,36 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
   bool isEmpty = false;
 
   AuthService authService;
+
+  @override
+  void initState() {
+    this._chargeUsers();
+    this.authService = Provider.of<AuthService>(context, listen: false);
+
+    super.initState();
+  }
+
+  _chargeUsers() async {
+    this.users = await usuarioService.getUsers();
+    await authService.getProfileByUserId(widget.user.uid);
+
+    name = this.authService.profile.name;
+
+    if (mounted) {
+      setState(() {});
+    }
+
+    // await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+
+    _controller.dispose();
+    super.dispose();
+  }
 
   static const String _url =
       //  'https://thumbs.dreamstime.com/z/mega-sale-discount-vector-layout-concept-illustration-abstract-horizontal-advertising-promotion-banner-special-offer-126871873.jpg';
@@ -93,50 +114,6 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
   Future<ui.Image> _image(String url) async =>
       await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
 
-  SliverPersistentHeader makeHeaderTabs(context) {
-    //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    return SliverPersistentHeader(
-      pinned: true,
-      delegate: SliverAppBarDelegate(
-        minHeight: 70.0,
-        maxHeight: 70.0,
-        child: FutureBuilder(
-          future: this.usuarioService.getUsers(),
-          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-            if (snapshot.hasData) {
-              return Container(
-                  child: TabsScrollCustom(users: users)); // image is ready
-            } else {
-              return Container(
-                  height: 400.0,
-                  child: Center(
-                      child: CircularProgressIndicator())); // placeholder
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  Route _createRouteRoomsPage() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => RoomsListPage(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(0.0, 1.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
@@ -145,18 +122,22 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
     var foregroundColor =
         backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: currentTheme.accentColor,
-        onPressed: () {
-          Navigator.of(context).push(_createRouteRoomsPage());
+    final username = widget.user.username.toLowerCase();
 
-          setState(() {
-            isEmpty = !isEmpty;
-          });
-        },
-      ),
+    return Scaffold(
+      floatingActionButton: (!widget.isUserEdit)
+          ? FloatingActionButton(
+              child: Icon(Icons.add),
+              backgroundColor: currentTheme.accentColor,
+              onPressed: () {
+                Navigator.of(context).push(_createRouteRoomsPage());
+
+                setState(() {
+                  isEmpty = !isEmpty;
+                });
+              },
+            )
+          : Container(),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
           _snapAppbar();
@@ -217,104 +198,33 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
                     builder: (BuildContext context,
                             AsyncSnapshot<ui.Image> snapshot) =>
                         !snapshot.hasData
-                            ? Container(
-                                height: 400.0,
-                                child:
-                                    Center(child: CircularProgressIndicator()))
+                            ? HeaderMultiCurves(
+                                color: currentTheme.scaffoldBackgroundColor,
+                              )
                             : HeaderMultiCurvesImage(
                                 color: Colors.white,
                                 image: snapshot.data,
                               ),
                   ),
-                  Stack(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-/*                 if (!isUserAuth)
-                  Navigator.of(context).push(_createRouteChat());
-                else
-                  Navigator.of(context).push(_createRouteMyProfile()); */
-                        },
-                        child: Container(
-                          width: 70,
-                          height: 70,
-                          margin: EdgeInsets.only(left: 50, top: 170),
-                          child: Hero(
-                            tag: widget.user.uid,
-                            child: ImageUserChat(
-                              width: 100,
-                              height: 100,
-                              user: widget.user,
-                              fontsize: 13,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(30),
-                        margin: EdgeInsets.only(left: 100, top: 100),
-                        width: 200,
-                        height: 150,
-                        child: Center(
-                          child: FittedBox(
-                            child: Text(
-                              (widget.user.username.length >= 14)
-                                  ? widget.user.username.substring(0, 14) +
-                                      '...'
-                                  : widget.user.username,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 5,
-                              style: TextStyle(
-                                  fontSize: 20, color: foregroundColor),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                          width: 30,
-                          height: 30,
-                          margin: EdgeInsets.only(left: 170, top: 210),
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            child: CircleAvatar(
-                                minRadius: 20,
-                                child: FittedBox(
-                                  child: Icon(
-                                    Icons.share,
-                                    size: 15,
-                                    color: currentTheme.accentColor,
-                                  ),
-                                ),
-                                backgroundColor: Colors.black),
-                          )),
-                      Container(
-                          width: 30,
-                          height: 30,
-                          margin: EdgeInsets.only(left: 210, top: 210),
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            child: CircleAvatar(
-                                minRadius: 10,
-                                child: FittedBox(
-                                  child: Icon(
-                                    Icons.favorite,
-                                    size: 15,
-                                    color: currentTheme.accentColor,
-                                  ),
-                                ),
-                                backgroundColor: Colors.black),
-                          )),
-                    ],
+                  HeaderUserInfo(
+                    user: widget.user,
+                    isUserAuth: widget.isUserAuth,
+                    isUserEdit: widget.isUserEdit,
+                    name: name,
+                    currentTheme: currentTheme,
+                    username: username,
                   ),
                 ]),
               ),
               expandedHeight: maxHeight,
               collapsedHeight: minHeight,
             ),
-            makeHeaderTabs(context),
+            if (!widget.isUserEdit)
+              makeHeaderTabs(context)
+            else
+              SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: FormEditUserprofile(widget.user)),
             if (!isEmpty)
               SliverFixedExtentList(
                 itemExtent: 150.0,
@@ -342,6 +252,53 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
     );
   }
 
+  SliverPersistentHeader makeHeaderTabs(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+        minHeight: 70.0,
+        maxHeight: 70.0,
+        child: FutureBuilder(
+          future: this.usuarioService.getUsers(),
+          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+            if (snapshot.hasData) {
+              return Stack(fit: StackFit.expand, children: [
+                TabsScrollCustom(users: users),
+                _buildEditCircle()
+              ]);
+              // image is ready
+            } else {
+              return Container(
+                  height: 400.0,
+                  child: Center(
+                      child: CircularProgressIndicator())); // placeholder
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Route _createRouteRoomsPage() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => RoomsListPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(1.0, 0.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
   Card _buildCard(int index) {
     return Card(
       elevation: 4,
@@ -351,6 +308,37 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
         child: Text("Item $index"),
       ),
     );
+  }
+
+  Container _buildEditCircle() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return (widget.isUserAuth)
+        ? Container(
+            margin: EdgeInsets.only(left: 300),
+            width: 100,
+            height: 100,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              child: CircleAvatar(
+                  child: (IconButton(
+                    icon: Icon(
+                      Icons.edit,
+                      color: currentTheme.accentColor,
+                      size: 35,
+                    ),
+                    onPressed: () {
+                      if (!widget.isUserAuth)
+                        return true;
+                      else
+                        Navigator.of(context).push(_createRouteRoomsPage());
+
+                      //globalKey.currentState.openEndDrawer();
+                    },
+                  )),
+                  backgroundColor: Colors.black),
+            ))
+        : Container();
   }
 
   void _snapAppbar() {
@@ -363,6 +351,175 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
       Future.microtask(() => _controller.animateTo(snapOffset,
           duration: Duration(milliseconds: 200), curve: Curves.easeIn));
     }
+  }
+}
+
+class HeaderUserInfo extends StatefulWidget {
+  const HeaderUserInfo(
+      {Key key,
+      @required this.name,
+      @required this.currentTheme,
+      @required this.username,
+      @required this.isUserAuth,
+      @required this.user,
+      @required this.isUserEdit})
+      : super(key: key);
+
+  final String name;
+  final ThemeData currentTheme;
+  final String username;
+  final bool isUserAuth;
+  final User user;
+  final bool isUserEdit;
+
+  @override
+  _HeaderUserInfoState createState() => _HeaderUserInfoState();
+}
+
+class _HeaderUserInfoState extends State<HeaderUserInfo> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () => {
+            if (!widget.isUserAuth)
+              Navigator.of(context).push(createRouteChat())
+            else
+              Navigator.of(context).push(createRouteMyProfile()),
+
+            if (widget.isUserEdit)
+              Navigator.of(context).pushReplacement(PageRouteBuilder(
+                  transitionDuration: Duration(milliseconds: 200),
+                  pageBuilder: (_, __, ___) =>
+                      AvatarImagePage(this.widget.user))),
+
+            // make changes here
+
+            //Navigator.of(context).push(createRouteAvatarProfile(this.user));
+          },
+          child: Container(
+            width: 70,
+            height: 70,
+            margin: EdgeInsets.only(left: 50, top: 170),
+            child: Hero(
+              tag: widget.user.uid,
+              child: ImageUserChat(
+                width: 100,
+                height: 100,
+                user: widget.user,
+                fontsize: 13,
+              ),
+            ),
+          ),
+        ),
+        if (!widget.isUserEdit)
+          Container(
+            padding: EdgeInsets.all(30),
+            margin: EdgeInsets.only(left: 100, top: 90),
+            width: 200,
+            height: 150,
+            child: Center(
+              child: Container(
+                child: Text(
+                  (widget.name.length >= 20)
+                      ? widget.name.substring(0, 20) + '...'
+                      : widget.name,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                      fontSize: (widget.name.length >= 14) ? 14 : 16,
+                      color: widget.currentTheme.scaffoldBackgroundColor),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+        if (!widget.isUserEdit)
+          Container(
+            padding: EdgeInsets.all(30),
+            margin: EdgeInsets.only(left: 100, top: 110),
+            width: 200,
+            height: 150,
+            child: Center(
+              child: Container(
+                child: Text(
+                  (widget.username.length >= 20)
+                      ? '@' + widget.username.substring(0, 20) + '...'
+                      : '@' + widget.username,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 5,
+                  style: TextStyle(
+                      fontSize: 12, color: Colors.black.withOpacity(0.60)),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+        if (!widget.isUserEdit)
+          Container(
+              width: 40,
+              height: 40,
+              margin: EdgeInsets.only(left: 160, top: 210),
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                child: CircleAvatar(
+                    child: (IconButton(
+                      icon: Icon(
+                        (!widget.isUserAuth) ? Icons.share : Icons.settings,
+                        color: widget.currentTheme.accentColor,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        if (!widget.isUserAuth)
+                          return true;
+                        else
+                          Navigator.of(context).push(createRouteMyProfile());
+
+                        //globalKey.currentState.openEndDrawer();
+                      },
+                    )),
+                    backgroundColor: Colors.black),
+              )),
+        if (!widget.isUserEdit)
+          Container(
+              width: 40,
+              height: 40,
+              margin: EdgeInsets.only(left: 220, top: 210),
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                child: CircleAvatar(
+                    child: (IconButton(
+                      icon: Icon(
+                        (!widget.isUserAuth) ? Icons.favorite : Icons.edit,
+                        color: widget.currentTheme.accentColor,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        if (!widget.isUserAuth)
+                          return true;
+                        else
+                          Navigator.of(context).push(createRouteMyProfile());
+
+                        //globalKey.currentState.openEndDrawer();
+                      },
+                    )),
+                    backgroundColor: Colors.black),
+              )),
+      ],
+    );
   }
 }
 
@@ -471,4 +628,12 @@ class _ImageMaskState extends State<ImageMask> {
       Float64List.fromList(Matrix4.identity().storage),
     );
   }
+}
+
+PageRoute<Object> _createTutorialDetailRoute(Widget child) {
+  return PageRouteBuilder(
+      transitionDuration: Duration(milliseconds: 200),
+      transitionsBuilder: (context, anim, secondaryAnim, child) =>
+          FadeTransition(opacity: anim, child: child),
+      pageBuilder: (context, anim, secondaryAnim) => child);
 }

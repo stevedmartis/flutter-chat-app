@@ -49,7 +49,6 @@ class AuthService with ChangeNotifier {
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
       this.user = loginResponse.user;
-      print('${loginResponse}');
 
       await this._guardarToken(loginResponse.token);
 
@@ -96,7 +95,6 @@ class AuthService with ChangeNotifier {
 
     final resp = await http.get('${Environment.apiUrl}/login/profile/user/$id',
         headers: {'Content-Type': 'application/json', 'x-token': token});
-    print(' OK::: ${resp}');
 
     if (resp.statusCode == 200) {
       print('resp');
@@ -120,7 +118,6 @@ class AuthService with ChangeNotifier {
 
     final resp = await http.get('${Environment.apiUrl}/login/renew',
         headers: {'Content-Type': 'application/json', 'x-token': token});
-    print('siiii ${token}');
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
       this.user = loginResponse.user;

@@ -1,8 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:chat/models/usuario.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'dart:ui' as ui;
 
 class HeaderMultiCurvesImage extends StatelessWidget {
@@ -22,6 +20,31 @@ class HeaderMultiCurvesImage extends StatelessWidget {
             child: CustomPaint(
                 painter: _HeaderTwoCurvesPainterImage(
                     color: this.color, opacity: 1.0, image: this.image))),
+
+        /*      Container(
+          padding: EdgeInsets.only(top: 40, left: 275),
+          child: StyledLogo(),
+        ), */
+      ],
+    );
+  }
+}
+
+class HeaderMultiCurves extends StatelessWidget {
+  final Color color;
+
+  HeaderMultiCurves({@required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+            width: double.infinity,
+            height: 250,
+            child: CustomPaint(
+                painter:
+                    _HeaderTwoCurvesPainter(color: this.color, opacity: 1.0))),
 
         /*      Container(
           padding: EdgeInsets.only(top: 40, left: 275),
@@ -119,7 +142,7 @@ class _HeaderTwoCurvesPainterImage extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final pencil = Paint();
-    var rect = Offset.zero & size;
+    // var rect = Offset.zero & size;
 
 /*     pencil.shader = LinearGradient(
       begin: Alignment.topCenter,
@@ -145,7 +168,7 @@ class _HeaderTwoCurvesPainterImage extends CustomPainter {
     path.quadraticBezierTo(size.width * 0.30, size.height * 1.1,
         size.width * 0.5, size.height * 0.90);
     path.quadraticBezierTo(
-        size.width * 0.70, size.height * 0.70, size.width, size.height * 0.90);
+        size.width * 0.73, size.height * 0.70, size.width, size.height * 0.90);
     path.lineTo(size.width, 0);
 
     canvas.drawPath(
@@ -176,11 +199,7 @@ class _HeaderTwoCurvesPainter extends CustomPainter {
     pencil.shader = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [
-        Color(0xffF5E40A),
-        Color(0xffEFD40B),
-        Color(0xffBE9109),
-      ],
+      colors: [this.color, this.color, this.color],
     ).createShader(rect);
     // properties
     pencil.color = this.color.withOpacity(opacity);
