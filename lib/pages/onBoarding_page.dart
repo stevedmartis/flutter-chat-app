@@ -18,7 +18,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
-          height: _size.height * 0.95,
+          height: _size.height,
           decoration: new BoxDecoration(
             gradient: LinearGradient(
               colors: [

@@ -18,7 +18,6 @@ class CustomAppBarHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     final authService = Provider.of<AuthService>(context);
     final profile = authService.profile;
 
@@ -34,6 +33,7 @@ class CustomAppBarHeader extends StatelessWidget {
                 }
               },
               child: Container(
+                padding: EdgeInsets.all(5.0),
                 margin: EdgeInsets.only(left: 20),
                 child: Hero(
                   tag: profile.user.uid,

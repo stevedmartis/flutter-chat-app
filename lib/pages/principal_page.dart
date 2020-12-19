@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 
 import 'package:chat/services/users_service.dart';
 import 'dart:math' as math;
-import 'package:chat/models/usuario.dart';
 
 class UsersPage extends StatefulWidget {
   @override
