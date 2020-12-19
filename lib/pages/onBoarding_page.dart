@@ -29,30 +29,32 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               end: Alignment(0.00, 5.00),
             ),
           ),
-          child: OnBoardingSelector(
-            pages: [
-              OnboardingMessages(
-                title: "HELLO 2!",
-                message: "Know everything you need to know about your car",
-                image: "assets/images/img-intro-1.svg",
-              ),
-              OnboardingMessages(
-                title: "HELLO!",
-                message:
-                    "Get assistance when ever you need, where ever you need",
-                image: "assets/images/img-intro-2.svg",
-              ),
-              OnboardingMessages(
-                title: "HELLO!",
-                message: "Take control of your car, make it a SmartCar",
-                image: "assets/images/img-intro-3.svg",
-              ),
-              OnboardingMessages(
-                title: "HELLO!",
-                message: "Take control of your car, make it a SmartCar",
-                image: "assets/images/img-intro-3.svg",
-              ),
-            ],
+          child: Expanded(
+            child: OnBoardingSelector(
+              pages: [
+                OnboardingMessages(
+                  title: "HELLO 2!",
+                  message: "Know everything you need to know about your car",
+                  image: "assets/images/img-intro-1.svg",
+                ),
+                OnboardingMessages(
+                  title: "HELLO!",
+                  message:
+                      "Get assistance when ever you need, where ever you need",
+                  image: "assets/images/img-intro-2.svg",
+                ),
+                OnboardingMessages(
+                  title: "HELLO!",
+                  message: "Take control of your car, make it a SmartCar",
+                  image: "assets/images/img-intro-3.svg",
+                ),
+                OnboardingMessages(
+                  title: "HELLO!",
+                  message: "Take control of your car, make it a SmartCar",
+                  image: "assets/images/img-intro-3.svg",
+                ),
+              ],
+            ),
           ),
         ),
       ),

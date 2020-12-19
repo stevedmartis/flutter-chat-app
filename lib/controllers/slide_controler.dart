@@ -32,21 +32,19 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(
-          child: Container(
-            width: double.infinity,
-            height: _size.height,
-            alignment: Alignment.center,
-            child: PageView(
-              physics: ClampingScrollPhysics(),
-              controller: _pageController,
-              onPageChanged: (int page) {
-                setState(() {
-                  this._currentPage = page;
-                });
-              },
-              children: widget.pages,
-            ),
+        Container(
+          width: double.infinity,
+          height: _size.height - 300,
+          alignment: Alignment.center,
+          child: PageView(
+            physics: ClampingScrollPhysics(),
+            controller: _pageController,
+            onPageChanged: (int page) {
+              setState(() {
+                this._currentPage = page;
+              });
+            },
+            children: widget.pages,
           ),
         ),
         (!_isLastPage)
