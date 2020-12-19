@@ -14,7 +14,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     Size _size = MediaQuery.of(context).size;
     changeStatusLight();
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
@@ -33,7 +32,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           child: OnBoardingSelector(
             pages: [
               OnboardingMessages(
-                title: "HELLO!",
+                title: "HELLO 2!",
                 message: "Know everything you need to know about your car",
                 image: "assets/images/img-intro-1.svg",
               ),
