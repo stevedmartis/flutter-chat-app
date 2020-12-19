@@ -174,8 +174,8 @@ class _HeaderTwoCurvesPainterImage extends CustomPainter {
     canvas.drawPath(
         path,
         pencil
-          ..shader = ImageShader(image, TileMode.clamp, TileMode.clamp,
-              Float64List.fromList(Matrix4.identity().scaled(0.7).storage))
+          ..shader = ImageShader(image, TileMode.mirror, TileMode.mirror,
+              Float64List.fromList(Matrix4.identity().scaled(0.5).storage))
           ..style = PaintingStyle.fill);
 
     //canvas.drawPath(path, pencil);
@@ -261,7 +261,7 @@ class HeaderMultiCurvesText extends StatelessWidget {
           child: StyledLogo(),
         ), */
         Container(
-          padding: EdgeInsets.only(top: 200, left: 20),
+          padding: EdgeInsets.only(top: 120, left: 20),
           child: Text(
             this.title,
             style: TextStyle(
@@ -271,7 +271,7 @@ class HeaderMultiCurvesText extends StatelessWidget {
           ),
         ),
         Container(
-          padding: EdgeInsets.only(top: 150, left: 20),
+          padding: EdgeInsets.only(top: 100, left: 20),
           child: Text(
             this.subtitle,
             style: TextStyle(

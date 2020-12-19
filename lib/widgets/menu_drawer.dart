@@ -14,7 +14,8 @@ class PrincipalMenu extends StatelessWidget {
 
     final socketService = Provider.of<SocketService>(context);
     final authService = Provider.of<AuthService>(context);
-    final user = authService.user;
+    final profile = authService.profile;
+
     return Drawer(
       child: Container(
         child: Column(
@@ -26,12 +27,15 @@ class PrincipalMenu extends StatelessWidget {
                 width: 150,
                 height: 150,
                 child: Hero(
-                    tag: user.uid,
-                    child: ImageUserChat(
-                      width: 200,
-                      height: 200,
-                      user: user,
-                      fontsize: 20,
+                    tag: profile.user.uid,
+                    child: Material(
+                      type: MaterialType.transparency,
+                      child: ImageUserChat(
+                        width: 200,
+                        height: 200,
+                        profile: profile,
+                        fontsize: 20,
+                      ),
                     )),
               ),
             ),

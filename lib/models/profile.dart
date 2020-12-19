@@ -16,7 +16,7 @@ class Profile {
     this.createdAt,
     //  this.rooms,
     this.updatedAt,
-    this.avatar,
+    this.imageAvatar,
   });
 
   String userId;
@@ -26,6 +26,7 @@ class Profile {
   DateTime createdAt;
   DateTime updatedAt;
   String avatar;
+  String imageAvatar;
 
   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
       userId: json["userId"],
@@ -34,7 +35,7 @@ class Profile {
       //rooms: List<Room>.from(json["rooms"].map((x) => x)),
       createdAt: DateTime.parse(json["createdAt"]),
       updatedAt: DateTime.parse(json["updatedAt"]),
-      avatar: json["avatar"]);
+      imageAvatar: json["imageAvatar"]);
 
   Map<String, dynamic> toJson() => {
         "userId": userId,
@@ -42,15 +43,15 @@ class Profile {
         "lastName": lastName,
         "dateCreate": createdAt,
         "dateUpdate": updatedAt,
-        "avatar": avatar,
+        "imageAvatar:": imageAvatar,
         //   "rooms": List<dynamic>.from(rooms.map((x) => x)),
       };
 
   getPosterImg() {
-    if (avatar == "") {
+    if (imageAvatar == "") {
       return "";
     } else {
-      return avatar;
+      return imageAvatar;
     }
   }
 }

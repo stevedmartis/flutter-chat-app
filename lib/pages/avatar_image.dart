@@ -1,3 +1,5 @@
+import 'package:chat/models/profile.dart';
+import 'package:chat/models/profiles.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
@@ -7,8 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class AvatarImagePage extends StatefulWidget {
-  AvatarImagePage(this.user);
-  final User user;
+  AvatarImagePage(this.profile);
+  final Profiles profile;
 
   @override
   _AvatarImagePageState createState() => _AvatarImagePageState();
@@ -32,7 +34,6 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -44,60 +45,63 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          leading: IconButton(
-            icon: Icon(
-              Icons.chevron_left,
-              color: currentTheme.accentColor,
-            ),
-            iconSize: 50,
-            onPressed: () => Navigator.pop(context),
-            color: Colors.white,
+      key: _scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        leading: IconButton(
+          icon: Icon(
+            Icons.chevron_left,
+            color: currentTheme.accentColor,
           ),
+          iconSize: 50,
+          onPressed: () => Navigator.pop(context),
+          color: Colors.white,
         ),
-        bottomNavigationBar: Container(
-            height: 70,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => {_selectImage()},
-                    child: Container(
-                      alignment: Alignment.center,
-                      color: currentTheme.accentColor,
-                      child: Text("Cambiar",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18)),
-                    ),
-                  ),
-                ),
-                Expanded(
+      ),
+      bottomNavigationBar: Container(
+          height: 70,
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => {_selectImage()},
                   child: Container(
                     alignment: Alignment.center,
-                    color: currentTheme.scaffoldBackgroundColor,
-                    child: Text("Quitar",
+                    color: currentTheme.accentColor,
+                    child: Text("Cambiar",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18)),
                   ),
                 ),
-              ],
-            )),
-        backgroundColor: Colors.black,
-        body: Material(
+              ),
+              Expanded(
+                child: Container(
+                  alignment: Alignment.center,
+                  color: currentTheme.scaffoldBackgroundColor,
+                  child: Text("Quitar",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                ),
+              ),
+            ],
+          )),
+      backgroundColor: Colors.black,
+      body: Hero(
+        tag: widget.profile.user.uid,
+        child: Material(
           type: MaterialType.transparency,
-          child: Hero(
-            tag: widget.user.uid,
-            child: ImageAvatarExpanded(
-              width: 100,
-              height: 100,
-              user: widget.user,
-              fontsize: 13,
-            ),
+          child: ImageAvatarExpanded(
+            width: 100,
+            height: 100,
+            profile: widget.profile,
+            fontsize: 100,
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   _selectImage() async {

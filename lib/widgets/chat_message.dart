@@ -24,8 +24,9 @@ class ChatMessage extends StatelessWidget {
         sizeFactor:
             CurvedAnimation(parent: animationController, curve: Curves.easeOut),
         child: Container(
-          child:
-              this.uid == authService.user.uid ? _myMessage() : _notMyMessage(),
+          child: this.uid == authService.profile.user.uid
+              ? _myMessage()
+              : _notMyMessage(),
         ),
       ),
     );

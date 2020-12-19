@@ -88,10 +88,13 @@ class _PreviewState extends State<Preview> {
                     height: 100,
                     child: Hero(
                         tag: widget.user.uid,
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          child: Text(widget.user.username),
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            child: Text(widget.user.username),
+                          ),
                         )),
                   ),
                 ],

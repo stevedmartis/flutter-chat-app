@@ -18,12 +18,12 @@ class SliverAppBarProfilepPageState extends State<SliverAppBarProfilepPage> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
-    final userAuth = authService.user;
+    final profile = authService.profile;
 
     return Scaffold(
       body: Center(
         child: SliverAppBarSnap(
-          user: userAuth,
+          profile: profile,
           isUserAuth: true,
         ),
       ),

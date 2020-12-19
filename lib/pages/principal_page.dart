@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
+import 'package:chat/models/profiles.dart';
 
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/carousel_users.dart';
@@ -50,17 +51,21 @@ class _CollapsingListState extends State<CollapsingList>
 
   TabController _tabController;
 
-  List<User> users = [];
+  List<Profiles> profiles = [];
 
   @override
   void initState() {
     _tabController = new TabController(vsync: this, length: myTabs.length);
-    this._chargeUsers();
+    this._chargeProfileUsers();
     super.initState();
   }
 
-  _chargeUsers() async {
-    this.users = await usuarioService.getUsers();
+  _chargeProfileUsers() async {
+    //this.users = await usuarioService.getUsers();
+
+    this.profiles = await usuarioService.getProfilesLastUsers();
+    print('${this.profiles} ');
+
     setState(() {});
 
     // await Future.delayed(Duration(milliseconds: 1000));
@@ -81,7 +86,7 @@ class _CollapsingListState extends State<CollapsingList>
       slivers: <Widget>[
         makeHeaderCustom(),
 
-        CupertinoSliverRefreshControl(onRefresh: () => _chargeUsers()),
+        CupertinoSliverRefreshControl(onRefresh: () => _chargeProfileUsers()),
 
         SliverFixedExtentList(
           itemExtent: 150.0,
@@ -95,13 +100,13 @@ class _CollapsingListState extends State<CollapsingList>
           delegate: SliverChildListDelegate(
             [
               FutureBuilder(
-                future: this.usuarioService.getUsers(),
+                future: this.usuarioService.getProfilesLastUsers(),
                 builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
                   if (snapshot.hasData) {
                     return Container(
                         margin: EdgeInsets.only(top: 10),
                         child: CarouselUsersSliderCustom(
-                            users: users)); // image is ready
+                            profiles: profiles)); // image is ready
                   } else {
                     return Container(
                         height: 400.0,

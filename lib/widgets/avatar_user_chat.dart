@@ -1,3 +1,5 @@
+import 'package:chat/models/profile.dart';
+import 'package:chat/models/profiles.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +10,12 @@ class ImageUserChat extends StatefulWidget {
     Key key,
     @required this.width,
     @required this.height,
-    @required this.user,
+    @required this.profile,
     @required this.fontsize,
   }) : super(key: key);
 
-  final User user;
+  final Profiles profile;
+
   final double fontsize;
   final double width;
 
@@ -25,25 +28,27 @@ class ImageUserChat extends StatefulWidget {
 class _ImageUserChatState extends State<ImageUserChat> {
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    print('${widget.profile}');
 
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    print('${widget.profile}');
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(100.0)),
-      child: (widget.user.image != "")
+      child: (widget.profile.imageAvatar != "")
           ? CircleAvatar(
               minRadius: 20,
               child: Container(
                 width: widget.width,
                 height: widget.height,
                 child: FadeInImage(
-                    image: NetworkImage(widget.user.getPosterImg()),
+                    image: NetworkImage(widget.profile.getAvatarImg()),
                     placeholder: AssetImage('assets/loading2.gif'),
                     fit: BoxFit.cover),
               ),
             )
           : CircleAvatar(
               child: Text(
-                widget.user.username.substring(0, 2).toUpperCase(),
+                widget.profile.user.username.substring(0, 2).toUpperCase(),
                 style: TextStyle(fontSize: widget.fontsize),
               ),
               backgroundColor: currentTheme.accentColor,
@@ -57,11 +62,11 @@ class ImageAvatarExpanded extends StatefulWidget {
     Key key,
     @required this.width,
     @required this.height,
-    @required this.user,
+    @required this.profile,
     @required this.fontsize,
   }) : super(key: key);
 
-  final User user;
+  final Profiles profile;
   final double fontsize;
   final double width;
 
@@ -92,23 +97,29 @@ class _ImageAvatarExpandedState extends State<ImageAvatarExpanded> {
       elevation: 4.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       clipBehavior: Clip.antiAlias,
-      child: (widget.user.image != "")
+      child: (widget.profile.imageAvatar != "")
           ? Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Image(
-                  image: NetworkImage(widget.user.getPosterImg()),
+                  image: NetworkImage(widget.profile.getAvatarImg()),
                   fit: BoxFit.cover,
                   width: double.maxFinite,
                 )
               ],
             )
-          : CircleAvatar(
-              child: Text(
-                widget.user.username.substring(0, 2).toUpperCase(),
-                style: TextStyle(fontSize: widget.fontsize),
+          : Container(
+              margin: EdgeInsets.only(bottom: 300),
+              padding: EdgeInsets.all(50),
+              width: double.maxFinite,
+              height: double.maxFinite,
+              child: CircleAvatar(
+                child: Text(
+                  widget.profile.user.username.substring(0, 2).toUpperCase(),
+                  style: TextStyle(fontSize: widget.fontsize),
+                ),
+                backgroundColor: currentTheme.accentColor,
               ),
-              backgroundColor: currentTheme.accentColor,
             ),
     );
   }

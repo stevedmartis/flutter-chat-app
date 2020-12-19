@@ -1,22 +1,29 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:chat/models/usuario.dart';
+import 'package:chat/models/profiles.dart';
 import 'package:chat/pages/user_page.dart';
 import 'package:chat/services/chat_service.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CarouselUsersSliderCustom extends StatelessWidget {
+class CarouselUsersSliderCustom extends StatefulWidget {
   const CarouselUsersSliderCustom({
     Key key,
-    @required this.users,
+    @required this.profiles,
   }) : super(key: key);
 
-  final List<User> users;
+  final List<Profiles> profiles;
 
   @override
+  _CarouselUsersSliderCustomState createState() =>
+      _CarouselUsersSliderCustomState();
+}
+
+class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
+  @override
   Widget build(BuildContext context) {
+    print(widget.profiles);
     return CarouselSlider.builder(
       options: CarouselOptions(
         height: 100,
@@ -31,19 +38,19 @@ class CarouselUsersSliderCustom extends StatelessWidget {
         enlargeCenterPage: false,
         scrollDirection: Axis.horizontal,
       ),
-      itemCount: users.length,
+      itemCount: widget.profiles.length,
       itemBuilder: (BuildContext context, int index) => GestureDetector(
         onTap: () {
           final chatService = Provider.of<ChatService>(context, listen: false);
-          chatService.userFor = users[index];
-
+          chatService.userFor = widget.profiles[index];
+          print(widget.profiles);
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      UserPage(user: users[index])));
+                      UserPage(profile: widget.profiles[index])));
         },
-        child: Preview(user: users[index]),
+        child: Preview(profile: widget.profiles[index]),
       ),
     );
   }
@@ -52,10 +59,10 @@ class CarouselUsersSliderCustom extends StatelessWidget {
 class Preview extends StatefulWidget {
   const Preview({
     Key key,
-    @required this.user,
+    @required this.profile,
   }) : super(key: key);
 
-  final User user;
+  final Profiles profile;
 
   @override
   _PreviewState createState() => _PreviewState();
@@ -64,6 +71,7 @@ class Preview extends StatefulWidget {
 class _PreviewState extends State<Preview> {
   @override
   Widget build(BuildContext context) {
+    print(widget.profile);
     return Stack(
       children: [
         Container(
@@ -76,12 +84,15 @@ class _PreviewState extends State<Preview> {
                     width: 100,
                     height: 100,
                     child: Hero(
-                        tag: widget.user.uid,
-                        child: ImageUserChat(
-                          width: 100,
-                          height: 100,
-                          user: widget.user,
-                          fontsize: 20,
+                        tag: widget.profile.user.uid,
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: ImageUserChat(
+                            width: 100,
+                            height: 100,
+                            profile: widget.profile,
+                            fontsize: 20,
+                          ),
                         )),
                   ),
                   Positioned(
@@ -100,9 +111,11 @@ class _PreviewState extends State<Preview> {
                           Container(
                             constraints: BoxConstraints(maxWidth: 80),
                             child: Text(
-                              (widget.user.username.length >= 10)
-                                  ? widget.user.username.substring(0, 7) + '...'
-                                  : widget.user.username,
+                              (widget.profile.user.username.length >= 10)
+                                  ? widget.profile.user.username
+                                          .substring(0, 7) +
+                                      '...'
+                                  : widget.profile.user.username,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 5,
                               style: TextStyle(
@@ -124,7 +137,9 @@ class _PreviewState extends State<Preview> {
           width: 17.0,
           height: 17.0,
           decoration: new BoxDecoration(
-            color: widget.user.online ? Colors.green[300] : Color(0xff969B9B),
+            color: widget.profile.user.online
+                ? Colors.green[300]
+                : Color(0xff969B9B),
             shape: BoxShape.circle,
           ),
         ),

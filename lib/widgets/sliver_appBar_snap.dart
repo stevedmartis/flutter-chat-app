@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:chat/models/profile.dart';
+import 'package:chat/models/profiles.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/my_profile.dart';
@@ -20,12 +22,12 @@ import 'dart:async';
 
 class SliverAppBarSnap extends StatefulWidget {
   SliverAppBarSnap({
-    @required this.user,
+    @required this.profile,
     this.isUserAuth = false,
     this.isUserEdit = false,
   });
 
-  final User user;
+  final Profiles profile;
 
   final bool isUserAuth;
   final bool isUserEdit;
@@ -81,9 +83,9 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
 
   _chargeUsers() async {
     this.users = await usuarioService.getUsers();
-    await authService.getProfileByUserId(widget.user.uid);
+    // await authService.getProfileByUserId(widget.profile.user.uid);
 
-    name = this.authService.profile.name;
+    name = widget.profile.name;
 
     if (mounted) {
       setState(() {});
@@ -122,9 +124,10 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
     var foregroundColor =
         backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 
-    final username = widget.user.username.toLowerCase();
-
+    final username = widget.profile.user.username.toLowerCase();
+    print(widget.profile);
     return Scaffold(
+      key: widget.key,
       floatingActionButton: (!widget.isUserEdit)
           ? FloatingActionButton(
               child: Icon(Icons.add),
@@ -194,7 +197,7 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
                 collapseMode: CollapseMode.parallax,
                 title: Stack(children: [
                   FutureBuilder<ui.Image>(
-                    future: _image(_url),
+                    future: _image(widget.profile.getHeaderImg()),
                     builder: (BuildContext context,
                             AsyncSnapshot<ui.Image> snapshot) =>
                         !snapshot.hasData
@@ -207,7 +210,7 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
                               ),
                   ),
                   HeaderUserInfo(
-                    user: widget.user,
+                    profile: widget.profile,
                     isUserAuth: widget.isUserAuth,
                     isUserEdit: widget.isUserEdit,
                     name: name,
@@ -224,7 +227,7 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
             else
               SliverFillRemaining(
                   hasScrollBody: false,
-                  child: FormEditUserprofile(widget.user)),
+                  child: FormEditUserprofile(widget.profile.user)),
             if (!isEmpty)
               SliverFixedExtentList(
                 itemExtent: 150.0,
@@ -361,7 +364,7 @@ class HeaderUserInfo extends StatefulWidget {
       @required this.currentTheme,
       @required this.username,
       @required this.isUserAuth,
-      @required this.user,
+      @required this.profile,
       @required this.isUserEdit})
       : super(key: key);
 
@@ -369,7 +372,7 @@ class HeaderUserInfo extends StatefulWidget {
   final ThemeData currentTheme;
   final String username;
   final bool isUserAuth;
-  final User user;
+  final Profiles profile;
   final bool isUserEdit;
 
   @override
@@ -384,13 +387,13 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('${widget.profile}');
+
     return Stack(
       children: [
         GestureDetector(
@@ -404,7 +407,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
               Navigator.of(context).pushReplacement(PageRouteBuilder(
                   transitionDuration: Duration(milliseconds: 200),
                   pageBuilder: (_, __, ___) =>
-                      AvatarImagePage(this.widget.user))),
+                      AvatarImagePage(this.widget.profile))),
 
             // make changes here
 
@@ -415,12 +418,15 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
             height: 70,
             margin: EdgeInsets.only(left: 50, top: 170),
             child: Hero(
-              tag: widget.user.uid,
-              child: ImageUserChat(
-                width: 100,
-                height: 100,
-                user: widget.user,
-                fontsize: 13,
+              tag: widget.profile.user.uid,
+              child: Material(
+                type: MaterialType.transparency,
+                child: ImageUserChat(
+                  width: 100,
+                  height: 100,
+                  profile: widget.profile,
+                  fontsize: 13,
+                ),
               ),
             ),
           ),
@@ -428,7 +434,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
         if (!widget.isUserEdit)
           Container(
             padding: EdgeInsets.all(30),
-            margin: EdgeInsets.only(left: 100, top: 90),
+            margin: EdgeInsets.only(left: 120, top: 165),
             width: 200,
             height: 150,
             child: Center(
@@ -441,7 +447,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
                   maxLines: 1,
                   style: TextStyle(
                       fontSize: (widget.name.length >= 14) ? 14 : 16,
-                      color: widget.currentTheme.scaffoldBackgroundColor),
+                      color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -450,7 +456,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
         if (!widget.isUserEdit)
           Container(
             padding: EdgeInsets.all(30),
-            margin: EdgeInsets.only(left: 100, top: 110),
+            margin: EdgeInsets.only(left: 120, top: 195),
             width: 200,
             height: 150,
             child: Center(
@@ -462,7 +468,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
                   overflow: TextOverflow.ellipsis,
                   maxLines: 5,
                   style: TextStyle(
-                      fontSize: 12, color: Colors.black.withOpacity(0.60)),
+                      fontSize: 12, color: Colors.white.withOpacity(0.60)),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -470,17 +476,19 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           ),
         if (!widget.isUserEdit)
           Container(
-              width: 40,
-              height: 40,
-              margin: EdgeInsets.only(left: 160, top: 210),
+              width: 32,
+              height: 32,
+              margin: EdgeInsets.only(left: 170, top: 160),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
                     child: (IconButton(
-                      icon: Icon(
-                        (!widget.isUserAuth) ? Icons.share : Icons.settings,
-                        color: widget.currentTheme.accentColor,
-                        size: 20,
+                      icon: Center(
+                        child: Icon(
+                          (!widget.isUserAuth) ? Icons.share : Icons.settings,
+                          color: widget.currentTheme.accentColor,
+                          size: 17,
+                        ),
                       ),
                       onPressed: () {
                         if (!widget.isUserAuth)
@@ -491,13 +499,13 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
                         //globalKey.currentState.openEndDrawer();
                       },
                     )),
-                    backgroundColor: Colors.black),
+                    backgroundColor: Colors.black.withOpacity(0.70)),
               )),
         if (!widget.isUserEdit)
           Container(
-              width: 40,
-              height: 40,
-              margin: EdgeInsets.only(left: 220, top: 210),
+              width: 32,
+              height: 32,
+              margin: EdgeInsets.only(left: 210, top: 160),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
@@ -505,7 +513,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
                       icon: Icon(
                         (!widget.isUserAuth) ? Icons.favorite : Icons.edit,
                         color: widget.currentTheme.accentColor,
-                        size: 20,
+                        size: 17,
                       ),
                       onPressed: () {
                         if (!widget.isUserAuth)
@@ -516,7 +524,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
                         //globalKey.currentState.openEndDrawer();
                       },
                     )),
-                    backgroundColor: Colors.black),
+                    backgroundColor: Colors.black.withOpacity(0.70)),
               )),
       ],
     );

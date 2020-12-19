@@ -1,4 +1,7 @@
+import 'package:chat/models/profile.dart';
+import 'package:chat/models/profiles.dart';
 import 'package:chat/models/usuario.dart';
+import 'package:chat/services/auth_service.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
@@ -8,8 +11,11 @@ import 'package:flutter/cupertino.dart';
 final Color darkBlue = Color.fromARGB(255, 18, 32, 47);
 
 class UserPage extends StatefulWidget {
-  UserPage({this.user});
-  final User user;
+  UserPage({this.profile});
+  final Profiles profile;
+
+  final authService = new AuthService();
+
   @override
   _UserPageState createState() => _UserPageState();
 }
@@ -20,7 +26,7 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
       body: Center(
         child: SliverAppBarSnap(
-          user: widget.user,
+          profile: widget.profile,
         ),
       ),
     );

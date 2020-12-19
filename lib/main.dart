@@ -1,4 +1,3 @@
-import 'package:chat/bloc/provider.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/models/shoes.dart';
 import 'package:chat/theme/theme.dart';
@@ -10,6 +9,8 @@ import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/socket_service.dart';
 
 import 'package:chat/routes/routes.dart';
+
+import 'bloc/provider.dart';
 
 void main() => runApp(MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => AuthService()),

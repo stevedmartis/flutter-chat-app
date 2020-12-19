@@ -9,34 +9,24 @@ User usuarioFromJson(String str) => User.fromJson(json.decode(str));
 String usuarioToJson(User data) => json.encode(data.toJson());
 
 class User {
-  User({this.online, this.username, this.email, this.uid, this.image});
+  User({this.online, this.username, this.email, this.uid});
 
   bool online;
   String username;
   String email;
   String uid;
-  String image;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-      online: json["online"],
-      username: json["username"],
-      email: json["email"],
-      uid: json["uid"],
-      image: json["image"]);
+        online: json["online"],
+        username: json["username"],
+        email: json["email"],
+        uid: json["uid"],
+      );
 
   Map<String, dynamic> toJson() => {
         "online": online,
         "username": username,
         "email": email,
         "uid": uid,
-        "image": image
       };
-
-  getPosterImg() {
-    if (image == "") {
-      return "";
-    } else {
-      return image;
-    }
-  }
 }

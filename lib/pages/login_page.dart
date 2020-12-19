@@ -116,7 +116,7 @@ class __FormState extends State<_Form> {
     return StreamBuilder(
       stream: bloc.emailStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+        //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),

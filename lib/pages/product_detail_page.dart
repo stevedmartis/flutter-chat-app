@@ -9,7 +9,11 @@ class ShoesDetailPage extends StatelessWidget {
       body: Column(
         children: [
           Stack(children: [
-            Hero(tag: 'shoes-1', child: ShoesSizePreview(fullScreen: true)),
+            Hero(
+                tag: 'shoes-1',
+                child: Material(
+                    type: MaterialType.transparency,
+                    child: ShoesSizePreview(fullScreen: true))),
             Positioned(
               top: 0,
               child: FloatingActionButton(

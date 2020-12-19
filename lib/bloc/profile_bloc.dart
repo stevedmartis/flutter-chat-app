@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:chat/bloc/validators.dart';
 import 'package:rxdart/rxdart.dart';
 
-class RegisterBloc with Validators {
+class ProfileBloc with Validators {
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
   final _usernameController = BehaviorSubject<String>();

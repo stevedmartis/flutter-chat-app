@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:chat/models/profile.dart';
-import 'package:chat/models/profile_response.dart';
+import 'package:chat/models/profiles.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -9,11 +8,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:chat/global/environment.dart';
 
 import 'package:chat/models/login_response.dart';
-import 'package:chat/models/usuario.dart';
 
 class AuthService with ChangeNotifier {
-  User user;
-  Profile profile;
+  Profiles profile;
   bool _authenticated = false;
 
   final _storage = new FlutterSecureStorage();
@@ -41,18 +38,18 @@ class AuthService with ChangeNotifier {
 
     final data = {'email': email, 'password': password};
 
-    final resp = await http.post('${Environment.apiUrl}/login',
+    final resp = await http.post('${Environment.apiUrl}/profile/login',
         body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
 
     this.authenticated = false;
 
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
-      this.user = loginResponse.user;
+      this.profile = loginResponse.profile;
 
       await this._guardarToken(loginResponse.token);
 
-      await getProfileByUserId(this.user.uid);
+      // await getProfileByUserId(this.profile.user.uid);
 
       return true;
     } else {
@@ -60,10 +57,17 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future register(String username, String email, String password) async {
-    this.authenticated = true;
+  Future register(
+      String username, String name, String email, String password) async {
+    // this.authenticated = true;
 
-    final data = {'username': username, 'email': email, 'password': password};
+    final data = {
+      'username': username,
+      'name': name,
+      'email': email,
+      'password': password
+    };
+    print('${data}');
 
     final resp = await http.post('${Environment.apiUrl}/login/new',
         body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
@@ -72,15 +76,16 @@ class AuthService with ChangeNotifier {
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
 
-      this.user = loginResponse.user;
+      this.profile = loginResponse.profile;
 
+      print('${profile}');
       //this.profile = loginResponse.profile;
       await this._guardarToken(loginResponse.token);
 
       final token = await this._storage.read(key: 'token');
       print(token);
 
-      await getProfileByUserId(this.user.uid);
+      //await getProfileByUserId(this.profile.user.uid);
 
       return true;
     } else {
@@ -89,7 +94,40 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<bool> getProfileByUserId(String id) async {
+  Future editProfile(String uid, String username, String name, String email,
+      String password) async {
+    // this.authenticated = true;
+
+    final data = {
+      'uid': uid,
+      'username': username,
+      'name': name,
+      'email': email,
+      'password': password
+    };
+    print('${data}');
+
+    final token = await this._storage.read(key: 'token');
+
+    final resp = await http.post('${Environment.apiUrl}/profile/edit',
+        body: jsonEncode(data),
+        headers: {'Content-Type': 'application/json', 'x-token': token});
+
+    if (resp.statusCode == 200) {
+      final loginResponse = loginResponseFromJson(resp.body);
+
+      this.profile = loginResponse.profile;
+
+      print('${profile}');
+
+      return true;
+    } else {
+      final respBody = jsonDecode(resp.body);
+      return respBody['msg'];
+    }
+  }
+
+  /*  Future<bool> getProfileByUserId(String id) async {
     final token = await this._storage.read(key: 'token');
     print(' ENTROAA::: ${id}');
 
@@ -112,20 +150,20 @@ class AuthService with ChangeNotifier {
       return false;
     }
   }
+ */
 
   Future<bool> isLoggedIn() async {
     final token = await this._storage.read(key: 'token');
-
+    this.logout();
+    print(Environment.apiUrl);
     final resp = await http.get('${Environment.apiUrl}/login/renew',
         headers: {'Content-Type': 'application/json', 'x-token': token});
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
-      this.user = loginResponse.user;
-
+      this.profile = loginResponse.profile;
       // this.profile = loginResponse.profile;
       await this._guardarToken(loginResponse.token);
-      await getProfileByUserId(this.user.uid);
-
+      // await getProfileByUserId(this.user.uid);
       // this.logout();a
 
       return true;

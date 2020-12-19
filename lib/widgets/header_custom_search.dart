@@ -1,3 +1,4 @@
+import 'package:chat/models/profile.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/tabs.dart';
@@ -19,8 +20,9 @@ class CustomAppBarHeader extends StatelessWidget {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     final authService = Provider.of<AuthService>(context);
-    final user = authService.user;
+    final profile = authService.profile;
 
+    print(profile);
     return Container(
       child: Row(
         children: [
@@ -34,12 +36,15 @@ class CustomAppBarHeader extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.only(left: 20),
                 child: Hero(
-                  tag: user.uid,
-                  child: ImageUserChat(
-                    width: 50,
-                    height: 50,
-                    user: user,
-                    fontsize: 18,
+                  tag: profile.user.uid,
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: ImageUserChat(
+                      width: 50,
+                      height: 50,
+                      profile: profile,
+                      fontsize: 18,
+                    ),
                   ),
                 ),
               ),

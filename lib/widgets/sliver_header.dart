@@ -1,3 +1,5 @@
+import 'package:chat/models/profile.dart';
+import 'package:chat/models/profiles.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
@@ -11,7 +13,7 @@ import 'avatar_user_chat.dart';
 class Header extends StatelessWidget {
   final double maxHeight;
   final double minHeight;
-  final User user;
+  final Profiles profile;
   final bool isUserAuth;
 
   const Header({
@@ -19,7 +21,7 @@ class Header extends StatelessWidget {
     this.maxHeight,
     this.minHeight,
     this.isUserAuth,
-    @required this.user,
+    @required this.profile,
   }) : super(key: key);
 
   @override
@@ -33,7 +35,8 @@ class Header extends StatelessWidget {
             title: Container(
               margin: EdgeInsets.only(top: 170),
               child: Stack(children: [
-                ItemsUnderSliverAppBar(user: user, isUserAuth: isUserAuth),
+                ItemsUnderSliverAppBar(
+                    profile: profile, isUserAuth: isUserAuth),
                 Container(
                   padding: EdgeInsets.only(top: 90, left: 20),
                   child: Row(
@@ -59,10 +62,10 @@ class Header extends StatelessWidget {
 }
 
 class ItemsUnderSliverAppBar extends StatelessWidget {
-  final User user;
+  final Profiles profile;
   final bool isUserAuth;
 
-  ItemsUnderSliverAppBar({this.user, this.isUserAuth});
+  ItemsUnderSliverAppBar({this.profile, this.isUserAuth});
 
   @override
   Widget build(BuildContext context) {
@@ -86,12 +89,15 @@ class ItemsUnderSliverAppBar extends StatelessWidget {
                 height: 70,
                 margin: EdgeInsets.only(left: 50, top: 20),
                 child: Hero(
-                  tag: user.uid,
-                  child: ImageUserChat(
-                    width: 100,
-                    height: 100,
-                    user: user,
-                    fontsize: 13,
+                  tag: profile.user.uid,
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: ImageUserChat(
+                      width: 100,
+                      height: 100,
+                      profile: profile,
+                      fontsize: 13,
+                    ),
                   ),
                 ),
               ),
@@ -102,9 +108,9 @@ class ItemsUnderSliverAppBar extends StatelessWidget {
               child: Center(
                 child: FittedBox(
                   child: Text(
-                    (user.username.length >= 14)
-                        ? user.username.substring(0, 14) + '...'
-                        : user.username,
+                    (profile.user.username.length >= 14)
+                        ? profile.user.username.substring(0, 14) + '...'
+                        : profile.user.username,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 5,
                     style: TextStyle(
@@ -192,10 +198,10 @@ Route createRouteMyProfile() {
   );
 }
 
-Route createRouteAvatarProfile(User user) {
+Route createRouteAvatarProfile(User user, Profiles profile) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
-        AvatarImagePage(user),
+        AvatarImagePage(profile),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
