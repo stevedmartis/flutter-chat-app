@@ -26,13 +26,15 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
 
     bool _isLastPage = widget.pages.length == this._currentPage + 1;
 
+    Size _size = MediaQuery.of(context).size;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          width: 600,
-          height: 650,
+          width: double.infinity,
+          height: _size.height - 310,
           alignment: Alignment.center,
           child: PageView(
             physics: ClampingScrollPhysics(),
