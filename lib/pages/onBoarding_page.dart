@@ -16,21 +16,21 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          height: _size.height,
-          decoration: new BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xff202020),
-                Color(0xff1D1D1D),
-              ],
-              stops: [0, 1],
-              begin: Alignment(-0.00, -5.00),
-              end: Alignment(0.00, 5.00),
+        child: Expanded(
+          child: Container(
+            width: double.infinity,
+            height: _size.height,
+            decoration: new BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xff202020),
+                  Color(0xff1D1D1D),
+                ],
+                stops: [0, 1],
+                begin: Alignment(-0.00, -5.00),
+                end: Alignment(0.00, 5.00),
+              ),
             ),
-          ),
-          child: Expanded(
             child: OnBoardingSelector(
               pages: [
                 OnboardingMessages(

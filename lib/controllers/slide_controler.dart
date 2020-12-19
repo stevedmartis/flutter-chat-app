@@ -28,14 +28,12 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
 
     Size _size = MediaQuery.of(context).size;
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Stack(
       children: [
         Expanded(
           child: Container(
             width: double.infinity,
-            height: _size.height / 4,
+            height: _size.height,
             alignment: Alignment.center,
             child: PageView(
               physics: ClampingScrollPhysics(),
