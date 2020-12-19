@@ -35,7 +35,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
         Expanded(
           child: Container(
             width: double.infinity,
-            height: _size.height,
+            height: _size.height / 4,
             alignment: Alignment.center,
             child: PageView(
               physics: ClampingScrollPhysics(),

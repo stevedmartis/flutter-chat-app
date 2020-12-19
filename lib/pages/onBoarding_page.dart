@@ -14,6 +14,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     Size _size = MediaQuery.of(context).size;
     changeStatusLight();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
