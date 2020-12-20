@@ -211,7 +211,7 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
               stretch: true,
               flexibleSpace: FlexibleSpaceBar(
                 collapseMode: CollapseMode.parallax,
-                title: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                title: Stack(children: [
                   FutureBuilder<ui.Image>(
                     future: _image(widget.profile.getHeaderImg()),
                     builder: (BuildContext context,
@@ -434,7 +434,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           child: Container(
             width: 70,
             height: 70,
-            margin: EdgeInsets.only(left: 50, top: size.height / 5.0),
+            margin: EdgeInsets.only(left: 50, top: 200),
             child: Hero(
               tag: widget.profile.user.uid,
               child: Material(
@@ -452,7 +452,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
         if (!widget.isUserEdit)
           Container(
             margin:
-                EdgeInsets.only(left: size.width / 3.5, top: size.height / 4.5),
+                EdgeInsets.only(left: size.width / 3.5, top: size.height / 4.3),
             width: size.width / 2,
             height: size.height / 2,
             child: Center(
@@ -474,7 +474,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
         if (!widget.isUserEdit)
           Container(
             margin:
-                EdgeInsets.only(left: size.width / 3.0, top: size.height / 3.8),
+                EdgeInsets.only(left: size.width / 3.0, top: size.height / 3.6),
             width: size.width / 2,
             height: size.height / 2,
             child: Center(
@@ -497,7 +497,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
               width: size.width / 12,
               height: size.height / 12,
               margin: EdgeInsets.only(
-                  left: size.width / 2.5, top: size.height / 6.0),
+                  left: size.width / 2.5, top: size.height / 5.6),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
@@ -525,7 +525,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
               width: size.width / 12,
               height: size.height / 12,
               margin:
-                  EdgeInsets.only(left: size.width / 2, top: size.height / 6.0),
+                  EdgeInsets.only(left: size.width / 2, top: size.height / 5.6),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
