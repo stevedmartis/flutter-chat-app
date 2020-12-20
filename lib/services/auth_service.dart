@@ -57,16 +57,10 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future register(
-      String username, String name, String email, String password) async {
+  Future register(String username, String email, String password) async {
     // this.authenticated = true;
 
-    final data = {
-      'username': username,
-      'name': name,
-      'email': email,
-      'password': password
-    };
+    final data = {'username': username, 'email': email, 'password': password};
     print('${data}');
 
     final resp = await http.post('${Environment.apiUrl}/login/new',

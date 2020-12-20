@@ -93,7 +93,7 @@ class __FormState extends State<_Form> {
           _createEmail(bloc),
           SizedBox(height: 20),
           _createPassword(bloc),
-          SizedBox(height: 100),
+          SizedBox(height: 50),
           _crearBoton(bloc)
           /* ButtonGold(
             color: currentTheme.accentColor,

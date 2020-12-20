@@ -164,8 +164,8 @@ _register(RegisterBloc bloc, BuildContext context) async {
   final authService = Provider.of<AuthService>(context, listen: false);
   final socketService = Provider.of<SocketService>(context, listen: false);
 
-  final registroOk = await authService.register(bloc.username.trim(),
-      bloc.name.trim(), bloc.email.trim(), bloc.password.trim());
+  final registroOk = await authService.register(
+      bloc.username.trim(), bloc.email.trim(), bloc.password.trim());
 
   print('================');
   print('name: ${bloc.name}');
