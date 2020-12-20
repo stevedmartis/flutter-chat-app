@@ -72,7 +72,6 @@ class _PreviewState extends State<Preview> {
     return Stack(
       children: [
         Container(
-          padding: EdgeInsets.all(5),
           child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(100.0)),
               child: Stack(
@@ -94,7 +93,7 @@ class _PreviewState extends State<Preview> {
                   ),
                   Positioned(
                     bottom: 0.0,
-                    left: 20.0,
+                    left: 30.0,
                     top: 60.0,
                     right: 0.0,
                     child: Container(
