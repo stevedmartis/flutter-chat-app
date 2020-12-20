@@ -434,7 +434,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           child: Container(
             width: 70,
             height: 70,
-            margin: EdgeInsets.only(left: 50, top: size.width / 2.5),
+            margin: EdgeInsets.only(left: 50, top: size.height / 5.5),
             child: Hero(
               tag: widget.profile.user.uid,
               child: Material(
@@ -452,9 +452,10 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
         if (!widget.isUserEdit)
           Container(
             padding: EdgeInsets.all(30),
-            margin: EdgeInsets.only(left: 120, top: size.width / 2.5),
-            width: 200,
-            height: 150,
+            margin:
+                EdgeInsets.only(left: size.width / 3.5, top: size.height / 5.5),
+            width: size.width / 2,
+            height: size.height / 2,
             child: Center(
               child: Container(
                 child: Text(
@@ -475,8 +476,8 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           Container(
             padding: EdgeInsets.all(30),
             margin: EdgeInsets.only(left: 120, top: size.width / 2.1),
-            width: 200,
-            height: 150,
+            width: size.width / 2,
+            height: size.height / 2,
             child: Center(
               child: Container(
                 child: Text(
@@ -494,10 +495,10 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           ),
         if (!widget.isUserEdit)
           Container(
-              width: 32,
-              height: 32,
+              width: size.width / 13,
+              height: size.height / 13,
               margin: EdgeInsets.only(
-                  left: size.width / 2.5, top: size.width / 2.6),
+                  left: size.width / 2.5, top: size.height / 6.5),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
@@ -522,10 +523,10 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
               )),
         if (!widget.isUserEdit)
           Container(
-              width: 32,
-              height: 32,
+              width: size.width / 13,
+              height: size.height / 13,
               margin:
-                  EdgeInsets.only(left: size.width / 2, top: size.width / 2.6),
+                  EdgeInsets.only(left: size.width / 2, top: size.height / 6.5),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
