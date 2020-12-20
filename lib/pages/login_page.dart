@@ -36,21 +36,30 @@ class _LoginPageState extends State<LoginPage> {
           physics: BouncingScrollPhysics(),
           child: Container(
             height: _size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Stack(
               children: <Widget>[
                 HeaderMultiCurvesText(
                     title: 'Log In!',
                     subtitle: 'Welcome back,',
                     color: currentTheme.accentColor),
-                _Form(),
-                Labels(
-                    rute: 'register',
-                    title: '¿No tienes cuenta?',
-                    subTitulo: 'Crea una ahora!',
-                    colortText1: Colors.white70,
-                    colortText2: Color(0xffD9B310)),
-                StyledLogoCustom()
+                Container(
+                    margin: EdgeInsets.only(top: _size.height / 2.7),
+                    child: _Form()),
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: _size.height / 1.2),
+                    child: Labels(
+                        rute: 'register',
+                        title: '¿No tienes cuenta?',
+                        subTitulo: 'Crea una ahora!',
+                        colortText1: Colors.white70,
+                        colortText2: Color(0xffD9B310)),
+                  ),
+                ),
+                Center(
+                    child: Container(
+                        margin: EdgeInsets.only(top: _size.height / 1.1),
+                        child: StyledLogoCustom()))
               ],
             ),
           ),
@@ -84,7 +93,7 @@ class __FormState extends State<_Form> {
           _createEmail(bloc),
           SizedBox(height: 20),
           _createPassword(bloc),
-          SizedBox(height: 20),
+          SizedBox(height: 100),
           _crearBoton(bloc)
           /* ButtonGold(
             color: currentTheme.accentColor,

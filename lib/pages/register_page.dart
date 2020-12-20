@@ -28,22 +28,32 @@ class RegisterPage extends StatelessWidget {
           physics: BouncingScrollPhysics(),
           child: Container(
             height: _size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Stack(
               children: <Widget>[
                 HeaderMultiCurvesText(
                     title: 'Sign Up!',
                     subtitle: 'Hello,',
                     color: Color(0xffD9B310)),
-                _Form(),
-                Labels(
-                  rute: 'login',
-                  title: '¿Ya tienes una cuenta?',
-                  subTitulo: 'Ingresa ahora!',
-                  colortText1: Colors.white70,
-                  colortText2: Color(0xffD9B310),
+                Center(
+                    child: Container(
+                        margin: EdgeInsets.only(top: _size.height / 3),
+                        child: _Form())),
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: _size.height / 1.2),
+                    child: Labels(
+                      rute: 'login',
+                      title: '¿Ya tienes una cuenta?',
+                      subTitulo: 'Ingresa ahora!',
+                      colortText1: Colors.white70,
+                      colortText2: Color(0xffD9B310),
+                    ),
+                  ),
                 ),
-                StyledLogoCustom()
+                Center(
+                    child: Container(
+                        margin: EdgeInsets.only(top: _size.height / 1.1),
+                        child: StyledLogoCustom()))
               ],
             ),
           ),
@@ -82,10 +92,10 @@ class __FormState extends State<_Form> {
           SizedBox(
             height: 10,
           ),
-          _createName(bloc),
+          /*     _createName(bloc),
           SizedBox(
             height: 10,
-          ),
+          ), */
           // _createLastName(bloc),
 
           _createPassword(bloc),
