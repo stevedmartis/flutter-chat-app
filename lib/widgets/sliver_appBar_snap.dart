@@ -412,8 +412,6 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
     final size = MediaQuery.of(context).size;
 
     return Stack(
-      alignment: AlignmentDirectional.topStart,
-      fit: StackFit.loose,
       children: [
         GestureDetector(
           onTap: () => {
@@ -454,8 +452,8 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           Container(
             margin:
                 EdgeInsets.only(left: size.width / 3.5, top: size.height / 5.5),
-            width: 180,
-            height: 180,
+            width: size.width / 2,
+            height: size.height / 2,
             child: Center(
               child: Container(
                 child: Text(
@@ -477,8 +475,8 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
             padding: EdgeInsets.all(30),
             margin:
                 EdgeInsets.only(left: size.width / 3, top: size.height / 4.5),
-            width: 180,
-            height: 180,
+            width: size.width / 2,
+            height: size.height / 2,
             child: Center(
               child: Container(
                 child: Text(
@@ -496,10 +494,10 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           ),
         if (!widget.isUserEdit)
           Container(
-              width: 35,
-              height: 35,
+              width: size.width / 12,
+              height: size.height / 12,
               margin: EdgeInsets.only(
-                  left: size.width / 2.5, top: size.height / 5.7),
+                  left: size.width / 2.5, top: size.height / 6.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
@@ -524,10 +522,10 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
               )),
         if (!widget.isUserEdit)
           Container(
-              width: 35,
-              height: 35,
+              width: size.width / 12,
+              height: size.height / 12,
               margin:
-                  EdgeInsets.only(left: size.width / 2, top: size.height / 5.7),
+                  EdgeInsets.only(left: size.width / 2, top: size.height / 6.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
