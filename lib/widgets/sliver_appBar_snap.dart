@@ -454,8 +454,8 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           Container(
             margin:
                 EdgeInsets.only(left: size.width / 3.5, top: size.height / 5.5),
-            width: size.width / 2,
-            height: size.height / 2,
+            width: 180,
+            height: 180,
             child: Center(
               child: Container(
                 child: Text(
@@ -477,8 +477,8 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
             padding: EdgeInsets.all(30),
             margin:
                 EdgeInsets.only(left: size.width / 3, top: size.height / 4.5),
-            width: size.width / 2,
-            height: size.height / 2,
+            width: 180,
+            height: 180,
             child: Center(
               child: Container(
                 child: Text(
@@ -496,10 +496,10 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           ),
         if (!widget.isUserEdit)
           Container(
-              width: size.width / 13,
-              height: size.height / 13,
+              width: 35,
+              height: 35,
               margin: EdgeInsets.only(
-                  left: size.width / 2.5, top: size.height / 6.5),
+                  left: size.width / 2.5, top: size.height / 5.7),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
@@ -524,10 +524,10 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
               )),
         if (!widget.isUserEdit)
           Container(
-              width: size.width / 13,
-              height: size.height / 13,
+              width: 35,
+              height: 35,
               margin:
-                  EdgeInsets.only(left: size.width / 2, top: size.height / 6.5),
+                  EdgeInsets.only(left: size.width / 2, top: size.height / 5.7),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
