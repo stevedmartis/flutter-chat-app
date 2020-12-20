@@ -210,7 +210,8 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
               stretch: true,
               flexibleSpace: FlexibleSpaceBar(
                 collapseMode: CollapseMode.parallax,
-                title: Stack(children: [
+                title:
+                    Stack(alignment: AlignmentDirectional.centerEnd, children: [
                   FutureBuilder<ui.Image>(
                     future: _image(widget.profile.getHeaderImg()),
                     builder: (BuildContext context,
@@ -474,7 +475,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           Container(
             padding: EdgeInsets.all(30),
             margin:
-                EdgeInsets.only(left: size.width / 3, top: size.height / 4.5),
+                EdgeInsets.only(left: size.width / 3.0, top: size.height / 4.5),
             width: size.width / 2,
             height: size.height / 2,
             child: Center(
@@ -494,17 +495,17 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           ),
         if (!widget.isUserEdit)
           Container(
-              width: size.width / 12,
-              height: size.height / 12,
-              margin: EdgeInsets.only(
-                  left: size.width / 2.5, top: size.height / 6.5),
+              width: size.height / 12,
+              height: size.width / 12,
+              margin:
+                  EdgeInsets.only(left: size.height / 6, top: size.width / 2.6),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
                     child: (IconButton(
                       icon: Center(
                         child: Icon(
-                          (!widget.isUserAuth) ? Icons.share : Icons.sms_failed,
+                          (!widget.isUserAuth) ? Icons.share : Icons.settings,
                           color: widget.currentTheme.accentColor,
                           size: 17,
                         ),
