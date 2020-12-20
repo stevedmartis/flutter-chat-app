@@ -497,14 +497,14 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
               width: size.width / 12,
               height: size.height / 12,
               margin: EdgeInsets.only(
-                  left: size.width / 2.5, top: size.height / 6.0),
+                  left: size.width / 2.5, top: size.height / 6.5),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
                     child: (IconButton(
                       icon: Center(
                         child: Icon(
-                          (!widget.isUserAuth) ? Icons.share : Icons.settings,
+                          (!widget.isUserAuth) ? Icons.share : Icons.sms_failed,
                           color: widget.currentTheme.accentColor,
                           size: 17,
                         ),
@@ -525,7 +525,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
               width: size.width / 12,
               height: size.height / 12,
               margin:
-                  EdgeInsets.only(left: size.width / 2, top: size.height / 6.0),
+                  EdgeInsets.only(left: size.width / 2, top: size.height / 6.5),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
