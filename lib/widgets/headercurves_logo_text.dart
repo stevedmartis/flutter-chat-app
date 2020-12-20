@@ -236,23 +236,25 @@ class HeaderMultiCurvesText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _size = MediaQuery.of(context).size;
+
     return Stack(
       children: [
         Container(
             width: double.infinity,
-            height: 270,
+            height: _size.height / 3.5,
             child: CustomPaint(
                 painter:
                     _HeaderTwoCurvesPainter(color: this.color, opacity: 0.80))),
         Container(
             width: double.infinity,
-            height: 220,
+            height: _size.height / 4,
             child: CustomPaint(
                 painter:
                     _HeaderTwoCurvesPainter(color: this.color, opacity: 1.0))),
         Container(
             width: double.infinity,
-            height: 290,
+            height: _size.height / 3.3,
             child: CustomPaint(
                 painter:
                     _HeaderTwoCurvesPainter(color: this.color, opacity: 0.1))),
