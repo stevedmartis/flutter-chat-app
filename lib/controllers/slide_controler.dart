@@ -46,9 +46,11 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
           ),
         ),
         (!_isLastPage)
-            ? Positioned(
-                left: _size.width / 2.5,
-                top: _size.height * 0.7,
+            ? Container(
+                margin: EdgeInsets.only(
+                  left: _size.width / 2.5,
+                  top: _size.height * 0.8,
+                ),
                 child: Row(
                   children: _buildPageIndicator(),
                 ),
@@ -76,7 +78,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
             : */
             : Container(
                 padding: EdgeInsets.only(
-                    top: _size.height * 0.7, left: 60, right: 60),
+                    top: _size.height * 0.8, left: 60, right: 60),
                 child: ButtonGold(
                     color: currentTheme.accentColor,
                     text: 'Start now!',
