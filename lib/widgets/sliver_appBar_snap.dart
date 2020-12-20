@@ -157,7 +157,7 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
             SliverAppBar(
               leading: Container(
                   width: size.width / 2,
-                  height: size.width / 2,
+                  height: size.height / 2,
                   margin: EdgeInsets.only(left: 20),
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -173,7 +173,7 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
               actions: [
                 Container(
                     width: size.width / 11,
-                    height: size.width / 11,
+                    height: size.height / 2,
                     margin: EdgeInsets.only(right: 20),
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -452,7 +452,6 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
         ),
         if (!widget.isUserEdit)
           Container(
-            padding: EdgeInsets.all(30),
             margin:
                 EdgeInsets.only(left: size.width / 3.5, top: size.height / 5.5),
             width: size.width / 2,
@@ -476,7 +475,8 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
         if (!widget.isUserEdit)
           Container(
             padding: EdgeInsets.all(30),
-            margin: EdgeInsets.only(left: 120, top: size.width / 2.1),
+            margin:
+                EdgeInsets.only(left: size.width / 3, top: size.height / 4.5),
             width: size.width / 2,
             height: size.height / 2,
             child: Center(
