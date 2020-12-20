@@ -156,8 +156,8 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
           slivers: [
             SliverAppBar(
               leading: Container(
-                  width: 40,
-                  height: 40,
+                  width: size.width / 2,
+                  height: size.width / 2,
                   margin: EdgeInsets.only(left: 20),
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -172,14 +172,15 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
               backgroundColor: currentTheme.scaffoldBackgroundColor,
               actions: [
                 Container(
-                    width: 40,
-                    height: 40,
+                    width: size.width / 11,
+                    height: size.width / 11,
                     margin: EdgeInsets.only(right: 20),
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       child: CircleAvatar(
                           child: IconButton(
                             icon: FaIcon(FontAwesomeIcons.slidersH,
+                                size: size.width / 22,
                                 color: currentTheme.accentColor),
                             onPressed: () => Navigator.of(context).pop(),
                           ),

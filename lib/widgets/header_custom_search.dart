@@ -21,6 +21,8 @@ class CustomAppBarHeader extends StatelessWidget {
     final authService = Provider.of<AuthService>(context);
     final profile = authService.profile;
 
+    final size = MediaQuery.of(context).size;
+
     return Container(
       child: Row(
         children: [
@@ -52,7 +54,7 @@ class CustomAppBarHeader extends StatelessWidget {
           Center(
               child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 30),
-                  width: 250,
+                  width: size.width / 1.8,
                   height: 40,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
