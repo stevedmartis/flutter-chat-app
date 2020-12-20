@@ -434,7 +434,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           child: Container(
             width: 70,
             height: 70,
-            margin: EdgeInsets.only(left: 50, top: 200),
+            margin: EdgeInsets.only(left: 50, top: size.height / 5.0),
             child: Hero(
               tag: widget.profile.user.uid,
               child: Material(
