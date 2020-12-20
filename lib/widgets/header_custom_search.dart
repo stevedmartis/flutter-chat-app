@@ -21,7 +21,6 @@ class CustomAppBarHeader extends StatelessWidget {
     final authService = Provider.of<AuthService>(context);
     final profile = authService.profile;
 
-    print(profile);
     return Container(
       child: Row(
         children: [

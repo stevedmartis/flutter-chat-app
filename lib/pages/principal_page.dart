@@ -63,7 +63,6 @@ class _CollapsingListState extends State<CollapsingList>
     //this.users = await usuarioService.getUsers();
 
     this.profiles = await usuarioService.getProfilesLastUsers();
-    print('${this.profiles} ');
 
     setState(() {});
 

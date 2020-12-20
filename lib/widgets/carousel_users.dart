@@ -23,7 +23,6 @@ class CarouselUsersSliderCustom extends StatefulWidget {
 class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
   @override
   Widget build(BuildContext context) {
-    print(widget.profiles);
     return CarouselSlider.builder(
       options: CarouselOptions(
         height: 100,
@@ -43,7 +42,6 @@ class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
         onTap: () {
           final chatService = Provider.of<ChatService>(context, listen: false);
           chatService.userFor = widget.profiles[index];
-          print(widget.profiles);
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -71,7 +69,6 @@ class Preview extends StatefulWidget {
 class _PreviewState extends State<Preview> {
   @override
   Widget build(BuildContext context) {
-    print(widget.profile);
     return Stack(
       children: [
         Container(

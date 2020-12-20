@@ -30,29 +30,30 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
 
     return Stack(
       children: [
-        Expanded(
-          child: Container(
-            width: double.infinity,
-            height: _size.height,
-            alignment: Alignment.center,
-            child: PageView(
-              physics: ClampingScrollPhysics(),
-              controller: _pageController,
-              onPageChanged: (int page) {
-                setState(() {
-                  this._currentPage = page;
-                });
-              },
-              children: widget.pages,
-            ),
+        Container(
+          width: double.infinity,
+          height: _size.height,
+          alignment: Alignment.center,
+          child: PageView(
+            physics: ClampingScrollPhysics(),
+            controller: _pageController,
+            onPageChanged: (int page) {
+              setState(() {
+                this._currentPage = page;
+              });
+            },
+            children: widget.pages,
           ),
         ),
         (!_isLastPage)
-            ? Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _buildPageIndicator(),
+            ? Positioned(
+                left: _size.width / 2.5,
+                top: _size.height * 0.7,
+                child: Row(
+                  children: _buildPageIndicator(),
+                ),
               )
+
             /* : StyledButton(
                 label: "Ingresar",
                 borderColor: Colors.transparent,
@@ -74,7 +75,8 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
               )
             : */
             : Container(
-                padding: EdgeInsets.only(left: 60, right: 60),
+                padding: EdgeInsets.only(
+                    top: _size.height * 0.7, left: 60, right: 60),
                 child: ButtonGold(
                     color: currentTheme.accentColor,
                     text: 'Start now!',
@@ -83,7 +85,11 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
         SizedBox(
           height: (_isLastPage) ? 115 : 150,
         ),
-        StyledLogoCustom(),
+        Center(
+          child: Container(
+              padding: EdgeInsets.only(top: _size.height * 0.9),
+              child: StyledLogoCustom()),
+        ),
       ],
     );
   }

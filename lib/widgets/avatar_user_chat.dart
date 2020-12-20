@@ -28,10 +28,7 @@ class ImageUserChat extends StatefulWidget {
 class _ImageUserChatState extends State<ImageUserChat> {
   @override
   Widget build(BuildContext context) {
-    print('${widget.profile}');
-
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    print('${widget.profile}');
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(100.0)),
       child: (widget.profile.imageAvatar != "")

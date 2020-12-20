@@ -78,12 +78,10 @@ class AuthService with ChangeNotifier {
 
       this.profile = loginResponse.profile;
 
-      print('${profile}');
       //this.profile = loginResponse.profile;
       await this._guardarToken(loginResponse.token);
 
       final token = await this._storage.read(key: 'token');
-      print(token);
 
       //await getProfileByUserId(this.profile.user.uid);
 
@@ -105,7 +103,6 @@ class AuthService with ChangeNotifier {
       'email': email,
       'password': password
     };
-    print('${data}');
 
     final token = await this._storage.read(key: 'token');
 
@@ -117,8 +114,6 @@ class AuthService with ChangeNotifier {
       final loginResponse = loginResponseFromJson(resp.body);
 
       this.profile = loginResponse.profile;
-
-      print('${profile}');
 
       return true;
     } else {
@@ -168,8 +163,6 @@ class AuthService with ChangeNotifier {
 
       return true;
     } else {
-      print('nooo ');
-
       this.logout();
       return false;
     }
