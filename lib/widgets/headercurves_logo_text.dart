@@ -204,7 +204,7 @@ class _HeaderTwoCurvesPainter extends CustomPainter {
     ).createShader(rect);
     // properties
     pencil.color = this.color.withOpacity(opacity);
-    pencil.style = PaintingStyle.stroke; // .stroke = bordes, .fill = relleno
+    pencil.style = PaintingStyle.fill; // .stroke = bordes, .fill = relleno
     pencil.strokeWidth = 20;
 
     final path = new Path();
