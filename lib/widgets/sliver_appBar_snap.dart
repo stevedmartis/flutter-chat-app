@@ -155,22 +155,35 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
           slivers: [
             SliverAppBar(
               leading: Container(
-                margin: EdgeInsets.only(left: 20),
-                child: IconButton(
-                  icon: Icon(Icons.arrow_back_ios, color: foregroundColor),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ),
+                  width: 40,
+                  height: 40,
+                  margin: EdgeInsets.only(left: 20),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    child: CircleAvatar(
+                        child: IconButton(
+                          icon: Icon(Icons.arrow_back_ios,
+                              color: currentTheme.accentColor),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                        backgroundColor: Colors.black.withOpacity(0.70)),
+                  )),
               backgroundColor: currentTheme.scaffoldBackgroundColor,
               actions: [
                 Container(
-                  margin: EdgeInsets.only(left: 20),
-                  child: IconButton(
-                    icon: FaIcon(FontAwesomeIcons.slidersH,
-                        color: foregroundColor),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ),
+                    width: 40,
+                    height: 40,
+                    margin: EdgeInsets.only(right: 20),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      child: CircleAvatar(
+                          child: IconButton(
+                            icon: FaIcon(FontAwesomeIcons.slidersH,
+                                color: currentTheme.accentColor),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                          backgroundColor: Colors.black.withOpacity(0.70)),
+                    )),
               ],
               /*  title: Center(
                 child: Container(
@@ -228,7 +241,7 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
               SliverFillRemaining(
                   hasScrollBody: false,
                   child: FormEditUserprofile(widget.profile.user)),
-            if (!isEmpty)
+            if (!widget.isUserEdit)
               SliverFixedExtentList(
                 itemExtent: 150.0,
                 delegate: SliverChildBuilderDelegate(
@@ -236,8 +249,8 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
                     return _buildCard(index);
                   },
                 ),
-              )
-            else
+              ),
+            if (isEmpty)
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Center(
@@ -339,7 +352,7 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
                       //globalKey.currentState.openEndDrawer();
                     },
                   )),
-                  backgroundColor: Colors.black),
+                  backgroundColor: Colors.black.withOpacity(0.70)),
             ))
         : Container();
   }
@@ -394,6 +407,8 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
   Widget build(BuildContext context) {
     print('${widget.profile}');
 
+    final size = MediaQuery.of(context).size;
+
     return Stack(
       children: [
         GestureDetector(
@@ -416,7 +431,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           child: Container(
             width: 70,
             height: 70,
-            margin: EdgeInsets.only(left: 50, top: 170),
+            margin: EdgeInsets.only(left: 50, top: size.width / 2.5),
             child: Hero(
               tag: widget.profile.user.uid,
               child: Material(
@@ -434,7 +449,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
         if (!widget.isUserEdit)
           Container(
             padding: EdgeInsets.all(30),
-            margin: EdgeInsets.only(left: 120, top: 165),
+            margin: EdgeInsets.only(left: 120, top: size.width / 2.5),
             width: 200,
             height: 150,
             child: Center(
@@ -456,7 +471,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
         if (!widget.isUserEdit)
           Container(
             padding: EdgeInsets.all(30),
-            margin: EdgeInsets.only(left: 120, top: 195),
+            margin: EdgeInsets.only(left: 120, top: size.width / 2.1),
             width: 200,
             height: 150,
             child: Center(
@@ -478,7 +493,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           Container(
               width: 32,
               height: 32,
-              margin: EdgeInsets.only(left: 170, top: 160),
+              margin: EdgeInsets.only(left: 170, top: size.width / 2.6),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
@@ -505,7 +520,7 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           Container(
               width: 32,
               height: 32,
-              margin: EdgeInsets.only(left: 210, top: 160),
+              margin: EdgeInsets.only(left: 210, top: size.width / 2.6),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
