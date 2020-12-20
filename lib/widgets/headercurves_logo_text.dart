@@ -12,11 +12,12 @@ class HeaderMultiCurvesImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Stack(
       children: [
         Container(
             width: double.infinity,
-            height: 250,
+            height: size.height / 3.7,
             child: CustomPaint(
                 painter: _HeaderTwoCurvesPainterImage(
                     color: this.color, opacity: 1.0, image: this.image))),
@@ -203,7 +204,7 @@ class _HeaderTwoCurvesPainter extends CustomPainter {
     ).createShader(rect);
     // properties
     pencil.color = this.color.withOpacity(opacity);
-    pencil.style = PaintingStyle.fill; // .stroke = bordes, .fill = relleno
+    pencil.style = PaintingStyle.stroke; // .stroke = bordes, .fill = relleno
     pencil.strokeWidth = 20;
 
     final path = new Path();
