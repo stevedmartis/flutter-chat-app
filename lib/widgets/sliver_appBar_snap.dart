@@ -123,6 +123,7 @@ class _SliverAppBarSnapState extends State<SliverAppBarSnap> {
     var backgroundColor = Colors.white; // this color could be anything
     var foregroundColor =
         backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+    final size = MediaQuery.of(context).size;
 
     final username = widget.profile.user.username.toLowerCase();
     print(widget.profile);
@@ -410,6 +411,8 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
     final size = MediaQuery.of(context).size;
 
     return Stack(
+      alignment: AlignmentDirectional.topStart,
+      fit: StackFit.loose,
       children: [
         GestureDetector(
           onTap: () => {
@@ -493,7 +496,8 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           Container(
               width: 32,
               height: 32,
-              margin: EdgeInsets.only(left: 170, top: size.width / 2.6),
+              margin: EdgeInsets.only(
+                  left: size.width / 2.5, top: size.width / 2.6),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(
@@ -520,7 +524,8 @@ class _HeaderUserInfoState extends State<HeaderUserInfo> {
           Container(
               width: 32,
               height: 32,
-              margin: EdgeInsets.only(left: 210, top: size.width / 2.6),
+              margin:
+                  EdgeInsets.only(left: size.width / 2, top: size.width / 2.6),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: CircleAvatar(

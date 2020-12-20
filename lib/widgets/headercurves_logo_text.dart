@@ -17,7 +17,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
       children: [
         Container(
             width: double.infinity,
-            height: size.height / 3.6,
+            height: size.height / 3.5,
             child: CustomPaint(
                 painter: _HeaderTwoCurvesPainterImage(
                     color: this.color, opacity: 1.0, image: this.image))),
