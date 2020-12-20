@@ -19,15 +19,17 @@ import 'package:chat/widgets/button_gold.dart';
 class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _size = MediaQuery.of(context).size;
+
     changeStatusDark();
     return Scaffold(
         backgroundColor: Color(0xff0F0F0F),
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.95,
+            height: _size.height,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 HeaderMultiCurvesText(
                     title: 'Sign Up!',

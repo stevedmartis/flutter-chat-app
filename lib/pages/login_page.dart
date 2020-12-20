@@ -27,15 +27,17 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final _size = MediaQuery.of(context).size;
+
     changeStatusDark();
     return Scaffold(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.95,
+            height: _size.height,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 HeaderMultiCurvesText(
                     title: 'Log In!',
