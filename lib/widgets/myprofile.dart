@@ -38,8 +38,6 @@ class MyProfile extends StatefulWidget {
   _MyProfileState createState() => new _MyProfileState();
 }
 
-const kExpandedHeight = 300.0;
-
 class NetworkImageDecoder {
   final NetworkImage image;
   const NetworkImageDecoder({this.image});
@@ -68,9 +66,9 @@ class _MyProfileState extends State<MyProfile> {
   AuthService authService;
   final usuarioService = new UsuariosService();
 
-  double get maxHeight => 250 + MediaQuery.of(context).padding.top;
+  double get maxHeight => 250.0 + MediaQuery.of(context).padding.top;
 
-  double get minHeight => 30 + MediaQuery.of(context).padding.top;
+  double get minHeight => 30.0 + MediaQuery.of(context).padding.bottom;
 
   Future<ui.Image> _image(String url) async =>
       await NetworkImageDecoder(image: NetworkImage(url)).uiImage;

@@ -105,20 +105,22 @@ class _PreviewState extends State<Preview> {
                           SizedBox(
                             width: 5,
                           ),
-                          Container(
-                            constraints: BoxConstraints(maxWidth: 80),
-                            child: Text(
-                              (widget.profile.user.username.length >= 10)
-                                  ? widget.profile.user.username
-                                          .substring(0, 7) +
-                                      '...'
-                                  : widget.profile.user.username,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 5,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: Container(
+                              constraints: BoxConstraints(maxWidth: 80),
+                              child: Text(
+                                (widget.profile.user.username.length >= 10)
+                                    ? widget.profile.user.username
+                                            .substring(0, 7) +
+                                        '...'
+                                    : widget.profile.user.username,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 5,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
