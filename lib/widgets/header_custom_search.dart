@@ -34,7 +34,7 @@ class CustomAppBarHeader extends StatelessWidget {
               },
               child: Container(
                 padding: EdgeInsets.all(5.0),
-                margin: EdgeInsets.only(left: 20),
+                margin: EdgeInsets.only(left: 15),
                 child: Hero(
                   tag: profile.user.uid,
                   child: Material(

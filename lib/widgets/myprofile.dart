@@ -181,6 +181,7 @@ class _MyProfileState extends State<MyProfile> {
                                 image: snapshot.data,
                               ),
                   ),
+                  titlePadding: EdgeInsets.all(0),
                   title: GestureDetector(
                     onTap: () => {
                       if (!widget.isUserAuth)
@@ -202,7 +203,7 @@ class _MyProfileState extends State<MyProfile> {
                       duration: Duration(milliseconds: 200),
                       width: (_showTitle) ? 50 : 70,
                       height: (_showTitle) ? 50 : 70,
-                      margin: EdgeInsets.only(right: size.width / 3),
+                      margin: EdgeInsets.only(left: size.width / 7.0),
                       child: Hero(
                         tag: widget.profile.user.uid,
                         child: Material(
@@ -235,12 +236,12 @@ class _MyProfileState extends State<MyProfile> {
                     },
                   ),
                 ),
-              SliverList(
+              /* SliverList(
                 delegate:
                     SliverChildListDelegate(List<Text>.generate(100, (int i) {
                   return Text("List item $i");
                 })),
-              ),
+              ), */
             ]),
       ),
     );

@@ -35,7 +35,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
       children: [
         Container(
             width: double.infinity,
-            height: size.height / 3.3,
+            height: size.height / 3.5,
             child: (isEmpty)
                 ? HeaderMultiCurves(
                     color: currentTheme.accentColor,
@@ -55,7 +55,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: TextStyle(
-                    fontSize: (name.length >= 14) ? 18 : 20,
+                    fontSize: (name.length >= 14) ? 22 : 27,
                     color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -64,10 +64,10 @@ class HeaderMultiCurvesImage extends StatelessWidget {
         ),
         Container(
           //padding: EdgeInsets.all(30),
-          width: size.width / 2.5,
+          width: size.width / 2.6,
           height: 100,
           margin:
-              EdgeInsets.only(left: size.width / 2.0, top: size.height / 4.0),
+              EdgeInsets.only(left: size.width / 2.0, top: size.height / 3.8),
           child: Center(
             child: Container(
               child: Text(
@@ -77,7 +77,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 5,
                 style: TextStyle(
-                    fontSize: 15, color: Colors.white.withOpacity(0.60)),
+                    fontSize: 20, color: Colors.white.withOpacity(0.60)),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -156,7 +156,7 @@ class HeaderMultiCurves extends StatelessWidget {
       children: [
         Container(
             width: double.infinity,
-            height: size.height / 3.3,
+            height: size.height / 3.5,
             child: CustomPaint(
                 painter:
                     _HeaderTwoCurvesPainter(color: this.color, opacity: 1.0))),
