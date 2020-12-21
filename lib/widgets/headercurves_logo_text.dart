@@ -47,7 +47,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
           width: size.width / 2.5,
           height: 100,
           margin:
-              EdgeInsets.only(left: size.width / 2.0, top: size.height / 4.5),
+              EdgeInsets.only(left: size.width / 2.0, top: size.height / 4.8),
           child: Center(
             child: Container(
               child: Text(
@@ -55,7 +55,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: TextStyle(
-                    fontSize: (name.length >= 14) ? 22 : 27,
+                    fontSize: (name.length >= 14) ? 20 : 24,
                     color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -66,8 +66,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
           //padding: EdgeInsets.all(30),
           width: size.width / 2.6,
           height: 100,
-          margin:
-              EdgeInsets.only(left: size.width / 2.0, top: size.height / 3.8),
+          margin: EdgeInsets.only(left: size.width / 2.0, top: size.height / 4),
           child: Center(
             child: Container(
               child: Text(
@@ -77,7 +76,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 5,
                 style: TextStyle(
-                    fontSize: 20, color: Colors.white.withOpacity(0.60)),
+                    fontSize: 18, color: Colors.white.withOpacity(0.60)),
                 textAlign: TextAlign.center,
               ),
             ),

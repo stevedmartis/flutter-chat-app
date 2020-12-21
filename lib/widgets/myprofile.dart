@@ -68,7 +68,7 @@ class _MyProfileState extends State<MyProfile> {
 
   double get maxHeight => MediaQuery.of(context).size.height / 3.5;
 
-  double get minHeight => 30.0 + MediaQuery.of(context).padding.bottom / 2;
+  double get minHeight => MediaQuery.of(context).padding.bottom / 3;
 
   Future<ui.Image> _image(String url) async =>
       await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
@@ -156,7 +156,7 @@ class _MyProfileState extends State<MyProfile> {
                 pinned: true,
                 // title : (between leading and actions) ,
                 expandedHeight: maxHeight,
-                collapsedHeight: 56.0001,
+                // collapsedHeight: 56.0001,
                 flexibleSpace: FlexibleSpaceBar(
                   background: FutureBuilder<ui.Image>(
                     future: _image(widget.profile.getHeaderImg()),
