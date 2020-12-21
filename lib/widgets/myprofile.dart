@@ -66,9 +66,9 @@ class _MyProfileState extends State<MyProfile> {
   AuthService authService;
   final usuarioService = new UsuariosService();
 
-  double get maxHeight => 250.0 + MediaQuery.of(context).padding.top;
+  double get maxHeight => 250.0 + MediaQuery.of(context).padding.top / 2;
 
-  double get minHeight => 30.0 + MediaQuery.of(context).padding.bottom;
+  double get minHeight => 30.0 + MediaQuery.of(context).padding.bottom / 2;
 
   Future<ui.Image> _image(String url) async =>
       await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
@@ -156,7 +156,7 @@ class _MyProfileState extends State<MyProfile> {
                 pinned: true,
                 // title : (between leading and actions) ,
                 expandedHeight: maxHeight,
-                collapsedHeight: minHeight,
+                collapsedHeight: 56.0001,
                 flexibleSpace: FlexibleSpaceBar(
                   background: FutureBuilder<ui.Image>(
                     future: _image(widget.profile.getHeaderImg()),
