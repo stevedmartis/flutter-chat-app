@@ -80,12 +80,11 @@ class CustomAppBarHeader extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (BuildContext context) => TabsCustom())),
             child: Container(
-                padding: EdgeInsets.all(5.0),
                 child: FaIcon(
-                  FontAwesomeIcons.slidersH,
-                  size: 25,
-                  color: currentTheme.accentColor,
-                )),
+              FontAwesomeIcons.slidersH,
+              size: 25,
+              color: currentTheme.accentColor,
+            )),
           )
         ],
       ),
