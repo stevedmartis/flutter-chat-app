@@ -67,7 +67,7 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
                 child: GestureDetector(
                   onTap: () => {_selectImage()},
                   child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
                     child: Container(
                       alignment: Alignment.center,
                       color: currentTheme.accentColor,
