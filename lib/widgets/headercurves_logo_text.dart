@@ -44,10 +44,8 @@ class HeaderMultiCurvesImage extends StatelessWidget {
                     painter: _HeaderTwoCurvesPainterImage(
                         color: this.color, opacity: 1.0, image: this.image))),
         Container(
-          width: size.width / 2.5,
-          height: 100,
           margin:
-              EdgeInsets.only(left: size.width / 2.0, top: size.height / 4.8),
+              EdgeInsets.only(left: size.width / 2.5, top: size.height / 5.0),
           child: Center(
             child: Container(
               child: Text(
@@ -64,9 +62,9 @@ class HeaderMultiCurvesImage extends StatelessWidget {
         ),
         Container(
           //padding: EdgeInsets.all(30),
-          width: size.width / 2.6,
-          height: 100,
-          margin: EdgeInsets.only(left: size.width / 2.0, top: size.height / 4),
+
+          margin:
+              EdgeInsets.only(left: size.width / 2.5, top: size.height / 3.7),
           child: Center(
             child: Container(
               child: Text(

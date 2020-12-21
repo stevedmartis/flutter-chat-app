@@ -268,10 +268,12 @@ class _MyProfileState extends State<MyProfile> {
           future: this.usuarioService.getUsers(),
           builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
             if (snapshot.hasData) {
-              return Stack(fit: StackFit.expand, children: [
-                TabsScrollCustom(users: users),
-                _buildEditCircle()
-              ]);
+              return Container(
+                child: Stack(fit: StackFit.expand, children: [
+                  TabsScrollCustom(users: users),
+                  _buildEditCircle()
+                ]),
+              );
               // image is ready
             } else {
               return Container(
