@@ -61,7 +61,6 @@ class AuthService with ChangeNotifier {
     // this.authenticated = true;
 
     final data = {'username': username, 'email': email, 'password': password};
-    print('${data}');
 
     final resp = await http.post('${Environment.apiUrl}/login/new',
         body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
@@ -75,7 +74,7 @@ class AuthService with ChangeNotifier {
       //this.profile = loginResponse.profile;
       await this._guardarToken(loginResponse.token);
 
-      final token = await this._storage.read(key: 'token');
+      //   final token = await this._storage.read(key: 'token');
 
       //await getProfileByUserId(this.profile.user.uid);
 
@@ -143,8 +142,7 @@ class AuthService with ChangeNotifier {
 
   Future<bool> isLoggedIn() async {
     final token = await this._storage.read(key: 'token');
-    this.logout();
-    print(Environment.apiUrl);
+    //this.logout();
     final resp = await http.get('${Environment.apiUrl}/login/renew',
         headers: {'Content-Type': 'application/json', 'x-token': token});
     if (resp.statusCode == 200) {

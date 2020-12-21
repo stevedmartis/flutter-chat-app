@@ -69,7 +69,6 @@ class _Form extends StatefulWidget {
 class __FormState extends State<_Form> {
   @override
   void dispose() {
-    // TODO: implement dispose
     final bloc = CustomProvider.registerBlocIn(context);
     bloc.dispose();
 
@@ -214,7 +213,7 @@ Widget _createUsername(RegisterBloc bloc) {
   );
 }
 
-Widget _createName(RegisterBloc bloc) {
+/* Widget _createName(RegisterBloc bloc) {
   return StreamBuilder(
     stream: bloc.nameStream,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -239,8 +238,8 @@ Widget _createName(RegisterBloc bloc) {
     },
   );
 }
-
-Widget _createLastName(RegisterBloc bloc) {
+ */
+/* Widget _createLastName(RegisterBloc bloc) {
   return StreamBuilder(
     stream: bloc.lastNameStream,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -265,7 +264,7 @@ Widget _createLastName(RegisterBloc bloc) {
     },
   );
 }
-
+ */
 Widget _createPassword(RegisterBloc bloc) {
   return StreamBuilder(
     stream: bloc.passwordStream,

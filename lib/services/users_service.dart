@@ -1,4 +1,3 @@
-import 'package:chat/models/profile.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/profiles_response.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +17,6 @@ class UsuariosService {
       });
 
       final usersResponse = usuariosResponseFromJson(resp.body);
-      print('${usersResponse}');
       return usersResponse.users;
     } catch (e) {
       return [];
@@ -32,8 +30,6 @@ class UsuariosService {
             'Content-Type': 'application/json',
             'x-token': await AuthService.getToken()
           });
-
-      print('${resp}');
 
       final profilesResponse = profilesResponseFromJson(resp.body);
 

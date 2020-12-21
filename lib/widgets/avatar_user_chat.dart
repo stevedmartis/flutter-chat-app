@@ -1,6 +1,4 @@
-import 'package:chat/models/profile.dart';
 import 'package:chat/models/profiles.dart';
-import 'package:chat/models/usuario.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,33 +27,43 @@ class _ImageUserChatState extends State<ImageUserChat> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(100.0)),
-      child: (widget.profile.imageAvatar != "")
-          ? CircleAvatar(
-              minRadius: 20,
-              child: Container(
-                width: widget.width,
-                height: widget.height,
-                child: FadeInImage(
-                    image: NetworkImage(widget.profile.getAvatarImg()),
-                    placeholder: AssetImage('assets/loading2.gif'),
-                    fit: BoxFit.cover),
-              ),
-            )
-          : CircleAvatar(
-              child: Container(
-                width: widget.width,
-                height: widget.height,
-                child: Center(
-                  child: Text(
-                    widget.profile.user.username.substring(0, 2).toUpperCase(),
-                    style: TextStyle(fontSize: widget.fontsize),
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(100)),
+          border: Border.all(
+              width: 3,
+              color: currentTheme.scaffoldBackgroundColor,
+              style: BorderStyle.solid)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(100.0)),
+        child: (widget.profile.imageAvatar != "")
+            ? CircleAvatar(
+                child: Container(
+                  color: Colors.white,
+                  width: widget.width,
+                  height: widget.height,
+                  child: FadeInImage(
+                      image: NetworkImage(widget.profile.getAvatarImg()),
+                      placeholder: AssetImage('assets/loading2.gif'),
+                      fit: BoxFit.cover),
+                ),
+              )
+            : CircleAvatar(
+                child: Container(
+                  width: widget.width,
+                  height: widget.height,
+                  child: Center(
+                    child: Text(
+                      widget.profile.user.username
+                          .substring(0, 2)
+                          .toUpperCase(),
+                      style: TextStyle(fontSize: widget.fontsize),
+                    ),
                   ),
                 ),
+                backgroundColor: currentTheme.accentColor,
               ),
-              backgroundColor: currentTheme.accentColor,
-            ),
+      ),
     );
   }
 }
@@ -87,7 +95,6 @@ class _ImageAvatarExpandedState extends State<ImageAvatarExpanded> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 

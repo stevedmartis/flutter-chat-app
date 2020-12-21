@@ -1,4 +1,3 @@
-import 'package:chat/models/profile.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/avatar_image.dart';

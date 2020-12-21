@@ -16,7 +16,6 @@ import 'package:chat/services/auth_service.dart';
 import 'package:chat/helpers/mostrar_alerta.dart';
 
 import 'package:chat/widgets/labels.dart';
-import 'package:chat/widgets/custom_input.dart';
 
 class LoginPage extends StatefulWidget {
   @override

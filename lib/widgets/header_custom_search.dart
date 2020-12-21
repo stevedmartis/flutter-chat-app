@@ -1,4 +1,3 @@
-import 'package:chat/models/profile.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/tabs.dart';
@@ -41,8 +40,8 @@ class CustomAppBarHeader extends StatelessWidget {
                   child: Material(
                     type: MaterialType.transparency,
                     child: ImageUserChat(
-                      width: 50,
-                      height: 50,
+                      width: 100,
+                      height: 100,
                       profile: profile,
                       fontsize: 18,
                     ),

@@ -4,8 +4,8 @@ import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/myprofile.dart';
 
-import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +24,7 @@ class MyProfilePage extends StatelessWidget {
 
     return Scaffold(
       body: Center(
-        child: SliverAppBarSnap(
+        child: MyProfile(
           profile: profile,
           isUserAuth: true,
           isUserEdit: true,
@@ -106,7 +106,6 @@ class _FormEditUserprofileState extends State<FormEditUserprofile> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     usernameCtrl.dispose();
     nameCtrl.dispose();
     emailCtrl.dispose();
@@ -281,7 +280,7 @@ Widget _createName(ProfileBloc bloc, TextEditingController nameCtrl) {
   );
 }
 
-Widget _createLastName(ProfileBloc bloc, TextEditingController lastNameCtrl) {
+/* Widget _createLastName(ProfileBloc bloc, TextEditingController lastNameCtrl) {
   return StreamBuilder(
     stream: bloc.lastNameStream,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -307,7 +306,7 @@ Widget _createLastName(ProfileBloc bloc, TextEditingController lastNameCtrl) {
     },
   );
 }
-
+ */
 Widget _createPassword(ProfileBloc bloc, TextEditingController passCtrl) {
   return StreamBuilder(
     stream: bloc.passwordStream,

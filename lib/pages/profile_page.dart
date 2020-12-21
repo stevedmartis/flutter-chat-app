@@ -1,5 +1,5 @@
 import 'package:chat/services/auth_service.dart';
-import 'package:chat/widgets/sliver_appBar_snap.dart';
+import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
@@ -22,7 +22,7 @@ class SliverAppBarProfilepPageState extends State<SliverAppBarProfilepPage> {
 
     return Scaffold(
       body: Center(
-        child: SliverAppBarSnap(
+        child: MyProfile(
           profile: profile,
           isUserAuth: true,
         ),

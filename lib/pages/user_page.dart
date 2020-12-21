@@ -1,8 +1,7 @@
-import 'package:chat/models/profile.dart';
 import 'package:chat/models/profiles.dart';
-import 'package:chat/models/usuario.dart';
+
 import 'package:chat/services/auth_service.dart';
-import 'package:chat/widgets/sliver_appBar_snap.dart';
+import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
@@ -25,7 +24,7 @@ class _UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SliverAppBarSnap(
+        child: MyProfile(
           profile: widget.profile,
         ),
       ),

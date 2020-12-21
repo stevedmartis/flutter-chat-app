@@ -1,9 +1,9 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat/models/profiles.dart';
-import 'package:chat/pages/user_page.dart';
 import 'package:chat/services/chat_service.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
+import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,8 +45,10 @@ class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      UserPage(profile: widget.profiles[index])));
+                  builder: (BuildContext context) => MyProfile(
+                        title: '',
+                        profile: widget.profiles[index],
+                      )));
         },
         child: Preview(profile: widget.profiles[index]),
       ),
@@ -98,7 +100,6 @@ class _PreviewState extends State<Preview> {
                     right: 0.0,
                     child: Container(
                         child: Container(
-                      margin: EdgeInsets.all(0.0),
                       child: Row(
                         children: [
                           SizedBox(

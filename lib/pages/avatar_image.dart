@@ -1,6 +1,4 @@
-import 'package:chat/models/profile.dart';
 import 'package:chat/models/profiles.dart';
-import 'package:chat/models/usuario.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
@@ -68,12 +66,15 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
               Expanded(
                 child: GestureDetector(
                   onTap: () => {_selectImage()},
-                  child: Container(
-                    alignment: Alignment.center,
-                    color: currentTheme.accentColor,
-                    child: Text("Cambiar",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                    child: Container(
+                      alignment: Alignment.center,
+                      color: currentTheme.accentColor,
+                      child: Text("Cambiar",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                    ),
                   ),
                 ),
               ),
