@@ -66,9 +66,9 @@ class _MyProfileState extends State<MyProfile> {
   AuthService authService;
   final usuarioService = new UsuariosService();
 
-  double get maxHeight => MediaQuery.of(context).size.height / 3.5;
+  double get maxHeight => 250 + MediaQuery.of(context).padding.top;
 
-  double get minHeight => MediaQuery.of(context).padding.bottom / 3;
+  double get minHeight => MediaQuery.of(context).padding.bottom;
 
   Future<ui.Image> _image(String url) async =>
       await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
@@ -108,7 +108,7 @@ class _MyProfileState extends State<MyProfile> {
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
           _snapAppbar();
-          if (_scrollController.offset >= 200) {}
+          if (_scrollController.offset >= 250) {}
           return false;
         },
         child: CustomScrollView(
