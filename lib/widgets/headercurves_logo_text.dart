@@ -80,56 +80,63 @@ class HeaderMultiCurvesImage extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-            width: 35,
-            height: 35,
-            margin:
-                EdgeInsets.only(left: size.width / 1.7, top: size.height / 5.5),
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              child: CircleAvatar(
-                  child: (IconButton(
-                    icon: Center(
-                      child: Icon((!isUserAuth) ? Icons.share : Icons.settings,
-                          color: currentTheme.accentColor, size: 20),
-                    ),
-                    onPressed: () {
-                      if (!isUserAuth)
-                        return true;
-                      else
-                        Navigator.of(context).push(createRouteMyProfile());
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+                width: 35,
+                height: 35,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  child: CircleAvatar(
+                      child: (IconButton(
+                        icon: Center(
+                          child: Icon(
+                              (!isUserAuth) ? Icons.share : Icons.settings,
+                              color: currentTheme.accentColor,
+                              size: 20),
+                        ),
+                        onPressed: () {
+                          if (!isUserAuth)
+                            return true;
+                          else
+                            Navigator.of(context).push(createRouteMyProfile());
 
-                      //globalKey.currentState.openEndDrawer();
-                    },
+                          //globalKey.currentState.openEndDrawer();
+                        },
+                      )),
+                      backgroundColor: Colors.black.withOpacity(0.70)),
+                )),
+            if (!this.isUserEdit)
+              Container(
+                  width: 35,
+                  height: 35,
+                  margin: EdgeInsets.only(
+                      left: 20, right: 20, top: size.height / 6),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    child: CircleAvatar(
+                        child: (IconButton(
+                          icon: Icon(
+                            (!isUserAuth) ? Icons.favorite : Icons.edit,
+                            color: currentTheme.accentColor,
+                            size: 20,
+                          ),
+                          onPressed: () {
+                            if (!isUserAuth)
+                              return true;
+                            else
+                              Navigator.of(context)
+                                  .push(createRouteMyProfile());
+
+                            //globalKey.currentState.openEndDrawer();
+                          },
+                        )),
+                        backgroundColor: Colors.black.withOpacity(0.70)),
                   )),
-                  backgroundColor: Colors.black.withOpacity(0.70)),
-            )),
-        if (!this.isUserEdit)
-          Container(
-              width: 35,
-              height: 35,
-              margin: EdgeInsets.only(
-                  left: size.width / 1.4, top: size.height / 5.5),
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                child: CircleAvatar(
-                    child: (IconButton(
-                      icon: Icon(
-                        (!isUserAuth) ? Icons.favorite : Icons.edit,
-                        color: currentTheme.accentColor,
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        if (!isUserAuth)
-                          return true;
-                        else
-                          Navigator.of(context).push(createRouteMyProfile());
-
-                        //globalKey.currentState.openEndDrawer();
-                      },
-                    )),
-                    backgroundColor: Colors.black.withOpacity(0.70)),
-              )),
+          ],
+        )
 
         /*      Container(
           padding: EdgeInsets.only(top: 40, left: 275),

@@ -129,6 +129,7 @@ class _MyProfileState extends State<MyProfile> {
                       child: CircleAvatar(
                           child: IconButton(
                             icon: Icon(Icons.arrow_back_ios,
+                                size: size.width / 20,
                                 color: currentTheme.accentColor),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
@@ -292,7 +293,7 @@ class _MyProfileState extends State<MyProfile> {
 
     return (widget.isUserAuth)
         ? Container(
-            margin: EdgeInsets.only(left: 300),
+            margin: EdgeInsets.only(left: 350),
             width: 100,
             height: 100,
             child: ClipRRect(
@@ -313,7 +314,7 @@ class _MyProfileState extends State<MyProfile> {
                       //globalKey.currentState.openEndDrawer();
                     },
                   )),
-                  backgroundColor: Colors.black.withOpacity(0.70)),
+                  backgroundColor: Colors.black.withOpacity(0.30)),
             ))
         : Container();
   }
