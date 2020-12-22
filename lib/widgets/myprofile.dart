@@ -66,7 +66,7 @@ class _MyProfileState extends State<MyProfile> {
   AuthService authService;
   final usuarioService = new UsuariosService();
 
-  double get maxHeight => 250 + MediaQuery.of(context).padding.top;
+  double get maxHeight => 200 + MediaQuery.of(context).padding.top;
 
   double get minHeight => MediaQuery.of(context).padding.bottom;
 

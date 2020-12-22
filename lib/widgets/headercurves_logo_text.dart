@@ -35,7 +35,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
       children: [
         Container(
             width: double.infinity,
-            height: size.height / 3.0,
+            height: size.height / 3.5,
             child: (isEmpty)
                 ? HeaderMultiCurves(
                     color: currentTheme.accentColor,
