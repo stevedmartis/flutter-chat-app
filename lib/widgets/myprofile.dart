@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:chat/models/profiles.dart';
-import 'package:chat/models/usuario.dart';
+import 'package:chat/models/room.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/my_profile.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/services/auth_service.dart';
-import 'package:chat/services/users_service.dart';
+import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
@@ -62,9 +62,10 @@ class _MyProfileState extends State<MyProfile> {
   ScrollController _scrollController;
 
   String name = '';
-  List<User> users = [];
+  // List<Room> rooms = [];
+  Future<List<Room>> getRoomsFuture;
   AuthService authService;
-  final usuarioService = new UsuariosService();
+  final roomService = new RoomService();
 
   double get maxHeight => 200 + MediaQuery.of(context).padding.top;
 
@@ -75,7 +76,7 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   void initState() {
-    this._chargeUsers();
+    this._chargeRoomsUser();
     this.authService = Provider.of<AuthService>(context, listen: false);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     super.initState();
@@ -83,8 +84,10 @@ class _MyProfileState extends State<MyProfile> {
     _scrollController = ScrollController()..addListener(() => setState(() {}));
   }
 
-  _chargeUsers() async {
-    this.users = await usuarioService.getUsers();
+  _chargeRoomsUser() async {
+    await roomService.getRoomsUser();
+
+    print(roomService.rooms);
     // await authService.getProfileByUserId(widget.profile.user.uid);
 
     name = widget.profile.name;
@@ -160,6 +163,7 @@ class _MyProfileState extends State<MyProfile> {
                 // collapsedHeight: 56.0001,
                 flexibleSpace: FlexibleSpaceBar(
                   background: FutureBuilder<ui.Image>(
+                    initialData: null,
                     future: _image(widget.profile.getHeaderImg()),
                     builder: (BuildContext context,
                             AsyncSnapshot<ui.Image> snapshot) =>
@@ -266,12 +270,13 @@ class _MyProfileState extends State<MyProfile> {
         minHeight: 70.0,
         maxHeight: 70.0,
         child: FutureBuilder(
-          future: this.usuarioService.getUsers(),
+          future: this.roomService.getRoomsUser(),
           builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
             if (snapshot.hasData) {
+              final rooms = snapshot.data;
               return Container(
                 child: Stack(fit: StackFit.expand, children: [
-                  TabsScrollCustom(users: users),
+                  TabsScrollCustom(rooms: rooms),
                   _buildEditCircle()
                 ]),
               );
@@ -309,7 +314,8 @@ class _MyProfileState extends State<MyProfile> {
                       if (!widget.isUserAuth)
                         return true;
                       else
-                        Navigator.of(context).push(_createRouteRoomsPage());
+                        Navigator.of(context)
+                            .push(_createRouteRoomsPage(widget.profile));
 
                       //globalKey.currentState.openEndDrawer();
                     },
@@ -392,7 +398,7 @@ class _SABTState extends State<SABT> {
   }
 }
 
-Route _createRouteRoomsPage() {
+Route _createRouteRoomsPage(Profiles profile) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => RoomsListPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {

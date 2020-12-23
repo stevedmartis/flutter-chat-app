@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:chat/models/profile.dart';
 import 'package:chat/models/profiles.dart';
 
 ProfilesResponse profilesResponseFromJson(String str) =>

@@ -11,20 +11,20 @@ Profiles profilesFromJson(String str) => Profiles.fromJson(json.decode(str));
 String profilesToJson(Profiles data) => json.encode(data.toJson());
 
 class Profiles {
-  Profiles(
-      {this.id,
-      this.name,
-      this.lastName,
-      this.createdAt,
-      this.updatedAt,
-      this.imageHeader,
-      this.imageAvatar,
-      this.user});
+  Profiles({
+    this.id,
+    this.name,
+    this.lastName,
+    this.createdAt,
+    this.updatedAt,
+    this.imageHeader,
+    this.imageAvatar,
+    this.user,
+  });
 
   String id;
   String name;
   String lastName;
-  //List<Room> rooms;
   DateTime createdAt;
   DateTime updatedAt;
   String imageHeader;
@@ -52,13 +52,12 @@ class Profiles {
         "dateUpdate": updatedAt,
         "imageAvatar:": imageAvatar,
         "imageHeader": imageHeader,
-        "user": user.toJson()
-        //   "rooms": List<dynamic>.from(rooms.map((x) => x)),
+        "user": user.toJson(),
       };
 
   getAvatarImg() {
     if (imageAvatar == "") {
-      return "";
+      return null;
     } else {
       return imageAvatar;
     }
@@ -66,7 +65,7 @@ class Profiles {
 
   getHeaderImg() {
     if (imageHeader == "") {
-      return "";
+      return null;
     } else {
       return imageHeader;
     }

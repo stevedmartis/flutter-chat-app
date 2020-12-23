@@ -1,3 +1,4 @@
+import 'package:chat/models/room.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:chat/theme/theme.dart';
 
@@ -8,10 +9,10 @@ import '../utils//extension.dart';
 class TabsScrollCustom extends StatefulWidget {
   const TabsScrollCustom({
     Key key,
-    @required this.users,
+    @required this.rooms,
   }) : super(key: key);
 
-  final List<User> users;
+  final List<Room> rooms;
 
   @override
   _TabsScrollCustomState createState() => _TabsScrollCustomState();
@@ -27,24 +28,24 @@ class _TabsScrollCustomState extends State<TabsScrollCustom> {
     return Container(
       color: Colors.black,
       child: DefaultTabController(
-          length: widget.users.length,
+          length: widget.rooms.length,
           child: PreferredSize(
             preferredSize: Size.fromHeight(600.0),
             child: TabBar(
               isScrollable: true,
               unselectedLabelColor: Colors.white.withOpacity(0.3),
               indicatorColor: currentTheme.accentColor,
-              tabs: List<Widget>.generate(widget.users.length, (int index) {
-                final user = widget.users[index];
+              tabs: List<Widget>.generate(widget.rooms.length, (int index) {
+                final room = widget.rooms[index];
 
-                final username = user.username;
-                final usernameCapitalized = username.capitalize();
+                final name = room.name;
+                final nameCapitalized = name.capitalize();
 
                 return new Tab(
                   child: Text(
-                    (usernameCapitalized.length >= 15)
-                        ? usernameCapitalized.substring(0, 15) + '...'
-                        : usernameCapitalized,
+                    (nameCapitalized.length >= 15)
+                        ? nameCapitalized.substring(0, 15) + '...'
+                        : nameCapitalized,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 5,
                     style: TextStyle(

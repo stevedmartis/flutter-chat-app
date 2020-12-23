@@ -193,10 +193,6 @@ class HeaderCurvesText extends StatelessWidget {
               painter:
                   _HeaderTwoCurvesPainter(color: this.color, opacity: 1.0)),
         ),
-        /*   Container(
-          padding: EdgeInsets.only(top: 70, left: 20),
-          child: StyledLogo(),
-        ), */
         Container(
           padding: EdgeInsets.only(top: 150, left: 20),
           child: Text(

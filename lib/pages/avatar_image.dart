@@ -15,7 +15,7 @@ class AvatarImagePage extends StatefulWidget {
 }
 
 class _AvatarImagePageState extends State<AvatarImagePage> {
-  File _image;
+  File image;
   final picker = ImagePicker();
 
   Future getImage() async {
@@ -23,7 +23,7 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
 
     setState(() {
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
+        image = File(pickedFile.path);
       } else {
         print('No image selected.');
       }
@@ -110,7 +110,7 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
 
     setState(() {
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
+        image = File(pickedFile.path);
       } else {
         print('No image selected.');
       }

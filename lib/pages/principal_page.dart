@@ -99,6 +99,7 @@ class _CollapsingListState extends State<CollapsingList>
             [
               FutureBuilder(
                 future: this.usuarioService.getProfilesLastUsers(),
+                initialData: null,
                 builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
                   if (snapshot.hasData) {
                     return Container(

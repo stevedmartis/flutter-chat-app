@@ -4,48 +4,46 @@
 
 import 'dart:convert';
 
-import 'package:chat/models/products.dart';
-
 Room roomFromJson(String str) => Room.fromJson(json.decode(str));
 
 String roomToJson(Room data) => json.encode(data.toJson());
 
 class Room {
-  Room({
-    this.userId,
-    this.name,
-    this.description,
-    this.dateCreate,
-    this.products,
-    this.dateUpdate,
-    this.totalProducts,
-  });
+  Room(
+      {this.id,
+      this.user,
+      this.name,
+      this.description,
+      this.totalItems,
+      this.createdAt,
+      this.updatedAt});
 
-  bool userId;
+  String user;
+  String id;
   String name;
   String description;
-  List<Product> products;
-  String dateCreate;
-  String dateUpdate;
-  int totalProducts;
 
-  factory Room.fromJson(Map<String, dynamic> json) => Room(
-      userId: json["userId"],
+  int totalItems;
+  DateTime createdAt;
+  DateTime updatedAt;
+
+  factory Room.fromJson(Map<String, dynamic> json) => new Room(
+      id: json["id"],
+      user: json["user"],
       name: json["name"],
+      createdAt: DateTime.parse(json["createdAt"]),
+      updatedAt: DateTime.parse(json["updatedAt"]),
       description: json["description"],
-      products: List<Product>.from(json["products"].map((x) => x)),
-      dateCreate: json["dateCreate"],
-      dateUpdate: json["dateUpdate"],
-      totalProducts: json["totalProducts"]);
+      //products: List<Product>.from(json["products"].map((x) => x)),
+      totalItems: json["totalItems"]);
 
   Map<String, dynamic> toJson() => {
-        "userId": userId,
+        "id": id,
+        "user": user,
         "name": name,
         "description": description,
-        "dateCreate": dateCreate,
-        "dateUpdate": dateUpdate,
-        "totalProducts": totalProducts,
-        "products": List<dynamic>.from(products.map((x) => x)),
+        "totalItems": totalItems,
+        //"products": List<dynamic>.from(products.map((x) => x)),
       };
 
 /*   getPosterImg() {

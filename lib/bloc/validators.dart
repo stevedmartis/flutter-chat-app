@@ -22,4 +22,13 @@ class Validators {
       sink.addError('Más de 1 caracteres por favor');
     }
   });
+
+  final validationNameRoom =
+      StreamTransformer<String, String>.fromHandlers(handleData: (name, sink) {
+    if (name.length > 0) {
+      sink.add(name);
+    } else {
+      sink.addError('Ingrese un nombre');
+    }
+  });
 }

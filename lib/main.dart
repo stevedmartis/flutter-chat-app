@@ -1,5 +1,6 @@
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/models/shoes.dart';
+import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ void main() => runApp(MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => SocketService()),
       ChangeNotifierProvider(create: (_) => ChatService()),
       ChangeNotifierProvider(create: (_) => ThemeChanger(3)),
-      ChangeNotifierProvider(create: (_) => ShoesModel())
+      ChangeNotifierProvider(create: (_) => ShoesModel()),
     ], child: MyApp()));
 
 class MyApp extends StatelessWidget {
