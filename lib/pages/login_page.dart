@@ -182,7 +182,7 @@ class __FormState extends State<_Form> {
     return PageRouteBuilder(
         pageBuilder: (BuildContext context, Animation<double> animation,
                 Animation<double> secondaryAnimation) =>
-            UsersPage(),
+            PrincipalPage(),
         transitionDuration: Duration(milliseconds: 1500),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           final curvedAnimation =

@@ -8,15 +8,16 @@ class RoomBloc with Validators {
 
   // Recuperar los datos del Stream
   Stream<String> get nameStream =>
-      _nameController.stream.transform(validationNameRoom);
+      _nameController.stream.transform(validationRequired);
   Stream<String> get descriptionStream =>
-      _descriptionController.stream.transform(validationNameRoom);
+      _descriptionController.stream.transform(validationRequired);
 
   Stream<bool> get formValidStream =>
       Observable.combineLatest2(nameStream, descriptionStream, (e, p) => true);
 
   // Insertar valores al Stream
   Function(String) get changeName => _nameController.sink.add;
+  Function(String) get changeDescription => _descriptionController.sink.add;
 
   // Obtener el último valor ingresado a los streams
 

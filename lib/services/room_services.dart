@@ -5,17 +5,22 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:chat/global/environment.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RoomService with ChangeNotifier {
   List<Room> rooms = [];
 
+  Room roomModel;
+
   final _storage = new FlutterSecureStorage();
 
-  Future<List<Room>> getRoomsUser() async {
+  Future<List<Room>> getRoomsUser(String userId) async {
     final token = await this._storage.read(key: 'token');
 
+    print(userId);
     try {
-      final resp = await http.get('${Environment.apiUrl}/room/rooms/user',
+      final resp = await http.get(
+          '${Environment.apiUrl}/room/rooms/user/$userId',
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       final roomsResponse = roomsResponseFromJson(resp.body);
@@ -28,7 +33,11 @@ class RoomService with ChangeNotifier {
         rooms.add(item);
       });
 
-      return rooms;
+      roomModel.rooms = rooms;
+
+      print('$roomModel.rooms');
+
+      return roomModel.rooms;
     } catch (e) {
       return [];
     }
@@ -54,6 +63,22 @@ class RoomService with ChangeNotifier {
     } else {
       final respBody = jsonDecode(resp.body);
       return respBody['msg'];
+    }
+  }
+
+  Future deleteRoom(String roomId) async {
+    final token = await this._storage.read(key: 'token');
+
+    try {
+      final resp = await http.delete(
+          '${Environment.apiUrl}/room/delete/$roomId',
+          headers: {'Content-Type': 'application/json', 'x-token': token});
+
+      print(resp);
+
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

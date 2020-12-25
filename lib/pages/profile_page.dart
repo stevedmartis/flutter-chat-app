@@ -16,6 +16,11 @@ class SliverAppBarProfilepPage extends StatefulWidget {
 
 class SliverAppBarProfilepPageState extends State<SliverAppBarProfilepPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
     final profile = authService.profile;

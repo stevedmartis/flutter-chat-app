@@ -34,7 +34,7 @@ class LoadingPage extends StatelessWidget {
         transitionDuration: Duration(milliseconds: 1000),
         pageBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secondaryAnimation) {
-          return UsersPage();
+          return PrincipalPage();
         },
         transitionsBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secondaryAnimation, Widget child) {

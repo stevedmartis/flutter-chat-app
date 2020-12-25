@@ -4,11 +4,31 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 Room roomFromJson(String str) => Room.fromJson(json.decode(str));
 
 String roomToJson(Room data) => json.encode(data.toJson());
 
-class Room {
+class Room with ChangeNotifier {
+  bool _isRoute = false;
+
+  bool get isRoute => this._isRoute;
+
+  set isRoute(bool value) {
+    this._isRoute = value;
+    // notifyListeners();
+  }
+
+  List<Room> _rooms = [];
+
+  List<Room> get rooms => this._rooms;
+
+  set rooms(List<Room> rooms) {
+    this._rooms = rooms;
+    notifyListeners();
+  }
+
   Room(
       {this.id,
       this.user,
@@ -16,7 +36,8 @@ class Room {
       this.description,
       this.totalItems,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      isRoute});
 
   String user;
   String id;
@@ -53,4 +74,5 @@ class Room {
       return avatar;
     }
   } */
+
 }

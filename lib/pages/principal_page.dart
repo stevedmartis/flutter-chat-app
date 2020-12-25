@@ -5,20 +5,20 @@ import 'package:chat/models/profiles.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/header_custom_search.dart';
+import 'package:chat/widgets/sliver_appBar_snap.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/users_service.dart';
-import 'dart:math' as math;
 
-class UsersPage extends StatefulWidget {
+class PrincipalPage extends StatefulWidget {
   @override
-  _UsersPageState createState() => _UsersPageState();
+  _PrincipalPageState createState() => _PrincipalPageState();
 }
 
-class _UsersPageState extends State<UsersPage> {
+class _PrincipalPageState extends State<PrincipalPage> {
   @override
   Widget build(BuildContext context) {
     // final authService = Provider.of<AuthService>(context);
@@ -288,34 +288,6 @@ class SliverCustomHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(covariant SliverCustomHeaderDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
-  }
-}
-
-class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  SliverAppBarDelegate({
-    @required this.minHeight,
-    @required this.maxHeight,
-    @required this.child,
-  });
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
-  @override
-  double get minExtent => minHeight;
-  @override
-  double get maxExtent => math.max(maxHeight, minHeight);
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new SizedBox.expand(child: child);
-  }
-
-  @override
-  bool shouldRebuild(SliverAppBarDelegate oldDelegate) {
     return maxHeight != oldDelegate.maxHeight ||
         minHeight != oldDelegate.minHeight ||
         child != oldDelegate.child;

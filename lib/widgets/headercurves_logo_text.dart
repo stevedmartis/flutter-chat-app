@@ -415,5 +415,6 @@ Route createRouteMyProfile() {
         child: child,
       );
     },
+    transitionDuration: Duration(milliseconds: 500),
   );
 }

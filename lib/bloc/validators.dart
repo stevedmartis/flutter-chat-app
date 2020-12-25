@@ -23,10 +23,10 @@ class Validators {
     }
   });
 
-  final validationNameRoom =
-      StreamTransformer<String, String>.fromHandlers(handleData: (name, sink) {
-    if (name.length > 0) {
-      sink.add(name);
+  final validationRequired =
+      StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+    if (text.length > 0) {
+      sink.add(text);
     } else {
       sink.addError('Ingrese un nombre');
     }

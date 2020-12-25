@@ -34,7 +34,7 @@ class ThemeChanger with ChangeNotifier {
         _currentTheme = ThemeData.dark().copyWith(
           accentColor: Color(0xffD9B310),
           primaryColor: Color(0xffD9B310),
-          scaffoldBackgroundColor: Color(0xff101010),
+          scaffoldBackgroundColor: Color(0xff1D1D1D),
           textTheme: TextTheme(bodyText1: TextStyle(color: Colors.white)),
         );
         break;
@@ -72,7 +72,7 @@ class ThemeChanger with ChangeNotifier {
         accentColor: Color(0xffD9B310),
         primaryColor: Color(0xffD9B310),
         primaryColorLight: Colors.white,
-        scaffoldBackgroundColor: Color(0xff101010),
+        scaffoldBackgroundColor: Color(0xff1D1D1D),
         textTheme: TextTheme(bodyText1: TextStyle(color: Colors.white)),
       );
     } else {

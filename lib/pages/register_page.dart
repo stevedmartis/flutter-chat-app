@@ -295,7 +295,7 @@ Route _createRute() {
   return PageRouteBuilder(
       pageBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation) =>
-          UsersPage(),
+          PrincipalPage(),
       transitionDuration: Duration(seconds: 1),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         final curvedAnimation =

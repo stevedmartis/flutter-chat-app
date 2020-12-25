@@ -5,6 +5,7 @@ import 'package:chat/models/room.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/my_profile.dart';
+import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/room_services.dart';
@@ -62,9 +63,12 @@ class _MyProfileState extends State<MyProfile> {
   ScrollController _scrollController;
 
   String name = '';
+  bool _showBorderAvatar = true;
+  bool fromRooms = false;
   // List<Room> rooms = [];
   Future<List<Room>> getRoomsFuture;
   AuthService authService;
+
   final roomService = new RoomService();
 
   double get maxHeight => 200 + MediaQuery.of(context).padding.top;
@@ -85,10 +89,11 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   _chargeRoomsUser() async {
-    await roomService.getRoomsUser();
+    //  await roomService.getRoomsUser(widget.profile.user.uid);
 
-    print(roomService.rooms);
-    // await authService.getProfileByUserId(widget.profile.user.uid);
+    // print(roomService.rooms);
+
+    getRoomsFuture = this.roomService.getRoomsUser(widget.profile.user.uid);
 
     name = widget.profile.name;
 
@@ -131,11 +136,12 @@ class _MyProfileState extends State<MyProfile> {
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       child: CircleAvatar(
                           child: IconButton(
-                            icon: Icon(Icons.arrow_back_ios,
-                                size: size.width / 20,
-                                color: currentTheme.accentColor),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
+                              icon: Icon(Icons.arrow_back_ios,
+                                  size: size.width / 20,
+                                  color: currentTheme.accentColor),
+                              onPressed: () => {
+                                    Navigator.pop(context),
+                                  }),
                           backgroundColor: Colors.black.withOpacity(0.70)),
                     )),
                 actions: [
@@ -215,6 +221,7 @@ class _MyProfileState extends State<MyProfile> {
                           type: MaterialType.transparency,
                           child: ImageUserChat(
                             width: 100,
+                            // showBorderAvatar: _showBorderAvatar,
                             height: 100,
                             profile: widget.profile,
                             fontsize: 13,
@@ -264,16 +271,23 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   SliverPersistentHeader makeHeaderTabs(context) {
+    //   final roomModel = Provider.of<Room>(context);
+
     return SliverPersistentHeader(
       pinned: true,
       delegate: SliverAppBarDelegate(
         minHeight: 70.0,
         maxHeight: 70.0,
         child: FutureBuilder(
-          future: this.roomService.getRoomsUser(),
+          future: getRoomsFuture,
           builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
             if (snapshot.hasData) {
               final rooms = snapshot.data;
+
+              //   roomModel.rooms = rooms;
+
+              // setState(() {});
+
               return Container(
                 child: Stack(fit: StackFit.expand, children: [
                   TabsScrollCustom(rooms: rooms),
@@ -296,30 +310,35 @@ class _MyProfileState extends State<MyProfile> {
   Container _buildEditCircle() {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
+    //  final roomModel = Provider.of<Room>(context, listen: false);
+
+    final size = MediaQuery.of(context).size;
+
     return (widget.isUserAuth)
         ? Container(
-            margin: EdgeInsets.only(left: 350),
+            margin: EdgeInsets.only(left: size.width / 1.3),
             width: 100,
             height: 100,
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(20.0)),
               child: CircleAvatar(
                   child: (IconButton(
-                    icon: Icon(
-                      Icons.edit,
-                      color: currentTheme.accentColor,
-                      size: 35,
-                    ),
-                    onPressed: () {
-                      if (!widget.isUserAuth)
-                        return true;
-                      else
-                        Navigator.of(context)
-                            .push(_createRouteRoomsPage(widget.profile));
+                      icon: Icon(
+                        Icons.edit,
+                        color: currentTheme.accentColor,
+                        size: 35,
+                      ),
+                      onPressed: () {
+                        if (!widget.isUserAuth)
+                          return true;
+                        else
+                          //roomModel.isRoute = true;
+                          //globalKey.currentState.openEndDrawer();
+                          //Navigator.of(context).push(createRouteRooms());
+                          //Navigator.popAndPushNamed(context, 'rooms');
 
-                      //globalKey.currentState.openEndDrawer();
-                    },
-                  )),
+                          Navigator.of(context).pushNamed('rooms');
+                      })),
                   backgroundColor: Colors.black.withOpacity(0.30)),
             ))
         : Container();
@@ -354,6 +373,7 @@ class SABT extends StatefulWidget {
 class _SABTState extends State<SABT> {
   ScrollPosition _position;
   bool _visible;
+
   @override
   void dispose() {
     _removeListener();
@@ -413,12 +433,13 @@ Route _createRouteRoomsPage(Profiles profile) {
         child: child,
       );
     },
+    transitionDuration: Duration(milliseconds: 400),
   );
 }
 
-Route createRouteMyProfile() {
+Route createRoutePrincipalPage() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => MyProfilePage(),
+    pageBuilder: (context, animation, secondaryAnimation) => PrincipalPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
@@ -431,6 +452,7 @@ Route createRouteMyProfile() {
         child: child,
       );
     },
+    transitionDuration: Duration(seconds: 1),
   );
 }
 
@@ -449,5 +471,25 @@ Route createRouteChat() {
         child: child,
       );
     },
+    transitionDuration: Duration(milliseconds: 400),
+  );
+}
+
+Route createRouteRooms() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => RoomsListPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
   );
 }

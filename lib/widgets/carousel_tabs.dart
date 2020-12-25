@@ -1,5 +1,7 @@
+import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/usuario.dart';
+
 import 'package:chat/theme/theme.dart';
 
 import 'package:flutter/material.dart';
@@ -22,25 +24,39 @@ class _TabsScrollCustomState extends State<TabsScrollCustom> {
   int currentIndexTab = 0;
 
   @override
+  void initState() {
+    /*    final roomService = Provider.of<RoomService>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    profile = authService.profile;
+    roomService.getRoomsUser(profile.user.uid);
+ */
+    setState(() {});
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final roomModel = Provider.of<Room>(context);
+
+    print(roomModel);
 
     return Container(
       color: Colors.black,
       child: DefaultTabController(
-          length: widget.rooms.length,
+          length: roomModel.rooms.length,
           child: PreferredSize(
             preferredSize: Size.fromHeight(600.0),
             child: TabBar(
               isScrollable: true,
               unselectedLabelColor: Colors.white.withOpacity(0.3),
               indicatorColor: currentTheme.accentColor,
-              tabs: List<Widget>.generate(widget.rooms.length, (int index) {
-                final room = widget.rooms[index];
+              tabs: List<Widget>.generate(roomModel.rooms.length, (int index) {
+                final room = roomModel.rooms[index];
 
                 final name = room.name;
                 final nameCapitalized = name.capitalize();
-
                 return new Tab(
                   child: Text(
                     (nameCapitalized.length >= 15)

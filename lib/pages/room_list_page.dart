@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/room_bloc.dart';
@@ -10,7 +10,8 @@ import 'package:chat/models/room.dart';
 import 'package:chat/services/room_services.dart';
 
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/avatar_user_chat.dart';
+import 'package:chat/widgets/button_gold.dart';
+import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,9 +29,12 @@ class _RoomsListPageState extends State<RoomsListPage> {
   final roomService = new RoomService();
   List<Room> rooms = [];
   Future<List<Room>> getJobFuture;
+  Profiles profile;
+
   @override
   void initState() {
     super.initState();
+
     this._chargeUsers();
   }
 
@@ -47,7 +51,11 @@ class _RoomsListPageState extends State<RoomsListPage> {
   _chargeUsers() async {
     // this.rooms = await roomService.getRoomsUser();
 
-    getJobFuture = roomService.getRoomsUser();
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    profile = authService.profile;
+
+    getJobFuture = roomService.getRoomsUser(profile.user.uid);
     setState(() {});
 
     // await Future.delayed(Duration(milliseconds: 1000));
@@ -57,75 +65,94 @@ class _RoomsListPageState extends State<RoomsListPage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    // final roomsModel = Provider.of<Room>(context);
 
     return Scaffold(
-        backgroundColor: currentTheme.scaffoldBackgroundColor,
-        appBar: AppBar(
-            backgroundColor: Colors.black,
-            actions: [
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: IconButton(
-                    icon: Icon(
-                      Icons.add,
-                      color: currentTheme.accentColor,
-                    ),
-                    iconSize: 30,
-                    onPressed: () => {
-                          setState(() {
-                            addNewRoom();
-                          })
-                        }),
-              )
-            ],
-            leading: IconButton(
-              icon: Icon(
-                Icons.chevron_left,
-                color: currentTheme.accentColor,
-              ),
-              iconSize: 30,
-              onPressed: () => Navigator.pop(context),
-              color: Colors.white,
-            )),
-        body: FutureBuilder(
-            future: getJobFuture,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.data == null) {
-                return Text('Loading');
-              } else {
-                rooms = snapshot.data;
+      backgroundColor: currentTheme.scaffoldBackgroundColor,
+      appBar: AppBar(
+          backgroundColor: Colors.black,
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    color: currentTheme.accentColor,
+                  ),
+                  iconSize: 30,
+                  onPressed: () => {
+                        setState(() {
+                          addNewRoom();
+                        })
+                      }),
+            )
+          ],
+          leading: IconButton(
+            icon: Icon(
+              Icons.chevron_left,
+              color: currentTheme.accentColor,
+            ),
+            iconSize: 30,
+            onPressed: () => Navigator.pop(context),
+            color: Colors.white,
+          )),
+      body: FutureBuilder(
+          future: getJobFuture,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.data == null) {
+              return Container(
+                  height: 400.0,
+                  child: Center(child: CircularProgressIndicator()));
+            } else {
+              rooms = snapshot.data;
 
-                if (rooms.length < 1) {
-                  return Center(
-                    child: Text('No Messages, Create New one'),
-                  );
-                }
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ReorderableListView(
-                      children: List.generate(
-                        rooms.length,
-                        (index) {
-                          final item = rooms[index];
-                          return Card(
-                            color: Colors.black,
-                            key: ValueKey(item),
+              if (rooms.length < 1) {
+                return Center(
+                  child: Text('No rooms, create a new'),
+                );
+              }
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ReorderableListView(
+                    children: List.generate(
+                      rooms.length,
+                      (index) {
+                        final item = rooms[index];
+                        return Card(
+                          key: ValueKey(item),
+                          color: Colors.black,
+                          child: Dismissible(
+                            key: Key(item.id),
+                            direction: DismissDirection.startToEnd,
+                            onDismissed: (_) => {_deleteRoom(item.id, index)},
+                            background: Container(
+                                padding: EdgeInsets.only(left: 8.0),
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.black,
+                                  ),
+                                )),
                             child: ListTile(
-                              trailing: ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(100)),
-                                child: Icon(
-                                  Icons.add,
-                                  color: currentTheme.accentColor,
-                                ),
-                              ),
+                              /*  trailing: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(100)),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: currentTheme.accentColor,
+                                  ),
+                                ), */
                               selectedTileColor: currentTheme.accentColor,
                               focusColor: currentTheme.accentColor,
                               hoverColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                   side: BorderSide(
                                       color: Colors.white, width: 0.5),
-                                  borderRadius: BorderRadius.circular(0.5)),
+                                  borderRadius: BorderRadius.circular(10)),
                               visualDensity: VisualDensity.comfortable,
                               title: Text(item.name),
                               subtitle: Text(
@@ -134,33 +161,35 @@ class _RoomsListPageState extends State<RoomsListPage> {
                                     color: currentTheme.secondaryHeaderColor),
                               ),
                               leading: Icon(
-                                Icons.drag_handle,
+                                Icons.drag_indicator,
                                 color: currentTheme.accentColor,
                               ),
                             ),
-                          );
-                        },
-                      ).toList(),
-                      onReorder: (int oldIndex, int newIndex) {
-                        setState(() {
-                          if (newIndex > oldIndex) {
-                            newIndex -= 1;
-                          }
-                          final item = snapshot.data.removeAt(oldIndex);
-                          snapshot.data.insert(newIndex, item);
-                        });
-                      }),
-                );
-              }
-            }),
-        floatingActionButton: (FloatingActionButton(
+                          ),
+                        );
+                      },
+                    ).toList(),
+                    onReorder: (int oldIndex, int newIndex) {
+                      setState(() {
+                        if (newIndex > oldIndex) {
+                          newIndex -= 1;
+                        }
+                        final item = snapshot.data.removeAt(oldIndex);
+                        snapshot.data.insert(newIndex, item);
+                      });
+                    }),
+              );
+            }
+          }),
+      /*  floatingActionButton: (FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
               setState(() {
                 var j = Room(name: 'sfddsfsdf', description: 'sdfsdf');
                 rooms.add(j);
               });
-            })));
+            }) */
+    );
   }
 
   @override
@@ -172,6 +201,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
     final roomService = Provider.of<RoomService>(context, listen: false);
     final authService = Provider.of<AuthService>(context, listen: false);
     final bloc = CustomProvider.roomBlocIn(context);
+    final roomsModel = Provider.of<Room>(context, listen: false);
 
     print('================');
     print('name: ${bloc.name}');
@@ -182,7 +212,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
         name: bloc.name,
         description: bloc.description,
         id: authService.profile.user.uid);
-    rooms.add(room);
+
     final addRoomOk = await roomService.createRoom(room);
 
     if (addRoomOk != null) {
@@ -191,6 +221,15 @@ class _RoomsListPageState extends State<RoomsListPage> {
         //Navigator.push(context, _createRute());
 
         Navigator.pop(context);
+
+        Timer(
+            Duration(milliseconds: 300),
+            () => {
+                  setState(() {
+                    rooms.add(room);
+                    roomsModel.rooms = rooms;
+                  }),
+                });
       } else {
         mostrarAlerta(context, 'Registro incorrecto', addRoomOk);
       }
@@ -201,40 +240,86 @@ class _RoomsListPageState extends State<RoomsListPage> {
     //Navigator.pushReplacementNamed(context, '');
   }
 
-  Widget _bandTile(Room band) {
-    final socketService = Provider.of<SocketService>(context, listen: false);
+  _deleteRoom(String id, int index) async {
+    print(id);
+    final res = await this.roomService.deleteRoom(id);
 
-    return Dismissible(
-      key: Key(band.id),
-      direction: DismissDirection.startToEnd,
-      onDismissed: (_) => socketService.emit('delete-band', {'id': band.id}),
-      background: Container(
-          padding: EdgeInsets.only(left: 8.0),
-          color: Colors.red,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Delete Band', style: TextStyle(color: Colors.white)),
-          )),
-      child: ListTile(
-        leading: CircleAvatar(
-          child: Text(band.name.substring(0, 2)),
-          backgroundColor: Colors.blue[100],
-        ),
-        title: Text(band.name),
-        trailing: Text('', style: TextStyle(fontSize: 20)),
-        onTap: () => socketService.socket.emit('vote-band', {'id': band.id}),
-      ),
-    );
+    final roomsModel = Provider.of<Room>(context, listen: false);
+
+    if (res) {
+      setState(() {
+        rooms.removeAt(index);
+      });
+
+      roomsModel.rooms = rooms;
+    }
   }
 
   addNewRoom() {
-    final textController = new TextEditingController();
-
-    final bloc = CustomProvider.roomBlocIn(context);
     final currentTheme =
         Provider.of<ThemeChanger>(context, listen: false).currentTheme;
 
-    if (Platform.isAndroid) {
+    final bloc = CustomProvider.roomBlocIn(context);
+
+    return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: currentTheme.scaffoldBackgroundColor,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30.0),
+            topRight: Radius.circular(30.0),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        child: Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.50,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 20, left: 150, right: 150),
+                  padding: EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: Color(0xffEBECF0).withOpacity(0.30),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(30.0),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(30),
+                  child: Text(
+                    "New Room",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                _createName(bloc),
+                SizedBox(
+                  height: 30,
+                ),
+                _createDescription(bloc),
+                SizedBox(
+                  height: 40,
+                ),
+                ButtonGold(
+                    color: currentTheme.accentColor,
+                    text: 'Done',
+                    onPressed: () => _handleAddRoom(context)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    /*   if (Platform.isAndroid) {
       // Android
       return showDialog(
           context: context,
@@ -295,6 +380,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
                         })),
               ],
             ));
+   */
   }
 
   void addBandToList(String name) {
@@ -305,29 +391,78 @@ class _RoomsListPageState extends State<RoomsListPage> {
 
     Navigator.pop(context);
   }
+
+  Widget _createName(RoomBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.nameStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+          child: TextField(
+            //  keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+                // icon: Icon(Icons.perm_identity),
+                //  fillColor: currentTheme.accentColor,
+                focusedBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.yellow, width: 2.0),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                hintText: '',
+                labelText: 'Name',
+                //counterText: snapshot.data,
+                errorText: snapshot.error),
+            onChanged: bloc.changeName,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _createDescription(RoomBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.descriptionStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+          child: TextField(
+            //  keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+                // icon: Icon(Icons.perm_identity),
+                //  fillColor: currentTheme.accentColor,
+                focusedBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.yellow, width: 2.0),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                hintText: '',
+                labelText: 'Description',
+                //counterText: snapshot.data,
+                errorText: snapshot.error),
+            onChanged: bloc.changeDescription,
+          ),
+        );
+      },
+    );
+  }
 }
 
-Widget _createName(RoomBloc bloc) {
-  return StreamBuilder(
-    stream: bloc.nameStream,
-    builder: (BuildContext context, AsyncSnapshot snapshot) {
-      return Container(
-        child: TextField(
-          //  keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-              // icon: Icon(Icons.perm_identity),
-              //  fillColor: currentTheme.accentColor,
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.yellow, width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: '',
-              labelText: 'Name',
-              counterText: snapshot.data,
-              errorText: snapshot.error),
-          onChanged: bloc.changeName,
-        ),
+Route _createRouteRoomsPage(Profiles profile) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => MyProfile(
+      profile: profile,
+      isUserAuth: true,
+    ),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(-1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
       );
     },
+    transitionDuration: Duration(milliseconds: 500),
   );
 }
