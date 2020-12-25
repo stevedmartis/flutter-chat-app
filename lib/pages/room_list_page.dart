@@ -6,12 +6,12 @@ import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/pages/profile_page.dart';
 
 import 'package:chat/services/room_services.dart';
 
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
-import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -93,7 +93,9 @@ class _RoomsListPageState extends State<RoomsListPage> {
               color: currentTheme.accentColor,
             ),
             iconSize: 30,
-            onPressed: () => Navigator.pop(context),
+            onPressed: () =>
+                //  Navigator.pushReplacement(context, createRouteProfile()),
+                Navigator.pop(context),
             color: Colors.white,
           )),
       body: FutureBuilder(
@@ -201,7 +203,6 @@ class _RoomsListPageState extends State<RoomsListPage> {
     final roomService = Provider.of<RoomService>(context, listen: false);
     final authService = Provider.of<AuthService>(context, listen: false);
     final bloc = CustomProvider.roomBlocIn(context);
-    final roomsModel = Provider.of<Room>(context, listen: false);
 
     print('================');
     print('name: ${bloc.name}');
@@ -227,9 +228,13 @@ class _RoomsListPageState extends State<RoomsListPage> {
             () => {
                   setState(() {
                     rooms.add(room);
-                    roomsModel.rooms = rooms;
                   }),
+
+                  // roomsModel.rooms = rooms
+                  //roomService.rooms = rooms,
+                  // print(roomService.rooms)
                 });
+        roomBloc.getRooms(authService.profile.user.uid);
       } else {
         mostrarAlerta(context, 'Registro incorrecto', addRoomOk);
       }
@@ -244,14 +249,14 @@ class _RoomsListPageState extends State<RoomsListPage> {
     print(id);
     final res = await this.roomService.deleteRoom(id);
 
-    final roomsModel = Provider.of<Room>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
 
     if (res) {
       setState(() {
         rooms.removeAt(index);
       });
 
-      roomsModel.rooms = rooms;
+      roomBloc.getRooms(authService.profile.user.uid);
     }
   }
 
@@ -445,12 +450,10 @@ class _RoomsListPageState extends State<RoomsListPage> {
   }
 }
 
-Route _createRouteRoomsPage(Profiles profile) {
+Route createRouteProfile() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => MyProfile(
-      profile: profile,
-      isUserAuth: true,
-    ),
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        SliverAppBarProfilepPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(-1.0, 0.0);
       var end = Offset.zero;

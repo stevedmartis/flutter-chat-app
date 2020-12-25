@@ -20,6 +20,7 @@ class MyProfilePage extends StatelessWidget {
     final authService = Provider.of<AuthService>(context);
 
     final profile = authService.profile;
+
     changeStatusDark();
 
     return Scaffold(

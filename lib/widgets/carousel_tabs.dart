@@ -1,4 +1,3 @@
-import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/usuario.dart';
 
@@ -9,12 +8,11 @@ import 'package:provider/provider.dart';
 import '../utils//extension.dart';
 
 class TabsScrollCustom extends StatefulWidget {
-  const TabsScrollCustom({
-    Key key,
-    @required this.rooms,
-  }) : super(key: key);
+  const TabsScrollCustom({Key key, @required this.rooms, this.isAuthUser})
+      : super(key: key);
 
   final List<Room> rooms;
+  final bool isAuthUser;
 
   @override
   _TabsScrollCustomState createState() => _TabsScrollCustomState();
@@ -25,12 +23,20 @@ class _TabsScrollCustomState extends State<TabsScrollCustom> {
 
   @override
   void initState() {
+    print(widget.rooms);
     /*    final roomService = Provider.of<RoomService>(context, listen: false);
     final authService = Provider.of<AuthService>(context, listen: false);
 
     profile = authService.profile;
     roomService.getRoomsUser(profile.user.uid);
  */
+//
+    // final roomModel = Provider.of<Room>(context, listen: false);
+
+    //  roomModel.rooms = widget.rooms;
+    //  print(roomModel.rooms);
+
+    //  print(roomModel.rooms);
     setState(() {});
     super.initState();
   }
@@ -38,22 +44,21 @@ class _TabsScrollCustomState extends State<TabsScrollCustom> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    final roomModel = Provider.of<Room>(context);
 
-    print(roomModel);
+    final rooms = widget.rooms;
 
     return Container(
       color: Colors.black,
       child: DefaultTabController(
-          length: roomModel.rooms.length,
+          length: rooms.length,
           child: PreferredSize(
             preferredSize: Size.fromHeight(600.0),
             child: TabBar(
               isScrollable: true,
               unselectedLabelColor: Colors.white.withOpacity(0.3),
               indicatorColor: currentTheme.accentColor,
-              tabs: List<Widget>.generate(roomModel.rooms.length, (int index) {
-                final room = roomModel.rooms[index];
+              tabs: List<Widget>.generate(rooms.length, (int index) {
+                final room = rooms[index];
 
                 final name = room.name;
                 final nameCapitalized = name.capitalize();

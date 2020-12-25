@@ -39,6 +39,7 @@ dependencies:
   rxdart: ^0.22.0
   image_picker: 0.6.7+15
   flutter_bloc: 6.1.1
+  dio: ^3.0.10
 
   
 

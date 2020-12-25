@@ -26,4 +26,6 @@ class RoomsResponse {
         "ok": ok,
         "rooms": List<dynamic>.from(rooms.map((x) => x.toJson())),
       };
+
+  RoomsResponse.withError(String errorValue);
 }

@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/models/rooms_response.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/my_profile.dart';
@@ -63,7 +65,6 @@ class _MyProfileState extends State<MyProfile> {
   ScrollController _scrollController;
 
   String name = '';
-  bool _showBorderAvatar = true;
   bool fromRooms = false;
   // List<Room> rooms = [];
   Future<List<Room>> getRoomsFuture;
@@ -80,26 +81,14 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   void initState() {
-    this._chargeRoomsUser();
-    this.authService = Provider.of<AuthService>(context, listen: false);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
+
     super.initState();
 
     _scrollController = ScrollController()..addListener(() => setState(() {}));
-  }
-
-  _chargeRoomsUser() async {
-    //  await roomService.getRoomsUser(widget.profile.user.uid);
-
-    // print(roomService.rooms);
-
-    getRoomsFuture = this.roomService.getRoomsUser(widget.profile.user.uid);
-
     name = widget.profile.name;
-
-    if (mounted) {
-      setState(() {});
-    }
+    roomBloc.getRooms(widget.profile.user.uid);
+    // this._chargeRoomsUser();
   }
 
   bool get _showTitle {
@@ -278,33 +267,49 @@ class _MyProfileState extends State<MyProfile> {
       delegate: SliverAppBarDelegate(
         minHeight: 70.0,
         maxHeight: 70.0,
-        child: FutureBuilder(
-          future: getRoomsFuture,
-          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        child: StreamBuilder<RoomsResponse>(
+          stream: roomBloc.subject.stream,
+          builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
             if (snapshot.hasData) {
-              final rooms = snapshot.data;
-
-              //   roomModel.rooms = rooms;
-
-              // setState(() {});
-
-              return Container(
-                child: Stack(fit: StackFit.expand, children: [
-                  TabsScrollCustom(rooms: rooms),
-                  _buildEditCircle()
-                ]),
-              );
-              // image is ready
+              print(snapshot.data);
+              return _buildUserWidget(snapshot.data);
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
             } else {
-              return Container(
-                  height: 400.0,
-                  child: Center(
-                      child: CircularProgressIndicator())); // placeholder
+              return _buildLoadingWidget();
             }
           },
         ),
       ),
     );
+  }
+
+  Widget _buildUserWidget(RoomsResponse data) {
+    print(data);
+    return Container(
+      child: Stack(fit: StackFit.expand, children: [
+        TabsScrollCustom(
+          rooms: data.rooms,
+          isAuthUser: widget.isUserAuth,
+        ),
+        _buildEditCircle()
+      ]),
+    );
+  }
+
+  Widget _buildLoadingWidget() {
+    return Container(
+        height: 400.0, child: Center(child: CircularProgressIndicator()));
+  }
+
+  Widget _buildErrorWidget(String error) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Error occured: $error"),
+      ],
+    ));
   }
 
   Container _buildEditCircle() {
@@ -418,25 +423,6 @@ class _SABTState extends State<SABT> {
   }
 }
 
-Route _createRouteRoomsPage(Profiles profile) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => RoomsListPage(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(1.0, 0.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-    transitionDuration: Duration(milliseconds: 400),
-  );
-}
-
 Route createRoutePrincipalPage() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => PrincipalPage(),
@@ -493,3 +479,33 @@ Route createRouteRooms() {
     transitionDuration: Duration(milliseconds: 400),
   );
 }
+
+/* 
+        FutureBuilder(
+          future: getRoomsFuture,
+          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+            if (snapshot.hasData) {
+              final rooms = snapshot.data;
+
+              //roomModel.rooms = rooms;
+
+              //setState(() {});
+
+              return Container(
+                child: Stack(fit: StackFit.expand, children: [
+                  TabsScrollCustom(
+                    rooms: rooms,
+                    isAuthUser: widget.isUserAuth,
+                  ),
+                  _buildEditCircle()
+                ]),
+              );
+              // image is ready
+            } else {
+              return Container(
+                  height: 400.0,
+                  child: Center(
+                      child: CircularProgressIndicator())); // placeholder
+            }
+          },
+        ), */

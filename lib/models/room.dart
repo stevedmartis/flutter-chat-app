@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/room_services.dart';
 import 'package:flutter/material.dart';
 
 Room roomFromJson(String str) => Room.fromJson(json.decode(str));
@@ -11,6 +13,9 @@ Room roomFromJson(String str) => Room.fromJson(json.decode(str));
 String roomToJson(Room data) => json.encode(data.toJson());
 
 class Room with ChangeNotifier {
+  final roomService = RoomService();
+  final authService = AuthService();
+
   bool _isRoute = false;
 
   bool get isRoute => this._isRoute;
@@ -24,8 +29,18 @@ class Room with ChangeNotifier {
 
   List<Room> get rooms => this._rooms;
 
-  set rooms(List<Room> rooms) {
+/*   set rooms(List<Room> rooms) {
     this._rooms = rooms;
+    notifyListeners();
+  } */
+
+  init() async {
+    // initial sample data here.
+    await getRooms();
+  }
+
+  Future getRooms() async {
+    _rooms = await roomService.getRoomsUser(authService.profile.user.uid);
     notifyListeners();
   }
 
@@ -37,7 +52,8 @@ class Room with ChangeNotifier {
       this.totalItems,
       this.createdAt,
       this.updatedAt,
-      isRoute});
+      isRoute,
+      init()});
 
   String user;
   String id;

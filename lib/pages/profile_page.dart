@@ -1,3 +1,5 @@
+import 'package:chat/models/profiles.dart';
+import 'package:chat/models/room.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
@@ -15,16 +17,23 @@ class SliverAppBarProfilepPage extends StatefulWidget {
 }
 
 class SliverAppBarProfilepPageState extends State<SliverAppBarProfilepPage> {
+  Profiles profile;
+
   @override
   void initState() {
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    profile = authService.profile;
+
+    final roomModel = Provider.of<Room>(context, listen: false);
+
+    roomModel.rooms;
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
-    final profile = authService.profile;
-
     return Scaffold(
       body: Center(
         child: MyProfile(

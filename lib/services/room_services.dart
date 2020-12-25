@@ -5,11 +5,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:chat/global/environment.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class RoomService with ChangeNotifier {
-  List<Room> rooms = [];
-
   Room roomModel;
 
   final _storage = new FlutterSecureStorage();
@@ -25,19 +22,13 @@ class RoomService with ChangeNotifier {
 
       final roomsResponse = roomsResponseFromJson(resp.body);
 
-      final List<Room> rooms = new List();
+      // roomModel.rooms = rooms;
+      //roomModel.rooms;
+      // this.rooms = rooms;
 
-      roomsResponse.rooms.forEach((item) {
-        print(item);
+      //  print('$roomModel.rooms');
 
-        rooms.add(item);
-      });
-
-      roomModel.rooms = rooms;
-
-      print('$roomModel.rooms');
-
-      return roomModel.rooms;
+      return roomsResponse.rooms;
     } catch (e) {
       return [];
     }

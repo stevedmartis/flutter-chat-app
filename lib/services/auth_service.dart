@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chat/models/profiles.dart';
+import 'package:chat/models/room.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,6 +12,7 @@ import 'package:chat/models/login_response.dart';
 
 class AuthService with ChangeNotifier {
   Profiles profile;
+  List<Room> rooms;
   bool _authenticated = false;
 
   final _storage = new FlutterSecureStorage();
