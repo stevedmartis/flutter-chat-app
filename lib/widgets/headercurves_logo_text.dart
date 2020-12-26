@@ -38,106 +38,20 @@ class HeaderMultiCurvesImage extends StatelessWidget {
             height: size.height / 3.5,
             child: (isEmpty)
                 ? HeaderMultiCurves(
-                    color: currentTheme.accentColor,
+                    color: currentTheme.scaffoldBackgroundColor,
                   )
                 : CustomPaint(
                     painter: _HeaderTwoCurvesPainterImage(
                         color: this.color, opacity: 1.0, image: this.image))),
-        Container(
-          margin:
-              EdgeInsets.only(left: size.width / 2.5, top: size.height / 5.0),
-          child: Center(
-            child: Container(
-              child: Text(
-                (name.length >= 20) ? name.substring(0, 20) + '...' : name,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                    fontSize: (name.length >= 14) ? 20 : 24,
-                    color: Colors.white),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ),
-        Container(
-          //padding: EdgeInsets.all(30),
-
-          margin:
-              EdgeInsets.only(left: size.width / 2.5, top: size.height / 3.7),
-          child: Center(
-            child: Container(
-              child: Text(
-                (username.length >= 20)
-                    ? '@' + username.substring(0, 20) + '...'
-                    : '@' + username,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 5,
-                style: TextStyle(
-                    fontSize: 18, color: Colors.white.withOpacity(0.60)),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ),
-        Row(
+        /*  Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Container(
-                width: 35,
-                height: 35,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  child: CircleAvatar(
-                      child: (IconButton(
-                        icon: Center(
-                          child: Icon(
-                              (!isUserAuth) ? Icons.share : Icons.settings,
-                              color: currentTheme.accentColor,
-                              size: 20),
-                        ),
-                        onPressed: () {
-                          if (!isUserAuth)
-                            return true;
-                          else
-                            Navigator.of(context).push(createRouteMyProfile());
-
-                          //globalKey.currentState.openEndDrawer();
-                        },
-                      )),
-                      backgroundColor: Colors.black.withOpacity(0.70)),
-                )),
-            if (!this.isUserEdit)
-              Container(
-                  width: 35,
-                  height: 35,
-                  margin: EdgeInsets.only(
-                      left: 20, right: 20, top: size.height / 6),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    child: CircleAvatar(
-                        child: (IconButton(
-                          icon: Icon(
-                            (!isUserAuth) ? Icons.favorite : Icons.edit,
-                            color: currentTheme.accentColor,
-                            size: 20,
-                          ),
-                          onPressed: () {
-                            if (!isUserAuth)
-                              return true;
-                            else
-                              Navigator.of(context)
-                                  .push(createRouteMyProfile());
-
-                            //globalKey.currentState.openEndDrawer();
-                          },
-                        )),
-                        backgroundColor: Colors.black.withOpacity(0.70)),
-                  )),
+            
+            
           ],
         )
-
+ */
         /*      Container(
           padding: EdgeInsets.only(top: 40, left: 275),
           child: StyledLogo(),

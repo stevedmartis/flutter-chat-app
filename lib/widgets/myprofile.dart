@@ -92,7 +92,7 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   bool get _showTitle {
-    return _scrollController.hasClients && _scrollController.offset >= 200;
+    return _scrollController.hasClients && _scrollController.offset >= 150;
   }
 
   @override
@@ -203,7 +203,10 @@ class _MyProfileState extends State<MyProfile> {
                       duration: Duration(milliseconds: 200),
                       width: (_showTitle) ? 50 : 70,
                       height: (_showTitle) ? 50 : 70,
-                      margin: EdgeInsets.only(left: size.width / 7.0),
+                      margin: EdgeInsets.only(
+                          left: (_showTitle)
+                              ? size.width / 7.0
+                              : size.width / 12.0),
                       child: Hero(
                         tag: widget.profile.user.uid,
                         child: Material(
@@ -222,6 +225,9 @@ class _MyProfileState extends State<MyProfile> {
                   centerTitle: false,
                 ),
               ),
+              (!this.widget.isUserEdit)
+                  ? makeHeaderInfo(context)
+                  : makeHeaderSpacer(context),
               if (!widget.isUserEdit)
                 makeHeaderTabs(context)
               else
@@ -281,6 +287,120 @@ class _MyProfileState extends State<MyProfile> {
           },
         ),
       ),
+    );
+  }
+
+  SliverPersistentHeader makeHeaderSpacer(context) {
+    //   final roomModel = Provider.of<Room>(context);
+
+    return SliverPersistentHeader(
+      pinned: false,
+      delegate: SliverAppBarDelegate(
+          minHeight: 20.0,
+          maxHeight: 20.0,
+          child: Row(
+            children: [],
+          )),
+    );
+  }
+
+  SliverPersistentHeader makeHeaderInfo(context) {
+    //   final roomModel = Provider.of<Room>(context);
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    final username = widget.profile.user.username.toLowerCase();
+    final size = MediaQuery.of(context).size;
+
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+          minHeight: 70.0,
+          maxHeight: 150.0,
+          child: Container(
+            padding: EdgeInsets.only(top: 5.0),
+            color: currentTheme.scaffoldBackgroundColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (!this.widget.isUserEdit)
+                  Container(
+                    padding: EdgeInsets.only(left: 40, top: 10),
+                    //margin: EdgeInsets.only(left: size.width / 6, top: 10),
+                    child: Text(
+                      (name.length >= 16)
+                          ? name.substring(0, 16) + '...'
+                          : name.isEmpty
+                              ? username
+                              : name,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontSize: (name.length >= 14) ? 24 : 26,
+                          color: Colors.white),
+                    ),
+                  ),
+                Spacer(),
+                if (!this.widget.isUserEdit)
+                  Container(
+                      width: 50,
+                      height: 50,
+                      margin: EdgeInsets.only(right: 20),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        child: CircleAvatar(
+                            child: (IconButton(
+                              icon: Center(
+                                child: Icon(
+                                    (!widget.isUserAuth)
+                                        ? Icons.share
+                                        : Icons.settings,
+                                    color: currentTheme.accentColor,
+                                    size: 25),
+                              ),
+                              onPressed: () {
+                                if (!widget.isUserAuth)
+                                  return true;
+                                else
+                                  Navigator.of(context)
+                                      .push(createRouteMyProfile());
+
+                                //globalKey.currentState.openEndDrawer();
+                              },
+                            )),
+                            backgroundColor: Colors.black.withOpacity(0.70)),
+                      )),
+                if (!this.widget.isUserEdit)
+                  Container(
+                      width: 50,
+                      height: 50,
+                      margin: EdgeInsets.only(right: 20),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        child: CircleAvatar(
+                            child: (IconButton(
+                              icon: Icon(
+                                (!widget.isUserAuth)
+                                    ? Icons.favorite
+                                    : Icons.edit,
+                                color: currentTheme.accentColor,
+                                size: 25,
+                              ),
+                              onPressed: () {
+                                if (!widget.isUserAuth)
+                                  return true;
+                                else
+                                  Navigator.of(context)
+                                      .push(createRouteMyProfile());
+
+                                //globalKey.currentState.openEndDrawer();
+                              },
+                            )),
+                            backgroundColor: Colors.black.withOpacity(0.70)),
+                      )),
+              ],
+            ),
+          )),
     );
   }
 
