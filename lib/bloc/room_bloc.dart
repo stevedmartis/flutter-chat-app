@@ -19,7 +19,6 @@ class RoomBloc with Validators {
 
   getRooms(String userId) async {
     RoomsResponse response = await _repository.getRooms(userId);
-    print(response);
     _subject.sink.add(response);
   }
 

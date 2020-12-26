@@ -152,7 +152,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
 
     if (_currentPage >= index - 0.5 && _currentPage < index + 0.5) {
       _size = 20;
-      _color = currentTheme.primaryColor;
+      _color = currentTheme.accentColor;
     } else {
       _size = 15;
       _color = currentTheme.scaffoldBackgroundColor;

@@ -98,91 +98,96 @@ class _RoomsListPageState extends State<RoomsListPage> {
                 Navigator.pop(context),
             color: Colors.white,
           )),
-      body: FutureBuilder(
-          future: getJobFuture,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.data == null) {
-              return Container(
-                  height: 400.0,
-                  child: Center(child: CircularProgressIndicator()));
-            } else {
-              rooms = snapshot.data;
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: FutureBuilder(
+            future: getJobFuture,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.data == null) {
+                return Container(
+                    height: 400.0,
+                    child: Center(child: CircularProgressIndicator()));
+              } else {
+                rooms = snapshot.data;
 
-              if (rooms.length < 1) {
-                return Center(
-                  child: Text('No rooms, create a new'),
-                );
-              }
-              return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ReorderableListView(
-                    children: List.generate(
-                      rooms.length,
-                      (index) {
-                        final item = rooms[index];
-                        return Card(
-                          key: ValueKey(item),
-                          color: Colors.black,
-                          child: Dismissible(
-                            key: Key(item.id),
-                            direction: DismissDirection.startToEnd,
-                            onDismissed: (_) => {_deleteRoom(item.id, index)},
-                            background: Container(
-                                padding: EdgeInsets.only(left: 8.0),
-                                decoration: BoxDecoration(
-                                    color: Colors.red,
+                if (rooms.length < 1) {
+                  return Center(
+                    child: Text('No rooms, create a new'),
+                  );
+                }
+                return Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ReorderableListView(
+                      children: List.generate(
+                        rooms.length,
+                        (index) {
+                          final item = rooms[index];
+                          return Card(
+                            key: ValueKey(item),
+                            color: Colors.black,
+                            child: Dismissible(
+                              key: Key(item.id),
+                              direction: DismissDirection.startToEnd,
+                              onDismissed: (_) => {_deleteRoom(item.id, index)},
+                              background: Container(
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.black,
+                                    ),
+                                  )),
+                              child: ListTile(
+                                /*  trailing: ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100)),
+                                    child: Icon(
+                                      Icons.add,
+                                      color: currentTheme.accentColor,
+                                    ),
+                                  ), */
+                                selectedTileColor: currentTheme.accentColor,
+                                focusColor: currentTheme.accentColor,
+                                hoverColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        color: Colors.white, width: 0.5),
                                     borderRadius: BorderRadius.circular(10)),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.black,
-                                  ),
-                                )),
-                            child: ListTile(
-                              /*  trailing: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100)),
-                                  child: Icon(
-                                    Icons.add,
-                                    color: currentTheme.accentColor,
-                                  ),
-                                ), */
-                              selectedTileColor: currentTheme.accentColor,
-                              focusColor: currentTheme.accentColor,
-                              hoverColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      color: Colors.white, width: 0.5),
-                                  borderRadius: BorderRadius.circular(10)),
-                              visualDensity: VisualDensity.comfortable,
-                              title: Text(item.name),
-                              subtitle: Text(
-                                '10 productos',
-                                style: TextStyle(
-                                    color: currentTheme.secondaryHeaderColor),
-                              ),
-                              leading: Icon(
-                                Icons.drag_indicator,
-                                color: currentTheme.accentColor,
+                                visualDensity: VisualDensity.comfortable,
+                                title: Text(item.name),
+                                subtitle: Text(
+                                  '10 productos',
+                                  style: TextStyle(
+                                      color: currentTheme.secondaryHeaderColor),
+                                ),
+                                leading: Icon(
+                                  Icons.drag_indicator,
+                                  color: currentTheme.accentColor,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ).toList(),
-                    onReorder: (int oldIndex, int newIndex) {
-                      setState(() {
-                        if (newIndex > oldIndex) {
-                          newIndex -= 1;
-                        }
-                        final item = snapshot.data.removeAt(oldIndex);
-                        snapshot.data.insert(newIndex, item);
-                      });
-                    }),
-              );
-            }
-          }),
+                          );
+                        },
+                      ).toList(),
+                      onReorder: (int oldIndex, int newIndex) {
+                        setState(() {
+                          if (newIndex > oldIndex) {
+                            newIndex -= 1;
+                          }
+                          final item = snapshot.data.removeAt(oldIndex);
+                          snapshot.data.insert(newIndex, item);
+                        });
+                      }),
+                );
+              }
+            }),
+      ),
       /*  floatingActionButton: (FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
@@ -246,7 +251,6 @@ class _RoomsListPageState extends State<RoomsListPage> {
   }
 
   _deleteRoom(String id, int index) async {
-    print(id);
     final res = await this.roomService.deleteRoom(id);
 
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -283,7 +287,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.50,
+            height: MediaQuery.of(context).size.height * 0.70,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
@@ -466,6 +470,6 @@ Route createRouteProfile() {
         child: child,
       );
     },
-    transitionDuration: Duration(milliseconds: 500),
+    transitionDuration: Duration(milliseconds: 400),
   );
 }

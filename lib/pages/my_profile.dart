@@ -165,7 +165,10 @@ class _FormEditUserprofileState extends State<FormEditUserprofile> {
                     Navigator.pushReplacementNamed(context, 'login');
                     AuthService.deleteToken();
                   },
-          )
+          ),
+          SizedBox(
+            height: 150,
+          ),
         ],
       ),
     );

@@ -14,7 +14,6 @@ class RoomService with ChangeNotifier {
   Future<List<Room>> getRoomsUser(String userId) async {
     final token = await this._storage.read(key: 'token');
 
-    print(userId);
     try {
       final resp = await http.get(
           '${Environment.apiUrl}/room/rooms/user/$userId',
@@ -61,11 +60,8 @@ class RoomService with ChangeNotifier {
     final token = await this._storage.read(key: 'token');
 
     try {
-      final resp = await http.delete(
-          '${Environment.apiUrl}/room/delete/$roomId',
+      await http.delete('${Environment.apiUrl}/room/delete/$roomId',
           headers: {'Content-Type': 'application/json', 'x-token': token});
-
-      print(resp);
 
       return true;
     } catch (e) {

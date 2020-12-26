@@ -5,6 +5,7 @@ import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/headercurves_logo_text.dart';
+import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,46 +16,77 @@ import 'package:chat/helpers/mostrar_alerta.dart';
 
 import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/button_gold.dart';
+import 'dart:ui' as ui;
 
 class RegisterPage extends StatelessWidget {
+  Future<ui.Image> _image(String url) async =>
+      await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
+
   @override
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
 
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     changeStatusDark();
     return Scaffold(
-        backgroundColor: Color(0xff0F0F0F),
-        body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Container(
-            height: _size.height,
-            child: Stack(
-              children: <Widget>[
-                HeaderMultiCurvesText(
-                    title: 'Sign Up!',
-                    subtitle: 'Hello,',
-                    color: Color(0xffD9B310)),
-                Center(
+        backgroundColor: currentTheme.scaffoldBackgroundColor,
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Container(
+              height: _size.height + 100,
+              child: Stack(
+                children: <Widget>[
+                  FutureBuilder<ui.Image>(
+                    initialData: null,
+                    future:
+                        _image("https://wallpapercave.com/wp/wp2869931.jpg"),
+                    builder: (BuildContext context,
+                            AsyncSnapshot<ui.Image> snapshot) =>
+                        !snapshot.hasData
+                            ? HeaderMultiCurvesImageEmptyText(
+                                isEmpty: true,
+                                color: Colors.white,
+                                image: snapshot.data,
+                              )
+                            : HeaderMultiCurvesImageEmptyText(
+                                color: Colors.white,
+                                image: snapshot.data,
+                                title: 'Sign Up!',
+                                subtitle: 'Hello!',
+                              ),
+                  ),
+
+                  /*   HeaderMultiCurvesText(
+                      title: 'Sign Up!',
+                      subtitle: 'Hello,',
+                      color: currentTheme.accentColor), */
+                  Center(
+                      child: Container(
+                          margin: EdgeInsets.only(top: _size.height / 3),
+                          child: _Form())),
+                  Center(
                     child: Container(
-                        margin: EdgeInsets.only(top: _size.height / 3),
-                        child: _Form())),
-                Center(
-                  child: Container(
-                    margin: EdgeInsets.only(top: _size.height / 1.2),
-                    child: Labels(
-                      rute: 'login',
-                      title: '¿Ya tienes una cuenta?',
-                      subTitulo: 'Ingresa ahora!',
-                      colortText1: Colors.white70,
-                      colortText2: Color(0xffD9B310),
+                      margin: EdgeInsets.only(top: _size.height / 1.1),
+                      child: Labels(
+                        rute: 'login',
+                        title: '¿Ya tienes una cuenta?',
+                        subTitulo: 'Ingresa ahora!',
+                        colortText1: Colors.white70,
+                        colortText2: Color(0xffD9B310),
+                      ),
                     ),
                   ),
-                ),
-                Center(
-                    child: Container(
-                        margin: EdgeInsets.only(top: _size.height / 1.1),
-                        child: StyledLogoCustom()))
-              ],
+                  Center(
+                      child: Container(
+                          margin: EdgeInsets.only(top: _size.height),
+                          child: StyledLogoCustom()))
+                ],
+              ),
             ),
           ),
         ));
@@ -69,9 +101,6 @@ class _Form extends StatefulWidget {
 class __FormState extends State<_Form> {
   @override
   void dispose() {
-    final bloc = CustomProvider.registerBlocIn(context);
-    bloc.dispose();
-
     super.dispose();
   }
 
@@ -80,14 +109,14 @@ class __FormState extends State<_Form> {
 
     return Container(
       margin: EdgeInsets.only(top: 20),
-      padding: EdgeInsets.symmetric(horizontal: 50),
+      // padding: EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: <Widget>[
-          _createUsername(bloc),
+          _createUsername(bloc, context),
           SizedBox(
             height: 10,
           ),
-          _createEmail(bloc),
+          _createEmail(bloc, context),
           SizedBox(
             height: 10,
           ),
@@ -97,7 +126,7 @@ class __FormState extends State<_Form> {
           ), */
           // _createLastName(bloc),
 
-          _createPassword(bloc),
+          _createPassword(bloc, context),
           SizedBox(
             height: 30,
           ),
@@ -119,22 +148,27 @@ Widget _createButton(RegisterBloc bloc) {
       final authService = Provider.of<AuthService>(context);
       final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-      return ButtonGold(
-          color: currentTheme.accentColor,
-          text: 'Create my account!',
-          onPressed: authService.authenticated
-              ? null
-              : snapshot.hasData
-                  ? () => {
-                        FocusScope.of(context).unfocus(),
-                        _register(bloc, context)
-                      }
-                  : null);
+      return Container(
+        padding: EdgeInsets.only(left: 30, right: 30),
+        child: ButtonGold(
+            color: currentTheme.accentColor,
+            text: 'Create my account!',
+            onPressed: authService.authenticated
+                ? null
+                : snapshot.hasData
+                    ? () => {
+                          FocusScope.of(context).unfocus(),
+                          _register(bloc, context)
+                        }
+                    : null),
+      );
     },
   );
 }
 
-Widget _createEmail(RegisterBloc bloc) {
+Widget _createEmail(RegisterBloc bloc, context) {
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
   return StreamBuilder(
     stream: bloc.emailStream,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -146,7 +180,8 @@ Widget _createEmail(RegisterBloc bloc) {
               icon: Icon(Icons.alternate_email),
               //  fillColor: currentTheme.accentColor,
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.yellow, width: 2.0),
+                borderSide:
+                    BorderSide(color: currentTheme.accentColor, width: 2.0),
                 borderRadius: BorderRadius.circular(25.0),
               ),
               hintText: '',
@@ -187,7 +222,9 @@ _register(RegisterBloc bloc, BuildContext context) async {
   //Navigator.pushReplacementNamed(context, '');
 }
 
-Widget _createUsername(RegisterBloc bloc) {
+Widget _createUsername(RegisterBloc bloc, context) {
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
   return StreamBuilder(
     stream: bloc.usernameSteam,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -199,7 +236,8 @@ Widget _createUsername(RegisterBloc bloc) {
               icon: Icon(Icons.perm_identity),
               //  fillColor: currentTheme.accentColor,
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.yellow, width: 2.0),
+                borderSide:
+                    BorderSide(color: currentTheme.accentColor, width: 2.0),
                 borderRadius: BorderRadius.circular(25.0),
               ),
               hintText: '',
@@ -265,7 +303,9 @@ Widget _createUsername(RegisterBloc bloc) {
   );
 }
  */
-Widget _createPassword(RegisterBloc bloc) {
+Widget _createPassword(RegisterBloc bloc, context) {
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
   return StreamBuilder(
     stream: bloc.passwordStream,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -277,7 +317,8 @@ Widget _createPassword(RegisterBloc bloc) {
               icon: Icon(Icons.lock_outline),
               //  fillColor: currentTheme.accentColor,
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.yellow, width: 2.0),
+                borderSide:
+                    BorderSide(color: currentTheme.accentColor, width: 2.0),
                 borderRadius: BorderRadius.circular(25.0),
               ),
               hintText: '',

@@ -7,6 +7,7 @@ import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/headercurves_logo_text.dart';
+import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ import 'package:chat/services/auth_service.dart';
 import 'package:chat/helpers/mostrar_alerta.dart';
 
 import 'package:chat/widgets/labels.dart';
+import 'dart:ui' as ui;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -23,6 +25,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Future<ui.Image> _image(String url) async =>
+      await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
@@ -31,35 +36,55 @@ class _LoginPageState extends State<LoginPage> {
     changeStatusDark();
     return Scaffold(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
-        body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Container(
-            height: _size.height,
-            child: Stack(
-              children: <Widget>[
-                HeaderMultiCurvesText(
-                    title: 'Log In!',
-                    subtitle: 'Welcome back,',
-                    color: currentTheme.accentColor),
-                Container(
-                    margin: EdgeInsets.only(top: _size.height / 2.7),
-                    child: _Form()),
-                Center(
-                  child: Container(
-                    margin: EdgeInsets.only(top: _size.height / 1.2),
-                    child: Labels(
-                        rute: 'register',
-                        title: '¿No tienes cuenta?',
-                        subTitulo: 'Crea una ahora!',
-                        colortText1: Colors.white70,
-                        colortText2: Color(0xffD9B310)),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Container(
+              height: _size.height + 100,
+              child: Stack(
+                children: <Widget>[
+                  FutureBuilder<ui.Image>(
+                    initialData: null,
+                    future:
+                        _image("https://wallpapercave.com/wp/wp2869931.jpg"),
+                    builder: (BuildContext context,
+                            AsyncSnapshot<ui.Image> snapshot) =>
+                        !snapshot.hasData
+                            ? HeaderMultiCurvesImageEmptyText(
+                                isEmpty: true,
+                                color: Colors.white,
+                                image: snapshot.data,
+                              )
+                            : HeaderMultiCurvesImageEmptyText(
+                                color: Colors.white,
+                                image: snapshot.data,
+                                title: 'Login!',
+                                subtitle: 'Welcome back!',
+                              ),
                   ),
-                ),
-                Center(
+                  Container(
+                      margin: EdgeInsets.only(top: _size.height / 2.7),
+                      child: _Form()),
+                  Center(
                     child: Container(
-                        margin: EdgeInsets.only(top: _size.height / 1.1),
-                        child: StyledLogoCustom()))
-              ],
+                      margin: EdgeInsets.only(top: _size.height / 1.2),
+                      child: Labels(
+                          rute: 'register',
+                          title: '¿No tienes cuenta?',
+                          subTitulo: 'Crea una ahora!',
+                          colortText1: Colors.white70,
+                          colortText2: Color(0xffD9B310)),
+                    ),
+                  ),
+                  Center(
+                      child: Container(
+                          margin: EdgeInsets.only(top: _size.height),
+                          child: StyledLogoCustom()))
+                ],
+              ),
             ),
           ),
         ));
@@ -80,7 +105,6 @@ class __FormState extends State<_Form> {
     final bloc = CustomProvider.of(context);
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: <Widget>[
           /* CustomInput(
@@ -206,16 +230,19 @@ class __FormState extends State<_Form> {
         final authService = Provider.of<AuthService>(context);
         final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-        return ButtonGold(
-          color: currentTheme.accentColor,
-          text: 'Log In',
-          onPressed: authService.authenticated
-              ? null
-              : () async {
-                  FocusScope.of(context).unfocus();
+        return Container(
+          padding: EdgeInsets.all(20),
+          child: ButtonGold(
+            color: currentTheme.accentColor,
+            text: 'Log In',
+            onPressed: authService.authenticated
+                ? null
+                : () async {
+                    FocusScope.of(context).unfocus();
 
-                  _login(bloc, context);
-                },
+                    _login(bloc, context);
+                  },
+          ),
         );
       },
     );

@@ -11,20 +11,15 @@ class HeaderMultiCurvesImage extends StatelessWidget {
   final Color color;
 
   final ui.Image image;
-  final bool isUserEdit;
-  final bool isUserAuth;
-  final String name;
-  final String username;
+
   final bool isEmpty;
+  final double height;
 
   HeaderMultiCurvesImage(
       {@required this.color,
       this.image,
-      this.isUserEdit = false,
-      this.isUserAuth = false,
-      this.name,
-      this.username,
-      this.isEmpty = false});
+      this.isEmpty = false,
+      this.height = 3.5});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +30,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
       children: [
         Container(
             width: double.infinity,
-            height: size.height / 3.5,
+            height: size.height / this.height,
             child: (isEmpty)
                 ? HeaderMultiCurves(
                     color: currentTheme.scaffoldBackgroundColor,
@@ -52,6 +47,71 @@ class HeaderMultiCurvesImage extends StatelessWidget {
           ],
         )
  */
+        /*      Container(
+          padding: EdgeInsets.only(top: 40, left: 275),
+          child: StyledLogo(),
+        ), */
+      ],
+    );
+  }
+}
+
+class HeaderMultiCurvesImageEmptyText extends StatelessWidget {
+  final Color color;
+
+  final ui.Image image;
+
+  final bool isEmpty;
+  final double height;
+  final String title;
+  final String subtitle;
+
+  HeaderMultiCurvesImageEmptyText(
+      {@required this.color,
+      this.image,
+      this.isEmpty = false,
+      this.height = 3.0,
+      this.title = "",
+      this.subtitle = ""});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return Stack(
+      children: [
+        Container(
+            width: double.infinity,
+            height: size.height / this.height,
+            child: (isEmpty)
+                ? HeaderMultiCurves(
+                    color: currentTheme.scaffoldBackgroundColor,
+                  )
+                : CustomPaint(
+                    painter: _HeaderTwoCurvesPainterImage(
+                        color: this.color, opacity: 1.0, image: this.image))),
+        Container(
+          padding: EdgeInsets.only(top: size.height / 5, left: 50),
+          child: Text(
+            this.title,
+            style: TextStyle(
+                fontSize: 40,
+                color: Colors.black87,
+                fontWeight: FontWeight.w800),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(top: size.height / 6, left: 50),
+          child: Text(
+            this.subtitle,
+            style: TextStyle(
+                fontSize: 19,
+                color: Colors.black.withOpacity(0.6),
+                fontWeight: FontWeight.w500),
+          ),
+        ),
+
         /*      Container(
           padding: EdgeInsets.only(top: 40, left: 275),
           child: StyledLogo(),
@@ -191,13 +251,13 @@ class _HeaderTwoCurvesPainterImage extends CustomPainter {
 
     // Dibujar con path y el pencil
 
-    path.lineTo(0, size.height * 0.90);
+    path.lineTo(0, size.height * 0.99);
     //path.lineTo(size.width, size.height * 0.25);
 
-    path.quadraticBezierTo(size.width * 0.30, size.height * 1.1,
+    path.quadraticBezierTo(size.width * 0.20, size.height * 1.2,
         size.width * 0.5, size.height * 0.90);
     path.quadraticBezierTo(
-        size.width * 0.73, size.height * 0.70, size.width, size.height * 0.90);
+        size.width * 0.70, size.height * 0.70, size.width, size.height * 0.99);
     path.lineTo(size.width, 0);
 
     canvas.drawPath(
@@ -329,6 +389,6 @@ Route createRouteMyProfile() {
         child: child,
       );
     },
-    transitionDuration: Duration(milliseconds: 500),
+    transitionDuration: Duration(milliseconds: 700),
   );
 }
