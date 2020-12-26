@@ -337,8 +337,8 @@ class _MyProfileState extends State<MyProfile> {
                                 color: Colors.white),
                           )
                         : Text(
-                            (name.length >= 12)
-                                ? name.substring(0, 12) + '...'
+                            (name.length >= 15)
+                                ? name.substring(0, 15) + '...'
                                 : name,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
