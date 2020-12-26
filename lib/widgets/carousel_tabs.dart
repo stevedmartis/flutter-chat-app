@@ -24,19 +24,7 @@ class _TabsScrollCustomState extends State<TabsScrollCustom> {
   @override
   void initState() {
     print(widget.rooms);
-    /*    final roomService = Provider.of<RoomService>(context, listen: false);
-    final authService = Provider.of<AuthService>(context, listen: false);
 
-    profile = authService.profile;
-    roomService.getRoomsUser(profile.user.uid);
- */
-//
-    // final roomModel = Provider.of<Room>(context, listen: false);
-
-    //  roomModel.rooms = widget.rooms;
-    //  print(roomModel.rooms);
-
-    //  print(roomModel.rooms);
     setState(() {});
     super.initState();
   }

@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
+import '../utils//extension.dart';
 
 class MyProfile extends StatefulWidget {
   MyProfile({
@@ -87,6 +88,7 @@ class _MyProfileState extends State<MyProfile> {
 
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     name = widget.profile.name;
+
     roomBloc.getRooms(widget.profile.user.uid);
     // this._chargeRoomsUser();
   }
@@ -307,10 +309,13 @@ class _MyProfileState extends State<MyProfile> {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     final username = widget.profile.user.username.toLowerCase();
-    //final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
+    final nameFinal = name.isEmpty ? "" : name.capitalize();
+
+    print(size.width);
     return SliverPersistentHeader(
-      pinned: true,
+      pinned: false,
       delegate: SliverAppBarDelegate(
           minHeight: 60.0,
           maxHeight: 150.0,
@@ -323,12 +328,13 @@ class _MyProfileState extends State<MyProfile> {
               children: [
                 if (!this.widget.isUserEdit)
                   Container(
+                    width: size.width / 1.8,
                     padding: EdgeInsets.only(left: 40, top: 5.0),
                     //margin: EdgeInsets.only(left: size.width / 6, top: 10),
-                    child: (name.isEmpty)
+                    child: (nameFinal == "")
                         ? Text(
-                            (name.length >= 12)
-                                ? username.substring(0, 12) + '...'
+                            (username.length >= 20)
+                                ? username.substring(0, 20) + '...'
                                 : username,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -337,13 +343,14 @@ class _MyProfileState extends State<MyProfile> {
                                 color: Colors.white),
                           )
                         : Text(
-                            (name.length >= 15)
-                                ? name.substring(0, 15) + '...'
-                                : name,
+                            (nameFinal.length >= 20)
+                                ? nameFinal.substring(0, 20) + '...'
+                                : nameFinal,
                             overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                            maxLines: 2,
                             style: TextStyle(
-                                fontSize: (name.length >= 15) ? 24 : 26,
+                                letterSpacing: 2.0,
+                                fontSize: (nameFinal.length >= 15) ? 24 : 26,
                                 color: Colors.white),
                           ),
                   ),
