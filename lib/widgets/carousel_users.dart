@@ -23,37 +23,75 @@ class CarouselUsersSliderCustom extends StatefulWidget {
 class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider.builder(
-      options: CarouselOptions(
-        height: 100,
-        viewportFraction: 0.30,
-        initialPage: 0,
-        enableInfiniteScroll: true,
-        reverse: false,
-        autoPlay: true,
-        autoPlayInterval: Duration(seconds: 5),
-        autoPlayAnimationDuration: Duration(milliseconds: 800),
-        autoPlayCurve: Curves.fastOutSlowIn,
-        enlargeCenterPage: false,
+    return (widget.profiles.length >= 6)
+        ? CarouselSlider.builder(
+            options: CarouselOptions(
+              height: 100,
+              viewportFraction: 0.30,
+              initialPage: 0,
+              enableInfiniteScroll: true,
+              reverse: false,
+              autoPlay: true,
+              autoPlayInterval: Duration(seconds: 5),
+              autoPlayAnimationDuration: Duration(milliseconds: 800),
+              autoPlayCurve: Curves.fastOutSlowIn,
+              enlargeCenterPage: false,
+              scrollDirection: Axis.horizontal,
+            ),
+            itemCount: widget.profiles.length,
+            itemBuilder: (BuildContext context, int index) => GestureDetector(
+              onTap: () {
+                final chatService =
+                    Provider.of<ChatService>(context, listen: false);
+                chatService.userFor = widget.profiles[index];
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MyProfile(
+                              title: '',
+                              profile: widget.profiles[index],
+                            )));
+              },
+              child: Preview(profile: widget.profiles[index]),
+            ),
+          )
+        : ListView.builder(
+            shrinkWrap: false,
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.profiles.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _buildBox(index: index);
+            },
+          );
+  }
+
+  Widget _horizontalListView() {
+    return SizedBox(
+      height: 120,
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
-      ),
-      itemCount: widget.profiles.length,
-      itemBuilder: (BuildContext context, int index) => GestureDetector(
-        onTap: () {
-          final chatService = Provider.of<ChatService>(context, listen: false);
-          chatService.userFor = widget.profiles[index];
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => MyProfile(
-                        title: '',
-                        profile: widget.profiles[index],
-                      )));
-        },
-        child: Preview(profile: widget.profiles[index]),
+        itemBuilder: (_, index) => _buildBox(index: index),
       ),
     );
   }
+
+  Widget _buildBox({int index}) => Container(
+        child: GestureDetector(
+          onTap: () {
+            final chatService =
+                Provider.of<ChatService>(context, listen: false);
+            chatService.userFor = widget.profiles[index];
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => MyProfile(
+                          title: '',
+                          profile: widget.profiles[index],
+                        )));
+          },
+          child: Preview(profile: widget.profiles[index]),
+        ),
+      );
 }
 
 class Preview extends StatefulWidget {

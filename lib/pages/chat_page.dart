@@ -111,6 +111,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   void _chargeRecord(String userId) async {
     List<Message> chat = await this.chatService.getChat(userId);
 
+    print(chat);
     final history = chat.map((m) => new ChatMessage(
           text: m.message,
           uid: m.by,
@@ -254,11 +255,19 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       _isWriting = false;
     });
 
+    print('$text');
+
     this.socketService.emit('personal-message', {
       'by': this.authService.profile.user.uid,
       'for': this.chatService.userFor.user.uid,
       'message': text
     });
+
+    /*    this.socketService.emit('personal-message', {
+      'by': this.authService.profile.user.uid,
+      'for': this.chatService.userFor.user.uid,
+      'message': text
+    }); */
   }
 
   @override
