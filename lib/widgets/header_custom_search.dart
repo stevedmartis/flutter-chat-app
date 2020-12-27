@@ -80,9 +80,9 @@ class CustomAppBarHeader extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (BuildContext context) => TabsCustom())),
             child: Container(
-                child: FaIcon(
-              FontAwesomeIcons.slidersH,
-              size: 25,
+                child: Icon(
+              Icons.menu,
+              size: 35,
               color: currentTheme.accentColor,
             )),
           )
@@ -162,7 +162,7 @@ class CustomSliverAppBarHeader extends StatelessWidget {
                 width: 250,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: currentTheme.scaffoldBackgroundColor.withOpacity(0.80),
+                  color: currentTheme.scaffoldBackgroundColor.withOpacity(0.30),
                   borderRadius: BorderRadius.all(Radius.circular(30)),
                   boxShadow: [
                     BoxShadow(
@@ -176,8 +176,8 @@ class CustomSliverAppBarHeader extends StatelessWidget {
           ),
           Container(
               padding: EdgeInsets.all(0.0),
-              child: FaIcon(
-                FontAwesomeIcons.slidersH,
+              child: Icon(
+                Icons.more_vert,
                 size: 25,
                 color: currentTheme.accentColor,
               )),

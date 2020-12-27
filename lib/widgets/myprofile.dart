@@ -94,7 +94,7 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   bool get _showTitle {
-    return _scrollController.hasClients && _scrollController.offset >= 100;
+    return _scrollController.hasClients && _scrollController.offset >= 130;
   }
 
   @override
@@ -133,11 +133,13 @@ class _MyProfileState extends State<MyProfile> {
                             child: IconButton(
                                 icon: Icon(Icons.arrow_back_ios,
                                     size: size.width / 20,
-                                    color: currentTheme.accentColor),
+                                    color: (_showTitle)
+                                        ? currentTheme.accentColor
+                                        : Colors.white),
                                 onPressed: () => {
                                       Navigator.pop(context),
                                     }),
-                            backgroundColor: Colors.black.withOpacity(0.70)),
+                            backgroundColor: Colors.black.withOpacity(0.30)),
                       )),
                   actions: [
                     Container(
@@ -147,13 +149,17 @@ class _MyProfileState extends State<MyProfile> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                           child: CircleAvatar(
-                              child: IconButton(
-                                icon: FaIcon(FontAwesomeIcons.slidersH,
-                                    size: size.width / 22,
-                                    color: currentTheme.accentColor),
-                                onPressed: () => Navigator.of(context).pop(),
+                              child: Center(
+                                child: IconButton(
+                                  icon: Icon(Icons.more_vert,
+                                      size: size.width / 15,
+                                      color: (_showTitle)
+                                          ? currentTheme.accentColor
+                                          : Colors.white),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
                               ),
-                              backgroundColor: Colors.black.withOpacity(0.70)),
+                              backgroundColor: Colors.black.withOpacity(0.30)),
                         )),
                   ],
 
@@ -180,47 +186,119 @@ class _MyProfileState extends State<MyProfile> {
                                 ),
                     ),
                     titlePadding: EdgeInsets.all(0),
-                    title: GestureDetector(
-                      onTap: () => {
-                        if (!widget.isUserAuth)
-                          Navigator.of(context).push(createRouteChat())
-                        else
-                          Navigator.of(context).push(createRouteMyProfile()),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: () => {
+                            if (!widget.isUserAuth)
+                              Navigator.of(context).push(createRouteChat())
+                            else
+                              Navigator.of(context)
+                                  .push(createRouteMyProfile()),
 
-                        if (widget.isUserEdit)
-                          Navigator.of(context).pushReplacement(
-                              PageRouteBuilder(
-                                  transitionDuration:
-                                      Duration(milliseconds: 200),
-                                  pageBuilder: (_, __, ___) =>
-                                      AvatarImagePage(this.widget.profile))),
+                            if (widget.isUserEdit)
+                              Navigator.of(context).pushReplacement(
+                                  PageRouteBuilder(
+                                      transitionDuration:
+                                          Duration(milliseconds: 200),
+                                      pageBuilder: (_, __, ___) =>
+                                          AvatarImagePage(
+                                              this.widget.profile))),
 
-                        // make changes here
+                            // make changes here
 
-                        //Navigator.of(context).push(createRouteAvatarProfile(this.user));
-                      },
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 200),
-                        width: (_showTitle) ? 50 : 70,
-                        height: (_showTitle) ? 50 : 70,
-                        margin: EdgeInsets.only(
-                            left: (_showTitle)
-                                ? size.width / 7.0
-                                : size.width / 12.0),
-                        child: Hero(
-                          tag: widget.profile.user.uid,
-                          child: Material(
-                            type: MaterialType.transparency,
-                            child: ImageUserChat(
-                              width: 100,
-                              // showBorderAvatar: _showBorderAvatar,
-                              height: 100,
-                              profile: widget.profile,
-                              fontsize: 13,
+                            //Navigator.of(context).push(createRouteAvatarProfile(this.user));
+                          },
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 200),
+                            width: (_showTitle) ? 50 : 70,
+                            height: (_showTitle) ? 50 : 70,
+                            margin: EdgeInsets.only(
+                                left: (_showTitle)
+                                    ? size.width / 8.0
+                                    : size.width / 25.0),
+                            child: Hero(
+                              tag: widget.profile.user.uid,
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: ImageUserChat(
+                                  width: 100,
+                                  // showBorderAvatar: _showBorderAvatar,
+                                  height: 100,
+                                  profile: widget.profile,
+                                  fontsize: 13,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        Spacer(),
+                        if (!this.widget.isUserEdit && !_showTitle)
+                          Container(
+                              width: 35,
+                              height: 35,
+                              margin: EdgeInsets.only(
+                                  right: 10, top: size.height / 3.5),
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                child: CircleAvatar(
+                                    child: (IconButton(
+                                      icon: Center(
+                                        child: Icon(
+                                            (!widget.isUserAuth)
+                                                ? Icons.share
+                                                : Icons.settings,
+                                            color: currentTheme.accentColor,
+                                            size: 15),
+                                      ),
+                                      onPressed: () {
+                                        if (!widget.isUserAuth)
+                                          return true;
+                                        else
+                                          Navigator.of(context)
+                                              .push(createRouteMyProfile());
+
+                                        //globalKey.currentState.openEndDrawer();
+                                      },
+                                    )),
+                                    backgroundColor:
+                                        Colors.black.withOpacity(0.70)),
+                              )),
+                        if (!this.widget.isUserEdit && !_showTitle)
+                          Container(
+                              width: 35,
+                              height: 35,
+                              margin: EdgeInsets.only(
+                                  right: 10, top: size.height / 3.5),
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                child: CircleAvatar(
+                                    child: (IconButton(
+                                      icon: Icon(
+                                        (!widget.isUserAuth)
+                                            ? Icons.favorite
+                                            : Icons.edit,
+                                        color: currentTheme.accentColor,
+                                        size: 15,
+                                      ),
+                                      onPressed: () {
+                                        if (!widget.isUserAuth)
+                                          return true;
+                                        else
+                                          Navigator.of(context)
+                                              .push(createRouteMyProfile());
+
+                                        //globalKey.currentState.openEndDrawer();
+                                      },
+                                    )),
+                                    backgroundColor:
+                                        Colors.black.withOpacity(0.70)),
+                              )),
+                      ],
                     ),
                     centerTitle: false,
                   ),
@@ -294,7 +372,7 @@ class _MyProfileState extends State<MyProfile> {
     //   final roomModel = Provider.of<Room>(context);
 
     return SliverPersistentHeader(
-      pinned: false,
+      pinned: true,
       delegate: SliverAppBarDelegate(
           minHeight: 10,
           maxHeight: 10,
@@ -328,14 +406,12 @@ class _MyProfileState extends State<MyProfile> {
               children: [
                 if (!this.widget.isUserEdit)
                   Container(
-                    width: size.width / 1.8,
-                    padding: EdgeInsets.only(left: 40, top: 5.0),
+                    width: size.width / 1.1,
+                    padding: EdgeInsets.only(left: size.width / 10.0, top: 5.0),
                     //margin: EdgeInsets.only(left: size.width / 6, top: 10),
                     child: (nameFinal == "")
                         ? Text(
-                            (username.length >= 20)
-                                ? username.substring(0, 20) + '...'
-                                : username,
+                            username,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: TextStyle(
@@ -343,8 +419,8 @@ class _MyProfileState extends State<MyProfile> {
                                 color: Colors.white),
                           )
                         : Text(
-                            (nameFinal.length >= 20)
-                                ? nameFinal.substring(0, 20) + '...'
+                            (nameFinal.length >= 30)
+                                ? nameFinal.substring(0, 30)
                                 : nameFinal,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
@@ -354,64 +430,6 @@ class _MyProfileState extends State<MyProfile> {
                                 color: Colors.white),
                           ),
                   ),
-                Spacer(),
-                if (!this.widget.isUserEdit)
-                  Container(
-                      width: 50,
-                      height: 50,
-                      margin: EdgeInsets.only(right: 20),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        child: CircleAvatar(
-                            child: (IconButton(
-                              icon: Center(
-                                child: Icon(
-                                    (!widget.isUserAuth)
-                                        ? Icons.share
-                                        : Icons.settings,
-                                    color: currentTheme.accentColor,
-                                    size: 25),
-                              ),
-                              onPressed: () {
-                                if (!widget.isUserAuth)
-                                  return true;
-                                else
-                                  Navigator.of(context)
-                                      .push(createRouteMyProfile());
-
-                                //globalKey.currentState.openEndDrawer();
-                              },
-                            )),
-                            backgroundColor: Colors.black.withOpacity(0.70)),
-                      )),
-                if (!this.widget.isUserEdit)
-                  Container(
-                      width: 50,
-                      height: 50,
-                      margin: EdgeInsets.only(right: 20),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        child: CircleAvatar(
-                            child: (IconButton(
-                              icon: Icon(
-                                (!widget.isUserAuth)
-                                    ? Icons.favorite
-                                    : Icons.edit,
-                                color: currentTheme.accentColor,
-                                size: 25,
-                              ),
-                              onPressed: () {
-                                if (!widget.isUserAuth)
-                                  return true;
-                                else
-                                  Navigator.of(context)
-                                      .push(createRouteMyProfile());
-
-                                //globalKey.currentState.openEndDrawer();
-                              },
-                            )),
-                            backgroundColor: Colors.black.withOpacity(0.70)),
-                      )),
               ],
             ),
           )),

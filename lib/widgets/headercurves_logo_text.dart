@@ -19,7 +19,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
       {@required this.color,
       this.image,
       this.isEmpty = false,
-      this.height = 3.5});
+      this.height = 1.8});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class HeaderMultiCurvesImage extends StatelessWidget {
       children: [
         Container(
             width: double.infinity,
-            height: size.height / this.height,
+            height: size.width / this.height,
             child: (isEmpty)
                 ? HeaderMultiCurves(
                     color: currentTheme.scaffoldBackgroundColor,
@@ -254,10 +254,10 @@ class _HeaderTwoCurvesPainterImage extends CustomPainter {
     path.lineTo(0, size.height * 0.99);
     //path.lineTo(size.width, size.height * 0.25);
 
-    path.quadraticBezierTo(size.width * 0.20, size.height * 1.2,
-        size.width * 0.5, size.height * 0.90);
+    path.quadraticBezierTo(size.width * 0.20, size.height * 1.0,
+        size.width * 0.5, size.height * 0.99);
     path.quadraticBezierTo(
-        size.width * 0.70, size.height * 0.70, size.width, size.height * 0.99);
+        size.width * 0.99, size.height * 0.99, size.width, size.height * 0.99);
     path.lineTo(size.width, 0);
 
     canvas.drawPath(
