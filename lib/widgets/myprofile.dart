@@ -73,7 +73,7 @@ class _MyProfileState extends State<MyProfile> {
 
   final roomService = new RoomService();
 
-  double get maxHeight => 200 + MediaQuery.of(context).padding.top;
+  double get maxHeight => 230 + MediaQuery.of(context).padding.top;
 
   double get minHeight => MediaQuery.of(context).padding.bottom;
 
@@ -217,7 +217,7 @@ class _MyProfileState extends State<MyProfile> {
                             height: (_showTitle) ? 50 : 70,
                             margin: EdgeInsets.only(
                                 left: (_showTitle)
-                                    ? size.width / 8.0
+                                    ? size.width / 7.0
                                     : size.width / 25.0),
                             child: Hero(
                               tag: widget.profile.user.uid,
