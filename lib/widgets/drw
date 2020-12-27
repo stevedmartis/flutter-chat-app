@@ -74,7 +74,7 @@ class _MyProfileState extends State<MyProfile> {
 
   final roomService = new RoomService();
 
-  double get maxHeight => 150 + MediaQuery.of(context).padding.top;
+  double get maxHeight => 230 + MediaQuery.of(context).padding.top;
 
   double get minHeight => MediaQuery.of(context).padding.bottom;
 
@@ -179,32 +179,50 @@ class _MyProfileState extends State<MyProfile> {
                       StretchMode.zoomBackground,
                       StretchMode.fadeTitle
                     ],
-                    background: FutureBuilder<ui.Image>(
-                      future: _image(widget.profile.getHeaderImg()),
-                      builder: (BuildContext context,
-                              AsyncSnapshot<ui.Image> snapshot) =>
-                          !snapshot.hasData
-                              ? ProfilePage(
-                                  image: snapshot.data,
-                                  isUserAuth: widget.isUserAuth,
-                                  isUserEdit: widget.isUserEdit,
-                                  profile: widget.profile,
-                                )
-                              : ProfilePage(
-                                  image: snapshot.data,
-                                  isUserAuth: widget.isUserAuth,
-                                  isUserEdit: widget.isUserEdit,
-                                  profile: widget.profile,
-                                ),
+                    background: ProfilePage(
+                      image: widget.profile.getHeaderImg(),
+                      isUserAuth: widget.isUserAuth,
+                      isUserEdit: widget.isUserEdit,
+                      profile: widget.profile,
                     ),
                     titlePadding: EdgeInsets.all(0),
-                    //title:
-
-                    /* Row(
+                    title: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Spacer(),
+                        if (!this.widget.isUserEdit && !_showTitle)
+                          Container(
+                              width: 35,
+                              height: 35,
+                              margin: EdgeInsets.only(
+                                  right: 10, top: size.height / 3.5),
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                child: CircleAvatar(
+                                    child: (IconButton(
+                                      icon: Center(
+                                        child: Icon(
+                                            (!widget.isUserAuth)
+                                                ? Icons.share
+                                                : Icons.settings,
+                                            color: currentTheme.accentColor,
+                                            size: 15),
+                                      ),
+                                      onPressed: () {
+                                        if (!widget.isUserAuth)
+                                          return true;
+                                        else
+                                          Navigator.of(context)
+                                              .push(createRouteMyProfile());
+
+                                        //globalKey.currentState.openEndDrawer();
+                                      },
+                                    )),
+                                    backgroundColor:
+                                        Colors.black.withOpacity(0.70)),
+                              )),
                         if (!this.widget.isUserEdit && !_showTitle)
                           Container(
                               width: 35,
@@ -237,9 +255,7 @@ class _MyProfileState extends State<MyProfile> {
                                         Colors.black.withOpacity(0.70)),
                               )),
                       ],
-                    
-                    
-                    ), */
+                    ),
                     centerTitle: false,
                   ),
                 ),

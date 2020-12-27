@@ -167,7 +167,7 @@ class _FormEditUserprofileState extends State<FormEditUserprofile> {
                   },
           ),
           SizedBox(
-            height: 150,
+            height: 200,
           ),
         ],
       ),
