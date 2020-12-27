@@ -73,7 +73,7 @@ class _MyProfileState extends State<MyProfile> {
 
   final roomService = new RoomService();
 
-  double get maxHeight => 200 + MediaQuery.of(context).padding.top;
+  double get maxHeight => 230 + MediaQuery.of(context).padding.top;
 
   double get minHeight => MediaQuery.of(context).padding.bottom;
 
