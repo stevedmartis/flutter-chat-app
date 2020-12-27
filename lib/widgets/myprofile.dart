@@ -120,6 +120,11 @@ class _MyProfileState extends State<MyProfile> {
               controller: _scrollController,
               slivers: <Widget>[
                 SliverAppBar(
+                  stretch: true,
+                  stretchTriggerOffset: 200.0,
+                  onStretchTrigger: () {
+                    return;
+                  },
                   backgroundColor: _showTitle
                       ? Colors.black
                       : currentTheme.scaffoldBackgroundColor,
@@ -169,21 +174,16 @@ class _MyProfileState extends State<MyProfile> {
                   expandedHeight: maxHeight,
                   // collapsedHeight: 56.0001,
                   flexibleSpace: FlexibleSpaceBar(
-                    background: FutureBuilder<ui.Image>(
-                      initialData: null,
-                      future: _image(widget.profile.getHeaderImg()),
-                      builder: (BuildContext context,
-                              AsyncSnapshot<ui.Image> snapshot) =>
-                          !snapshot.hasData
-                              ? HeaderMultiCurvesImage(
-                                  isEmpty: true,
-                                  color: Colors.white,
-                                  image: snapshot.data,
-                                )
-                              : HeaderMultiCurvesImage(
-                                  color: Colors.white,
-                                  image: snapshot.data,
-                                ),
+                    stretchModes: [
+                      StretchMode.zoomBackground,
+                      StretchMode.fadeTitle
+                    ],
+                    background: ClipPath(
+                      child: Image.network(
+                        widget.profile.getHeaderImg(),
+                        fit: BoxFit.cover,
+                      ),
+                      clipper: BottomWaveClipper(),
                     ),
                     titlePadding: EdgeInsets.all(0),
                     title: Row(
@@ -216,9 +216,10 @@ class _MyProfileState extends State<MyProfile> {
                             width: (_showTitle) ? 50 : 70,
                             height: (_showTitle) ? 50 : 70,
                             margin: EdgeInsets.only(
-                                left: (_showTitle)
-                                    ? size.width / 8.0
-                                    : size.width / 25.0),
+                              left: (_showTitle)
+                                  ? size.width / 8.0
+                                  : size.width / 25.0,
+                            ),
                             child: Hero(
                               tag: widget.profile.user.uid,
                               child: Material(
@@ -660,3 +661,31 @@ Route createRouteRooms() {
             }
           },
         ), */
+
+class BottomWaveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0.0, size.height / 1.40);
+
+    var firstControlPoint = Offset(size.width / 3, size.height);
+    var firstEndPoint = Offset(size.width / 1.30, size.height - 60.0);
+    path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
+        firstEndPoint.dx, firstEndPoint.dy);
+
+    var secondControlPoint =
+        Offset(size.width - (size.width / 3.25), size.height - 60);
+    var secondEndPoint = Offset(size.width / 1.30, size.height - 60);
+    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
+        secondEndPoint.dx, secondEndPoint.dy);
+
+    path.lineTo(size.width, size.height - 90);
+    path.lineTo(size.width, 0.0);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
