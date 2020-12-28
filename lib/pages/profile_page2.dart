@@ -11,7 +11,10 @@ import 'dart:ui' as ui;
 
 class ProfilePage extends StatefulWidget {
   ProfilePage(
-      {this.isUserAuth, this.isUserEdit, @required this.profile, this.image});
+      {this.isUserAuth,
+      this.isUserEdit = false,
+      @required this.profile,
+      this.image});
   final bool isUserAuth;
   final bool isUserEdit;
   final Profiles profile;
@@ -30,29 +33,31 @@ class _ProfilePageState extends State<ProfilePage> {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Scaffold(
-      floatingActionButton: Container(
-          width: 50,
-          height: 50,
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            child: CircleAvatar(
-                child: (IconButton(
-                  icon: Icon(
-                    (!widget.isUserAuth) ? Icons.favorite : Icons.edit,
-                    color: currentTheme.accentColor,
-                    size: 25,
-                  ),
-                  onPressed: () {
-                    if (!widget.isUserAuth)
-                      return true;
-                    else
-                      Navigator.of(context).push(createRouteMyProfile());
+      floatingActionButton: (!widget.isUserEdit)
+          ? Container(
+              width: 50,
+              height: 50,
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                child: CircleAvatar(
+                    child: (IconButton(
+                      icon: Icon(
+                        (!widget.isUserAuth) ? Icons.favorite : Icons.edit,
+                        color: currentTheme.accentColor,
+                        size: 25,
+                      ),
+                      onPressed: () {
+                        if (!widget.isUserAuth)
+                          return true;
+                        else
+                          Navigator.of(context).push(createRouteEditProfile());
 
-                    //globalKey.currentState.openEndDrawer();
-                  },
-                )),
-                backgroundColor: Colors.black),
-          )),
+                        //globalKey.currentState.openEndDrawer();
+                      },
+                    )),
+                    backgroundColor: Colors.black),
+              ))
+          : Container(),
       body: SizedBox.expand(
         child: Container(
           height: _profileCardHeight,

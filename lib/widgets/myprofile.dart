@@ -5,7 +5,6 @@ import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
 import 'package:chat/pages/chat_page.dart';
-import 'package:chat/pages/my_profile.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/profile_page2.dart';
 import 'package:chat/pages/room_list_page.dart';
@@ -68,11 +67,8 @@ class _MyProfileState extends State<MyProfile> {
   // List<Room> rooms = [];
   Future<List<Room>> getRoomsFuture;
   AuthService authService;
-
   final roomService = new RoomService();
-
   double get maxHeight => 150 + MediaQuery.of(context).padding.top;
-
   double get minHeight => MediaQuery.of(context).padding.bottom;
 
   Future<ui.Image> _image(String url) async =>
@@ -201,13 +197,11 @@ class _MyProfileState extends State<MyProfile> {
                               ? ProfilePage(
                                   image: snapshot.data,
                                   isUserAuth: widget.isUserAuth,
-                                  isUserEdit: widget.isUserEdit,
                                   profile: widget.profile,
                                 )
                               : ProfilePage(
                                   image: snapshot.data,
                                   isUserAuth: widget.isUserAuth,
-                                  isUserEdit: widget.isUserEdit,
                                   profile: widget.profile,
                                 ),
                     ),
@@ -260,12 +254,7 @@ class _MyProfileState extends State<MyProfile> {
                 (!this.widget.isUserEdit)
                     ? makeHeaderInfo(context)
                     : makeHeaderSpacer(context),
-                if (!widget.isUserEdit)
-                  makeHeaderTabs(context)
-                else
-                  SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: FormEditUserprofile(widget.profile.user)),
+                if (!widget.isUserEdit) makeHeaderTabs(context),
                 if (!widget.isUserEdit)
                   SliverFixedExtentList(
                     itemExtent: 150.0,
@@ -337,7 +326,6 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   SliverPersistentHeader makeHeaderInfo(context) {
-    //   final roomModel = Provider.of<Room>(context);
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     final username = widget.profile.user.username.toLowerCase();

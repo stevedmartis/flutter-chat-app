@@ -7,8 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class AvatarImagePage extends StatefulWidget {
-  AvatarImagePage(this.profile);
+  AvatarImagePage({this.profile, this.isUserAuth = true});
   final Profiles profile;
+  final bool isUserAuth;
 
   @override
   _AvatarImagePageState createState() => _AvatarImagePageState();
@@ -43,10 +44,8 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: IconButton(
@@ -59,36 +58,40 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
           color: Colors.white,
         ),
       ),
-      bottomNavigationBar: Container(
-          height: 70,
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => {_selectImage()},
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
+      bottomNavigationBar: (widget.isUserAuth)
+          ? Container(
+              height: 70,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => {_selectImage()},
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        child: Container(
+                          alignment: Alignment.center,
+                          color: currentTheme.accentColor,
+                          child: Text("Cambiar",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
                     child: Container(
                       alignment: Alignment.center,
-                      color: currentTheme.accentColor,
-                      child: Text("Cambiar",
+                      color: currentTheme.scaffoldBackgroundColor,
+                      child: Text("Quitar",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18)),
                     ),
                   ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.center,
-                  color: currentTheme.scaffoldBackgroundColor,
-                  child: Text("Quitar",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                ),
-              ),
-            ],
-          )),
+                ],
+              ))
+          : Container(
+              height: 70,
+            ),
       backgroundColor: Colors.black,
       body: Hero(
         tag: widget.profile.user.uid,

@@ -1,4 +1,5 @@
 import 'package:chat/models/profiles.dart';
+import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,6 +29,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     return AppBar(
       backgroundColor: Colors.black,
       actions: [
@@ -35,7 +37,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
           padding: EdgeInsets.all(20),
           child: Icon(
             Icons.more_vert,
-            color: Colors.white,
+            color: currentTheme.accentColor,
+            size: 30,
           ),
         ),
       ],
@@ -43,21 +46,30 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(100.0)),
-            child: Container(
-              width: 50,
-              height: 50,
-              child: Hero(
-                  tag: profile.user.uid,
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: ImageUserChat(
-                        width: 100,
-                        height: 100,
-                        profile: profile,
-                        fontsize: 20),
-                  )),
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(PageRouteBuilder(
+                transitionDuration: Duration(milliseconds: 200),
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    AvatarImagePage(
+                      profile: this.profile,
+                      isUserAuth: false,
+                    ))),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(100.0)),
+              child: Container(
+                width: 50,
+                height: 50,
+                child: Hero(
+                    tag: profile.user.uid,
+                    child: Material(
+                      type: MaterialType.transparency,
+                      child: ImageUserChat(
+                          width: 100,
+                          height: 100,
+                          profile: profile,
+                          fontsize: 20),
+                    )),
+              ),
             ),
           ),
           Container(
@@ -69,9 +81,14 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         ],
       ),
       leading: IconButton(
-        icon: Icon(Icons.chevron_left),
-        iconSize: 30,
-        onPressed: () => Navigator.pop(context),
+        icon: Icon(
+          Icons.chevron_left,
+          color: currentTheme.accentColor,
+        ),
+        iconSize: 35,
+        onPressed: () =>
+            //  Navigator.pushReplacement(context, createRouteProfile()),
+            Navigator.pop(context),
         color: Colors.white,
       ),
       automaticallyImplyLeading: true,

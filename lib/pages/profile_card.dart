@@ -35,13 +35,15 @@ class ProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Container(
-          child: CustomPaint(
-            size: Size.infinite,
-            painter: ProfileCardPainter(
-              image: image,
-              color: profileColor,
-              avatarRadius: avatarRadius,
+        SizedBox(
+          child: Container(
+            child: CustomPaint(
+              size: Size.infinite,
+              painter: ProfileCardPainter(
+                image: image,
+                color: profileColor,
+                avatarRadius: avatarRadius,
+              ),
             ),
           ),
         ),
@@ -82,13 +84,12 @@ class ProfileCard extends StatelessWidget {
                   if (!isUserAuth)
                     Navigator.of(context).push(createRouteChat())
                   else
-                    Navigator.of(context).push(createRouteMyProfile()),
-
-                  if (isUserEdit)
-                    Navigator.of(context).pushReplacement(PageRouteBuilder(
+                    Navigator.of(context).push(PageRouteBuilder(
                         transitionDuration: Duration(milliseconds: 200),
-                        pageBuilder: (_, __, ___) =>
-                            AvatarImagePage(this.profile))),
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            AvatarImagePage(
+                              profile: this.profile,
+                            ))),
 
                   // make changes here
 
