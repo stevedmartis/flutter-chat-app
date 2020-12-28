@@ -470,7 +470,7 @@ class _MyProfileState extends State<MyProfile> {
 
                           Navigator.of(context).pushNamed('rooms');
                       })),
-                  backgroundColor: Colors.black.withOpacity(0.30)),
+                  backgroundColor: Colors.black.withOpacity(0.50)),
             ))
         : Container();
   }
