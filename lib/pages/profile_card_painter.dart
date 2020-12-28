@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import './extensions.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -23,20 +22,20 @@ class ProfileCardPainter extends CustomPainter {
     final shapeBounds =
         Rect.fromLTWH(0, 0, size.width, size.height - avatarRadius);
 
-    final centerAvatar = Offset(shapeBounds.left + 100, shapeBounds.bottom);
+    final centerAvatar = Offset(shapeBounds.left + 70, shapeBounds.bottom);
     final avatarRect =
         Rect.fromCircle(center: centerAvatar, radius: avatarRadius)
             .inflate(_margin);
-
+/* 
     final curvedShapeBounds = Rect.fromLTRB(
       shapeBounds.left,
       shapeBounds.top + shapeBounds.height * 0.35,
       shapeBounds.right,
       shapeBounds.bottom,
-    );
+    ); */
 
     _drawBackground(canvas, shapeBounds, avatarRect);
-    _drawCurvedShape(canvas, curvedShapeBounds, avatarRect);
+    //_drawCurvedShape(canvas, curvedShapeBounds, avatarRect);
   }
 
   void _drawBackground(Canvas canvas, Rect bounds, Rect avatarRect) {
@@ -58,11 +57,12 @@ class ProfileCardPainter extends CustomPainter {
           ..style = PaintingStyle.fill);
   }
 
-  void _drawCurvedShape(Canvas canvas, Rect bounds, Rect avatarRect) {
-    //  final colors = [Colors.white, Colors.white];
+  /*  void _drawCurvedShape(Canvas canvas, Rect bounds, Rect avatarRect) {
+    //  final colors = [];
     // final stops = [0.0, 0.3, 1.0];
-    // final gradient = LinearGradient(colors: colors, stops: stops);
+    //final gradient = LinearGradient(colors: colors, stops: stops);
     final paint = Paint();
+    //..shader = gradient.createShader(bounds);
     final handlePoint = Offset(bounds.left + (bounds.width * 0.25), bounds.top);
 
     final curvePath = Path()
@@ -83,7 +83,7 @@ class ProfileCardPainter extends CustomPainter {
               Float64List.fromList(Matrix4.identity().scaled(0.5).storage))
           ..style = PaintingStyle.fill);
   }
-
+ */
   @override
   bool shouldRepaint(ProfileCardPainter oldDelegate) {
     return avatarRadius != oldDelegate.avatarRadius ||

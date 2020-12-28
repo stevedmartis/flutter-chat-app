@@ -71,7 +71,7 @@ class ProfileCard extends StatelessWidget {
          */
 
         Container(
-          margin: EdgeInsets.only(left: 52),
+          margin: EdgeInsets.only(left: 22),
           child: Align(
             alignment: Alignment.bottomLeft,
             child: CircleAvatar(

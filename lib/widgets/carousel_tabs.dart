@@ -23,8 +23,6 @@ class _TabsScrollCustomState extends State<TabsScrollCustom> {
 
   @override
   void initState() {
-    print(widget.rooms);
-
     setState(() {});
     super.initState();
   }

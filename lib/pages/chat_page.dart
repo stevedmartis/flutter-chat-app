@@ -255,8 +255,6 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       _isWriting = false;
     });
 
-    print('$text');
-
     this.socketService.emit('personal-message', {
       'by': this.authService.profile.user.uid,
       'for': this.chatService.userFor.user.uid,

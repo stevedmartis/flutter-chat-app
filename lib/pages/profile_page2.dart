@@ -1,5 +1,4 @@
 import 'package:chat/models/profiles.dart';
-import 'package:chat/pages/widgets.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/sliver_header.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +28,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       floatingActionButton: Container(

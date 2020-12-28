@@ -65,16 +65,6 @@ class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
           );
   }
 
-  Widget _horizontalListView() {
-    return SizedBox(
-      height: 120,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (_, index) => _buildBox(index: index),
-      ),
-    );
-  }
-
   Widget _buildBox({int index}) => Container(
         child: GestureDetector(
           onTap: () {

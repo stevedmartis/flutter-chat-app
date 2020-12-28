@@ -5,7 +5,6 @@ import 'package:chat/services/auth_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class CustomAppBarHeader extends StatelessWidget {
@@ -24,6 +23,8 @@ class CustomAppBarHeader extends StatelessWidget {
 
     return Container(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
             child: GestureDetector(
@@ -52,8 +53,8 @@ class CustomAppBarHeader extends StatelessWidget {
           ),
           Center(
               child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 30),
-                  width: size.width / 1.8,
+                  //  margin: EdgeInsets.only(left: 10, right: 10),
+                  width: size.height / 3.5,
                   height: 40,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -135,6 +136,7 @@ class CustomSliverAppBarHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final size = MediaQuery.of(context).size;
 
     return Container(
       child: Row(
@@ -159,7 +161,7 @@ class CustomSliverAppBarHeader extends StatelessWidget {
           Center(
             child: Container(
                 margin: EdgeInsets.only(left: 30),
-                width: 250,
+                width: size.height / 3,
                 height: 40,
                 decoration: BoxDecoration(
                   color: currentTheme.scaffoldBackgroundColor.withOpacity(0.30),
@@ -227,7 +229,7 @@ class _ItemCircular extends StatelessWidget {
 class SearchContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final color = Colors.white.withOpacity(0.30);
+    final color = Colors.white.withOpacity(0.60);
     return Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
         child: Row(
@@ -238,7 +240,7 @@ class SearchContent extends StatelessWidget {
             Icon(Icons.search, color: color),
             SizedBox(width: 20),
             Container(
-                margin: EdgeInsets.only(top: 0),
+                margin: EdgeInsets.only(top: 0, left: 10),
                 child: Text('¿Qué quieres hoy?',
                     style: TextStyle(
                         color: color,

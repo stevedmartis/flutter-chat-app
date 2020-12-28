@@ -1,7 +1,5 @@
 import 'package:chat/pages/profile_model.dart';
-import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class LifeTime extends StatelessWidget {
   LifeTime({@required this.born, @required this.died});
@@ -38,9 +36,9 @@ class Info extends StatelessWidget {
         Text(title,
             style: Theme.of(context)
                 .textTheme
-                .subtitle
+                .bodyText2
                 .copyWith(color: Colors.grey.shade600)),
-        Text(subtitle, style: Theme.of(context).textTheme.title),
+        Text(subtitle, style: Theme.of(context).textTheme.bodyText1),
       ],
     );
   }

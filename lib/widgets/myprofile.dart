@@ -4,7 +4,6 @@ import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
-import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/my_profile.dart';
 import 'package:chat/pages/principal_page.dart';
@@ -13,12 +12,10 @@ import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
-import 'package:chat/widgets/headercurves_logo_text.dart';
+import 'package:chat/widgets/header_custom_search.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 import '../utils//extension.dart';
@@ -122,7 +119,7 @@ class _MyProfileState extends State<MyProfile> {
               slivers: <Widget>[
                 SliverAppBar(
                   stretch: true,
-                  stretchTriggerOffset: 200.0,
+                  stretchTriggerOffset: 250.0,
                   onStretchTrigger: () {
                     return;
                   },
@@ -132,7 +129,7 @@ class _MyProfileState extends State<MyProfile> {
                   leading: Container(
                       width: size.width / 2,
                       height: size.height / 2,
-                      margin: EdgeInsets.only(left: 20),
+                      margin: EdgeInsets.only(left: 15),
                       child: ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         child: CircleAvatar(
@@ -171,13 +168,30 @@ class _MyProfileState extends State<MyProfile> {
 
                   centerTitle: false,
                   pinned: true,
-                  // title : (between leading and actions) ,
+
+                  title: Center(
+                    child: Container(
+                        //  margin: EdgeInsets.only(left: 0),
+                        width: size.height / 3,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: (!_showTitle)
+                              ? Colors.black.withOpacity(0.30)
+                              : currentTheme.scaffoldBackgroundColor
+                                  .withOpacity(0.90),
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                          boxShadow: [],
+                        ),
+                        child: SearchContent()),
+                  ),
+
                   expandedHeight: maxHeight,
                   // collapsedHeight: 56.0001,
                   flexibleSpace: FlexibleSpaceBar(
                     stretchModes: [
                       StretchMode.zoomBackground,
-                      StretchMode.fadeTitle
+                      StretchMode.fadeTitle,
+                      //  StretchMode.blurBackground
                     ],
                     background: FutureBuilder<ui.Image>(
                       future: _image(widget.profile.getHeaderImg()),
@@ -331,44 +345,65 @@ class _MyProfileState extends State<MyProfile> {
 
     final nameFinal = name.isEmpty ? "" : name.capitalize();
 
-    print(size.width);
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
           minHeight: 60.0,
           maxHeight: 150.0,
           child: Container(
-            padding: EdgeInsets.only(top: 5.0),
+            padding: EdgeInsets.only(top: 10.0),
             color: currentTheme.scaffoldBackgroundColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (!this.widget.isUserEdit)
-                  Container(
-                    width: size.width / 1.1,
-                    padding: EdgeInsets.only(left: size.width / 10.0, top: 5.0),
-                    //margin: EdgeInsets.only(left: size.width / 6, top: 10),
-                    child: (nameFinal == "")
-                        ? Text(
-                            username,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontSize: (name.length >= 15) ? 24 : 26,
-                                color: Colors.white),
-                          )
-                        : Text(
-                            (nameFinal.length >= 30)
-                                ? nameFinal.substring(0, 30)
-                                : nameFinal,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: (nameFinal.length >= 15) ? 24 : 26,
-                                color: Colors.white),
-                          ),
+                  Expanded(
+                    flex: -2,
+                    child: Container(
+                      width: size.width - 15.0,
+                      padding:
+                          EdgeInsets.only(left: size.width / 20.0, top: 5.0),
+                      //margin: EdgeInsets.only(left: size.width / 6, top: 10),
+                      child: (nameFinal == "")
+                          ? Text(
+                              username,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: (name.length >= 15) ? 26 : 28,
+                                  color: Colors.white),
+                            )
+                          : Text(
+                              (nameFinal.length >= 45)
+                                  ? nameFinal.substring(0, 45)
+                                  : nameFinal,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: (nameFinal.length >= 15) ? 26 : 28,
+                                  color: Colors.white),
+                            ),
+                    ),
+                  ),
+                if (!this.widget.isUserEdit)
+                  Expanded(
+                    child: Container(
+                        width: size.width - 1.10,
+                        padding:
+                            EdgeInsets.only(left: size.width / 20.0, top: 5.0),
+                        //margin: EdgeInsets.only(left: size.width / 6, top: 10),
+
+                        child: Text(
+                          '@' + username,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontSize: (username.length >= 15) ? 20 : 22,
+                              color: Colors.white.withOpacity(0.60)),
+                        )),
                   ),
               ],
             ),
@@ -383,7 +418,7 @@ class _MyProfileState extends State<MyProfile> {
           rooms: data.rooms,
           isAuthUser: widget.isUserAuth,
         ),
-        _buildEditCircle()
+        if (!_showTitle) _buildEditCircle()
       ]),
     );
   }
