@@ -1,26 +1,23 @@
 import 'package:chat/models/profiles.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
-import 'package:chat/widgets/headercurves_logo_text.dart';
 import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 
 import './extensions.dart';
-import 'profile_model.dart';
 import 'profile_card_painter.dart';
 
 import 'dart:ui' as ui;
 
-class ProfileCard extends StatelessWidget {
+class ProfileCard extends StatefulWidget {
   ProfileCard(
-      {@required this.data,
-      @required this.profileColor,
+      {@required this.profileColor,
       this.isUserAuth = false,
       this.isUserEdit = false,
       @required this.profile,
-      @required this.image});
+      @required this.image,
+      this.isEmpty = false});
 
-  final ProfileModel data;
   final Color profileColor;
   static const double avatarRadius = 48;
   static const double titleBottomMargin = (avatarRadius * 2) + 18;
@@ -28,25 +25,43 @@ class ProfileCard extends StatelessWidget {
   final bool isUserAuth;
   final bool isUserEdit;
   final Profiles profile;
+  final bool isEmpty;
 
   final ui.Image image;
 
   @override
+  _ProfileCardState createState() => _ProfileCardState();
+}
+
+class _ProfileCardState extends State<ProfileCard> {
+  @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Stack(
+      // fit: StackFit.expand,
       children: <Widget>[
-        SizedBox(
-          child: Container(
-            child: CustomPaint(
-              size: Size.infinite,
-              painter: ProfileCardPainter(
-                image: image,
-                color: profileColor,
-                avatarRadius: avatarRadius,
+        (!widget.isEmpty)
+            ? Container(
+                child: CustomPaint(
+                  size: Size.infinite,
+                  painter: ProfileCardPainter(
+                    isUserEdit: widget.isUserEdit,
+                    image: widget.image,
+                    color: widget.profileColor,
+                    avatarRadius: ProfileCard.avatarRadius,
+                  ),
+                ),
+              )
+            : Container(
+                child: CustomPaint(
+                  size: Size.infinite,
+                  painter: ProfileCardEmptyPainter(
+                    isUserEdit: widget.isUserEdit,
+                    color: widget.profileColor,
+                    avatarRadius: ProfileCard.avatarRadius,
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
         /* Positioned(
           left: 0,
           right: 0,
@@ -73,22 +88,23 @@ class ProfileCard extends StatelessWidget {
          */
 
         Container(
-          margin: EdgeInsets.only(left: 22),
+          margin: EdgeInsets.only(
+              left: (widget.isUserEdit) ? size.width / 2.68 : 22),
           child: Align(
             alignment: Alignment.bottomLeft,
             child: CircleAvatar(
-              radius: avatarRadius,
-              backgroundColor: profileColor.darker(),
+              radius: ProfileCard.avatarRadius,
+              backgroundColor: widget.profileColor.darker(),
               child: GestureDetector(
                 onTap: () => {
-                  if (!isUserAuth)
+                  if (!widget.isUserAuth)
                     Navigator.of(context).push(createRouteChat())
                   else
                     Navigator.of(context).push(PageRouteBuilder(
                         transitionDuration: Duration(milliseconds: 200),
                         pageBuilder: (context, animation, secondaryAnimation) =>
                             AvatarImagePage(
-                              profile: this.profile,
+                              profile: this.widget.profile,
                             ))),
 
                   // make changes here
@@ -100,15 +116,15 @@ class ProfileCard extends StatelessWidget {
                   width: 100,
                   height: 100,
                   child: Hero(
-                    tag: profile.user.uid,
+                    tag: widget.profile.user.uid,
                     child: Material(
                       type: MaterialType.transparency,
                       child: ImageUserChat(
                         width: 100,
                         // showBorderAvatar: _showBorderAvatar,
                         height: 100,
-                        profile: profile,
-                        fontsize: 13,
+                        profile: widget.profile,
+                        fontsize: 30,
                       ),
                     ),
                   ),

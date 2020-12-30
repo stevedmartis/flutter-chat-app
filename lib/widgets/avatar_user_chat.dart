@@ -99,25 +99,18 @@ class _ImageAvatarExpandedState extends State<ImageAvatarExpanded> {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    return Card(
-      color: Colors.black,
-      elevation: 4.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8.0),
       clipBehavior: Clip.antiAlias,
       child: (widget.profile.imageAvatar != "")
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Image(
-                  image: NetworkImage(widget.profile.getAvatarImg()),
-                  fit: BoxFit.cover,
-                  width: double.maxFinite,
-                )
-              ],
+          ? Image(
+              image: NetworkImage(widget.profile.getAvatarImg()),
+              fit: BoxFit.cover,
+              width: double.maxFinite,
             )
           : Container(
               margin: EdgeInsets.only(bottom: 300),
-              padding: EdgeInsets.all(50),
+              //padding: EdgeInsets.all(0),
               width: double.maxFinite,
               height: double.maxFinite,
               child: CircleAvatar(

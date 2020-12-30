@@ -9,22 +9,28 @@ class ProfileCardPainter extends CustomPainter {
   ProfileCardPainter(
       {@required this.color,
       @required this.avatarRadius,
-      @required this.image});
+      @required this.image,
+      this.isEmpty = true,
+      this.isUserEdit = false});
 
   static const double _margin = 6;
   final Color color;
   final double avatarRadius;
 
   final ui.Image image;
+  final bool isEmpty;
+  final bool isUserEdit;
 
   @override
   void paint(Canvas canvas, Size size) {
     final shapeBounds =
         Rect.fromLTWH(0, 0, size.width, size.height - avatarRadius);
 
-    final centerAvatar = Offset(shapeBounds.left + 70, shapeBounds.bottom);
+    final positionAvatar = Offset(
+        (isUserEdit) ? shapeBounds.center.dx : shapeBounds.left + 70,
+        shapeBounds.bottom);
     final avatarRect =
-        Rect.fromCircle(center: centerAvatar, radius: avatarRadius)
+        Rect.fromCircle(center: positionAvatar, radius: avatarRadius)
             .inflate(_margin);
 /* 
     final curvedShapeBounds = Rect.fromLTRB(
@@ -39,7 +45,7 @@ class ProfileCardPainter extends CustomPainter {
   }
 
   void _drawBackground(Canvas canvas, Rect bounds, Rect avatarRect) {
-    final paint = Paint()..color = color;
+    final paint = Paint();
 
     final backgroundPath = Path()
       ..moveTo(bounds.left, bounds.top)
@@ -49,11 +55,13 @@ class ProfileCardPainter extends CustomPainter {
       ..lineTo(bounds.topRight.dx, bounds.topRight.dy)
       ..close();
 
+    canvas.drawPath(backgroundPath, paint);
+
     canvas.drawPath(
         backgroundPath,
         paint
           ..shader = ImageShader(image, TileMode.mirror, TileMode.mirror,
-              Float64List.fromList(Matrix4.identity().scaled(0.5).storage))
+              Float64List.fromList(Matrix4.identity().scaled(0.3).storage))
           ..style = PaintingStyle.fill);
   }
 
@@ -86,6 +94,54 @@ class ProfileCardPainter extends CustomPainter {
  */
   @override
   bool shouldRepaint(ProfileCardPainter oldDelegate) {
+    return avatarRadius != oldDelegate.avatarRadius ||
+        color != oldDelegate.color;
+  }
+}
+
+class ProfileCardEmptyPainter extends CustomPainter {
+  ProfileCardEmptyPainter(
+      {@required this.color,
+      @required this.avatarRadius,
+      this.isUserEdit = false});
+
+  static const double _margin = 6;
+  final Color color;
+  final double avatarRadius;
+  final bool isUserEdit;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final shapeBounds =
+        Rect.fromLTWH(0, 0, size.width, size.height - avatarRadius);
+
+    final positionAvatar = Offset(
+        (isUserEdit) ? shapeBounds.center.dx : shapeBounds.left + 70,
+        shapeBounds.bottom);
+    final avatarRect =
+        Rect.fromCircle(center: positionAvatar, radius: avatarRadius)
+            .inflate(_margin);
+
+    _drawBackground(canvas, shapeBounds, avatarRect);
+    //_drawCurvedShape(canvas, curvedShapeBounds, avatarRect);
+  }
+
+  void _drawBackground(Canvas canvas, Rect bounds, Rect avatarRect) {
+    final paint = Paint();
+
+    final backgroundPath = Path()
+      ..moveTo(bounds.left, bounds.top)
+      ..lineTo(bounds.bottomLeft.dx, bounds.bottomLeft.dy)
+      ..arcTo(avatarRect, -pi, pi, false)
+      ..lineTo(bounds.bottomRight.dx, bounds.bottomRight.dy)
+      ..lineTo(bounds.topRight.dx, bounds.topRight.dy)
+      ..close();
+
+    canvas.drawPath(backgroundPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(ProfileCardEmptyPainter oldDelegate) {
     return avatarRadius != oldDelegate.avatarRadius ||
         color != oldDelegate.color;
   }
