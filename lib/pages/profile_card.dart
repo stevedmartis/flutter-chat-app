@@ -1,7 +1,6 @@
 import 'package:chat/models/profiles.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
-import 'package:chat/widgets/headercurves_logo_text.dart';
 import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 
