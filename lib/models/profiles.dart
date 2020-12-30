@@ -68,7 +68,7 @@ class Profiles {
 //      "https://png.pngtree.com/thumb_back/fh260/background/20190223/ourmid/pngtree-minimalistic-coral-red-banner-background-template-redsimplebanner-backgroundgeneral-backgroundgeometricbox-image_86813.jpg";
 
     if (imageHeader == "") {
-      return "https://wallpapercave.com/wp/wp2869931.jpg";
+      return null;
     } else {
       return imageHeader;
     }

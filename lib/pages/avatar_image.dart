@@ -60,31 +60,39 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
       ),
       bottomNavigationBar: (widget.isUserAuth)
           ? Container(
-              height: 70,
-              child: Row(
+              height: 100,
+              child: Column(
                 children: <Widget>[
                   Expanded(
-                    child: GestureDetector(
-                      onTap: () => {_selectImage()},
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        child: Container(
-                          alignment: Alignment.center,
-                          color: currentTheme.accentColor,
-                          child: Text("Cambiar",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                    child: Container(
+                      child: GestureDetector(
+                        onTap: () => {_selectImage()},
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: currentTheme.accentColor,
+                            child: Text("Cambiar",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18)),
+                          ),
                         ),
                       ),
                     ),
                   ),
                   Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      color: currentTheme.scaffoldBackgroundColor,
-                      child: Text("Quitar",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18)),
+                    child: GestureDetector(
+                      onTap: () => {},
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        child: Container(
+                          alignment: Alignment.center,
+                          color: currentTheme.scaffoldBackgroundColor,
+                          child: Text("Quitar",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                        ),
+                      ),
                     ),
                   ),
                 ],

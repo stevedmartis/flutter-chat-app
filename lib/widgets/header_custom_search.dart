@@ -23,7 +23,7 @@ class CustomAppBarHeader extends StatelessWidget {
 
     return Container(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
@@ -35,7 +35,7 @@ class CustomAppBarHeader extends StatelessWidget {
               },
               child: Container(
                 padding: EdgeInsets.all(5.0),
-                margin: EdgeInsets.only(left: 15),
+                // margin: EdgeInsets.only(left: 15),
                 child: Hero(
                   tag: profile.user.uid,
                   child: Material(
@@ -54,7 +54,7 @@ class CustomAppBarHeader extends StatelessWidget {
           Center(
               child: Container(
                   //  margin: EdgeInsets.only(left: 10, right: 10),
-                  width: size.height / 3.5,
+                  width: size.height / 3.0,
                   height: 40,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -240,7 +240,7 @@ class SearchContent extends StatelessWidget {
             Icon(Icons.search, color: color),
             SizedBox(width: 20),
             Container(
-                margin: EdgeInsets.only(top: 0, left: 10),
+                // margin: EdgeInsets.only(top: 0, left: 0),
                 child: Text('¿Qué quieres hoy?',
                     style: TextStyle(
                         color: color,

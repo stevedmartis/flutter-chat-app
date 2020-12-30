@@ -32,3 +32,8 @@ class Validators {
     }
   });
 }
+
+final validationOk =
+    StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+  sink.add(text);
+});

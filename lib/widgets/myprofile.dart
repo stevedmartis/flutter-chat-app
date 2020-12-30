@@ -68,7 +68,7 @@ class _MyProfileState extends State<MyProfile> {
   Future<List<Room>> getRoomsFuture;
   AuthService authService;
   final roomService = new RoomService();
-  double get maxHeight => 150 + MediaQuery.of(context).padding.top;
+  double get maxHeight => 200 + MediaQuery.of(context).padding.top;
   double get minHeight => MediaQuery.of(context).padding.bottom;
 
   Future<ui.Image> _image(String url) async =>
@@ -123,8 +123,6 @@ class _MyProfileState extends State<MyProfile> {
                       ? Colors.black
                       : currentTheme.scaffoldBackgroundColor,
                   leading: Container(
-                      width: size.width / 2,
-                      height: size.height / 2,
                       margin: EdgeInsets.only(left: 15),
                       child: ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -140,10 +138,11 @@ class _MyProfileState extends State<MyProfile> {
                                     }),
                             backgroundColor: Colors.black.withOpacity(0.30)),
                       )),
+
                   actions: [
                     Container(
-                        width: size.width / 11,
-                        height: size.height / 2,
+                        width: 40,
+                        height: 40,
                         margin: EdgeInsets.only(right: 20),
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -190,21 +189,23 @@ class _MyProfileState extends State<MyProfile> {
                       //  StretchMode.blurBackground
                     ],
                     background: FutureBuilder<ui.Image>(
-                      future: _image(widget.profile.getHeaderImg()),
-                      builder: (BuildContext context,
-                              AsyncSnapshot<ui.Image> snapshot) =>
-                          !snapshot.hasData
-                              ? ProfilePage(
-                                  image: snapshot.data,
-                                  isUserAuth: widget.isUserAuth,
-                                  profile: widget.profile,
-                                )
-                              : ProfilePage(
-                                  image: snapshot.data,
-                                  isUserAuth: widget.isUserAuth,
-                                  profile: widget.profile,
-                                ),
-                    ),
+                        future: _image(widget.profile.getHeaderImg()),
+                        builder: (BuildContext context,
+                                AsyncSnapshot<ui.Image> snapshot) =>
+                            snapshot.hasData
+                                ? ProfilePage(
+                                    image: snapshot.data,
+                                    isUserAuth: widget.isUserAuth,
+                                    isUserEdit: widget.isUserEdit,
+                                    profile: widget.profile,
+                                  )
+                                : ProfilePage(
+                                    isEmpty: true,
+                                    image: snapshot.data,
+                                    isUserAuth: widget.isUserAuth,
+                                    isUserEdit: widget.isUserEdit,
+                                    profile: widget.profile,
+                                  )),
                     titlePadding: EdgeInsets.all(0),
                     //title:
 

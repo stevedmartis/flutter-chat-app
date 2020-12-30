@@ -100,6 +100,8 @@ class EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
+  double get maxHeight => 150 + MediaQuery.of(context).padding.top;
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
@@ -141,29 +143,30 @@ class EditProfilePageState extends State<EditProfilePage> {
               physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics()),
               // controller: _scrollController,
+
               slivers: <Widget>[
                 SliverFixedExtentList(
-                  itemExtent: 200.0,
+                  itemExtent: maxHeight,
                   delegate: SliverChildListDelegate(
                     [
                       FutureBuilder<ui.Image>(
-                        future: _image(profile.getHeaderImg()),
-                        builder: (BuildContext context,
-                                AsyncSnapshot<ui.Image> snapshot) =>
-                            !snapshot.hasData
-                                ? ProfilePage(
-                                    image: snapshot.data,
-                                    isUserAuth: true,
-                                    isUserEdit: true,
-                                    profile: profile,
-                                  )
-                                : ProfilePage(
-                                    image: snapshot.data,
-                                    isUserAuth: true,
-                                    isUserEdit: true,
-                                    profile: profile,
-                                  ),
-                      ),
+                          future: _image(profile.getHeaderImg()),
+                          builder: (BuildContext context,
+                                  AsyncSnapshot<ui.Image> snapshot) =>
+                              snapshot.hasData
+                                  ? ProfilePage(
+                                      image: snapshot.data,
+                                      isUserAuth: true,
+                                      isUserEdit: true,
+                                      profile: profile,
+                                    )
+                                  : ProfilePage(
+                                      isEmpty: true,
+                                      image: snapshot.data,
+                                      isUserAuth: true,
+                                      isUserEdit: true,
+                                      profile: profile,
+                                    )),
                     ],
                   ),
                 ),
@@ -237,6 +240,11 @@ class EditProfilePageState extends State<EditProfilePage> {
         final isControllerChange =
             isUsernameChange || isEmailChange || isNameChange || isPassChange;
 
+        final formValid = snapshot.hasData;
+
+        print(isControllerChange);
+
+        print(snapshot);
         return GestureDetector(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -244,23 +252,19 @@ class EditProfilePageState extends State<EditProfilePage> {
                 child: Text(
                   'Done',
                   style: TextStyle(
-                      color: (!isControllerChange)
-                          ? Colors.white.withOpacity(0.30)
-                          : snapshot.hasData
-                              ? currentTheme.accentColor
-                              : Colors.white.withOpacity(0.30),
-                      fontSize: 20),
+                      color: (isControllerChange) && formValid
+                          ? currentTheme.accentColor
+                          : Colors.white.withOpacity(0.30),
+                      fontSize: 17),
                 ),
               ),
             ),
-            onTap: !isControllerChange
-                ? null
-                : snapshot.hasData
-                    ? () => {
-                          FocusScope.of(context).unfocus(),
-                          _editProfile(bloc, context)
-                        }
-                    : null);
+            onTap: (!isControllerChange) && formValid
+                ? () => {
+                      FocusScope.of(context).unfocus(),
+                      _editProfile(bloc, context)
+                    }
+                : null);
       },
     );
   }
