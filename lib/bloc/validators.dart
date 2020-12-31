@@ -19,21 +19,34 @@ class Validators {
     if (password.length >= 1) {
       sink.add(password);
     } else {
-      sink.addError('Más de 1 caracteres por favor');
+      sink.addError('Password is required');
     }
   });
 
-  final validationRequired =
+  final validationNameRequired =
       StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
-    if (text.length > 0) {
+    if (text.length >= 1) {
       sink.add(text);
     } else {
-      sink.addError('Ingrese un nombre');
+      sink.addError('Name is required');
+    }
+  });
+
+  final validationUserNameRequired =
+      StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+    if (text.length >= 1) {
+      sink.add(text);
+    } else {
+      sink.addError('Username is required');
     }
   });
 }
 
 final validationOk =
     StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
-  sink.add(text);
+  if (text.length > 1) {
+    sink.add(text);
+  } else {
+    sink.addError('Campo requerido');
+  }
 });

@@ -25,9 +25,9 @@ class RoomBloc with Validators {
   BehaviorSubject<RoomsResponse> get subject => _subject;
   // Recuperar los datos del Stream
   Stream<String> get nameStream =>
-      _nameController.stream.transform(validationRequired);
+      _nameController.stream.transform(validationNameRequired);
   Stream<String> get descriptionStream =>
-      _descriptionController.stream.transform(validationRequired);
+      _descriptionController.stream.transform(validationUserNameRequired);
 
   Stream<bool> get formValidStream =>
       Observable.combineLatest2(nameStream, descriptionStream, (e, p) => true);
