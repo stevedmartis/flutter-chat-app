@@ -144,7 +144,9 @@ class _ProfileCardState extends State<ProfileCard> {
         Container(
           //top: size.height / 3.5,
           margin: EdgeInsets.only(
-              top: size.height / 3.6, left: size.width / 1.6, right: 20),
+              top: size.height / 3.3,
+              left: size.width / 1.8,
+              right: size.width / 20),
           child: Align(
             alignment: Alignment.bottomLeft,
             child: ButtonSubEditProfile(
