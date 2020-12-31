@@ -35,5 +35,9 @@ class Validators {
 
 final validationOk =
     StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
-  sink.add(text);
+  if (text.length > 0) {
+    sink.add(text);
+  } else {
+    sink.addError('Campo requerido');
+  }
 });
