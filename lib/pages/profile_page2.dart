@@ -63,29 +63,17 @@ class _ProfilePageState extends State<ProfilePage> {
               ))
           : */
           Container(),
-      body: Stack(
-        children: [
-          Container(
-            height: _profileCardHeight,
-            child: ProfileCard(
-                image: widget.image,
-                isEmpty: widget.isEmpty,
-                isUserAuth: widget.isUserAuth,
-                isUserEdit: widget.isUserEdit,
-                profile: widget.profile,
-                profileColor: currentTheme.scaffoldBackgroundColor),
-          ),
-          Container(
-            padding: EdgeInsets.all(50),
-            margin: EdgeInsets.only(top: size.height / 5),
-            child: ButtonGold(
-                color: currentTheme.accentColor,
-                text: 'Start now!',
-                onPressed: () => {
-                      // Navigator.push()
-                    }),
-          ),
-        ],
+      body: SizedBox.expand(
+        child: Container(
+          height: _profileCardHeight,
+          child: ProfileCard(
+              image: widget.image,
+              isEmpty: widget.isEmpty,
+              isUserAuth: widget.isUserAuth,
+              isUserEdit: widget.isUserEdit,
+              profile: widget.profile,
+              profileColor: currentTheme.scaffoldBackgroundColor),
+        ),
       ),
     );
   }

@@ -95,10 +95,11 @@ class _ProfileCardState extends State<ProfileCard> {
          */
 
         Container(
-          margin: EdgeInsets.only(
-              left: (widget.isUserEdit) ? size.width / 2.68 : 22),
+          margin: EdgeInsets.only(left: (widget.isUserEdit) ? 0 : 22),
           child: Align(
-            alignment: Alignment.bottomLeft,
+            alignment: (widget.isUserEdit)
+                ? Alignment.bottomCenter
+                : Alignment.bottomLeft,
             child: CircleAvatar(
               radius: ProfileCard.avatarRadius,
               backgroundColor: widget.profileColor.darker(),
@@ -140,23 +141,25 @@ class _ProfileCardState extends State<ProfileCard> {
             ),
           ),
         ),
+        Container(
+          //top: size.height / 3.5,
+          margin: EdgeInsets.only(
+              top: size.height / 3.6, left: size.width / 1.6, right: 20),
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: ButtonSubEditProfile(
+                color: currentTheme.scaffoldBackgroundColor,
+                textColor: (widget.isUserAuth)
+                    ? Colors.white.withOpacity(0.50)
+                    : currentTheme.accentColor,
+                text: widget.isUserAuth ? 'Editar perfil' : 'Subscribe',
+                onPressed: () {
+                  if (widget.isUserAuth)
+                    Navigator.of(context).push(createRouteEditProfile());
+                }),
+          ),
+        ),
       ],
-    );
-  }
-
-  Widget _createBtnActionUser(Color accentColor) {
-    final size = MediaQuery.of(context).size;
-
-    return Container(
-      width: 100,
-      height: 100,
-      margin: EdgeInsets.only(top: size.height / 3.6, left: size.width / 1.3),
-      child: ButtonGold(
-          color: accentColor,
-          text: 'Start now!',
-          onPressed: () => {
-                // Navigator.push()
-              }),
     );
   }
 }
