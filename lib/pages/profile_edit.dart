@@ -237,7 +237,7 @@ class EditProfilePageState extends State<EditProfilePage> {
         final isControllerChange =
             isUsernameChange || isEmailChange || isNameChange || isPassChange;
 
-        final formValid = snapshot.hasData;
+        final isInvalid = snapshot.hasError;
 
         return GestureDetector(
             child: Padding(
@@ -246,14 +246,14 @@ class EditProfilePageState extends State<EditProfilePage> {
                 child: Text(
                   'Done',
                   style: TextStyle(
-                      color: isControllerChange && formValid
+                      color: isControllerChange && !isInvalid
                           ? currentTheme.accentColor
                           : Colors.white.withOpacity(0.30),
                       fontSize: 15),
                 ),
               ),
             ),
-            onTap: isControllerChange && formValid
+            onTap: isControllerChange && !isInvalid
                 ? () => {
                       FocusScope.of(context).unfocus(),
                       _editProfile(bloc, context)
