@@ -11,6 +11,7 @@ import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
 import 'package:chat/widgets/header_custom_search.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
@@ -206,7 +207,8 @@ class _MyProfileState extends State<MyProfile> {
                                     isUserEdit: widget.isUserEdit,
                                     profile: widget.profile,
                                   )),
-                    titlePadding: EdgeInsets.all(0),
+                    // titlePadding: EdgeInsets.all(50),
+
                     //title:
 
                     /* Row(

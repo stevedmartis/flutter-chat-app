@@ -1,5 +1,6 @@
 import 'package:chat/models/profiles.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/sliver_header.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,8 +35,10 @@ class _ProfilePageState extends State<ProfilePage> {
     final size = MediaQuery.of(context).size;
     final _profileCardHeight = size.height / 3;
     return Scaffold(
-      floatingActionButton: (!widget.isUserEdit)
+      floatingActionButton:
+          /* (!widget.isUserEdit)
           ? Container(
+           //   margin: EdgeInsets.only(top: 250),
               width: 50,
               height: 50,
               child: ClipRRect(
@@ -58,18 +61,31 @@ class _ProfilePageState extends State<ProfilePage> {
                     )),
                     backgroundColor: Colors.black),
               ))
-          : Container(),
-      body: SizedBox.expand(
-        child: Container(
-          height: _profileCardHeight,
-          child: ProfileCard(
-              image: widget.image,
-              isEmpty: widget.isEmpty,
-              isUserAuth: widget.isUserAuth,
-              isUserEdit: widget.isUserEdit,
-              profile: widget.profile,
-              profileColor: currentTheme.scaffoldBackgroundColor),
-        ),
+          : */
+          Container(),
+      body: Stack(
+        children: [
+          Container(
+            height: _profileCardHeight,
+            child: ProfileCard(
+                image: widget.image,
+                isEmpty: widget.isEmpty,
+                isUserAuth: widget.isUserAuth,
+                isUserEdit: widget.isUserEdit,
+                profile: widget.profile,
+                profileColor: currentTheme.scaffoldBackgroundColor),
+          ),
+          Container(
+            padding: EdgeInsets.all(50),
+            margin: EdgeInsets.only(top: size.height / 5),
+            child: ButtonGold(
+                color: currentTheme.accentColor,
+                text: 'Start now!',
+                onPressed: () => {
+                      // Navigator.push()
+                    }),
+          ),
+        ],
       ),
     );
   }

@@ -1,8 +1,13 @@
 import 'package:chat/models/profiles.dart';
 import 'package:chat/pages/avatar_image.dart';
+import 'package:chat/pages/chat_page.dart';
+import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
+import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/myprofile.dart';
+import 'package:chat/widgets/sliver_header.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './extensions.dart';
 import 'profile_card_painter.dart';
@@ -37,6 +42,8 @@ class _ProfileCardState extends State<ProfileCard> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Stack(
       // fit: StackFit.expand,
       children: <Widget>[
@@ -136,4 +143,39 @@ class _ProfileCardState extends State<ProfileCard> {
       ],
     );
   }
+
+  Widget _createBtnActionUser(Color accentColor) {
+    final size = MediaQuery.of(context).size;
+
+    return Container(
+      width: 100,
+      height: 100,
+      margin: EdgeInsets.only(top: size.height / 3.6, left: size.width / 1.3),
+      child: ButtonGold(
+          color: accentColor,
+          text: 'Start now!',
+          onPressed: () => {
+                // Navigator.push()
+              }),
+    );
+  }
+}
+
+Route createRouteChat() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => ChatPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
 }

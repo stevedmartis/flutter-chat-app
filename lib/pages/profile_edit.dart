@@ -33,6 +33,7 @@ class EditProfilePageState extends State<EditProfilePage> {
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
   final lastName = TextEditingController();
+
   bool isUsernameChange = false;
   bool isNameChange = false;
   bool isEmailChange = false;
@@ -259,7 +260,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                 ),
               ),
             ),
-            onTap: (!isControllerChange) && formValid
+            onTap: (isControllerChange) && formValid
                 ? () => {
                       FocusScope.of(context).unfocus(),
                       _editProfile(bloc, context)
