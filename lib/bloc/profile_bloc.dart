@@ -20,8 +20,8 @@ class ProfileBloc with Validators {
       _nameController.stream.transform(validationNameRequired);
   Stream<String> get lastNameStream => _lastNameController.stream;
 
-  Stream<bool> get formValidStream =>
-      Observable.combineLatest2(emailStream, nameStream, (a, c) => true);
+  Stream<bool> get formValidStream => Observable.combineLatest3(
+      emailStream, nameStream, usernameSteam, (e, n, u) => true);
 
   // Insertar valores al Stream
   Function(String) get changeEmail => _emailController.sink.add;

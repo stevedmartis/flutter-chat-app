@@ -167,9 +167,9 @@ class _ProfileCardState extends State<ProfileCard> {
         ),
         Container(
           //top: size.height / 3.5,
-          padding: EdgeInsets.only(top: 15.0),
+          padding: EdgeInsets.only(top: 25.0),
           margin: EdgeInsets.only(
-              top: size.height / 3.6,
+              top: size.height / 4.0,
               left: size.width / 1.7,
               right: size.width / 20),
           child: Align(
