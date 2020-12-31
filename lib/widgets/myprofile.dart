@@ -171,7 +171,7 @@ class _MyProfileState extends State<MyProfile> {
                         height: 40,
                         decoration: BoxDecoration(
                           color: (!_showTitle)
-                              ? Colors.black.withOpacity(0.30)
+                              ? Colors.black.withOpacity(0.60)
                               : currentTheme.scaffoldBackgroundColor
                                   .withOpacity(0.90),
                           borderRadius: BorderRadius.all(Radius.circular(30)),

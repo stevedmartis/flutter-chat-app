@@ -48,26 +48,51 @@ class _ProfileCardState extends State<ProfileCard> {
       children: <Widget>[
         (!widget.isEmpty)
             ? Container(
-                child: CustomPaint(
-                  size: Size.infinite,
-                  painter: ProfileCardPainter(
-                    isUserEdit: widget.isUserEdit,
-                    image: widget.image,
-                    color: widget.profileColor,
-                    avatarRadius: ProfileCard.avatarRadius,
+                child: AnimatedOpacity(
+                  opacity: widget.isEmpty ? 0.0 : 1.0,
+                  duration: Duration(milliseconds: 500),
+                  child: CustomPaint(
+                    size: Size.infinite,
+                    painter: ProfileCardPainter(
+                      isUserEdit: widget.isUserEdit,
+                      image: widget.image,
+                      color: widget.profileColor,
+                      avatarRadius: ProfileCard.avatarRadius,
+                    ),
                   ),
                 ),
               )
             : Container(
-                child: CustomPaint(
-                  size: Size.infinite,
-                  painter: ProfileCardEmptyPainter(
-                    isUserEdit: widget.isUserEdit,
-                    color: widget.profileColor,
-                    avatarRadius: ProfileCard.avatarRadius,
+                child: AnimatedOpacity(
+                  opacity: widget.isEmpty ? 0.0 : 0.0,
+                  duration: Duration(milliseconds: 500),
+                  child: CustomPaint(
+                    size: Size.infinite,
+                    painter: ProfileCardEmptyPainter(
+                      isUserEdit: widget.isUserEdit,
+                      color: widget.profileColor,
+                      avatarRadius: ProfileCard.avatarRadius,
+                    ),
                   ),
                 ),
               ),
+        Container(
+          height: double.infinity,
+          decoration: BoxDecoration(
+              color: Colors.black,
+              gradient: LinearGradient(
+                  begin: FractionalOffset.topCenter,
+                  end: FractionalOffset.bottomCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.50),
+                    // Colors.white.withOpacity(0.30),
+                    widget.profileColor.withOpacity(0.30)
+                  ],
+                  stops: [
+                    0.0,
+                    1.0
+                  ])),
+        ),
         /* Positioned(
           left: 0,
           right: 0,
