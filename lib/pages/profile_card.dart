@@ -4,7 +4,6 @@ import 'package:chat/pages/chat_page.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/button_gold.dart';
-import 'package:chat/widgets/myprofile.dart';
 import 'package:chat/widgets/sliver_header.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

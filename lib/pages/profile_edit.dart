@@ -33,7 +33,6 @@ class EditProfilePageState extends State<EditProfilePage> {
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
   final lastName = TextEditingController();
-
   bool isUsernameChange = false;
   bool isNameChange = false;
   bool isEmailChange = false;
@@ -101,8 +100,6 @@ class EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
-  double get maxHeight => 150 + MediaQuery.of(context).padding.top;
-
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
@@ -144,30 +141,29 @@ class EditProfilePageState extends State<EditProfilePage> {
               physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics()),
               // controller: _scrollController,
-
               slivers: <Widget>[
                 SliverFixedExtentList(
-                  itemExtent: maxHeight,
+                  itemExtent: 200.0,
                   delegate: SliverChildListDelegate(
                     [
                       FutureBuilder<ui.Image>(
-                          future: _image(profile.getHeaderImg()),
-                          builder: (BuildContext context,
-                                  AsyncSnapshot<ui.Image> snapshot) =>
-                              snapshot.hasData
-                                  ? ProfilePage(
-                                      image: snapshot.data,
-                                      isUserAuth: true,
-                                      isUserEdit: true,
-                                      profile: profile,
-                                    )
-                                  : ProfilePage(
-                                      isEmpty: true,
-                                      image: snapshot.data,
-                                      isUserAuth: true,
-                                      isUserEdit: true,
-                                      profile: profile,
-                                    )),
+                        future: _image(profile.getHeaderImg()),
+                        builder: (BuildContext context,
+                                AsyncSnapshot<ui.Image> snapshot) =>
+                            !snapshot.hasData
+                                ? ProfilePage(
+                                    image: snapshot.data,
+                                    isUserAuth: true,
+                                    isUserEdit: true,
+                                    profile: profile,
+                                  )
+                                : ProfilePage(
+                                    image: snapshot.data,
+                                    isUserAuth: true,
+                                    isUserEdit: true,
+                                    profile: profile,
+                                  ),
+                      ),
                     ],
                   ),
                 ),
@@ -235,7 +231,7 @@ class EditProfilePageState extends State<EditProfilePage> {
     return StreamBuilder(
       stream: bloc.formValidStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        //final authService = Provider.of<AuthService>(context);
+        // final authService = Provider.of<AuthService>(context);
         final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
         final isControllerChange =
@@ -243,9 +239,6 @@ class EditProfilePageState extends State<EditProfilePage> {
 
         final formValid = snapshot.hasData;
 
-        print(isControllerChange);
-
-        print(snapshot);
         return GestureDetector(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -253,14 +246,14 @@ class EditProfilePageState extends State<EditProfilePage> {
                 child: Text(
                   'Done',
                   style: TextStyle(
-                      color: (isControllerChange) && formValid
+                      color: isControllerChange && formValid
                           ? currentTheme.accentColor
                           : Colors.white.withOpacity(0.30),
-                      fontSize: 17),
+                      fontSize: 15),
                 ),
               ),
             ),
-            onTap: (isControllerChange) && formValid
+            onTap: isControllerChange && formValid
                 ? () => {
                       FocusScope.of(context).unfocus(),
                       _editProfile(bloc, context)

@@ -14,7 +14,8 @@ class ProfileBloc with Validators {
       _emailController.stream.transform(validarEmail);
   Stream<String> get passwordStream =>
       _passwordController.stream.transform(validarPassword);
-  Stream<String> get usernameSteam => _usernameController.stream;
+  Stream<String> get usernameSteam =>
+      _usernameController.stream.transform(validationOk);
   Stream<String> get nameStream =>
       _nameController.stream.transform(validationOk);
   Stream<String> get lastNameStream => _lastNameController.stream;
