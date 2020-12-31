@@ -1,7 +1,5 @@
 import 'package:chat/models/profiles.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/button_gold.dart';
-import 'package:chat/widgets/sliver_header.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
