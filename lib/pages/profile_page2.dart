@@ -32,46 +32,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
     final size = MediaQuery.of(context).size;
     final _profileCardHeight = size.height / 3;
-    return Scaffold(
-      floatingActionButton:
-          /* (!widget.isUserEdit)
-          ? Container(
-           //   margin: EdgeInsets.only(top: 250),
-              width: 50,
-              height: 50,
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                child: CircleAvatar(
-                    child: (IconButton(
-                      icon: Icon(
-                        (!widget.isUserAuth) ? Icons.favorite : Icons.edit,
-                        color: currentTheme.accentColor,
-                        size: 25,
-                      ),
-                      onPressed: () {
-                        if (!widget.isUserAuth)
-                          return true;
-                        else
-                          Navigator.of(context).push(createRouteEditProfile());
-
-                        //globalKey.currentState.openEndDrawer();
-                      },
-                    )),
-                    backgroundColor: Colors.black),
-              ))
-          : */
-          Container(),
-      body: SizedBox.expand(
-        child: Container(
-          height: _profileCardHeight,
-          child: ProfileCard(
-              image: widget.image,
-              isEmpty: widget.isEmpty,
-              isUserAuth: widget.isUserAuth,
-              isUserEdit: widget.isUserEdit,
-              profile: widget.profile,
-              profileColor: currentTheme.scaffoldBackgroundColor),
-        ),
+    return SizedBox.expand(
+      child: Container(
+        height: _profileCardHeight,
+        child: ProfileCard(
+            image: widget.image,
+            isEmpty: widget.isEmpty,
+            isUserAuth: widget.isUserAuth,
+            isUserEdit: widget.isUserEdit,
+            profile: widget.profile,
+            profileColor: currentTheme.scaffoldBackgroundColor),
       ),
     );
   }

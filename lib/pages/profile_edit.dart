@@ -106,6 +106,7 @@ class EditProfilePageState extends State<EditProfilePage> {
     final authService = Provider.of<AuthService>(context);
 
     final bloc = CustomProvider.profileBlocIn(context);
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -143,7 +144,7 @@ class EditProfilePageState extends State<EditProfilePage> {
               // controller: _scrollController,
               slivers: <Widget>[
                 SliverFixedExtentList(
-                  itemExtent: 200.0,
+                  itemExtent: size.height / 4.0,
                   delegate: SliverChildListDelegate(
                     [
                       FutureBuilder<ui.Image>(
@@ -154,6 +155,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                                 ? ProfilePage(
                                     image: snapshot.data,
                                     isUserAuth: true,
+                                    isEmpty: true,
                                     isUserEdit: true,
                                     profile: profile,
                                   )

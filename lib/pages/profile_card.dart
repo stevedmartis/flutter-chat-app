@@ -165,27 +165,29 @@ class _ProfileCardState extends State<ProfileCard> {
             ),
           ),
         ),
-        Container(
-          //top: size.height / 3.5,
-          padding: EdgeInsets.only(top: 25.0),
-          margin: EdgeInsets.only(
-              top: size.height / 4.0,
-              left: size.width / 1.7,
-              right: size.width / 20),
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: ButtonSubEditProfile(
-                color: currentTheme.scaffoldBackgroundColor,
-                textColor: (widget.isUserAuth)
-                    ? Colors.white.withOpacity(0.50)
-                    : currentTheme.accentColor,
-                text: widget.isUserAuth ? 'Editar perfil' : 'Subscribe',
-                onPressed: () {
-                  if (widget.isUserAuth)
-                    Navigator.of(context).push(createRouteEditProfile());
-                }),
-          ),
-        ),
+        (!widget.isUserEdit)
+            ? Container(
+                //top: size.height / 3.5,
+                padding: EdgeInsets.only(top: 25.0),
+                margin: EdgeInsets.only(
+                    top: size.height / 4.0,
+                    left: size.width / 1.7,
+                    right: size.width / 20),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: ButtonSubEditProfile(
+                      color: currentTheme.scaffoldBackgroundColor,
+                      textColor: (widget.isUserAuth)
+                          ? Colors.white.withOpacity(0.50)
+                          : currentTheme.accentColor,
+                      text: widget.isUserAuth ? 'Editar perfil' : 'Subscribe',
+                      onPressed: () {
+                        if (widget.isUserAuth)
+                          Navigator.of(context).push(createRouteEditProfile());
+                      }),
+                ),
+              )
+            : Container(),
       ],
     );
   }
