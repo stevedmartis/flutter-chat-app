@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
+<!-- Google Sign-in Section -->
+<key>CFBundleURLTypes</key>
+<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<!-- TODO Replace this value: -->
+			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+			<string>com.googleusercontent.apps.998672229328-jefh61rgduqj36t7qvrp358j1lmb54pr</string>
+		</array>
+	</dict>
+</array>
+<!-- End of the Google Sign-in Section -->
+	<key>CLIENT_ID</key>
+	<string>998672229328-jefh61rgduqj36t7qvrp358j1lmb54pr.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.998672229328-jefh61rgduqj36t7qvrp358j1lmb54pr</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>998672229328-8om047f0u3t12qconuvlpcr4acbr9ong.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCD-K6bTg0N0PdzG3M2Wv5T3vP6l3A_Pog</string>
+	<key>GCM_SENDER_ID</key>
+	<string>998672229328</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.davistevemars.flutterapp</string>
+	<key>PROJECT_ID</key>
+	<string>budanty-26bae</string>
+	<key>STORAGE_BUCKET</key>
+	<string>budanty-26bae.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:998672229328:ios:998371e87944285c180fd5</string>
+</dict>
+</plist>
