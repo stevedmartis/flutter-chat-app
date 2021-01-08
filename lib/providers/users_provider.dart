@@ -1,61 +1,27 @@
-import 'package:chat/models/usuario.dart';
-import 'package:chat/services/users_service.dart';
+import 'package:chat/global/environment.dart';
+import 'package:chat/models/profiles_response.dart';
+import 'package:chat/services/auth_service.dart';
+import 'package:http/http.dart' as http;
 
 import 'dart:async';
 
 class UsersProvider {
-  final usuarioService = new UsuariosService();
+  Future<ProfilesResponse> getSearchPrincipalByQuery(String query) async {
+    print(query);
+    try {
+      final resp = await http.get(
+        '${Environment.apiUrl}/search/principal/$query',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-token': await AuthService.getToken(),
+        },
+      );
 
-  String _apikey = '4bc0335f07b79c1a9cf3111e7b778f89';
-  String _url = 'api.themoviedb.org';
-  String _language = 'es-ES';
+      final profilesResponse = profilesResponseFromJson(resp.body);
 
-  bool _loading = false;
-
-  List<User> _popular = new List();
-
-  final _popularStreamController = StreamController<List<User>>.broadcast();
-
-  Function(List<User>) get popularSink => _popularStreamController.sink.add;
-
-  Stream<List<User>> get popularStream => _popularStreamController.stream;
-
-  void disposeStreams() {
-    _popularStreamController?.close();
-  }
-
-  Future<List<User>> _answerMethod(Uri url) async {
-    final users = await usuarioService.getUsers();
-
-    return (users);
-  }
-
-  Future<List<User>> getMovies() async {
-    final url = Uri.https(_url, '3/movie/now_playing',
-        {'api_key': _apikey, 'language': _language});
-
-    return await _answerMethod(url);
-  }
-
-  Future<List<User>> getPopulares() async {
-    if (_loading) return [];
-
-    _loading = true;
-
-    final users = await usuarioService.getUsers();
-
-    _popular.addAll(users);
-    popularSink(_popular);
-
-    _loading = false;
-
-    return users;
-  }
-
-  Future<List<User>> searchMovie(String query) async {
-    final url = Uri.http(_url, '3/search/movie',
-        {'api_key': _apikey, 'language': _language, 'query': query});
-
-    return await _answerMethod(url);
+      return profilesResponse;
+    } catch (error) {
+      return ProfilesResponse.withError("$error");
+    }
   }
 }

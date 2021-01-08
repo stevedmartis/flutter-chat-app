@@ -1,4 +1,5 @@
 import 'package:chat/bloc/login_bloc.dart';
+import 'package:chat/bloc/product_bloc.dart';
 import 'package:chat/bloc/profile_bloc.dart';
 import 'package:chat/bloc/register_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
@@ -12,6 +13,8 @@ class CustomProvider extends InheritedWidget {
   final profileBloc = new ProfileBloc();
 
   final roomBloc = new RoomBloc();
+
+  final productBloc = ProductBloc();
 
   static CustomProvider _instancia;
 
@@ -50,5 +53,10 @@ class CustomProvider extends InheritedWidget {
   static RoomBloc roomBlocIn(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<CustomProvider>())
         .roomBloc;
+  }
+
+  static ProductBloc productBlocIn(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<CustomProvider>())
+        .productBloc;
   }
 }

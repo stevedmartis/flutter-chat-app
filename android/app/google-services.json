@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "998672229328",
+    "project_id": "budanty-26bae",
+    "storage_bucket": "budanty-26bae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:998672229328:android:646de9207ac6db57180fd5",
+        "android_client_info": {
+          "package_name": "com.budanty.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "998672229328-8om047f0u3t12qconuvlpcr4acbr9ong.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.budanty.dev",
+            "certificate_hash": "c1bf4f4b2a50e46d066cd384b7fc6b95944c5ee0"
+          }
+        },
+        {
+          "client_id": "998672229328-07tmmjq53grsbt07s1r4akseqlas9fu0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVt5s98jCpp57J3MH98vf9kudlriGb_4A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "998672229328-07tmmjq53grsbt07s1r4akseqlas9fu0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

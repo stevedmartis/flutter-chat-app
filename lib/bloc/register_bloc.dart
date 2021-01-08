@@ -11,7 +11,7 @@ class RegisterBloc with Validators {
 
   // Recuperar los datos del Stream
   Stream<String> get emailStream =>
-      _emailController.stream.transform(validarEmail);
+      _emailController.stream.transform(validationOk);
   Stream<String> get passwordStream =>
       _passwordController.stream.transform(validarPassword);
   Stream<String> get usernameSteam => _usernameController.stream;

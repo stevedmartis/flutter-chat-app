@@ -1,5 +1,6 @@
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/profile_page.dart';
+import 'package:chat/pages/search_Principal_page.dart';
 import 'package:chat/pages/tabs.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/theme/theme.dart';
@@ -7,21 +8,28 @@ import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CustomAppBarHeader extends StatelessWidget {
+class CustomAppBarHeader extends StatefulWidget {
   final bool showContent;
 
   @override
   CustomAppBarHeader({this.showContent = true});
 
   @override
+  _CustomAppBarHeaderState createState() => _CustomAppBarHeaderState();
+}
+
+class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
+  @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final authService = Provider.of<AuthService>(context);
+
     final profile = authService.profile;
 
     final size = MediaQuery.of(context).size;
 
     return Container(
+      color: Colors.black,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,30 +59,35 @@ class CustomAppBarHeader extends StatelessWidget {
               ),
             ),
           ),
-          Center(
-              child: Container(
-                  //  margin: EdgeInsets.only(left: 10, right: 10),
-                  width: size.height / 3.0,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xff202020),
-                          Color(0xff1D1D1D),
-                          Color(0xff161616),
-                        ]),
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black54,
-                          spreadRadius: -5,
-                          blurRadius: 10,
-                          offset: Offset(0, 5))
-                    ],
-                  ),
-                  child: SearchContent())),
+          GestureDetector(
+            onTap: () => showSearch(
+                context: context, delegate: DataSearch(userAuth: profile)),
+            child: Center(
+                child: Container(
+                    // color: Colors.black,
+                    //  margin: EdgeInsets.only(left: 10, right: 10),
+                    width: size.height / 3.0,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xff202020),
+                            Color(0xff1D1D1D),
+                            Color(0xff161616),
+                          ]),
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black54,
+                            spreadRadius: -5,
+                            blurRadius: 10,
+                            offset: Offset(0, 5))
+                      ],
+                    ),
+                    child: SearchContent())),
+          ),
           GestureDetector(
             onTap: () => Navigator.push(
                 context,

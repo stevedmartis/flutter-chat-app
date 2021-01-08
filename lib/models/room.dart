@@ -49,6 +49,7 @@ class Room with ChangeNotifier {
       this.user,
       this.name,
       this.description,
+      this.position,
       this.totalItems,
       this.createdAt,
       this.updatedAt,
@@ -58,6 +59,7 @@ class Room with ChangeNotifier {
   String user;
   String id;
   String name;
+  int position;
   String description;
 
   int totalItems;
@@ -68,6 +70,7 @@ class Room with ChangeNotifier {
       id: json["id"],
       user: json["user"],
       name: json["name"],
+      position: json['position'],
       createdAt: DateTime.parse(json["createdAt"]),
       updatedAt: DateTime.parse(json["updatedAt"]),
       description: json["description"],
@@ -78,6 +81,7 @@ class Room with ChangeNotifier {
         "id": id,
         "user": user,
         "name": name,
+        "position": position,
         "description": description,
         "totalItems": totalItems,
         //"products": List<dynamic>.from(products.map((x) => x)),

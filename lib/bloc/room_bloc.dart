@@ -18,6 +18,7 @@ class RoomBloc with Validators {
       BehaviorSubject<RoomsResponse>();
 
   getRooms(String userId) async {
+    print(userId);
     RoomsResponse response = await _repository.getRooms(userId);
     _subject.sink.add(response);
   }
@@ -32,7 +33,7 @@ class RoomBloc with Validators {
   Stream<bool> get formValidStream =>
       Observable.combineLatest2(nameStream, descriptionStream, (e, p) => true);
 
-  Stream<List<Room>> get products => _roomsController.stream;
+  Stream<List<Room>> get rooms => _roomsController.stream;
 
   Function(List<Room>) get addRoom => _roomsController.sink.add;
 

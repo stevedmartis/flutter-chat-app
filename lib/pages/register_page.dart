@@ -3,10 +3,13 @@ import 'package:chat/bloc/register_bloc.dart';
 import 'package:chat/controllers/slide_controler.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/pages/principal_page.dart';
+import 'package:chat/services/apple_signin_service.dart';
+import 'package:chat/services/google_signin_service.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/headercurves_logo_text.dart';
+import 'package:chat/widgets/header_curve_signin.dart';
 import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/auth_service.dart';
@@ -15,11 +18,11 @@ import 'package:chat/services/socket_service.dart';
 import 'package:chat/helpers/mostrar_alerta.dart';
 
 import 'package:chat/widgets/labels.dart';
-import 'package:chat/widgets/button_gold.dart';
 import 'dart:ui' as ui;
 
 class RegisterPage extends StatelessWidget {
-  Future<ui.Image> _image(String url) async =>
+  final googleSignInServices = GoogleSignInServices();
+  Future<ui.Image> image(String url) async =>
       await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
 
   @override
@@ -41,7 +44,7 @@ class RegisterPage extends StatelessWidget {
               height: _size.height + 100,
               child: Stack(
                 children: <Widget>[
-                  FutureBuilder<ui.Image>(
+                  /*  FutureBuilder<ui.Image>(
                     initialData: null,
                     future:
                         _image("https://wallpapercave.com/wp/wp2869931.jpg"),
@@ -59,16 +62,76 @@ class RegisterPage extends StatelessWidget {
                                 title: 'Sign Up!',
                                 subtitle: 'Hello!',
                               ),
-                  ),
+                  ), */
 
                   /*   HeaderMultiCurvesText(
                       title: 'Sign Up!',
                       subtitle: 'Hello,',
                       color: currentTheme.accentColor), */
-                  Center(
-                      child: Container(
-                          margin: EdgeInsets.only(top: _size.height / 3),
-                          child: _Form())),
+
+                  WavyHeader(),
+
+                  /*    Positioned(
+                    top: 80,
+                    left: 100,
+                    child: Container(
+                      width: _size.width / 1.3,
+                      height: _size.width / 1.5,
+                      child: WebsafeSvg.asset(
+                          "assets/images/intro-background.svg"),
+                    ),
+                  ), */
+                  /*   Positioned(
+                    top: 100,
+                    left: 130,
+                    child: Container(
+                      width: _size.width / 1.7,
+                      height: _size.width / 1.7,
+                      child: WebsafeSvg.asset('assets/images/my_password.svg'),
+                    ),
+                  ), */
+
+                  Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(
+                        top: _size.width / 2.5,
+                      ),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                await _signInGoogle(context);
+                              },
+                              child: roundedRectSignInSocialMediaButton(
+                                  'Sign with Google',
+                                  Colors.orange,
+                                  FontAwesomeIcons.google,
+                                  true,
+                                  30),
+                            ),
+                            roundedRectSignInSocialMediaButton(
+                                'Sign In with Facebook',
+                                Color(0xff3C56A6),
+                                FontAwesomeIcons.facebook,
+                                false,
+                                25),
+                            GestureDetector(
+                              onTap: () async {
+                                AppleSignInService.signIn();
+                              },
+                              child: roundedRectSignInSocialMediaButton(
+                                  'Sign In with Apple',
+                                  Colors.white,
+                                  FontAwesomeIcons.apple,
+                                  false,
+                                  27),
+                            ),
+                          ])),
+
+                  Center(child: _Form()),
+
                   Center(
                     child: Container(
                       margin: EdgeInsets.only(top: _size.height / 1.1),
@@ -84,7 +147,8 @@ class RegisterPage extends StatelessWidget {
                   Center(
                       child: Container(
                           margin: EdgeInsets.only(top: _size.height),
-                          child: StyledLogoCustom()))
+                          child: StyledLogoCustom())),
+                  //Container(child: circleYellow())
                 ],
               ),
             ),
@@ -107,7 +171,58 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
     final bloc = CustomProvider.registerBlocIn(context);
 
+    // final authService = Provider.of<AuthService>(context);
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final _size = MediaQuery.of(context).size;
+
     return Container(
+      margin: EdgeInsets.only(top: _size.height / 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Material(
+            elevation: 10.0,
+            color: currentTheme.scaffoldBackgroundColor,
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.only(topRight: Radius.circular(30.0))),
+            child: Padding(
+                padding: EdgeInsets.only(
+                    left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
+                child: _createEmail(bloc, context)),
+          ),
+          Material(
+            elevation: 10.0,
+            color: currentTheme.scaffoldBackgroundColor,
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.only(topRight: Radius.circular(0.0))),
+            child: Padding(
+                padding: EdgeInsets.only(
+                    left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
+                child: _createUsername(bloc, context)),
+          ),
+          Material(
+            elevation: 10.0,
+            color: currentTheme.scaffoldBackgroundColor,
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.only(topRight: Radius.circular(0.0))),
+            child: Padding(
+                padding: EdgeInsets.only(
+                    left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
+                child: _createPassword(bloc, context)),
+          ),
+          _createButton(bloc),
+          SizedBox(
+            height: 30,
+          ),
+        ],
+      ),
+    );
+
+    /* Container(
       margin: EdgeInsets.only(top: 20),
       // padding: EdgeInsets.symmetric(horizontal: 50),
       child: Column(
@@ -130,11 +245,118 @@ class __FormState extends State<_Form> {
           SizedBox(
             height: 30,
           ),
-          _createButton(bloc)
+          _createButton(bloc),
+
+          ButtonGold(
+              color: currentTheme.accentColor,
+              text: 'Sign in with Google!',
+              onPressed: authService.authenticated
+                  ? null
+                  : () async {
+                      FocusScope.of(context).unfocus();
+                      _signInGoogle(context);
+                    }),
+
+          //  _createButtonSignInGoole(bloc)
         ],
       ),
     );
+   */
   }
+
+  final List<Color> orangeGradients = [
+    Color(0xffF96400),
+    Color(0xffF9A400),
+    Color(0xffE14D1A),
+  ];
+}
+
+Widget roundedRectButton(
+    String title, List<Color> gradient, bool isEndIconVisible) {
+  return Builder(builder: (BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return Padding(
+      padding: EdgeInsets.only(top: 25),
+      child: Stack(
+        alignment: Alignment(1.0, 0.0),
+        children: <Widget>[
+          Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width / 1.7,
+            decoration: ShapeDecoration(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)),
+              gradient: LinearGradient(
+                  colors: gradient,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight),
+            ),
+            child: Text(title,
+                style: TextStyle(
+                    color: currentTheme.scaffoldBackgroundColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500)),
+            padding: EdgeInsets.only(top: 16, bottom: 16),
+          ),
+          Visibility(
+            visible: isEndIconVisible,
+            child: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: ImageIcon(
+                  AssetImage("assets/ic_forward.png"),
+                  size: 30,
+                  color: Colors.white,
+                )),
+          ),
+        ],
+      ),
+    );
+  });
+}
+
+Widget roundedRectSignInSocialMediaButton(
+    String title, Color color, IconData icon, bool isGoogle, double sizeIcon) {
+  return Builder(builder: (BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Padding(
+      padding: EdgeInsets.only(top: 25),
+      child: Container(
+        alignment: Alignment.center,
+        width: size.width / 1.7,
+        height: size.width / 7.0,
+        decoration: ShapeDecoration(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0)),
+            color: Colors.black26),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+                child: (isGoogle)
+                    ? Image.asset('assets/google_logo_icon.png')
+                    : Container(
+                        child: FaIcon(
+                          icon,
+                          color: color,
+                          size: sizeIcon,
+                        ),
+                      )),
+            Container(
+              child: Text(title,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500)),
+            ),
+          ],
+        ),
+        padding: EdgeInsets.only(top: 13, bottom: 20),
+      ),
+    );
+  });
 }
 
 Widget _createButton(RegisterBloc bloc) {
@@ -146,14 +368,13 @@ Widget _createButton(RegisterBloc bloc) {
     stream: bloc.formValidStream,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
       final authService = Provider.of<AuthService>(context);
-      final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
       return Container(
         padding: EdgeInsets.only(left: 30, right: 30),
-        child: ButtonGold(
-            color: currentTheme.accentColor,
-            text: 'Create my account!',
-            onPressed: authService.authenticated
+        child: GestureDetector(
+            child:
+                roundedRectButton("Let's get Started", orangeGradients, false),
+            onTap: authService.authenticated
                 ? null
                 : snapshot.hasData
                     ? () => {
@@ -163,6 +384,17 @@ Widget _createButton(RegisterBloc bloc) {
                     : null),
       );
     },
+  );
+}
+
+Widget circleYellow() {
+  return Transform.translate(
+    offset: Offset(0.0, 210.0),
+    child: Material(
+      color: Colors.yellow,
+      child: Padding(padding: EdgeInsets.all(140)),
+      shape: CircleBorder(side: BorderSide(color: Colors.white, width: 15.0)),
+    ),
   );
 }
 
@@ -177,7 +409,7 @@ Widget _createEmail(RegisterBloc bloc, context) {
         child: TextField(
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-              icon: Icon(Icons.alternate_email),
+              // icon: Icon(Icons.alternate_email),
               //  fillColor: currentTheme.accentColor,
               focusedBorder: OutlineInputBorder(
                 borderSide:
@@ -185,13 +417,31 @@ Widget _createEmail(RegisterBloc bloc, context) {
                 borderRadius: BorderRadius.circular(25.0),
               ),
               hintText: '',
-              labelText: 'Email',
+              labelText: 'Phone number or email',
               errorText: snapshot.error),
           onChanged: bloc.changeEmail,
         ),
       );
     },
   );
+}
+
+_signInGoogle(BuildContext context) async {
+  final socketService = Provider.of<SocketService>(context, listen: false);
+  final authService = Provider.of<AuthService>(context, listen: false);
+
+  final signInGoogleOk = await authService.signInWitchGoogle();
+
+  print(signInGoogleOk);
+  if (signInGoogleOk) {
+    socketService.connect();
+    Navigator.push(context, _createRute());
+  } else {
+    // Mostara alerta
+    mostrarAlerta(context, 'Login incorrecto', 'El correo ya existe');
+  }
+
+  //Navigator.pushReplacementNamed(context, '');
 }
 
 _register(RegisterBloc bloc, BuildContext context) async {
@@ -217,7 +467,7 @@ _register(RegisterBloc bloc, BuildContext context) async {
     }
   } else {
     mostrarAlerta(
-        context, 'Error del servidor', 'lo sentimos, Intentelo mas tarde');
+        context, 'Error del servidor', 'Ingrese un correo electrónico valido');
   }
   //Navigator.pushReplacementNamed(context, '');
 }
@@ -233,7 +483,7 @@ Widget _createUsername(RegisterBloc bloc, context) {
         child: TextField(
           //  keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-              icon: Icon(Icons.perm_identity),
+              // icon: Icon(Icons.perm_identity),
               //  fillColor: currentTheme.accentColor,
               focusedBorder: OutlineInputBorder(
                 borderSide:
@@ -314,7 +564,7 @@ Widget _createPassword(RegisterBloc bloc, context) {
         child: TextField(
           obscureText: true,
           decoration: InputDecoration(
-              icon: Icon(Icons.lock_outline),
+              // icon: Icon(Icons.lock_outline),
               //  fillColor: currentTheme.accentColor,
               focusedBorder: OutlineInputBorder(
                 borderSide:

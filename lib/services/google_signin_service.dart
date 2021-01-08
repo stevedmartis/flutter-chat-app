@@ -1,21 +1,11 @@
+import 'package:chat/services/auth_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+final _storage = new FlutterSecureStorage();
 
 class GoogleSignInServices {
-  static GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>[
-      'email',
-    ],
-  );
-
-  static Future signInWitchGoole() async {
-    try {
-      final account = await _googleSignIn.signIn();
-
-      print(account);
-      return account;
-    } catch (e) {
-      print('error signin google');
-      print(e);
-    }
+  static Future _guardarToken(String token) async {
+    return await _storage.write(key: 'token', value: token);
   }
 }

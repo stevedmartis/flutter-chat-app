@@ -47,6 +47,6 @@ final validationOk =
   if (text.length > 1) {
     sink.add(text);
   } else {
-    sink.addError('Campo requerido');
+    // sink.addError('Ingrese requerido');
   }
 });

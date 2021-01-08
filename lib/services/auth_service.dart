@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/services/google_signin_service.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -11,15 +13,28 @@ import 'package:chat/global/environment.dart';
 import 'package:chat/models/login_response.dart';
 
 class AuthService with ChangeNotifier {
-  Profiles profile;
+  Profiles _profile;
   List<Room> rooms;
   bool _authenticated = false;
+
+  static GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: <String>[
+      'email',
+    ],
+  );
 
   final _storage = new FlutterSecureStorage();
 
   bool get authenticated => this._authenticated;
   set authenticated(bool valor) {
     this._authenticated = valor;
+    notifyListeners();
+  }
+
+  Profiles get profile => this._profile;
+
+  set profile(Profiles valor) {
+    this._profile = valor;
     notifyListeners();
   }
 
@@ -33,6 +48,7 @@ class AuthService with ChangeNotifier {
   static Future<void> deleteToken() async {
     final _storage = new FlutterSecureStorage();
     await _storage.delete(key: 'token');
+    signOut();
   }
 
   Future<bool> login(String email, String password) async {
@@ -57,6 +73,52 @@ class AuthService with ChangeNotifier {
     } else {
       return false;
     }
+  }
+
+  Future siginWithGoogleBack(token) async {
+    final resp = await http.post('${Environment.apiUrl}/google/sign-in',
+        body: jsonEncode({'token': token}),
+        headers: {'Content-Type': 'application/json'});
+
+    if (resp.statusCode == 200) {
+      final loginResponse = loginResponseFromJson(resp.body);
+      this.profile = loginResponse.profile;
+
+      print(this.profile);
+      await this._guardarToken(loginResponse.token);
+      // this.authenticated = true;
+
+      // await getProfileByUserId(this.profile.user.uid);
+
+      return true;
+    } else {
+      return false;
+    }
+
+    // await getProfileByUserId(this.profile.user.uid);
+  }
+
+  Future signInWitchGoogle() async {
+    try {
+      final account = await _googleSignIn.signIn();
+
+      print(account);
+
+      final googleKey = await account.authentication;
+
+      print(googleKey.idToken);
+      final authBack = await siginWithGoogleBack(googleKey.idToken);
+      print(authBack);
+
+      return authBack;
+    } catch (e) {
+      print('error signin google');
+      print(e);
+    }
+  }
+
+  static Future signOut() async {
+    await _googleSignIn.signOut();
   }
 
   Future register(String username, String email, String password) async {
@@ -154,6 +216,7 @@ class AuthService with ChangeNotifier {
       await this._guardarToken(loginResponse.token);
       // await getProfileByUserId(this.user.uid);
       // this.logout();a
+      this.authenticated = false;
 
       return true;
     } else {
@@ -168,5 +231,6 @@ class AuthService with ChangeNotifier {
 
   Future logout() async {
     await _storage.delete(key: 'token');
+    signOut();
   }
 }

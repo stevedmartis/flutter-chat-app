@@ -34,7 +34,16 @@ class _TabsScrollCustomState extends State<TabsScrollCustom> {
     final rooms = widget.rooms;
 
     return Container(
-      color: Colors.black,
+      decoration: BoxDecoration(
+        color: currentTheme.scaffoldBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black54,
+              spreadRadius: 0.5,
+              blurRadius: 0.5,
+              offset: Offset(0.5, 0.5))
+        ],
+      ),
       child: DefaultTabController(
           length: rooms.length,
           child: PreferredSize(

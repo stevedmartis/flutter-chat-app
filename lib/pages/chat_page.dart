@@ -73,11 +73,17 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             ),
           ),
           Container(
-            child: Text(
-              profile.user.username,
-              style: TextStyle(color: Colors.white),
-            ),
-          )
+              child: Text(
+            (profile.name.length >= 20)
+                ? profile.name.substring(0, 20)
+                : profile.name,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: (profile.name.length >= 15) ? 15 : 20,
+                color: Colors.white),
+          ))
         ],
       ),
       leading: IconButton(

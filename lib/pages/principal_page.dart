@@ -28,6 +28,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
     changeStatusLight();
     return SafeArea(
         child: Scaffold(
+
             //drawer: PrincipalMenu(),
             // appBar: AppBarBase(user: user, socketService: socketService),
             body: CollapsingList()));
@@ -218,7 +219,8 @@ class _CollapsingListState extends State<CollapsingList>
             maxHeight: 60,
             child: Container(
                 color: Colors.black,
-                child: Container(child: CustomAppBarHeader()))));
+                child: Container(
+                    color: Colors.black, child: CustomAppBarHeader()))));
   }
 
   SliverPersistentHeader makeHeaderTabs(context) {

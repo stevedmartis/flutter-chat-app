@@ -44,7 +44,7 @@ class _ProfileCardState extends State<ProfileCard> {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Stack(
-      //fit: StackFit.expand,
+      fit: StackFit.expand,
       children: <Widget>[
         (!widget.isEmpty)
             ? Container(

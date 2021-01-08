@@ -3,13 +3,15 @@ import 'package:chat/bloc/provider.dart';
 import 'package:chat/controllers/slide_controler.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/pages/principal_page.dart';
+import 'package:chat/pages/register_page.dart';
+import 'package:chat/services/google_signin_service.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/button_gold.dart';
-import 'package:chat/widgets/headercurves_logo_text.dart';
+import 'package:chat/widgets/header_curve_signin.dart';
 import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/auth_service.dart';
@@ -25,7 +27,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Future<ui.Image> _image(String url) async =>
+  Future<ui.Image> image(String url) async =>
       await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
 
   @override
@@ -46,49 +48,101 @@ class _LoginPageState extends State<LoginPage> {
               height: _size.height + 100,
               child: Stack(
                 children: <Widget>[
-                  FutureBuilder<ui.Image>(
-                    initialData: null,
-                    future:
-                        _image("https://wallpapercave.com/wp/wp2869931.jpg"),
-                    builder: (BuildContext context,
-                            AsyncSnapshot<ui.Image> snapshot) =>
-                        !snapshot.hasData
-                            ? HeaderMultiCurvesImageEmptyText(
-                                isEmpty: true,
-                                color: Colors.white,
-                                image: snapshot.data,
-                              )
-                            : HeaderMultiCurvesImageEmptyText(
-                                color: Colors.white,
-                                image: snapshot.data,
-                                title: 'Login!',
-                                subtitle: 'Welcome back!',
-                              ),
-                  ),
+                  WavyHeader(),
+
                   Container(
-                      margin: EdgeInsets.only(top: _size.height / 2.7),
-                      child: _Form()),
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(
+                        top: _size.width / 2.5,
+                      ),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                _signInGoogle(context);
+                              },
+                              child: roundedRectSignInSocialMediaButton(
+                                  'Log in with Google',
+                                  Colors.orange,
+                                  FontAwesomeIcons.google,
+                                  true,
+                                  30),
+                            ),
+                            roundedRectSignInSocialMediaButton(
+                                'Log in with Facebook',
+                                Color(0xff3C56A6),
+                                FontAwesomeIcons.facebook,
+                                false,
+                                25),
+                            roundedRectSignInSocialMediaButton(
+                                'Log in with Apple',
+                                Colors.white.withOpacity(0.50),
+                                FontAwesomeIcons.apple,
+                                false,
+                                27)
+                          ])),
+
+                  Center(child: _Form()),
+
                   Center(
                     child: Container(
-                      margin: EdgeInsets.only(top: _size.height / 1.2),
+                      margin: EdgeInsets.only(top: _size.height / 1.1),
                       child: Labels(
-                          rute: 'register',
-                          title: '¿No tienes cuenta?',
-                          subTitulo: 'Crea una ahora!',
-                          colortText1: Colors.white70,
-                          colortText2: Color(0xffD9B310)),
+                        rute: 'register',
+                        title: "Don't have an account?",
+                        subTitulo: 'Sig Up',
+                        colortText1: Colors.white70,
+                        colortText2: Color(0xffD9B310),
+                      ),
                     ),
                   ),
                   Center(
                       child: Container(
                           margin: EdgeInsets.only(top: _size.height),
-                          child: StyledLogoCustom()))
+                          child: StyledLogoCustom())),
+                  //Container(child: circleYellow())
                 ],
               ),
             ),
           ),
         ));
   }
+
+  _signInGoogle(BuildContext context) async {
+    final socketService = Provider.of<SocketService>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final signInGoogleOk = await authService.signInWitchGoogle();
+
+    print(signInGoogleOk);
+    if (signInGoogleOk) {
+      socketService.connect();
+      Navigator.push(context, _createRute());
+    } else {
+      // Mostara alerta
+      mostrarAlerta(context, 'Login incorrecto', 'El correo ya existe');
+    }
+
+    //Navigator.pushReplacementNamed(context, '');
+  }
+}
+
+Route _createRute() {
+  return PageRouteBuilder(
+      pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) =>
+          PrincipalPage(),
+      transitionDuration: Duration(seconds: 1),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedAnimation =
+            CurvedAnimation(parent: animation, curve: Curves.easeInOut);
+
+        return FadeTransition(
+            child: child,
+            opacity:
+                Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation));
+      });
 }
 
 class _Form extends StatefulWidget {
@@ -104,43 +158,45 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
     final bloc = CustomProvider.of(context);
 
-    return Container(
-      child: Column(
-        children: <Widget>[
-          /* CustomInput(
-            icon: Icons.mail_outline,
-            placeholder: 'Correo',
-            keyboardType: TextInputType.emailAddress,
-            textController: emailCtrl,
-          ), */
-          _createEmail(bloc),
-          SizedBox(height: 20),
-          _createPassword(bloc),
-          SizedBox(height: 50),
-          _crearBoton(bloc)
-          /* ButtonGold(
-            color: currentTheme.accentColor,
-            text: 'Ingresar',
-            onPressed: authService.authenticated
-                ? null
-                : () async {
-                    FocusScope.of(context).unfocus();
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final _size = MediaQuery.of(context).size;
 
-                    /*     final loginOk = await authService.login(
-                        emailCtrl.text.trim(), passCtrl.text.trim());
- */ /* 
-                    if (loginOk) {
-                      socketService.connect();
-                      Navigator.push(context, _createRute());
-                    } else {
-                      // Mostara alerta
-                      mostrarAlerta(context, 'Login incorrecto',
-                          'Revise sus credenciales nuevamente');
-                    } */
-                  },
-          )
-        
-         */
+    return Container(
+      margin: EdgeInsets.only(top: _size.height / 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Material(
+            elevation: 10.0,
+            color: currentTheme.scaffoldBackgroundColor,
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.only(topRight: Radius.circular(30.0))),
+            child: Padding(
+                padding: EdgeInsets.only(
+                    left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
+                child: _createEmail(bloc)),
+          ),
+          Material(
+            elevation: 10.0,
+            color: currentTheme.scaffoldBackgroundColor,
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.only(topRight: Radius.circular(0.0))),
+            child: Padding(
+                padding: EdgeInsets.only(
+                    left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
+                child: _createPassword(bloc)),
+          ),
+          GestureDetector(
+              onTap: () {
+                _login(bloc, context);
+              },
+              child: roundedRectButton("Log in", orangeGradients, false)),
+          SizedBox(
+            height: 30,
+          ),
         ],
       ),
     );
@@ -151,6 +207,7 @@ class __FormState extends State<_Form> {
       stream: bloc.emailStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+        final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -161,7 +218,7 @@ class __FormState extends State<_Form> {
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:
-                      const BorderSide(color: Colors.yellow, width: 2.0),
+                      BorderSide(color: currentTheme.accentColor, width: 2.0),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 hintText: '',
@@ -179,6 +236,8 @@ class __FormState extends State<_Form> {
     return StreamBuilder(
       stream: bloc.passwordStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: TextField(
@@ -188,7 +247,7 @@ class __FormState extends State<_Form> {
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:
-                      const BorderSide(color: Colors.yellow, width: 2.0),
+                      BorderSide(color: currentTheme.accentColor, width: 2.0),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 hintText: '',
@@ -219,7 +278,7 @@ class __FormState extends State<_Form> {
         });
   }
 
-  Widget _crearBoton(LoginBloc bloc) {
+  /* Widget _crearBoton(LoginBloc bloc) {
     // formValidStream
     // snapshot.hasData
     //  true ? algo si true : algo si false
@@ -247,7 +306,7 @@ class __FormState extends State<_Form> {
       },
     );
   }
-
+ */
   _login(LoginBloc bloc, BuildContext context) async {
     final authService = Provider.of<AuthService>(context, listen: false);
     final socketService = Provider.of<SocketService>(context, listen: false);

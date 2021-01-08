@@ -4,13 +4,16 @@
 
 import 'dart:convert';
 
+import 'package:chat/models/usuario.dart';
+
 Product productFromJson(String str) => Product.fromJson(json.decode(str));
 
 String productToJson(Product data) => json.encode(data.toJson());
 
 class Product {
   Product({
-    this.userId,
+    this.id,
+    this.user,
     this.name,
     this.description,
     this.dateCreate,
@@ -19,8 +22,8 @@ class Product {
     this.totalProducts,
     //this.products
   });
-
-  bool userId;
+  String id;
+  User user;
   String name;
   String description;
   // List<Product> products;
@@ -29,7 +32,8 @@ class Product {
   int totalProducts;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-      userId: json["userId"],
+      id: json["id"],
+      user: json["user"],
       name: json["name"],
       description: json["description"],
       //products: List<Room>.from(json["products"].map((x) => x)),
@@ -38,7 +42,8 @@ class Product {
       totalProducts: json["totalProducts"]);
 
   Map<String, dynamic> toJson() => {
-        "userId": userId,
+        "id": id,
+        "user": user,
         "name": name,
         "description": description,
         "dateCreate": dateCreate,

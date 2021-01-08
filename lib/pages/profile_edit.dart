@@ -144,7 +144,7 @@ class EditProfilePageState extends State<EditProfilePage> {
               // controller: _scrollController,
               slivers: <Widget>[
                 SliverFixedExtentList(
-                  itemExtent: size.height / 4.0,
+                  itemExtent: size.height / 4.8,
                   delegate: SliverChildListDelegate(
                     [
                       FutureBuilder<ui.Image>(
@@ -226,10 +226,6 @@ class EditProfilePageState extends State<EditProfilePage> {
 
   Widget _createButton(ProfileBloc bloc, bool isUsernameChange,
       bool isEmailChange, bool isNameChange, bool isPassChange) {
-    // formValidStream
-    // snapshot.hasData
-    //  true ? algo si true : algo si false
-
     return StreamBuilder(
       stream: bloc.formValidStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -405,7 +401,7 @@ class EditProfilePageState extends State<EditProfilePage> {
       if (editProfileOk == true) {
         socketService.connect();
 
-        Navigator.push(context, _createRoute());
+        Navigator.push(context, createRoute());
       } else {
         mostrarAlerta(context, 'Error', editProfileOk);
       }
@@ -415,24 +411,23 @@ class EditProfilePageState extends State<EditProfilePage> {
     }
     //Navigator.pushReplacementNamed(context, '');
   }
+}
 
-  Route _createRoute() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          SliverAppBarProfilepPage(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(-0.5, 0.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
+Route createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        SliverAppBarProfilepPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(-0.5, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
 
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

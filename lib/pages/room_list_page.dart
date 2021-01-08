@@ -7,6 +7,7 @@ import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/profile_page.dart';
+import 'package:chat/pages/room_detail.dart';
 
 import 'package:chat/services/room_services.dart';
 
@@ -35,7 +36,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
   void initState() {
     super.initState();
 
-    this._chargeUsers();
+    this._chargeRooms();
   }
 
   void reorderData(int oldindex, int newindex) {
@@ -48,7 +49,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
     });
   }
 
-  _chargeUsers() async {
+  _chargeRooms() async {
     // this.rooms = await roomService.getRoomsUser();
 
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -70,6 +71,10 @@ class _RoomsListPageState extends State<RoomsListPage> {
     return Scaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
+          title: Text(
+            'My rooms',
+            style: TextStyle(),
+          ),
           backgroundColor: Colors.black,
           actions: [
             Padding(
@@ -124,66 +129,72 @@ class _RoomsListPageState extends State<RoomsListPage> {
                         rooms.length,
                         (index) {
                           final item = rooms[index];
-                          return Card(
+                          return GestureDetector(
                             key: ValueKey(item),
-                            color: Colors.black,
-                            child: Dismissible(
-                              key: Key(item.id),
-                              direction: DismissDirection.startToEnd,
-                              onDismissed: (_) => {_deleteRoom(item.id, index)},
-                              background: Container(
-                                  padding: EdgeInsets.only(left: 8.0),
-                                  decoration: BoxDecoration(
-                                      color: Colors.red,
+                            onTap: () => Navigator.of(context)
+                                .push(createRouteRoomDetail(item)),
+                            child: Card(
+                              key: ValueKey(item),
+                              color: Colors.black,
+                              child: Dismissible(
+                                key: Key(item.id),
+                                direction: DismissDirection.startToEnd,
+                                onDismissed: (_) =>
+                                    {_deleteRoom(item.id, index)},
+                                background: Container(
+                                    padding: EdgeInsets.only(left: 8.0),
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.black,
+                                      ),
+                                    )),
+                                child: ListTile(
+                                  selectedTileColor: currentTheme.accentColor,
+                                  focusColor: currentTheme.accentColor,
+                                  hoverColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          color: Colors.white, width: 0.5),
                                       borderRadius: BorderRadius.circular(10)),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Colors.black,
-                                    ),
-                                  )),
-                              child: ListTile(
-                                /*  trailing: ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(100)),
-                                    child: Icon(
-                                      Icons.add,
-                                      color: currentTheme.accentColor,
-                                    ),
-                                  ), */
-                                selectedTileColor: currentTheme.accentColor,
-                                focusColor: currentTheme.accentColor,
-                                hoverColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                        color: Colors.white, width: 0.5),
-                                    borderRadius: BorderRadius.circular(10)),
-                                visualDensity: VisualDensity.comfortable,
-                                title: Text(item.name),
-                                subtitle: Text(
-                                  '10 productos',
-                                  style: TextStyle(
-                                      color: currentTheme.secondaryHeaderColor),
-                                ),
-                                leading: Icon(
-                                  Icons.drag_indicator,
-                                  color: currentTheme.accentColor,
+                                  visualDensity: VisualDensity.comfortable,
+                                  title: Text(item.name),
+                                  subtitle: Text(
+                                    '10 productos',
+                                    style: TextStyle(
+                                        color:
+                                            currentTheme.secondaryHeaderColor),
+                                  ),
+                                  leading: Icon(
+                                    Icons.drag_indicator,
+                                    color: currentTheme.accentColor,
+                                  ),
                                 ),
                               ),
                             ),
                           );
                         },
                       ).toList(),
-                      onReorder: (int oldIndex, int newIndex) {
-                        setState(() {
-                          if (newIndex > oldIndex) {
-                            newIndex -= 1;
-                          }
-                          final item = snapshot.data.removeAt(oldIndex);
-                          snapshot.data.insert(newIndex, item);
-                        });
-                      }),
+                      onReorder: (int oldIndex, int newIndex) => {
+                            setState(() {
+                              if (newIndex > oldIndex) {
+                                newIndex -= 1;
+                              }
+                              final Room item =
+                                  snapshot.data.removeAt(oldIndex);
+                              item.position = newIndex;
+                              snapshot.data.insert(newIndex, item);
+
+                              print(snapshot.data);
+                            }),
+                            _updateRoom(snapshot.data, newIndex, context,
+                                profile.user.uid)
+                          }),
                 );
               }
             }),
@@ -239,7 +250,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
                   //roomService.rooms = rooms,
                   // print(roomService.rooms)
                 });
-        roomBloc.getRooms(authService.profile.user.uid);
+        roomBloc.getRooms(profile.user.uid);
       } else {
         mostrarAlerta(context, 'Registro incorrecto', addRoomOk);
       }
@@ -253,14 +264,12 @@ class _RoomsListPageState extends State<RoomsListPage> {
   _deleteRoom(String id, int index) async {
     final res = await this.roomService.deleteRoom(id);
 
-    final authService = Provider.of<AuthService>(context, listen: false);
-
     if (res) {
       setState(() {
         rooms.removeAt(index);
       });
 
-      roomBloc.getRooms(authService.profile.user.uid);
+      roomBloc.getRooms(profile.user.uid);
     }
   }
 
@@ -454,12 +463,43 @@ class _RoomsListPageState extends State<RoomsListPage> {
   }
 }
 
+_updateRoom(List<Room> room, int newIndex, context, String userId) async {
+  final roomService = Provider.of<RoomService>(context, listen: false);
+
+  final resp = await roomService.updatePositionRoom(room, newIndex, userId);
+
+  if (resp) {
+    roomBloc.getRooms(userId);
+  }
+}
+
 Route createRouteProfile() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
         SliverAppBarProfilepPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(-1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
+}
+
+Route createRouteRoomDetail(Room room) {
+  print(room);
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        RoomDetailPage(room: room),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.ease;
 

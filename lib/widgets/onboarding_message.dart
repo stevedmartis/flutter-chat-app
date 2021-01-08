@@ -5,13 +5,10 @@ class OnboardingMessages extends StatelessWidget {
   final String title;
   final String message;
   final String image;
-
-  const OnboardingMessages({
-    Key key,
-    this.title,
-    this.message,
-    this.image,
-  }) : super(key: key);
+  final double left;
+  const OnboardingMessages(
+      {Key key, this.title, this.message, this.image, this.left})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +56,9 @@ class OnboardingMessages extends StatelessWidget {
               ),
               Positioned(
                 top: 80,
-                left: 50,
+                left: this.left,
                 child: Container(
-                  width: _size.width * 0.60,
+                  width: _size.width * 0.55,
                   height: _size.height * 0.30,
                   child: WebsafeSvg.asset(image),
                 ),

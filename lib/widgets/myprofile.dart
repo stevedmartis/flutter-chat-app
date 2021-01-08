@@ -11,6 +11,7 @@ import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
 import 'package:chat/widgets/header_custom_search.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
@@ -18,6 +19,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 import '../utils//extension.dart';
+
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+
+import 'product_widget.dart';
 
 class MyProfile extends StatefulWidget {
   MyProfile({
@@ -79,8 +85,6 @@ class _MyProfileState extends State<MyProfile> {
     _scrollController = ScrollController()..addListener(() => setState(() {}));
 
     super.initState();
-
-    _scrollController = ScrollController()..addListener(() => setState(() {}));
     name = widget.profile.name;
 
     roomBloc.getRooms(widget.profile.user.uid);
@@ -136,7 +140,7 @@ class _MyProfileState extends State<MyProfile> {
                                 onPressed: () => {
                                       Navigator.pop(context),
                                     }),
-                            backgroundColor: Colors.black.withOpacity(0.30)),
+                            backgroundColor: Colors.black.withOpacity(0.60)),
                       )),
 
                   actions: [
@@ -157,7 +161,7 @@ class _MyProfileState extends State<MyProfile> {
                                   onPressed: () => Navigator.of(context).pop(),
                                 ),
                               ),
-                              backgroundColor: Colors.black.withOpacity(0.30)),
+                              backgroundColor: Colors.black.withOpacity(0.60)),
                         )),
                   ],
 
@@ -186,7 +190,7 @@ class _MyProfileState extends State<MyProfile> {
                     stretchModes: [
                       StretchMode.zoomBackground,
                       StretchMode.fadeTitle,
-                      //  StretchMode.blurBackground
+                      // StretchMode.blurBackground
                     ],
                     background: FutureBuilder<ui.Image>(
                         future: _image(widget.profile.getHeaderImg()),
@@ -206,50 +210,6 @@ class _MyProfileState extends State<MyProfile> {
                                     isUserEdit: widget.isUserEdit,
                                     profile: widget.profile,
                                   )),
-                    // titlePadding: EdgeInsets.all(50),
-
-                    //title:
-
-                    /* Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Spacer(),
-                        if (!this.widget.isUserEdit && !_showTitle)
-                          Container(
-                              width: 35,
-                              height: 35,
-                              margin: EdgeInsets.only(
-                                  right: 10, top: size.height / 3.5),
-                              child: ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                child: CircleAvatar(
-                                    child: (IconButton(
-                                      icon: Icon(
-                                        (!widget.isUserAuth)
-                                            ? Icons.favorite
-                                            : Icons.edit,
-                                        color: currentTheme.accentColor,
-                                        size: 15,
-                                      ),
-                                      onPressed: () {
-                                        if (!widget.isUserAuth)
-                                          return true;
-                                        else
-                                          Navigator.of(context)
-                                              .push(createRouteMyProfile());
-
-                                        //globalKey.currentState.openEndDrawer();
-                                      },
-                                    )),
-                                    backgroundColor:
-                                        Colors.black.withOpacity(0.70)),
-                              )),
-                      ],
-                    
-                    
-                    ), */
                     centerTitle: false,
                   ),
                 ),
@@ -257,34 +217,15 @@ class _MyProfileState extends State<MyProfile> {
                     ? makeHeaderInfo(context)
                     : makeHeaderSpacer(context),
                 if (!widget.isUserEdit) makeHeaderTabs(context),
-                if (!widget.isUserEdit)
-                  SliverFixedExtentList(
-                    itemExtent: 150.0,
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return _buildCard(index);
-                      },
-                    ),
-                  ),
-                /* SliverList(
-                  delegate:
-                      SliverChildListDelegate(List<Text>.generate(100, (int i) {
-                    return Text("List item $i");
+                //  if (!widget.isUserEdit) makeProductsCard(context),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                      List<Widget>.generate(10, (int i) {
+                    return CardProduct(index: i);
                   })),
-                ), */
+                ),
               ]),
         ),
-      ),
-    );
-  }
-
-  Card _buildCard(int index) {
-    return Card(
-      elevation: 4,
-      margin: EdgeInsets.only(left: 12, right: 12, top: 12),
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 24, horizontal: 12),
-        child: Text("Item $index"),
       ),
     );
   }
@@ -302,6 +243,31 @@ class _MyProfileState extends State<MyProfile> {
           builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
             if (snapshot.hasData) {
               return _buildUserWidget(snapshot.data);
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
+            } else {
+              return _buildLoadingWidget();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  SliverPersistentHeader makeProductsCard(context) {
+    //   final roomModel = Provider.of<Room>(context);
+
+    return SliverPersistentHeader(
+      pinned: false,
+      delegate: SliverAppBarDelegate(
+        minHeight: 70.0,
+        maxHeight: 70.0,
+        child: StreamBuilder<RoomsResponse>(
+          stream: roomBloc.subject.stream,
+          builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
+            if (snapshot.hasData) {
+              print(snapshot.data);
+              return _buildWidgetProduct(snapshot.data.rooms);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
             } else {
@@ -408,14 +374,128 @@ class _MyProfileState extends State<MyProfile> {
           rooms: data.rooms,
           isAuthUser: widget.isUserAuth,
         ),
-        if (!_showTitle) _buildEditCircle()
+        AnimatedOpacity(
+            opacity: !_showTitle ? 1.0 : 0.0,
+            duration: Duration(milliseconds: 250),
+            child: _buildEditCircle())
       ]),
+    );
+  }
+
+  Widget _buildWidgetProduct(data) {
+    print(data);
+    return Container(
+      child: SizedBox(
+        child: ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (BuildContext ctxt, int index) {
+              return InfoPage(index: index);
+            }),
+      ),
     );
   }
 
   Widget _buildLoadingWidget() {
     return Container(
         height: 400.0, child: Center(child: CircularProgressIndicator()));
+  }
+
+  Widget itemCake() {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            height: 15,
+          ),
+          Text(
+            "Dark Belgium chocolate",
+            style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 15,
+                color: Colors.white),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.lightBlue[100],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Cold",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.red[100],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Fresh",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Text(
+                    "\$30.25",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Colors.black54),
+                  ),
+                  Text(
+                    "per Quantity",
+                    style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 10,
+                        color: Colors.black),
+                  )
+                ],
+              )
+            ],
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                width: 5,
+              ),
+              Icon(Icons.star, size: 15, color: Colors.orangeAccent),
+              Icon(Icons.star, size: 15, color: Colors.orangeAccent),
+              Icon(Icons.star, size: 15, color: Colors.orangeAccent),
+              Icon(Icons.star, size: 15, color: Colors.orangeAccent),
+              Icon(Icons.star, size: 15, color: Colors.orangeAccent),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildErrorWidget(String error) {
@@ -437,9 +517,10 @@ class _MyProfileState extends State<MyProfile> {
 
     return (widget.isUserAuth)
         ? Container(
+            padding: EdgeInsets.all(5.0),
             margin: EdgeInsets.only(left: size.width / 1.3),
-            width: 100,
-            height: 100,
+            width: 50,
+            height: 50,
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(20.0)),
               child: CircleAvatar(

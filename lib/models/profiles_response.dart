@@ -29,4 +29,6 @@ class ProfilesResponse {
         "ok": ok,
         "profiles": List<dynamic>.from(profiles.map((x) => x.toJson())),
       };
+
+  ProfilesResponse.withError(String errorValue);
 }
