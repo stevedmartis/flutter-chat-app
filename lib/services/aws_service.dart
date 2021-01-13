@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:chat/global/environment.dart';
+import 'dart:io';
+import 'package:path/path.dart' as path;
 
 class AwsService with ChangeNotifier {
   String _image;
@@ -40,22 +42,28 @@ class AwsService with ChangeNotifier {
     String uid,
     String fileName,
     String fileType,
-    bytes,
+    File image,
   ) async {
     // this.authenticated = true;
 
+    // final x = image.readAsBytesSync();
+
+    print(path.basename(image.path));
     final data = {
       'uid': uid,
-      'fileName': fileName,
+      'fileName': path.basename(image.path),
       'fileType': fileType,
-      'bytes': bytes
+      'image': image.readAsBytesSync()
     };
 
     final token = await this._storage.read(key: 'token');
 
     final resp = await http.post('${Environment.apiUrl}/aws/upload/avatar',
         body: jsonEncode(data),
-        headers: {'Content-Type': 'application/json', 'x-token': token});
+        headers: {
+          'Content-Type': 'application/json' + fileType,
+          'x-token': token
+        });
 
     if (resp.statusCode == 200) {
       // final loginResponse = loginResponseFromJson(resp.body);

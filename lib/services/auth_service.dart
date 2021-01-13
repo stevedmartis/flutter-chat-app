@@ -196,6 +196,7 @@ class AuthService with ChangeNotifier {
         body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
 
     this.authenticated = false;
+
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
 
@@ -203,10 +204,6 @@ class AuthService with ChangeNotifier {
 
       //this.profile = loginResponse.profile;
       await this._guardarToken(loginResponse.token);
-
-      //   final token = await this._storage.read(key: 'token');
-
-      //await getProfileByUserId(this.profile.user.uid);
 
       return true;
     } else {
@@ -245,31 +242,6 @@ class AuthService with ChangeNotifier {
       return respBody['msg'];
     }
   }
-
-  /*  Future<bool> getProfileByUserId(String id) async {
-    final token = await this._storage.read(key: 'token');
-    print(' ENTROAA::: ${id}');
-
-    final resp = await http.get('${Environment.apiUrl}/login/profile/user/$id',
-        headers: {'Content-Type': 'application/json', 'x-token': token});
-
-    if (resp.statusCode == 200) {
-      print('resp');
-
-      final profileResponse = profileResponseFromJson(resp.body);
-      this.profile = profileResponse.profile;
-      print(' profile resss:::: ${profileResponse}');
-
-      // this.profile = loginResponse.profile;
-      // await this._guardarToken(loginResponse.token);
-
-      return true;
-    } else {
-      print('que wea');
-      return false;
-    }
-  }
- */
 
   Future<bool> isLoggedIn() async {
     final token = await this._storage.read(key: 'token');

@@ -476,7 +476,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                           EdgeInsets.only(left: size.width / 20.0, right: 10),
                       //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
-                      child: (about.isEmpty)
+                      child: (about.isNotEmpty)
                           ? _convertHashtag(
                               about,
                               currentTheme.accentColor,

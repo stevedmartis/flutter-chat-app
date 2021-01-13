@@ -134,9 +134,6 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
 
     final pickedFile = await picker.getImage(source: ImageSource.camera);
 
-    Uint8List bytes = await pickedFile.readAsBytes();
-    print(bytes);
-
     setState(() {
       if (pickedFile != null) {
         image = File(pickedFile.path);
@@ -145,7 +142,7 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
 
         print(fileType);
         awsService.uploadAvatar(
-            widget.profile.user.uid, fileType[0], fileType[1], bytes);
+            widget.profile.user.uid, fileType[0], fileType[1], image);
       } else {
         print('No image selected.');
       }

@@ -55,7 +55,7 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
                       width: 100,
                       height: 100,
                       profile: profile,
-                      fontsize: 18,
+                      fontsize: 12,
                     ),
                   ),
                 ),
