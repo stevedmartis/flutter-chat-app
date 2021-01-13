@@ -471,16 +471,17 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                   ),
                 Expanded(
                   child: Container(
-                    width: size.width - 50,
-                    padding:
-                        EdgeInsets.only(left: size.width / 20.0, right: 10),
-                    //margin: EdgeInsets.only(left: size.width / 6, top: 10),
+                      width: size.width - 50,
+                      padding:
+                          EdgeInsets.only(left: size.width / 20.0, right: 10),
+                      //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
-                    child: _convertHashtag(
-                      about,
-                      currentTheme.accentColor,
-                    ),
-                  ),
+                      child: (about.isEmpty)
+                          ? _convertHashtag(
+                              about,
+                              currentTheme.accentColor,
+                            )
+                          : null),
                 ),
               ],
             ),
@@ -489,6 +490,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   }
 
   RichText _convertHashtag(String text, Color color) {
+    print(text);
     List<String> split = text.split(RegExp("#"));
     List<String> hashtags = split.getRange(1, split.length).fold([], (t, e) {
       var texts = e.split(" ");

@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:chat/models/profiles.dart';
+import 'package:chat/services/aws_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +21,7 @@ class AvatarImagePage extends StatefulWidget {
 class _AvatarImagePageState extends State<AvatarImagePage> {
   File image;
   final picker = ImagePicker();
+  // AwsService authService;
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -53,7 +57,7 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
             Icons.chevron_left,
             color: currentTheme.accentColor,
           ),
-          iconSize: 50,
+          iconSize: 40,
           onPressed: () => Navigator.pop(context),
           color: Colors.white,
         ),
@@ -92,7 +96,7 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
                         child: Container(
                           alignment: Alignment.center,
                           color: currentTheme.accentColor,
-                          child: Text("Cambiar",
+                          child: Text("Change",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 18)),
                         ),
@@ -126,11 +130,22 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
   }
 
   _selectImage() async {
+    final awsService = Provider.of<AwsService>(context, listen: false);
+
     final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    Uint8List bytes = await pickedFile.readAsBytes();
+    print(bytes);
 
     setState(() {
       if (pickedFile != null) {
         image = File(pickedFile.path);
+
+        final fileType = pickedFile.path.split('.');
+
+        print(fileType);
+        awsService.uploadAvatar(
+            widget.profile.user.uid, fileType[0], fileType[1], bytes);
       } else {
         print('No image selected.');
       }
