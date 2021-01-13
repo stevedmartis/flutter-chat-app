@@ -3,7 +3,6 @@ import 'package:chat/bloc/register_bloc.dart';
 import 'package:chat/controllers/slide_controler.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/pages/principal_page.dart';
-import 'package:chat/services/apple_signin_service.dart';
 import 'package:chat/services/google_signin_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/header_curve_signin.dart';
@@ -44,57 +43,11 @@ class RegisterPage extends StatelessWidget {
               height: _size.height + 100,
               child: Stack(
                 children: <Widget>[
-                  /*  FutureBuilder<ui.Image>(
-                    initialData: null,
-                    future:
-                        _image("https://wallpapercave.com/wp/wp2869931.jpg"),
-                    builder: (BuildContext context,
-                            AsyncSnapshot<ui.Image> snapshot) =>
-                        !snapshot.hasData
-                            ? HeaderMultiCurvesImageEmptyText(
-                                isEmpty: true,
-                                color: Colors.white,
-                                image: snapshot.data,
-                              )
-                            : HeaderMultiCurvesImageEmptyText(
-                                color: Colors.white,
-                                image: snapshot.data,
-                                title: 'Sign Up!',
-                                subtitle: 'Hello!',
-                              ),
-                  ), */
-
-                  /*   HeaderMultiCurvesText(
-                      title: 'Sign Up!',
-                      subtitle: 'Hello,',
-                      color: currentTheme.accentColor), */
-
                   WavyHeader(),
-
-                  /*    Positioned(
-                    top: 80,
-                    left: 100,
-                    child: Container(
-                      width: _size.width / 1.3,
-                      height: _size.width / 1.5,
-                      child: WebsafeSvg.asset(
-                          "assets/images/intro-background.svg"),
-                    ),
-                  ), */
-                  /*   Positioned(
-                    top: 100,
-                    left: 130,
-                    child: Container(
-                      width: _size.width / 1.7,
-                      height: _size.width / 1.7,
-                      child: WebsafeSvg.asset('assets/images/my_password.svg'),
-                    ),
-                  ), */
-
                   Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
-                        top: _size.width / 2.5,
+                        top: _size.width / 3.5,
                       ),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -112,14 +65,14 @@ class RegisterPage extends StatelessWidget {
                                   30),
                             ),
                             roundedRectSignInSocialMediaButton(
-                                'Sign In with Facebook',
+                                'Sign with Facebook',
                                 Color(0xff3C56A6),
                                 FontAwesomeIcons.facebook,
                                 false,
                                 25),
                             GestureDetector(
                               onTap: () async {
-                                AppleSignInService.signIn();
+                                await _signIApple(context);
                               },
                               child: roundedRectSignInSocialMediaButton(
                                   'Sign In with Apple',
@@ -134,13 +87,13 @@ class RegisterPage extends StatelessWidget {
 
                   Center(
                     child: Container(
-                      margin: EdgeInsets.only(top: _size.height / 1.1),
+                      margin: EdgeInsets.only(top: _size.height - 20),
                       child: Labels(
                         rute: 'login',
                         title: '¿Ya tienes una cuenta?',
                         subTitulo: 'Ingresa ahora!',
                         colortText1: Colors.white70,
-                        colortText2: Color(0xffD9B310),
+                        colortText2: currentTheme.accentColor,
                       ),
                     ),
                   ),
@@ -172,48 +125,27 @@ class __FormState extends State<_Form> {
     final bloc = CustomProvider.registerBlocIn(context);
 
     // final authService = Provider.of<AuthService>(context);
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final _size = MediaQuery.of(context).size;
 
     return Container(
-      margin: EdgeInsets.only(top: _size.height / 5),
+      margin: EdgeInsets.only(top: _size.height / 3.5),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Material(
-            elevation: 10.0,
-            color: currentTheme.scaffoldBackgroundColor,
-            shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.only(topRight: Radius.circular(30.0))),
-            child: Padding(
-                padding: EdgeInsets.only(
-                    left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
-                child: _createEmail(bloc, context)),
-          ),
-          Material(
-            elevation: 10.0,
-            color: currentTheme.scaffoldBackgroundColor,
-            shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.only(topRight: Radius.circular(0.0))),
-            child: Padding(
-                padding: EdgeInsets.only(
-                    left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
-                child: _createUsername(bloc, context)),
-          ),
-          Material(
-            elevation: 10.0,
-            color: currentTheme.scaffoldBackgroundColor,
-            shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.only(topRight: Radius.circular(0.0))),
-            child: Padding(
-                padding: EdgeInsets.only(
-                    left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
-                child: _createPassword(bloc, context)),
-          ),
+          Padding(
+              padding: EdgeInsets.only(
+                  left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
+              child: _createEmail(bloc, context)),
+          Padding(
+              padding: EdgeInsets.only(
+                  left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
+              child: _createUsername(bloc, context)),
+          Padding(
+              padding: EdgeInsets.only(
+                  left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
+              child: _createPassword(bloc, context)),
           _createButton(bloc),
           SizedBox(
             height: 30,
@@ -321,7 +253,7 @@ Widget roundedRectSignInSocialMediaButton(
     final size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: EdgeInsets.only(top: 25),
+      padding: EdgeInsets.only(top: 10),
       child: Container(
         alignment: Alignment.center,
         width: size.width / 1.7,
@@ -431,6 +363,24 @@ _signInGoogle(BuildContext context) async {
   final authService = Provider.of<AuthService>(context, listen: false);
 
   final signInGoogleOk = await authService.signInWitchGoogle();
+
+  print(signInGoogleOk);
+  if (signInGoogleOk) {
+    socketService.connect();
+    Navigator.push(context, _createRute());
+  } else {
+    // Mostara alerta
+    mostrarAlerta(context, 'Login incorrecto', 'El correo ya existe');
+  }
+
+  //Navigator.pushReplacementNamed(context, '');
+}
+
+_signIApple(BuildContext context) async {
+  final socketService = Provider.of<SocketService>(context, listen: false);
+  final authService = Provider.of<AuthService>(context, listen: false);
+
+  final signInGoogleOk = await authService.appleSignIn();
 
   print(signInGoogleOk);
   if (signInGoogleOk) {

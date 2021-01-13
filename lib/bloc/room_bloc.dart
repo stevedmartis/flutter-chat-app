@@ -51,6 +51,10 @@ class RoomBloc with Validators {
 
     _nameController?.close();
     _descriptionController?.close();
+    //  _roomsController?.close();
+  }
+
+  disposeRooms() {
     _roomsController?.close();
   }
 }

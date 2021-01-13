@@ -33,7 +33,6 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
         Container(
           width: double.infinity,
           height: _size.height,
-          alignment: Alignment.center,
           child: PageView(
             physics: ClampingScrollPhysics(),
             controller: _pageController,
@@ -48,8 +47,8 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
         (!_isLastPage)
             ? Container(
                 margin: EdgeInsets.only(
-                  left: _size.width / 2.5,
-                  top: _size.height * 0.8,
+                  left: _size.width / 2.9,
+                  top: _size.height * 0.85,
                 ),
                 child: Row(
                   children: _buildPageIndicator(),
@@ -79,9 +78,9 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
             : Container(
                 padding: EdgeInsets.only(
                     top: _size.height * 0.8, left: 60, right: 60),
-                child: ButtonGold(
+                child: ButtonAccent(
                     color: currentTheme.accentColor,
-                    text: 'Start now!',
+                    text: 'Start now',
                     onPressed: () => {Navigator.push(context, _createRute())}),
               ),
         SizedBox(
@@ -191,32 +190,85 @@ class StyledLogoCustom extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    return RichText(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        // Stroked text as border.
+
+        Stack(
+          children: [
+            Text(
+              'G',
+              style: TextStyle(
+                  fontSize: 30,
+                  fontFamily: 'GTWalsheimPro',
+                  fontStyle: FontStyle.normal,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 3
+                    ..color = currentTheme.accentColor),
+            ),
+            // Solid text as fill.
+            Text(
+              'G',
+              style: TextStyle(
+                  fontFamily: 'GTWalsheimPro',
+                  fontStyle: FontStyle.normal,
+                  fontSize: 30,
+                  color: currentTheme.scaffoldBackgroundColor),
+            ),
+          ],
+        ),
+        RichText(
+          textAlign: TextAlign.center,
+          text: new TextSpan(
+            children: [
+              TextSpan(
+                text: "safety",
+                style: TextStyle(
+                  letterSpacing: -1,
+                  fontFamily: 'GTWalsheimPro',
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w500,
+                  fontStyle: FontStyle.normal,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+/* RichText(
+
       textAlign: TextAlign.center,
       text: new TextSpan(
         children: [
           TextSpan(
-            text: "examp",
+            text: "G",
             style: TextStyle(
               fontFamily: 'GTWalsheimPro',
-              color: Color(0xff4b3232),
+              color: currentTheme.accentColor,
               fontSize: 27,
               fontWeight: FontWeight.w500,
               fontStyle: FontStyle.normal,
             ),
           ),
+
+          
           TextSpan(
-            text: "Logo",
+            text: "safety",
             style: TextStyle(
               fontFamily: 'GTWalsheimPro',
               fontStyle: FontStyle.normal,
-              color: currentTheme.accentColor,
+              color: currentTheme.scaffoldBackgroundColor,
               fontSize: 27,
               fontWeight: FontWeight.w700,
             ),
           ),
         ],
       ),
-    );
+    ); */
   }
 }

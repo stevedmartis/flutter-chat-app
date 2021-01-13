@@ -1,5 +1,5 @@
-import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/models/room_response.dart';
 import 'package:chat/models/rooms_response.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -42,15 +42,15 @@ class RoomService with ChangeNotifier {
     //final data = {'name': name, 'email': description, 'uid': uid};
 
     final resp = await http.post('${Environment.apiUrl}/room/new',
-        body: roomToJson(room),
+        body: jsonEncode(room),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
     if (resp.statusCode == 200) {
       // final roomResponse = roomsResponseFromJson(resp.body);
-
+      final roomResponse = roomResponseFromJson(resp.body);
       // this.rooms = roomResponse.rooms;
 
-      return true;
+      return roomResponse;
     } else {
       final respBody = jsonDecode(resp.body);
       return respBody['msg'];

@@ -7,6 +7,7 @@ import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/products.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/pages/new_product.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/services/product_services.dart';
 
@@ -85,7 +86,11 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                   iconSize: 30,
                   onPressed: () => {
                         setState(() {
-                          addNewProduct();
+                          //createRouteNewProduct(widget.room);
+
+                          Navigator.pushReplacement(
+                              context, createRouteNewProduct(widget.room));
+                          //addNewProduct();
                         })
                       }),
             )
@@ -257,7 +262,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                 SizedBox(
                   height: 40,
                 ),
-                ButtonGold(
+                ButtonAccent(
                     color: currentTheme.accentColor,
                     text: 'Done',
                     onPressed: () => _handleAddProduct(context)),
@@ -337,6 +342,26 @@ Route createRouteProfile() {
         SliverAppBarProfilepPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(-1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
+}
+
+Route createRouteNewProduct(Room room) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        NewProductPage(room: room),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.ease;
 

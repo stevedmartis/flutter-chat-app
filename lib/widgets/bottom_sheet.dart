@@ -103,7 +103,7 @@ class NewRoomScreen extends StatelessWidget {
             SizedBox(
               height: 40,
             ),
-            ButtonGold(
+            ButtonAccent(
                 color: currentTheme.accentColor,
                 text: 'Done',
                 onPressed: () => {handleadd}),

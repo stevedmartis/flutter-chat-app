@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:chat/models/room.dart';
 import 'package:chat/models/usuario.dart';
 
 Profiles profilesFromJson(String str) => Profiles.fromJson(json.decode(str));
@@ -12,16 +11,16 @@ Profiles profilesFromJson(String str) => Profiles.fromJson(json.decode(str));
 String profilesToJson(Profiles data) => json.encode(data.toJson());
 
 class Profiles {
-  Profiles({
-    this.id,
-    this.name,
-    this.lastName,
-    this.createdAt,
-    this.updatedAt,
-    this.imageHeader,
-    this.imageAvatar,
-    this.user,
-  });
+  Profiles(
+      {this.id,
+      this.name,
+      this.lastName,
+      this.createdAt,
+      this.updatedAt,
+      this.imageHeader,
+      this.imageAvatar,
+      this.user,
+      this.about});
 
   String id;
   String name;
@@ -29,6 +28,7 @@ class Profiles {
   DateTime createdAt;
   DateTime updatedAt;
   String imageHeader;
+  String about;
   String imageAvatar;
   User user;
 
@@ -39,6 +39,7 @@ class Profiles {
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
         imageAvatar: json["imageAvatar"],
+        about: json["about"],
         imageHeader: json["imageHeader"],
         user: User.fromJson(json["user"]),
       );
@@ -49,6 +50,7 @@ class Profiles {
         "lastName": lastName,
         "dateCreate": createdAt,
         "dateUpdate": updatedAt,
+        "about": about,
         "imageAvatar:": imageAvatar,
         "imageHeader": imageHeader,
         "user": user.toJson(),

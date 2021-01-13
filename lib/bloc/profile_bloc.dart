@@ -8,6 +8,7 @@ class ProfileBloc with Validators {
   final _usernameController = BehaviorSubject<String>();
   final _nameController = BehaviorSubject<String>();
   final _lastNameController = BehaviorSubject<String>();
+  final _aboutController = BehaviorSubject<String>();
 
   // Recuperar los datos del Stream
   Stream<String> get emailStream =>
@@ -18,6 +19,8 @@ class ProfileBloc with Validators {
       _usernameController.stream.transform(validationUserNameRequired);
   Stream<String> get nameStream =>
       _nameController.stream.transform(validationNameRequired);
+  Stream<String> get aboutStream =>
+      _aboutController.stream.transform(validationNameRequired);
   Stream<String> get lastNameStream => _lastNameController.stream;
 
   Stream<bool> get formValidStream => Observable.combineLatest3(
@@ -29,6 +32,7 @@ class ProfileBloc with Validators {
   Function(String) get changePassword => _passwordController.sink.add;
   Function(String) get changeName => _nameController.sink.add;
   Function(String) get changeLastName => _lastNameController.sink.add;
+  Function(String) get changeAbout => _aboutController.sink.add;
 
   // Obtener el último valor ingresado a los streams
   String get email => _emailController.value;
@@ -37,11 +41,14 @@ class ProfileBloc with Validators {
   String get name => _nameController.value;
   String get lastName => _lastNameController.value;
 
+  String get about => _aboutController.value;
+
   dispose() {
     _emailController?.close();
     _passwordController?.close();
     _usernameController?.close();
     _nameController?.close();
     _lastNameController?.close();
+    _aboutController?.close();
   }
 }

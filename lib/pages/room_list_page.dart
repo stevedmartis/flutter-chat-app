@@ -6,6 +6,7 @@ import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_detail.dart';
 
@@ -15,6 +16,7 @@ import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/auth_service.dart';
@@ -31,12 +33,39 @@ class _RoomsListPageState extends State<RoomsListPage> {
   List<Room> rooms = [];
   Future<List<Room>> getJobFuture;
   Profiles profile;
+  ScrollController _hideBottomNavController;
+
+  var _isVisible;
 
   @override
   void initState() {
     super.initState();
 
     this._chargeRooms();
+    this.bottomControll();
+  }
+
+  bottomControll() {
+    _isVisible = true;
+    _hideBottomNavController = ScrollController();
+    _hideBottomNavController.addListener(
+      () {
+        if (_hideBottomNavController.position.userScrollDirection ==
+            ScrollDirection.reverse) {
+          if (_isVisible)
+            setState(() {
+              _isVisible = false;
+            });
+        }
+        if (_hideBottomNavController.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          if (!_isVisible)
+            setState(() {
+              _isVisible = true;
+            });
+        }
+      },
+    );
   }
 
   void reorderData(int oldindex, int newindex) {
@@ -68,145 +97,153 @@ class _RoomsListPageState extends State<RoomsListPage> {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     // final roomsModel = Provider.of<Room>(context);
 
-    return Scaffold(
-      backgroundColor: currentTheme.scaffoldBackgroundColor,
-      appBar: AppBar(
-          title: Text(
-            'My rooms',
-            style: TextStyle(),
-          ),
-          backgroundColor: Colors.black,
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: currentTheme.accentColor,
-                  ),
-                  iconSize: 30,
-                  onPressed: () => {
-                        setState(() {
-                          addNewRoom();
-                        })
-                      }),
-            )
-          ],
-          leading: IconButton(
-            icon: Icon(
-              Icons.chevron_left,
-              color: currentTheme.accentColor,
+    return SafeArea(
+      child: Scaffold(
+        bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+        appBar: AppBar(
+            title: Text(
+              'My rooms',
+              style: TextStyle(),
             ),
-            iconSize: 30,
-            onPressed: () =>
-                //  Navigator.pushReplacement(context, createRouteProfile()),
+            backgroundColor: Colors.black,
+            actions: [
+              Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: IconButton(
+                    icon: Icon(
+                      Icons.add,
+                      color: currentTheme.accentColor,
+                    ),
+                    iconSize: 30,
+                    onPressed: () => {
+                          setState(() {
+                            addNewRoom();
+                          })
+                        }),
+              )
+            ],
+            leading: IconButton(
+              icon: Icon(
+                Icons.chevron_left,
+                color: currentTheme.accentColor,
+              ),
+              iconSize: 30,
+              onPressed: () => {
+                setState(() {
+                  Provider.of<MenuModel>(context, listen: false).currentPage =
+                      0;
+                }),
                 Navigator.pop(context),
-            color: Colors.white,
-          )),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: FutureBuilder(
-            future: getJobFuture,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.data == null) {
-                return Container(
-                    height: 400.0,
-                    child: Center(child: CircularProgressIndicator()));
-              } else {
-                rooms = snapshot.data;
+              },
+              color: Colors.white,
+            )),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: FutureBuilder(
+              future: getJobFuture,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.data == null) {
+                  return Container(
+                      height: 400.0,
+                      child: Center(child: CircularProgressIndicator()));
+                } else {
+                  rooms = snapshot.data;
 
-                if (rooms.length < 1) {
-                  return Center(
-                    child: Text('No rooms, create a new'),
-                  );
-                }
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ReorderableListView(
-                      children: List.generate(
-                        rooms.length,
-                        (index) {
-                          final item = rooms[index];
-                          return GestureDetector(
-                            key: ValueKey(item),
-                            onTap: () => Navigator.of(context)
-                                .push(createRouteRoomDetail(item)),
-                            child: Card(
+                  if (rooms.length < 1) {
+                    return Center(
+                      child: Text('No rooms, create a new'),
+                    );
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: ReorderableListView(
+                        scrollController: _hideBottomNavController,
+                        children: List.generate(
+                          rooms.length,
+                          (index) {
+                            final item = rooms[index];
+                            return GestureDetector(
                               key: ValueKey(item),
-                              color: Colors.black,
-                              child: Dismissible(
-                                key: Key(item.id),
-                                direction: DismissDirection.startToEnd,
-                                onDismissed: (_) =>
-                                    {_deleteRoom(item.id, index)},
-                                background: Container(
-                                    padding: EdgeInsets.only(left: 8.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.red,
+                              onTap: () => Navigator.of(context)
+                                  .push(createRouteRoomDetail(item)),
+                              child: Card(
+                                key: ValueKey(item),
+                                color: Colors.black,
+                                child: Dismissible(
+                                  key: Key(item.id),
+                                  direction: DismissDirection.startToEnd,
+                                  onDismissed: (_) =>
+                                      {_deleteRoom(item.id, index)},
+                                  background: Container(
+                                      padding: EdgeInsets.only(left: 8.0),
+                                      decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.black,
+                                        ),
+                                      )),
+                                  child: ListTile(
+                                    selectedTileColor: currentTheme.accentColor,
+                                    focusColor: currentTheme.accentColor,
+                                    hoverColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            color: Colors.white, width: 0.5),
                                         borderRadius:
                                             BorderRadius.circular(10)),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Colors.black,
-                                      ),
-                                    )),
-                                child: ListTile(
-                                  selectedTileColor: currentTheme.accentColor,
-                                  focusColor: currentTheme.accentColor,
-                                  hoverColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                          color: Colors.white, width: 0.5),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  visualDensity: VisualDensity.comfortable,
-                                  title: Text(item.name),
-                                  subtitle: Text(
-                                    '10 productos',
-                                    style: TextStyle(
-                                        color:
-                                            currentTheme.secondaryHeaderColor),
-                                  ),
-                                  leading: Icon(
-                                    Icons.drag_indicator,
-                                    color: currentTheme.accentColor,
+                                    visualDensity: VisualDensity.comfortable,
+                                    title: Text(item.name),
+                                    subtitle: Text(
+                                      '10 productos',
+                                      style: TextStyle(
+                                          color: currentTheme
+                                              .secondaryHeaderColor),
+                                    ),
+                                    leading: Icon(
+                                      Icons.drag_indicator,
+                                      color: currentTheme.accentColor,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      ).toList(),
-                      onReorder: (int oldIndex, int newIndex) => {
-                            setState(() {
-                              if (newIndex > oldIndex) {
-                                newIndex -= 1;
-                              }
-                              final Room item =
-                                  snapshot.data.removeAt(oldIndex);
-                              item.position = newIndex;
-                              snapshot.data.insert(newIndex, item);
+                            );
+                          },
+                        ).toList(),
+                        onReorder: (int oldIndex, int newIndex) => {
+                              setState(() {
+                                if (newIndex > oldIndex) {
+                                  newIndex -= 1;
+                                }
+                                final Room item =
+                                    snapshot.data.removeAt(oldIndex);
+                                item.position = newIndex;
+                                snapshot.data.insert(newIndex, item);
 
-                              print(snapshot.data);
+                                print(snapshot.data);
+                              }),
+                              _updateRoom(snapshot.data, newIndex, context,
+                                  profile.user.uid)
                             }),
-                            _updateRoom(snapshot.data, newIndex, context,
-                                profile.user.uid)
-                          }),
-                );
-              }
-            }),
+                  );
+                }
+              }),
+        ),
+        /*  floatingActionButton: (FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                setState(() {
+                  var j = Room(name: 'sfddsfsdf', description: 'sdfsdf');
+                  rooms.add(j);
+                });
+              }) */
       ),
-      /*  floatingActionButton: (FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              setState(() {
-                var j = Room(name: 'sfddsfsdf', description: 'sdfsdf');
-                rooms.add(j);
-              });
-            }) */
     );
   }
 
@@ -230,10 +267,11 @@ class _RoomsListPageState extends State<RoomsListPage> {
         description: bloc.description,
         id: authService.profile.user.uid);
 
-    final addRoomOk = await roomService.createRoom(room);
+    final addRoomResponse = await roomService.createRoom(room);
 
-    if (addRoomOk != null) {
-      if (addRoomOk == true) {
+    print(addRoomResponse);
+    if (addRoomResponse != null) {
+      if (addRoomResponse.ok == true) {
         //socketService.connect();
         //Navigator.push(context, _createRute());
 
@@ -243,7 +281,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
             Duration(milliseconds: 300),
             () => {
                   setState(() {
-                    rooms.add(room);
+                    rooms.add(addRoomResponse.room);
                   }),
 
                   // roomsModel.rooms = rooms
@@ -252,7 +290,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
                 });
         roomBloc.getRooms(profile.user.uid);
       } else {
-        mostrarAlerta(context, 'Registro incorrecto', addRoomOk);
+        mostrarAlerta(context, 'Registro incorrecto', addRoomResponse);
       }
     } else {
       mostrarAlerta(
@@ -262,13 +300,13 @@ class _RoomsListPageState extends State<RoomsListPage> {
   }
 
   _deleteRoom(String id, int index) async {
+    setState(() {
+      rooms.removeAt(index);
+    });
+
     final res = await this.roomService.deleteRoom(id);
 
     if (res) {
-      setState(() {
-        rooms.removeAt(index);
-      });
-
       roomBloc.getRooms(profile.user.uid);
     }
   }
@@ -278,6 +316,8 @@ class _RoomsListPageState extends State<RoomsListPage> {
         Provider.of<ThemeChanger>(context, listen: false).currentTheme;
 
     final bloc = CustomProvider.roomBlocIn(context);
+
+    final size = MediaQuery.of(context).size;
 
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
@@ -301,7 +341,8 @@ class _RoomsListPageState extends State<RoomsListPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(top: 20, left: 150, right: 150),
+                  margin: EdgeInsets.only(
+                      top: 20, left: size.width / 3.5, right: size.width / 3.5),
                   padding: EdgeInsets.all(4.0),
                   decoration: BoxDecoration(
                     color: Color(0xffEBECF0).withOpacity(0.30),
@@ -315,7 +356,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
                   child: Text(
                     "New Room",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
                 _createName(bloc),
@@ -326,7 +367,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
                 SizedBox(
                   height: 40,
                 ),
-                ButtonGold(
+                ButtonAccent(
                     color: currentTheme.accentColor,
                     text: 'Done',
                     onPressed: () => _handleAddRoom(context)),

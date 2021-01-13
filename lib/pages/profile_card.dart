@@ -48,6 +48,7 @@ class _ProfileCardState extends State<ProfileCard> {
       children: <Widget>[
         (!widget.isEmpty)
             ? Container(
+                // color: currentTheme.scaffoldBackgroundColor,
                 child: AnimatedOpacity(
                   opacity: widget.isEmpty ? 0.0 : 1.0,
                   duration: Duration(milliseconds: 500),
@@ -63,6 +64,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 ),
               )
             : Container(
+                // color: currentTheme.scaffoldBackgroundColor,
                 child: AnimatedOpacity(
                   opacity: widget.isEmpty ? 0.0 : 0.0,
                   duration: Duration(milliseconds: 500),
@@ -168,13 +170,13 @@ class _ProfileCardState extends State<ProfileCard> {
         (!widget.isUserEdit)
             ? Container(
                 //top: size.height / 3.5,
-                padding: EdgeInsets.only(top: 25.0),
+                padding: EdgeInsets.only(top: 35.0),
                 margin: EdgeInsets.only(
-                    top: size.height / 4.0,
-                    left: size.width / 1.7,
+                    top: size.height / 4.5,
+                    left: size.width / 1.8,
                     right: size.width / 20),
                 child: Align(
-                  alignment: Alignment.bottomLeft,
+                  alignment: Alignment.bottomRight,
                   child: ButtonSubEditProfile(
                       color: currentTheme.scaffoldBackgroundColor,
                       textColor: (widget.isUserAuth)

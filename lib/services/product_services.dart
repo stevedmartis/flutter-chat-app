@@ -1,6 +1,5 @@
 import 'package:chat/models/products.dart';
 import 'package:chat/models/products_response.dart';
-import 'package:chat/models/room.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

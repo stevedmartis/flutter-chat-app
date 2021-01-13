@@ -23,7 +23,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             gradient: LinearGradient(
               colors: [
                 Color(0xff202020),
-                Color(0xff1D1D1D),
+                Color(0xff1C3041),
               ],
               stops: [0, 1],
               begin: Alignment(-0.00, -5.00),
@@ -33,29 +33,48 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           child: OnBoardingSelector(
             pages: [
               OnboardingMessages(
-                left: 95,
-                title: "HELLO 2!",
-                message: "Know everything you need to know about your car",
-                image: "assets/images/shopping_app.svg",
-              ),
-              OnboardingMessages(
-                left: 95,
-                title: "HELLO!",
+                left: 80,
+                width: 0.60,
+                height: 0.40,
+                title: "Medical",
                 message:
-                    "Get assistance when ever you need, where ever you need",
-                image: "assets/images/gone_shopping.svg",
+                    "Register your prescription, validate your treatment get your medicine",
+                image: "assets/onBoard/medicine.svg",
               ),
               OnboardingMessages(
-                left: 95,
-                title: "HELLO!",
-                message: "Take control of your car, make it a SmartCar",
-                image: "assets/images/online_payments.svg",
+                left: 60,
+                width: 0.60,
+                height: 0.45,
+                title: "Clubes",
+                message:
+                    "Subscribe to clubes and receive all the information you need.",
+                image: "assets/onBoard/subscriber.svg",
               ),
               OnboardingMessages(
-                left: 95,
-                title: "HELLO!",
-                message: "Take control of your car, make it a SmartCar",
-                image: "assets/images/successful_puyin.svg",
+                left: 85,
+                width: 0.50,
+                height: 0.40,
+                title: "Cultivate",
+                message:
+                    "Check and record the evolution and development of your medicine.",
+                image: "assets/onBoard/gardening.svg",
+              ),
+              OnboardingMessages(
+                left: 80,
+                width: 0.60,
+                height: 0.40,
+                title: "Safety",
+                message:
+                    "Your data is confidential, you will have all the safety and support in your hands.",
+                image: "assets/onBoard/security.svg",
+              ),
+              OnboardingMessages(
+                left: 75,
+                width: 0.60,
+                height: 0.45,
+                title: "You are ready!",
+                message: "",
+                image: "assets/onBoard/celebration.svg",
               ),
             ],
           ),

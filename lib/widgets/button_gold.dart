@@ -1,12 +1,54 @@
 import 'package:flutter/material.dart';
 
-class ButtonGold extends StatelessWidget {
+class ButtonAccent extends StatelessWidget {
   final String text;
   final Function onPressed;
   final Color color;
   final Color textColor;
 
-  const ButtonGold(
+  const ButtonAccent(
+      {Key key,
+      @required this.text,
+      @required this.onPressed,
+      @required this.color,
+      this.textColor = Colors.black})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      elevation: 2,
+      highlightElevation: 5,
+      color: this.color,
+      shape: StadiumBorder(),
+      onPressed: this.onPressed,
+      child: Container(
+        width: double.infinity,
+        height: 55,
+        decoration: ShapeDecoration(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+          gradient: LinearGradient(
+              colors: gradients,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight),
+        ),
+        child: Center(
+          child:
+              Text(this.text, style: TextStyle(color: textColor, fontSize: 17)),
+        ),
+      ),
+    );
+  }
+}
+
+class ButtonLogout extends StatelessWidget {
+  final String text;
+  final Function onPressed;
+  final Color color;
+  final Color textColor;
+
+  const ButtonLogout(
       {Key key,
       @required this.text,
       @required this.onPressed,
@@ -33,6 +75,12 @@ class ButtonGold extends StatelessWidget {
     );
   }
 }
+
+const List<Color> gradients = [
+  Color(0xff20FFD7),
+  Color(0xff00FFB7),
+  Color(0xff20FFD7),
+];
 
 class ButtonSubEditProfile extends StatelessWidget {
   final String text;

@@ -1,14 +1,20 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/models/profiles.dart';
+import 'package:chat/models/rooms_response.dart';
+import 'package:chat/routes/routes.dart';
 
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/header_custom_search.dart';
+import 'package:chat/widgets/product_widget.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/users_service.dart';
@@ -19,23 +25,160 @@ class PrincipalPage extends StatefulWidget {
 }
 
 class _PrincipalPageState extends State<PrincipalPage> {
+  ScrollController _hideBottomNavController;
+
+  var _isVisible;
+
+  @override
+  initState() {
+    super.initState();
+    this.bottomControll();
+  }
+
+  bottomControll() {
+    _isVisible = true;
+    _hideBottomNavController = ScrollController();
+    _hideBottomNavController.addListener(
+      () {
+        if (_hideBottomNavController.position.userScrollDirection ==
+            ScrollDirection.reverse) {
+          if (_isVisible)
+            setState(() {
+              _isVisible = false;
+            });
+        }
+        if (_hideBottomNavController.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          if (!_isVisible)
+            setState(() {
+              _isVisible = true;
+            });
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final authService = Provider.of<AuthService>(context);
-    //final socketService = Provider.of<SocketService>(context);
-
-    //final user = authService.user;
     changeStatusLight();
     return SafeArea(
         child: Scaffold(
+      body: CollapsingList(_hideBottomNavController),
+      bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+    ));
+  }
+}
 
-            //drawer: PrincipalMenu(),
-            // appBar: AppBarBase(user: user, socketService: socketService),
-            body: CollapsingList()));
+class BottomNavigation extends StatefulWidget {
+  const BottomNavigation({
+    Key key,
+    @required isVisible,
+  })  : _isVisible = isVisible,
+        super(key: key);
+
+  final bool _isVisible;
+
+  @override
+  _BottomNavigationState createState() => _BottomNavigationState();
+}
+
+class _BottomNavigationState extends State<BottomNavigation> {
+  int currentIndex = 0;
+
+  void _onItemTapped(int index) {
+    final currentPage =
+        Provider.of<MenuModel>(context, listen: false).currentPage;
+
+    // Provider.of<MenuModel>(context, listen: false).lastPage = currentPage;
+
+    setState(() {
+      currentIndex = index;
+
+      Provider.of<MenuModel>(context, listen: false).currentPage = currentIndex;
+
+      if (currentIndex != currentPage) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    pageRouter[currentIndex].page));
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentPage = Provider.of<MenuModel>(context).currentPage;
+
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 200),
+      height: widget._isVisible ? 56.0 : 0.0,
+      child: Wrap(
+        children: <Widget>[
+          BottomNavigationBar(
+            currentIndex: currentPage,
+            onTap: _onItemTapped,
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.black,
+            unselectedItemColor: Colors.white.withOpacity(0.60),
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home,
+                    size: 40,
+                    color: (currentPage == 0)
+                        ? currentTheme.accentColor
+                        : Colors.white.withOpacity(0.60)),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.meeting_room,
+                    size: 40,
+                    color: (currentPage == 1)
+                        ? currentTheme.accentColor
+                        : Colors.white.withOpacity(0.60)),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notifications,
+                    size: 40,
+                    color: (currentPage == 2)
+                        ? currentTheme.accentColor
+                        : Colors.white.withOpacity(0.60)),
+                label: '',
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MenuModel with ChangeNotifier {
+  int _currentPage = 0;
+  int _lastPage = 0;
+
+  int get currentPage => this._currentPage;
+
+  set currentPage(int value) {
+    this._currentPage = value;
+    notifyListeners();
+  }
+
+  int get lastPage => this._lastPage;
+
+  set lastPage(int value) {
+    this._lastPage = value;
+    notifyListeners();
   }
 }
 
 class CollapsingList extends StatefulWidget {
+  final ScrollController _hideBottomNavController;
+
+  CollapsingList(this._hideBottomNavController);
+
   @override
   _CollapsingListState createState() => _CollapsingListState();
 }
@@ -56,7 +199,9 @@ class _CollapsingListState extends State<CollapsingList>
   @override
   void initState() {
     _tabController = new TabController(vsync: this, length: myTabs.length);
+
     this._chargeProfileUsers();
+
     super.initState();
   }
 
@@ -80,6 +225,7 @@ class _CollapsingListState extends State<CollapsingList>
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
+      controller: widget._hideBottomNavController,
       physics:
           const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       slivers: <Widget>[
@@ -119,91 +265,52 @@ class _CollapsingListState extends State<CollapsingList>
           ),
         ),
 
-        SliverGrid.count(
-          crossAxisCount: 3,
-          children: [
-            _BtnOption(
-                title: 'Restaurant', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(
-                title: 'Markets', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(title: 'Tienda', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(title: 'Club', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(
-                title: 'Historial', image: 'assets/banners/cart_image.jpg'),
-            _BtnOption(title: 'Mas', image: 'assets/banners/cart_image.jpg'),
-          ],
+        SliverFixedExtentList(
+          itemExtent: 150.0,
+          delegate: SliverChildListDelegate(
+            [
+              FutureBuilder(
+                future: this.usuarioService.getProfilesLastUsers(),
+                initialData: null,
+                builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                  if (snapshot.hasData) {
+                    return Container(
+                        margin: EdgeInsets.only(top: 10),
+                        child: CarouselCategorySliderCustom(
+                            profiles: profiles)); // image is ready
+                  } else {
+                    return Container(
+                        height: 400.0,
+                        child: Center(
+                            child: CircularProgressIndicator())); // placeholder
+                  }
+                },
+              ),
+            ],
+          ),
         ),
 
-        makeHeaderTabs(context),
+        SliverList(
+          delegate: SliverChildListDelegate(List<Widget>.generate(10, (int i) {
+            return Stack(
+              children: [
+                CardProduct(index: i),
+                GestureDetector(
+                    onTap: () {
+                      /* if (_heartAnimation.value <= 23.0)
+                                _heartAnimationController.forward();
+                              else if (_heartAnimation.value >= 25.0) {
+                                _heartAnimationController.reverse();
+                              } */
+                    },
+                    child: _buildCircleFavoriteProduct()),
+              ],
+            );
+          })),
+        ),
 
-        (_tabController.index == 0)
-            ? SliverGrid.count(
-                crossAxisCount: 3,
-                children: [
-                  Container(color: Colors.red, height: 150.0),
-                  Container(color: Colors.purple, height: 150.0),
-                  Container(color: Colors.green, height: 150.0),
-                  Container(color: Colors.orange, height: 150.0),
-                  Container(color: Colors.yellow, height: 150.0),
-                  Container(color: Colors.pink, height: 150.0),
-                  Container(color: Colors.cyan, height: 150.0),
-                  Container(color: Colors.indigo, height: 150.0),
-                  Container(color: Colors.blue, height: 150.0),
-                  Container(color: Colors.orange, height: 150.0),
-                  Container(color: Colors.yellow, height: 150.0),
-                  Container(color: Colors.pink, height: 150.0),
-                  Container(color: Colors.cyan, height: 150.0),
-                  Container(color: Colors.indigo, height: 150.0),
-                  Container(color: Colors.blue, height: 150.0),
-                  Container(color: Colors.orange, height: 150.0),
-                  Container(color: Colors.yellow, height: 150.0),
-                  Container(color: Colors.pink, height: 150.0),
-                  Container(color: Colors.cyan, height: 150.0),
-                  Container(color: Colors.indigo, height: 150.0),
-                  Container(color: Colors.blue, height: 150.0),
-                  Container(color: Colors.green, height: 150.0),
-                  Container(color: Colors.amber, height: 150.0),
-                  Container(color: Colors.blue, height: 150.0),
-                  Container(color: Colors.yellow, height: 150.0),
-                  Container(color: Colors.pink, height: 150.0),
-                  Container(color: Colors.cyan, height: 150.0),
-                  Container(color: Colors.indigo, height: 150.0),
-                ],
-              )
-            : Container(
-                child: SliverGrid.count(
-                crossAxisCount: 3,
-                children: [
-                  Container(color: Colors.blue, height: 150.0),
-                  Container(color: Colors.red, height: 150.0),
-                  Container(color: Colors.purple, height: 150.0),
-                  Container(color: Colors.orange, height: 150.0),
-                  Container(color: Colors.pink, height: 150.0),
-                  Container(color: Colors.blue, height: 150.0),
-                  Container(color: Colors.cyan, height: 150.0),
-                  Container(color: Colors.indigo, height: 150.0),
-                  Container(color: Colors.blue, height: 150.0),
-                  Container(color: Colors.amber, height: 150.0),
-                  Container(color: Colors.yellow, height: 150.0),
-                  Container(color: Colors.blue, height: 150.0),
-                  Container(color: Colors.indigo, height: 150.0),
-                  Container(color: Colors.indigo, height: 150.0),
-                  Container(color: Colors.blue, height: 150.0),
-                  Container(color: Colors.orange, height: 150.0),
-                  Container(color: Colors.yellow, height: 150.0),
-                  Container(color: Colors.pink, height: 150.0),
-                  Container(color: Colors.cyan, height: 150.0),
-                  Container(color: Colors.indigo, height: 150.0),
-                  Container(color: Colors.blue, height: 150.0),
-                  Container(color: Colors.green, height: 150.0),
-                  Container(color: Colors.amber, height: 150.0),
-                  Container(color: Colors.blue, height: 150.0),
-                  Container(color: Colors.yellow, height: 150.0),
-                  Container(color: Colors.pink, height: 150.0),
-                  Container(color: Colors.cyan, height: 150.0),
-                  Container(color: Colors.indigo, height: 150.0),
-                ],
-              )),
+        //makeProductsCard(context)
+/*  s */
 
         // Yes, this could also be a SliverFixedExtentList. Writing
         // this way just for an example of SliverList construction.
@@ -264,6 +371,98 @@ class _CollapsingListState extends State<CollapsingList>
       ),
     );
   }
+
+  Container _buildCircleFavoriteProduct() {
+    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    //  final roomModel = Provider.of<Room>(context, listen: false);
+
+    final size = MediaQuery.of(context).size;
+
+    return Container(
+        padding: EdgeInsets.all(5.0),
+        margin: EdgeInsets.only(left: size.width / 1.20, top: 15),
+        width: 50,
+        height: 50,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          child: CircleAvatar(
+              child: Icon(Icons.favorite_border, color: Colors.red, size: 22),
+              /* AnimatedBuilder(
+
+                animation: _heartAnimationController,
+                builder: (context, child) {
+                  return Center(
+                    child: Container(
+                      child: Center(
+                        child: Icon(
+                          (_heartAnimation.value > 22)
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: Colors.red,
+                          size: _heartAnimation.value,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ), */
+              backgroundColor: Colors.black),
+        ));
+  }
+}
+
+SliverPersistentHeader makeProductsCard(context) {
+  //   final roomModel = Provider.of<Room>(context);
+
+  return SliverPersistentHeader(
+    pinned: false,
+    delegate: SliverAppBarDelegate(
+      minHeight: 70.0,
+      maxHeight: 70.0,
+      child: StreamBuilder<RoomsResponse>(
+        stream: roomBloc.subject.stream,
+        builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
+          if (snapshot.hasData) {
+            print(snapshot.data);
+            return _buildWidgetProduct(snapshot.data.rooms);
+          } else if (snapshot.hasError) {
+            return _buildErrorWidget(snapshot.error);
+          } else {
+            return _buildLoadingWidget();
+          }
+        },
+      ),
+    ),
+  );
+}
+
+Widget _buildLoadingWidget() {
+  return Container(
+      height: 400.0, child: Center(child: CircularProgressIndicator()));
+}
+
+Widget _buildErrorWidget(String error) {
+  return Center(
+      child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text("Error occured: $error"),
+    ],
+  ));
+}
+
+Widget _buildWidgetProduct(data) {
+  print(data);
+  return Container(
+    child: SizedBox(
+      child: ListView.builder(
+          itemCount: data.length,
+          itemBuilder: (BuildContext ctxt, int index) {
+            return InfoPage(index: index);
+          }),
+    ),
+  );
 }
 
 class SliverCustomHeaderDelegate extends SliverPersistentHeaderDelegate {
@@ -293,68 +492,6 @@ class SliverCustomHeaderDelegate extends SliverPersistentHeaderDelegate {
     return maxHeight != oldDelegate.maxHeight ||
         minHeight != oldDelegate.minHeight ||
         child != oldDelegate.child;
-  }
-}
-
-class _BtnOption extends StatelessWidget {
-  final String title;
-  final String image;
-  const _BtnOption({Key key, @required this.title, @required this.image})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(25),
-      child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          child: Stack(
-            children: <Widget>[
-              Image.asset(
-                image,
-                height: 1000.0,
-                width: 1000.0,
-                fit: BoxFit.cover,
-              ),
-              Positioned(
-                bottom: 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black54,
-                          spreadRadius: 20,
-                          blurRadius: 20,
-                          offset: Offset(0, 20))
-                    ],
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(200, 0, 0, 0),
-                        Color.fromARGB(0, 0, 0, 0)
-                      ],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                  ),
-                  padding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                  child: Center(
-                    child: Text(
-                      this.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )),
-    );
   }
 }
 

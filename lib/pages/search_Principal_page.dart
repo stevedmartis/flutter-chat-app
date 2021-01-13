@@ -104,13 +104,8 @@ class DataSearch extends SearchDelegate {
                       final chatService =
                           Provider.of<ChatService>(context, listen: false);
                       chatService.userFor = profile;
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => MyProfile(
-                                    title: '',
-                                    profile: profile,
-                                  )));
+                      Navigator.push(context, createRouteProfile(profile));
+                      ;
                     } else {
                       Navigator.push(context, createRoute());
                     }
@@ -125,6 +120,27 @@ class DataSearch extends SearchDelegate {
           );
         }
       },
+    );
+  }
+
+  Route createRouteProfile(Profiles profile) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          MyProfile(profile: profile),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(1.0, 0.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+      transitionDuration: Duration(milliseconds: 400),
     );
   }
 }

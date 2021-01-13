@@ -65,20 +65,26 @@ class NetworkImageDecoder {
   }
 }
 
-class _MyProfileState extends State<MyProfile> {
+class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   ScrollController _scrollController;
 
   String name = '';
   bool fromRooms = false;
-  // List<Room> rooms = [];
+  bool activeTabs = false;
+
   Future<List<Room>> getRoomsFuture;
   AuthService authService;
+
   final roomService = new RoomService();
   double get maxHeight => 200 + MediaQuery.of(context).padding.top;
   double get minHeight => MediaQuery.of(context).padding.bottom;
 
   Future<ui.Image> _image(String url) async =>
       await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
+  // Animation _heartAnimation;
+  // AnimationController _heartAnimationController;
+
+  bool isLike = false;
 
   @override
   void initState() {
@@ -88,7 +94,14 @@ class _MyProfileState extends State<MyProfile> {
     name = widget.profile.name;
 
     roomBloc.getRooms(widget.profile.user.uid);
-    // this._chargeRoomsUser();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController?.dispose();
+    //  _heartAnimationController?.dispose();
+    roomBloc.disposeRooms();
   }
 
   bool get _showTitle {
@@ -102,6 +115,7 @@ class _MyProfileState extends State<MyProfile> {
     //final username = widget.profile.user.username.toLowerCase();
 
     return Scaffold(
+      // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
           _snapAppbar();
@@ -138,6 +152,11 @@ class _MyProfileState extends State<MyProfile> {
                                         ? currentTheme.accentColor
                                         : Colors.white),
                                 onPressed: () => {
+                                      {
+                                        Provider.of<MenuModel>(context,
+                                                listen: false)
+                                            .currentPage = 0,
+                                      },
                                       Navigator.pop(context),
                                     }),
                             backgroundColor: Colors.black.withOpacity(0.60)),
@@ -153,12 +172,12 @@ class _MyProfileState extends State<MyProfile> {
                           child: CircleAvatar(
                               child: Center(
                                 child: IconButton(
-                                  icon: Icon(Icons.more_vert,
+                                  icon: Icon(Icons.add,
                                       size: size.width / 15,
                                       color: (_showTitle)
                                           ? currentTheme.accentColor
                                           : Colors.white),
-                                  onPressed: () => Navigator.of(context).pop(),
+                                  onPressed: () => createSelectionNvigator(),
                                 ),
                               ),
                               backgroundColor: Colors.black.withOpacity(0.60)),
@@ -217,14 +236,87 @@ class _MyProfileState extends State<MyProfile> {
                     ? makeHeaderInfo(context)
                     : makeHeaderSpacer(context),
                 if (!widget.isUserEdit) makeHeaderTabs(context),
-                //  if (!widget.isUserEdit) makeProductsCard(context),
                 SliverList(
                   delegate: SliverChildListDelegate(
                       List<Widget>.generate(10, (int i) {
-                    return CardProduct(index: i);
+                    return Stack(
+                      children: [
+                        CardProduct(index: i),
+                        GestureDetector(
+                            onTap: () {
+                              /* if (_heartAnimation.value <= 23.0)
+                                _heartAnimationController.forward();
+                              else if (_heartAnimation.value >= 25.0) {
+                                _heartAnimationController.reverse();
+                              } */
+                            },
+                            child: _buildCircleFavoriteProduct()),
+                      ],
+                    );
                   })),
                 ),
               ]),
+        ),
+      ),
+    );
+  }
+
+  createSelectionNvigator() {
+    final currentTheme =
+        Provider.of<ThemeChanger>(context, listen: false).currentTheme;
+    final size = MediaQuery.of(context).size;
+    //final bloc = CustomProvider.roomBlocIn(context);
+
+    return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: currentTheme.scaffoldBackgroundColor,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30.0),
+            topRight: Radius.circular(30.0),
+          ),
+        ),
+        child: Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.50,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(
+                      top: 20, left: size.width / 3.0, right: size.width / 3.0),
+                  padding: EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: Color(0xffEBECF0).withOpacity(0.30),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(30.0),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(30),
+                  child: Text(
+                    "Create",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                //_createName(bloc),
+                SizedBox(
+                  height: 30,
+                ),
+                //_createDescription(bloc),
+                SizedBox(
+                  height: 40,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -293,10 +385,25 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
+  SliverPersistentHeader makeHeaderDefaultTabs(context) {
+    //   final roomModel = Provider.of<Room>(context);
+
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+          minHeight: 70,
+          maxHeight: 70,
+          child: Row(
+            children: [Container()],
+          )),
+    );
+  }
+
   SliverPersistentHeader makeHeaderInfo(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     final username = widget.profile.user.username.toLowerCase();
+    final about = widget.profile.about;
     final size = MediaQuery.of(context).size;
 
     final nameFinal = name.isEmpty ? "" : name.capitalize();
@@ -304,7 +411,7 @@ class _MyProfileState extends State<MyProfile> {
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: 60.0,
+          minHeight: 150.0,
           maxHeight: 150.0,
           child: Container(
             padding: EdgeInsets.only(top: 10.0),
@@ -328,7 +435,7 @@ class _MyProfileState extends State<MyProfile> {
                               maxLines: 1,
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: (name.length >= 15) ? 26 : 28,
+                                  fontSize: (name.length >= 15) ? 20 : 22,
                                   color: Colors.white),
                             )
                           : Text(
@@ -339,17 +446,18 @@ class _MyProfileState extends State<MyProfile> {
                               maxLines: 2,
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: (nameFinal.length >= 15) ? 26 : 28,
+                                  fontSize: (nameFinal.length >= 15) ? 20 : 22,
                                   color: Colors.white),
                             ),
                     ),
                   ),
                 if (!this.widget.isUserEdit)
                   Expanded(
+                    flex: -2,
                     child: Container(
                         width: size.width - 1.10,
-                        padding:
-                            EdgeInsets.only(left: size.width / 20.0, top: 5.0),
+                        padding: EdgeInsets.only(
+                            left: size.width / 20.0, top: 5.0, bottom: 10),
                         //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
                         child: Text(
@@ -357,13 +465,57 @@ class _MyProfileState extends State<MyProfile> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
-                              fontSize: (username.length >= 15) ? 20 : 22,
+                              fontSize: (username.length >= 16) ? 16 : 18,
                               color: Colors.white.withOpacity(0.60)),
                         )),
                   ),
+                Expanded(
+                  child: Container(
+                    width: size.width - 50,
+                    padding:
+                        EdgeInsets.only(left: size.width / 20.0, right: 10),
+                    //margin: EdgeInsets.only(left: size.width / 6, top: 10),
+
+                    child: _convertHashtag(
+                      about,
+                      currentTheme.accentColor,
+                    ),
+                  ),
+                ),
               ],
             ),
           )),
+    );
+  }
+
+  RichText _convertHashtag(String text, Color color) {
+    List<String> split = text.split(RegExp("#"));
+    List<String> hashtags = split.getRange(1, split.length).fold([], (t, e) {
+      var texts = e.split(" ");
+
+      if (texts.length > 1) {
+        return List.from(t)
+          ..addAll(["#${texts.first}", "${e.substring(texts.first.length)}"]);
+      }
+      return List.from(t)..add("#${texts.first}");
+    });
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+              text: split.first,
+              style: TextStyle(
+                  color: Colors.white.withOpacity(0.60), fontSize: 16))
+        ]..addAll(hashtags
+            .map((text) => text.contains("#") || text.contains("@")
+                ? TextSpan(
+                    text: text, style: TextStyle(color: color, fontSize: 16))
+                : TextSpan(
+                    text: text,
+                    style: TextStyle(
+                        color: Colors.white.withOpacity(0.60), fontSize: 16)))
+            .toList()),
+      ),
     );
   }
 
@@ -374,10 +526,10 @@ class _MyProfileState extends State<MyProfile> {
           rooms: data.rooms,
           isAuthUser: widget.isUserAuth,
         ),
-        AnimatedOpacity(
+        /*  AnimatedOpacity(
             opacity: !_showTitle ? 1.0 : 0.0,
             duration: Duration(milliseconds: 250),
-            child: _buildEditCircle())
+            child: _buildEditCircle()) */
       ]),
     );
   }
@@ -546,6 +698,45 @@ class _MyProfileState extends State<MyProfile> {
         : Container();
   }
 
+  Container _buildCircleFavoriteProduct() {
+    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    //  final roomModel = Provider.of<Room>(context, listen: false);
+
+    final size = MediaQuery.of(context).size;
+
+    return Container(
+        padding: EdgeInsets.all(5.0),
+        margin: EdgeInsets.only(left: size.width / 1.20, top: 15),
+        width: 50,
+        height: 50,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          child: CircleAvatar(
+              child: Icon(Icons.favorite_border, color: Colors.red, size: 22),
+              /* AnimatedBuilder(
+
+                animation: _heartAnimationController,
+                builder: (context, child) {
+                  return Center(
+                    child: Container(
+                      child: Center(
+                        child: Icon(
+                          (_heartAnimation.value > 22)
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: Colors.red,
+                          size: _heartAnimation.value,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ), */
+              backgroundColor: Colors.black),
+        ));
+  }
+
   void _snapAppbar() {
     final scrollDistance = maxHeight - minHeight;
 
@@ -676,36 +867,6 @@ Route createRouteRooms() {
     transitionDuration: Duration(milliseconds: 400),
   );
 }
-
-/* 
-        FutureBuilder(
-          future: getRoomsFuture,
-          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-            if (snapshot.hasData) {
-              final rooms = snapshot.data;
-
-              //roomModel.rooms = rooms;
-
-              //setState(() {});
-
-              return Container(
-                child: Stack(fit: StackFit.expand, children: [
-                  TabsScrollCustom(
-                    rooms: rooms,
-                    isAuthUser: widget.isUserAuth,
-                  ),
-                  _buildEditCircle()
-                ]),
-              );
-              // image is ready
-            } else {
-              return Container(
-                  height: 400.0,
-                  child: Center(
-                      child: CircularProgressIndicator())); // placeholder
-            }
-          },
-        ), */
 
 class BottomWaveClipper extends CustomClipper<Path> {
   @override

@@ -21,7 +21,7 @@ class _CardProductState extends State<CardProduct> {
         Container(
           color: currentTheme.scaffoldBackgroundColor,
           padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-          width: size.height / 2.0,
+          width: size.height / 1.5,
           child: FittedBox(
             child: Card(
               shadowColor: Colors.black,
@@ -42,7 +42,7 @@ class _CardProductState extends State<CardProduct> {
                       child: Image(
                         fit: BoxFit.cover,
                         alignment: Alignment.topRight,
-                        image: AssetImage('assets/pizza_empty.jpg'),
+                        image: AssetImage('assets/weed1.jpg'),
                       ),
                     ),
                   ),

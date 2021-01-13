@@ -1,4 +1,5 @@
 import 'package:chat/models/usuario.dart';
+import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/search_Principal_page.dart';
 import 'package:chat/pages/tabs.dart';
@@ -38,6 +39,8 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
             child: GestureDetector(
               onTap: () {
                 {
+                  Provider.of<MenuModel>(context, listen: false).currentPage =
+                      2;
                   Navigator.push(context, _createRoute());
                 }
               },

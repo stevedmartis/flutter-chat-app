@@ -6,8 +6,16 @@ class OnboardingMessages extends StatelessWidget {
   final String message;
   final String image;
   final double left;
+  final double width;
+  final double height;
   const OnboardingMessages(
-      {Key key, this.title, this.message, this.image, this.left})
+      {Key key,
+      this.title,
+      this.message,
+      this.image,
+      this.left,
+      this.width,
+      this.height})
       : super(key: key);
 
   @override
@@ -19,7 +27,7 @@ class OnboardingMessages extends StatelessWidget {
       children: <Widget>[
         Container(
           padding: EdgeInsets.only(
-            top: 80,
+            top: 50,
           ),
           child: Text(
             title,
@@ -50,16 +58,16 @@ class OnboardingMessages extends StatelessWidget {
               Positioned(
                 child: Container(
                   width: _size.width,
-                  height: _size.width * 1.0,
+                  height: _size.width,
                   child: WebsafeSvg.asset("assets/images/intro-background.svg"),
                 ),
               ),
               Positioned(
-                top: 80,
+                top: 50,
                 left: this.left,
                 child: Container(
-                  width: _size.width * 0.55,
-                  height: _size.height * 0.30,
+                  width: _size.width * width,
+                  height: _size.height * height,
                   child: WebsafeSvg.asset(image),
                 ),
               ),

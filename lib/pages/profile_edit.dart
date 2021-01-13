@@ -12,6 +12,7 @@ import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 
@@ -30,11 +31,14 @@ class EditProfilePageState extends State<EditProfilePage> {
 
   final usernameCtrl = TextEditingController();
   final nameCtrl = TextEditingController();
+  final aboutCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
   final lastName = TextEditingController();
+
   bool isUsernameChange = false;
   bool isNameChange = false;
+  bool isAboutChange = false;
   bool isEmailChange = false;
   bool isPassChange = false;
 
@@ -45,6 +49,8 @@ class EditProfilePageState extends State<EditProfilePage> {
 
     usernameCtrl.text = profile.user.username;
     nameCtrl.text = profile.name;
+    aboutCtrl.text = profile.about;
+
     emailCtrl.text = profile.user.email;
     lastName.text = profile.lastName;
 
@@ -65,6 +71,15 @@ class EditProfilePageState extends State<EditProfilePage> {
           this.isNameChange = true;
         else
           this.isNameChange = false;
+      });
+    });
+    aboutCtrl.addListener(() {
+      // print('${nameCtrl.text}');
+      setState(() {
+        if (profile.about != aboutCtrl.text)
+          this.isAboutChange = true;
+        else
+          this.isAboutChange = false;
       });
     });
     emailCtrl.addListener(() {
@@ -96,6 +111,7 @@ class EditProfilePageState extends State<EditProfilePage> {
     emailCtrl.dispose();
     passCtrl.dispose();
     lastName.dispose();
+    aboutCtrl.dispose();
 
     super.dispose();
   }
@@ -112,8 +128,8 @@ class EditProfilePageState extends State<EditProfilePage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         actions: [
-          _createButton(bloc, this.isUsernameChange, this.isEmailChange,
-              this.isNameChange, this.isPassChange),
+          _createButton(bloc, this.isUsernameChange, this.isAboutChange,
+              this.isEmailChange, this.isNameChange, this.isPassChange),
         ],
         leading: IconButton(
           icon: Icon(
@@ -144,7 +160,7 @@ class EditProfilePageState extends State<EditProfilePage> {
               // controller: _scrollController,
               slivers: <Widget>[
                 SliverFixedExtentList(
-                  itemExtent: size.height / 4.8,
+                  itemExtent: size.height / 3.7,
                   delegate: SliverChildListDelegate(
                     [
                       FutureBuilder<ui.Image>(
@@ -176,20 +192,24 @@ class EditProfilePageState extends State<EditProfilePage> {
                           EdgeInsets.symmetric(horizontal: 50, vertical: 30),
                       child: Column(
                         children: <Widget>[
-                          _createUsername(bloc, usernameCtrl),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _createEmail(bloc, emailCtrl),
-                          SizedBox(
-                            height: 10,
-                          ),
                           _createName(bloc, nameCtrl),
                           SizedBox(
                             height: 10,
                           ),
-                          // _createLastName(bloc),
+                          _createUsername(bloc, usernameCtrl),
+                          SizedBox(
+                            height: 10,
+                          ),
 
+                          _createAbout(bloc, aboutCtrl),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          // _createLastName(bloc),
+                          _createEmail(bloc, emailCtrl),
+                          SizedBox(
+                            height: 10,
+                          ),
                           _createPassword(bloc, passCtrl),
                           SizedBox(
                             height: 30,
@@ -198,7 +218,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                           SizedBox(
                             height: 50,
                           ),
-                          ButtonGold(
+                          ButtonLogout(
                             textColor: currentTheme.secondaryHeaderColor,
                             color: currentTheme.scaffoldBackgroundColor,
                             text: 'Log out',
@@ -224,16 +244,24 @@ class EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _createButton(ProfileBloc bloc, bool isUsernameChange,
-      bool isEmailChange, bool isNameChange, bool isPassChange) {
+  Widget _createButton(
+      ProfileBloc bloc,
+      bool isUsernameChange,
+      bool isAboutChange,
+      bool isEmailChange,
+      bool isNameChange,
+      bool isPassChange) {
     return StreamBuilder(
       stream: bloc.formValidStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         // final authService = Provider.of<AuthService>(context);
         final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-        final isControllerChange =
-            isUsernameChange || isEmailChange || isNameChange || isPassChange;
+        final isControllerChange = isUsernameChange ||
+            isEmailChange ||
+            isNameChange ||
+            isPassChange ||
+            isAboutChange;
 
         final isInvalid = snapshot.hasError;
 
@@ -271,7 +299,7 @@ class EditProfilePageState extends State<EditProfilePage> {
             controller: emailCtl,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-                icon: Icon(Icons.alternate_email),
+                // icon: Icon(Icons.alternate_email),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:
@@ -298,7 +326,7 @@ class EditProfilePageState extends State<EditProfilePage> {
             controller: usernameCtrl,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-                icon: Icon(Icons.perm_identity),
+                // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:
@@ -326,7 +354,7 @@ class EditProfilePageState extends State<EditProfilePage> {
             controller: nameCtrl,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-                icon: Icon(Icons.perm_identity),
+                // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:
@@ -344,6 +372,41 @@ class EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
+  Widget _createAbout(ProfileBloc bloc, TextEditingController aboutCtrl) {
+    return StreamBuilder(
+      stream: bloc.aboutStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: TextFormField(
+              inputFormatters: [
+                new LengthLimitingTextInputFormatter(148),
+              ],
+              controller: aboutCtrl,
+              //  keyboardType: TextInputType.emailAddress,
+
+              maxLines: 3,
+              minLines:
+                  3, // any number you need (It works as the rows for the textarea)
+              keyboardType: TextInputType.multiline,
+              decoration: InputDecoration(
+                  // icon: Icon(Icons.perm_identity),
+                  //  fillColor: currentTheme.accentColor,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        const BorderSide(color: Colors.yellow, width: 2.0),
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  hintText: '',
+                  labelText: 'About',
+                  //counterText: snapshot.data,
+                  errorText: snapshot.error),
+              onChanged: bloc.changeAbout),
+        );
+      },
+    );
+  }
+
   Widget _createPassword(ProfileBloc bloc, TextEditingController passCtrl) {
     return StreamBuilder(
       stream: bloc.passwordStream,
@@ -354,7 +417,7 @@ class EditProfilePageState extends State<EditProfilePage> {
             controller: passCtrl,
             obscureText: true,
             decoration: InputDecoration(
-                icon: Icon(Icons.lock_outline),
+                //  icon: Icon(Icons.lock_outline),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:
@@ -394,8 +457,10 @@ class EditProfilePageState extends State<EditProfilePage> {
 
     final password = (bloc.password == null) ? '' : bloc.password.trim();
 
+    final about = (bloc.about == null) ? '' : bloc.about.trim();
+
     final editProfileOk = await authService.editProfile(
-        profile.user.uid, username, name, email, password);
+        profile.user.uid, username, about, name, email, password);
 
     if (editProfileOk != null) {
       if (editProfileOk == true) {

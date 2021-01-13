@@ -4,7 +4,6 @@ import 'package:chat/controllers/slide_controler.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/register_page.dart';
-import 'package:chat/services/google_signin_service.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/header_curve_signin.dart';
@@ -53,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
-                        top: _size.width / 2.5,
+                        top: _size.width / 3.5,
                       ),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -76,12 +75,17 @@ class _LoginPageState extends State<LoginPage> {
                                 FontAwesomeIcons.facebook,
                                 false,
                                 25),
-                            roundedRectSignInSocialMediaButton(
-                                'Log in with Apple',
-                                Colors.white.withOpacity(0.50),
-                                FontAwesomeIcons.apple,
-                                false,
-                                27)
+                            GestureDetector(
+                              onTap: () async {
+                                await _signIApple(context);
+                              },
+                              child: roundedRectSignInSocialMediaButton(
+                                  'Sign In with Apple',
+                                  Colors.white,
+                                  FontAwesomeIcons.apple,
+                                  false,
+                                  27),
+                            ),
                           ])),
 
                   Center(child: _Form()),
@@ -92,9 +96,9 @@ class _LoginPageState extends State<LoginPage> {
                       child: Labels(
                         rute: 'register',
                         title: "Don't have an account?",
-                        subTitulo: 'Sig Up',
+                        subTitulo: 'Sign Up',
                         colortText1: Colors.white70,
-                        colortText2: Color(0xffD9B310),
+                        colortText2: currentTheme.accentColor,
                       ),
                     ),
                   ),
@@ -108,6 +112,24 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ));
+  }
+
+  _signIApple(BuildContext context) async {
+    final socketService = Provider.of<SocketService>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    final signInGoogleOk = await authService.appleSignIn();
+
+    print(signInGoogleOk);
+    if (signInGoogleOk) {
+      socketService.connect();
+      Navigator.push(context, _createRute());
+    } else {
+      // Mostara alerta
+      mostrarAlerta(context, 'Login incorrecto', 'El correo ya existe');
+    }
+
+    //Navigator.pushReplacementNamed(context, '');
   }
 
   _signInGoogle(BuildContext context) async {
@@ -158,7 +180,7 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
     final bloc = CustomProvider.of(context);
 
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final _size = MediaQuery.of(context).size;
 
     return Container(
@@ -167,28 +189,14 @@ class __FormState extends State<_Form> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Material(
-            elevation: 10.0,
-            color: currentTheme.scaffoldBackgroundColor,
-            shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.only(topRight: Radius.circular(30.0))),
-            child: Padding(
-                padding: EdgeInsets.only(
-                    left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
-                child: _createEmail(bloc)),
-          ),
-          Material(
-            elevation: 10.0,
-            color: currentTheme.scaffoldBackgroundColor,
-            shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.only(topRight: Radius.circular(0.0))),
-            child: Padding(
-                padding: EdgeInsets.only(
-                    left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
-                child: _createPassword(bloc)),
-          ),
+          Padding(
+              padding: EdgeInsets.only(
+                  left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
+              child: _createEmail(bloc)),
+          Padding(
+              padding: EdgeInsets.only(
+                  left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
+              child: _createPassword(bloc)),
           GestureDetector(
               onTap: () {
                 _login(bloc, context);
@@ -214,7 +222,7 @@ class __FormState extends State<_Form> {
           child: TextField(
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-                icon: Icon(Icons.alternate_email),
+                // icon: Icon(Icons.alternate_email),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:
@@ -243,7 +251,7 @@ class __FormState extends State<_Form> {
           child: TextField(
             obscureText: true,
             decoration: InputDecoration(
-                icon: Icon(Icons.lock_outline),
+                // icon: Icon(Icons.lock_outline),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:

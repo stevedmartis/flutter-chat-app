@@ -71,7 +71,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
                 },
               )
             : */
-            : ButtonGold(
+            : ButtonAccent(
                 color: currentTheme.accentColor,
                 text: 'Start now!',
                 onPressed: () => {Navigator.push(context, _createRute())}),
