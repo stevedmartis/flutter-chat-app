@@ -125,7 +125,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home,
-                    size: 40,
+                    size: 30,
                     color: (currentPage == 0)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
@@ -133,7 +133,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.meeting_room,
-                    size: 40,
+                    size: 30,
                     color: (currentPage == 1)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
@@ -141,7 +141,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.notifications,
-                    size: 40,
+                    size: 30,
                     color: (currentPage == 2)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
@@ -265,30 +265,39 @@ class _CollapsingListState extends State<CollapsingList>
           ),
         ),
 
-        SliverFixedExtentList(
-          itemExtent: 150.0,
-          delegate: SliverChildListDelegate(
-            [
-              FutureBuilder(
-                future: this.usuarioService.getProfilesLastUsers(),
-                initialData: null,
-                builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-                  if (snapshot.hasData) {
-                    return Container(
-                        margin: EdgeInsets.only(top: 10),
-                        child: CarouselCategorySliderCustom(
-                            profiles: profiles)); // image is ready
-                  } else {
-                    return Container(
-                        height: 400.0,
-                        child: Center(
-                            child: CircularProgressIndicator())); // placeholder
-                  }
-                },
+        (profiles.length > 0)
+            ? SliverFixedExtentList(
+                itemExtent: 150.0,
+                delegate: SliverChildListDelegate(
+                  [
+                    FutureBuilder(
+                      future: this.usuarioService.getProfilesLastUsers(),
+                      initialData: null,
+                      builder:
+                          (BuildContext context, AsyncSnapshot<List> snapshot) {
+                        if (snapshot.hasData) {
+                          return Container(
+                              margin: EdgeInsets.only(top: 10),
+                              child: CarouselCategorySliderCustom(
+                                  profiles: profiles)); // image is ready
+                        } else {
+                          return Container(
+                              height: 400.0,
+                              child: Center(
+                                  child:
+                                      CircularProgressIndicator())); // placeholder
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              )
+            : SliverFixedExtentList(
+                itemExtent: 0.0,
+                delegate: SliverChildListDelegate(
+                  [Container()],
+                ),
               ),
-            ],
-          ),
-        ),
 
         SliverList(
           delegate: SliverChildListDelegate(List<Widget>.generate(10, (int i) {

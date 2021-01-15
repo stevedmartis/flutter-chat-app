@@ -243,14 +243,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       children: [
                         CardProduct(index: i),
                         GestureDetector(
-                            onTap: () {
-                              /* if (_heartAnimation.value <= 23.0)
-                                _heartAnimationController.forward();
-                              else if (_heartAnimation.value >= 25.0) {
-                                _heartAnimationController.reverse();
-                              } */
-                            },
-                            child: _buildCircleFavoriteProduct()),
+                            onTap: () {}, child: _buildCircleFavoriteProduct()),
                       ],
                     );
                   })),
@@ -411,8 +404,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: 150.0,
-          maxHeight: 150.0,
+          minHeight: (about.length > 80) ? 150.0 : 80.0,
+          maxHeight: (about.length > 80) ? 150.0 : 80.0,
           child: Container(
             padding: EdgeInsets.only(top: 10.0),
             color: currentTheme.scaffoldBackgroundColor,
@@ -476,12 +469,12 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                           EdgeInsets.only(left: size.width / 20.0, right: 10),
                       //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
-                      child: (about.isNotEmpty)
+                      child: (about.length > 0)
                           ? _convertHashtag(
                               about,
                               currentTheme.accentColor,
                             )
-                          : null),
+                          : Container()),
                 ),
               ],
             ),

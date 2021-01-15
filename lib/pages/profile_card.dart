@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:chat/models/profiles.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
+import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/aws_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/sliver_header.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import './extensions.dart';
@@ -32,6 +37,9 @@ class ProfileCard extends StatefulWidget {
   final bool isEmpty;
 
   final ui.Image image;
+
+  File imageHeader;
+  final picker = ImagePicker();
 
   @override
   _ProfileCardState createState() => _ProfileCardState();
@@ -95,6 +103,7 @@ class _ProfileCardState extends State<ProfileCard> {
                     1.0
                   ])),
         ),
+
         /* Positioned(
           left: 0,
           right: 0,
@@ -119,7 +128,32 @@ class _ProfileCardState extends State<ProfileCard> {
           ),
         ),
          */
-
+        (widget.isUserEdit)
+            ? Container(
+                padding: EdgeInsets.all(10.0),
+                alignment: Alignment.topLeft,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    child: CircleAvatar(
+                        child: (IconButton(
+                            icon: Icon(
+                              Icons.add_photo_alternate,
+                              color: currentTheme.accentColor,
+                              size: 35,
+                            ),
+                            onPressed: () {
+                              if (!widget.isUserEdit)
+                                return true;
+                              else
+                                _selectImage();
+                            })),
+                        backgroundColor: Colors.black.withOpacity(0.50)),
+                  ),
+                ))
+            : Container(),
         Container(
           margin: EdgeInsets.only(left: (widget.isUserEdit) ? 0 : 22),
           child: Align(
@@ -192,6 +226,34 @@ class _ProfileCardState extends State<ProfileCard> {
             : Container(),
       ],
     );
+  }
+
+  _selectImage() async {
+    final awsService = Provider.of<AwsService>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    final pickedFile =
+        await widget.picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      widget.imageHeader = File(pickedFile.path);
+
+      final fileType = pickedFile.path.split('.');
+
+      print(fileType);
+      /* awsService.uploadAvatar(
+            widget.profile.user.uid, fileType[0], fileType[1], image); */
+      final resp = await awsService.uploadImageHeader(widget.profile.user.uid,
+          fileType[0], fileType[1], widget.imageHeader);
+
+      print(resp);
+      authService.profile.imageHeader = resp;
+      setState(() {});
+
+      Navigator.pop(context);
+    } else {
+      print('No image selected.');
+    }
   }
 }
 

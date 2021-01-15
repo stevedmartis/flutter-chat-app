@@ -3,7 +3,6 @@ import 'package:chat/bloc/register_bloc.dart';
 import 'package:chat/controllers/slide_controler.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/pages/principal_page.dart';
-import 'package:chat/services/google_signin_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/header_curve_signin.dart';
 import 'package:chat/widgets/myprofile.dart';
@@ -20,7 +19,6 @@ import 'package:chat/widgets/labels.dart';
 import 'dart:ui' as ui;
 
 class RegisterPage extends StatelessWidget {
-  final googleSignInServices = GoogleSignInServices();
   Future<ui.Image> image(String url) async =>
       await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
 

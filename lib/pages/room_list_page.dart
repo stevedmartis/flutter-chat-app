@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/room_bloc.dart';
 
-import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/pages/add_room.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_detail.dart';
@@ -96,7 +96,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     // final roomsModel = Provider.of<Room>(context);
-
+    final room = new Room();
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
@@ -116,9 +116,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
                     ),
                     iconSize: 30,
                     onPressed: () => {
-                          setState(() {
-                            addNewRoom();
-                          })
+                          Navigator.of(context).push(createRouteAddRoom(room)),
                         }),
               )
             ],
@@ -252,53 +250,6 @@ class _RoomsListPageState extends State<RoomsListPage> {
     super.dispose();
   }
 
-  _handleAddRoom(BuildContext context) async {
-    final roomService = Provider.of<RoomService>(context, listen: false);
-    final authService = Provider.of<AuthService>(context, listen: false);
-    final bloc = CustomProvider.roomBlocIn(context);
-
-    print('================');
-    print('name: ${bloc.name}');
-    print('desc: ${bloc.description}');
-    print('================');
-
-    final room = new Room(
-        name: bloc.name,
-        description: bloc.description,
-        id: authService.profile.user.uid);
-
-    final addRoomResponse = await roomService.createRoom(room);
-
-    print(addRoomResponse);
-    if (addRoomResponse != null) {
-      if (addRoomResponse.ok == true) {
-        //socketService.connect();
-        //Navigator.push(context, _createRute());
-
-        Navigator.pop(context);
-
-        Timer(
-            Duration(milliseconds: 300),
-            () => {
-                  setState(() {
-                    rooms.add(addRoomResponse.room);
-                  }),
-
-                  // roomsModel.rooms = rooms
-                  //roomService.rooms = rooms,
-                  // print(roomService.rooms)
-                });
-        roomBloc.getRooms(profile.user.uid);
-      } else {
-        mostrarAlerta(context, 'Registro incorrecto', addRoomResponse);
-      }
-    } else {
-      mostrarAlerta(
-          context, 'Error del servidor', 'lo sentimos, Intentelo mas tarde');
-    }
-    //Navigator.pushReplacementNamed(context, '');
-  }
-
   _deleteRoom(String id, int index) async {
     setState(() {
       rooms.removeAt(index);
@@ -368,78 +319,16 @@ class _RoomsListPageState extends State<RoomsListPage> {
                   height: 40,
                 ),
                 ButtonAccent(
-                    color: currentTheme.accentColor,
-                    text: 'Done',
-                    onPressed: () => _handleAddRoom(context)),
+                  color: currentTheme.accentColor,
+                  text: 'Done',
+                  onPressed: () => {},
+                )
               ],
             ),
           ),
         ),
       ),
     );
-
-    /*   if (Platform.isAndroid) {
-      // Android
-      return showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-                backgroundColor: currentTheme.scaffoldBackgroundColor,
-                title: Text('New Room:'),
-                content: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    // _createName(bloc),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    //_createName(bloc),
-                  ],
-                ),
-                actions: <Widget>[
-                  MaterialButton(
-                      child: Text('Done'),
-                      elevation: 5,
-                      textColor: Colors.blue,
-                      onPressed: () => setState(() {
-                            _handleAddRoom(context);
-                          }))
-                ],
-              ));
-    }
-
-    showCupertinoDialog(
-        context: context,
-        builder: (_) => CupertinoAlertDialog(
-              title: Text('New Room:'),
-              content: Material(
-                  color: Color(0xff131313),
-                  child: Column(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.all(20),
-                          child: _createName(bloc)),
-                    ],
-                  )),
-              actions: <Widget>[
-                CupertinoDialogAction(
-                    isDestructiveAction: true,
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.white.withOpacity(0.60)),
-                    ),
-                    onPressed: () => Navigator.pop(context)),
-                CupertinoDialogAction(
-                    isDefaultAction: true,
-                    child: Text('Done'),
-                    onPressed: () => setState(() {
-                          _handleAddRoom(context);
-                        })),
-              ],
-            ));
-   */
   }
 
   void addBandToList(String name) {
@@ -539,6 +428,26 @@ Route createRouteRoomDetail(Room room) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
         RoomDetailPage(room: room),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
+}
+
+Route createRouteAddRoom(Room room) {
+  print(room);
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => AddRoomPage(room),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

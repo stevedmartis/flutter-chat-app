@@ -34,7 +34,7 @@ class RoomService with ChangeNotifier {
     }
   }
 
-  Future createRoom(Room room) async {
+  Future createRoom(Room room, String uid) async {
     // this.authenticated = true;
 
     final token = await this._storage.read(key: 'token');

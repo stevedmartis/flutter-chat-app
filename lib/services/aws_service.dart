@@ -2,12 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:chat/global/environment.dart';
-import 'dart:io';
-import 'package:path/path.dart' as path;
+
+import 'package:mime_type/mime_type.dart';
 
 class AwsService with ChangeNotifier {
   String _image;
@@ -19,7 +23,7 @@ class AwsService with ChangeNotifier {
   final _storage = new FlutterSecureStorage();
 
   bool get isUpload => this._isUpload;
-  set authenticated(bool valor) {
+  set isUpload(bool valor) {
     this._isUpload = valor;
     notifyListeners();
   }
@@ -38,42 +42,78 @@ class AwsService with ChangeNotifier {
     return token;
   }
 
-  Future uploadAvatar(
-    String uid,
-    String fileName,
-    String fileType,
-    File image,
-  ) async {
-    // this.authenticated = true;
+  Future<String> uploadImageAvatar(
+      String uid, String fileName, String fileType, File image) async {
+    final url = Uri.parse('${Environment.apiUrl}/aws/upload/avatar');
 
-    // final x = image.readAsBytesSync();
-
-    print(path.basename(image.path));
-    final data = {
-      'uid': uid,
-      'fileName': path.basename(image.path),
-      'fileType': fileType,
-      'image': image.readAsBytesSync()
-    };
+    final mimeType = mime(image.path).split('/'); //image/jpeg
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/aws/upload/avatar',
-        body: jsonEncode(data),
-        headers: {
-          'Content-Type': 'application/json' + fileType,
-          'x-token': token
-        });
+    Map<String, String> headers = {"x-token": token, 'uid': uid};
 
-    if (resp.statusCode == 200) {
-      // final loginResponse = loginResponseFromJson(resp.body);
+    final imageUploadRequest = http.MultipartRequest('POST', url);
 
-      // this.image= loginResponse.profile;
+    final file = await http.MultipartFile.fromPath('file', image.path,
+        contentType: MediaType(mimeType[0], mimeType[1]));
 
-      return true;
-    } else {
-      final respBody = jsonDecode(resp.body);
-      return respBody['msg'];
+    imageUploadRequest.files.add(file);
+
+    imageUploadRequest.headers.addAll(headers);
+
+    final streamResponse = await imageUploadRequest.send();
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      print('Algo salio mal');
+      print(resp.body);
+      return null;
     }
+
+    final respBody = jsonDecode(resp.body);
+
+    //final respData = imageResponseToJson(resp.body);
+
+    final respUrl = respBody['url'];
+
+    return respUrl;
+  }
+
+  Future<String> uploadImageHeader(
+      String uid, String fileName, String fileType, File image) async {
+    final url = Uri.parse('${Environment.apiUrl}/aws/upload/header');
+
+    final mimeType = mime(image.path).split('/'); //image/jpeg
+
+    final token = await this._storage.read(key: 'token');
+
+    Map<String, String> headers = {"x-token": token, 'uid': uid};
+
+    final imageUploadRequest = http.MultipartRequest('POST', url);
+
+    final file = await http.MultipartFile.fromPath('file', image.path,
+        contentType: MediaType(mimeType[0], mimeType[1]));
+
+    imageUploadRequest.files.add(file);
+
+    imageUploadRequest.headers.addAll(headers);
+
+    final streamResponse = await imageUploadRequest.send();
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      print('Algo salio mal');
+      print(resp.body);
+      return null;
+    }
+
+    final respBody = jsonDecode(resp.body);
+
+    //final respData = imageResponseToJson(resp.body);
+    isUpload = true;
+
+    final respUrl = respBody['url'];
+    this.image = respUrl.toString();
+    return respUrl;
   }
 }

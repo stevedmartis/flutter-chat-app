@@ -71,7 +71,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               OnboardingMessages(
                 left: 75,
                 width: 0.60,
-                height: 0.45,
+                height: 0.40,
                 title: "You are ready!",
                 message: "",
                 image: "assets/onBoard/celebration.svg",
