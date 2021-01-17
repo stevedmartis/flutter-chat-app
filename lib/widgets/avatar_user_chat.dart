@@ -103,10 +103,16 @@ class _ImageAvatarExpandedState extends State<ImageAvatarExpanded> {
       borderRadius: BorderRadius.circular(8.0),
       clipBehavior: Clip.antiAlias,
       child: (widget.profile.imageAvatar != "")
-          ? Image(
-              image: NetworkImage(widget.profile.getAvatarImg()),
-              fit: BoxFit.cover,
-              width: double.maxFinite,
+          ? InteractiveViewer(
+              panEnabled: false, // Set it to false to prevent panning.
+              boundaryMargin: EdgeInsets.all(80),
+              minScale: 0.5,
+              maxScale: 4,
+              child: Image(
+                image: NetworkImage(widget.profile.getAvatarImg()),
+                fit: BoxFit.cover,
+                width: double.maxFinite,
+              ),
             )
           : Container(
               margin: EdgeInsets.only(bottom: 300),

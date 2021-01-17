@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
-import 'package:chat/services/auth_service.dart';
-import 'package:chat/services/aws_service.dart';
+import 'package:chat/pages/header_image.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/button_gold.dart';
@@ -140,7 +139,7 @@ class _ProfileCardState extends State<ProfileCard> {
                     child: CircleAvatar(
                         child: (IconButton(
                             icon: Icon(
-                              Icons.add_photo_alternate,
+                              Icons.edit,
                               color: currentTheme.accentColor,
                               size: 35,
                             ),
@@ -148,7 +147,14 @@ class _ProfileCardState extends State<ProfileCard> {
                               if (!widget.isUserEdit)
                                 return true;
                               else
-                                _selectImage();
+                                Navigator.of(context).push(PageRouteBuilder(
+                                    transitionDuration:
+                                        Duration(milliseconds: 200),
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        HeaderImagePage(
+                                          profile: this.widget.profile,
+                                        )));
                             })),
                         backgroundColor: Colors.black.withOpacity(0.50)),
                   ),
@@ -226,34 +232,6 @@ class _ProfileCardState extends State<ProfileCard> {
             : Container(),
       ],
     );
-  }
-
-  _selectImage() async {
-    final awsService = Provider.of<AwsService>(context, listen: false);
-    final authService = Provider.of<AuthService>(context, listen: false);
-
-    final pickedFile =
-        await widget.picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      widget.imageHeader = File(pickedFile.path);
-
-      final fileType = pickedFile.path.split('.');
-
-      print(fileType);
-      /* awsService.uploadAvatar(
-            widget.profile.user.uid, fileType[0], fileType[1], image); */
-      final resp = await awsService.uploadImageHeader(widget.profile.user.uid,
-          fileType[0], fileType[1], widget.imageHeader);
-
-      print(resp);
-      authService.profile.imageHeader = resp;
-      setState(() {});
-
-      Navigator.pop(context);
-    } else {
-      print('No image selected.');
-    }
   }
 }
 

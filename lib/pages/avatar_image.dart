@@ -104,6 +104,7 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
       authService.profile.imageAvatar = resp;
 
       Navigator.pop(context);
+      setState(() {});
     } else {
       print('No image selected.');
     }

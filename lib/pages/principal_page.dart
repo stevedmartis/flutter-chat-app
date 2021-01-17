@@ -112,7 +112,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     final currentPage = Provider.of<MenuModel>(context).currentPage;
 
     return AnimatedContainer(
-      duration: Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 300),
       height: widget._isVisible ? 56.0 : 0.0,
       child: Wrap(
         children: <Widget>[

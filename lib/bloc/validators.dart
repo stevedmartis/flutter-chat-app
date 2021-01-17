@@ -32,6 +32,51 @@ class Validators {
     }
   });
 
+  final validationWideRequired =
+      StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+    if (text.length >= 1) {
+      sink.add(text);
+    } else {
+      sink.addError('Wide is required');
+    }
+  });
+
+  final validationLongRequired =
+      StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+    if (text.length >= 1) {
+      sink.add(text);
+    } else {
+      sink.addError('Long is required');
+    }
+  });
+
+  final validationTallRequired =
+      StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+    if (text.length >= 1) {
+      sink.add(text);
+    } else {
+      sink.addError('Tall is required');
+    }
+  });
+
+  final validationTimeOnRequired =
+      StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+    if (text.length >= 1) {
+      sink.add(text);
+    } else {
+      sink.addError('Time On is required');
+    }
+  });
+
+  final validationTimeOffRequired =
+      StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+    if (text.length >= 1) {
+      sink.add(text);
+    } else {
+      sink.addError('Time Off is required');
+    }
+  });
+
   final validationUserNameRequired =
       StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
     if (text.length >= 1) {

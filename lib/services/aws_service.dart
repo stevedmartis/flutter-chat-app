@@ -50,7 +50,11 @@ class AwsService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    Map<String, String> headers = {"x-token": token, 'uid': uid};
+    Map<String, String> headers = {
+      "Content-Type": "image/mimeType",
+      "x-token": token,
+      'uid': uid
+    };
 
     final imageUploadRequest = http.MultipartRequest('POST', url);
 
@@ -87,7 +91,11 @@ class AwsService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    Map<String, String> headers = {"x-token": token, 'uid': uid};
+    Map<String, String> headers = {
+      "Content-Type": "image/mimeType",
+      "x-token": token,
+      'uid': uid
+    };
 
     final imageUploadRequest = http.MultipartRequest('POST', url);
 

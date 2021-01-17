@@ -134,9 +134,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                 SliverAppBar(
                   stretch: true,
                   stretchTriggerOffset: 250.0,
-                  onStretchTrigger: () {
-                    return;
-                  },
+
                   backgroundColor: _showTitle
                       ? Colors.black
                       : currentTheme.scaffoldBackgroundColor,
@@ -186,7 +184,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
                   centerTitle: false,
                   pinned: true,
-
                   title: Center(
                     child: Container(
                         //  margin: EdgeInsets.only(left: 0),
@@ -404,8 +401,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: (about.length > 80) ? 150.0 : 80.0,
-          maxHeight: (about.length > 80) ? 150.0 : 80.0,
+          minHeight: (about.length > 10) ? 100.0 : 80.0,
+          maxHeight: (about.length > 80) ? 180.0 : 80.0,
           child: Container(
             padding: EdgeInsets.only(top: 10.0),
             color: currentTheme.scaffoldBackgroundColor,
@@ -655,7 +652,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     ));
   }
 
-  Container _buildEditCircle() {
+/*   Container _buildEditCircle() {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     //  final roomModel = Provider.of<Room>(context, listen: false);
@@ -692,7 +689,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
             ))
         : Container();
   }
-
+ */
   Container _buildCircleFavoriteProduct() {
     // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 

@@ -1,58 +1,26 @@
-// To parse this JSON data, do
-//
-//     final usuario = usuarioFromJson(jsonString);
-
 import 'dart:convert';
-
-import 'package:chat/services/auth_service.dart';
-import 'package:chat/services/room_services.dart';
-import 'package:flutter/material.dart';
 
 Room roomFromJson(String str) => Room.fromJson(json.decode(str));
 
 String roomToJson(Room data) => json.encode(data.toJson());
 
-class Room with ChangeNotifier {
-  final roomService = RoomService();
-  final authService = AuthService();
-
-  bool _isRoute = false;
-
-  bool get isRoute => this._isRoute;
-
-  set isRoute(bool value) {
-    this._isRoute = value;
-    // notifyListeners();
-  }
-
-  List<Room> _rooms = [];
-
-  List<Room> get rooms => this._rooms;
-
-/*   set rooms(List<Room> rooms) {
-    this._rooms = rooms;
-    notifyListeners();
-  } */
-
-  init() async {
-    // initial sample data here.
-    await getRooms();
-  }
-
-  Future getRooms() async {
-    _rooms = await roomService.getRoomsUser(authService.profile.user.uid);
-    notifyListeners();
-  }
-
+class Room {
   Room(
       {this.id,
       this.user,
-      this.name,
-      this.description,
+      this.name = "",
+      this.description = "",
       this.position,
       this.totalItems,
       this.createdAt,
       this.updatedAt,
+      this.wide = 0,
+      this.long = 0,
+      this.tall = 0,
+      this.timeOn = "",
+      this.timeOff = "",
+      this.co2 = false,
+      this.co2Control = false,
       isRoute,
       init()});
 
@@ -61,6 +29,13 @@ class Room with ChangeNotifier {
   String name;
   int position;
   String description;
+  int wide;
+  int long;
+  int tall;
+  String timeOn;
+  String timeOff;
+  bool co2;
+  bool co2Control;
 
   int totalItems;
   DateTime createdAt;

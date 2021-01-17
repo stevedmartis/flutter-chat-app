@@ -61,7 +61,7 @@ class ProfileCardPainter extends CustomPainter {
         backgroundPath,
         paint
           ..shader = ImageShader(image, TileMode.mirror, TileMode.mirror,
-              Float64List.fromList(Matrix4.identity().scaled(0.3).storage))
+              Float64List.fromList(Matrix4.identity().scaled(0.1).storage))
           ..style = PaintingStyle.fill);
   }
 

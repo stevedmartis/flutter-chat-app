@@ -1,5 +1,6 @@
 import 'package:chat/pages/my_profile.dart';
 import 'package:chat/pages/onBoarding_page.dart';
+import 'package:chat/pages/profile_edit.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/pages/tabs.dart';
@@ -25,6 +26,7 @@ final Map<String, Widget Function(BuildContext)> appRoutes = {
   'rooms': (_) => RoomsListPage(),
   'chat': (_) => ChatPage(),
   'tabs': (_) => TabsCustom(),
+  '/profile-edit': (_) => EditProfilePage(),
 };
 
 final pageRouter = <_Route>[
@@ -39,6 +41,7 @@ final pageRouter = <_Route>[
   _Route(FontAwesomeIcons.signInAlt, 'profile_edit', MyProfilePage()),
   _Route(FontAwesomeIcons.signInAlt, 'chat', ChatPage()),
   _Route(FontAwesomeIcons.signInAlt, 'tabs', TabsCustom()),
+  _Route(FontAwesomeIcons.signInAlt, 'profile-edit', EditProfilePage()),
 ];
 
 class _Route {

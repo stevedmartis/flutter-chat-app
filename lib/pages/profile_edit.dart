@@ -5,6 +5,7 @@ import 'package:chat/models/profiles.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/profile_page2.dart';
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
@@ -120,6 +121,7 @@ class EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final authService = Provider.of<AuthService>(context);
+    final awsService = Provider.of<AwsService>(context);
 
     final bloc = CustomProvider.profileBlocIn(context);
     final size = MediaQuery.of(context).size;
@@ -163,25 +165,47 @@ class EditProfilePageState extends State<EditProfilePage> {
                   itemExtent: size.height / 3.7,
                   delegate: SliverChildListDelegate(
                     [
-                      FutureBuilder<ui.Image>(
-                        future: _image(profile.getHeaderImg()),
-                        builder: (BuildContext context,
-                                AsyncSnapshot<ui.Image> snapshot) =>
-                            !snapshot.hasData
-                                ? ProfilePage(
-                                    image: snapshot.data,
-                                    isUserAuth: true,
-                                    isEmpty: true,
-                                    isUserEdit: true,
-                                    profile: profile,
-                                  )
-                                : ProfilePage(
-                                    image: snapshot.data,
-                                    isUserAuth: true,
-                                    isUserEdit: true,
-                                    profile: profile,
-                                  ),
-                      ),
+                      (awsService.isUpload)
+                          ? FutureBuilder<ui.Image>(
+                              future:
+                                  _image(authService.profile.getHeaderImg()),
+                              builder: (BuildContext context,
+                                      AsyncSnapshot<ui.Image> snapshot) =>
+                                  !snapshot.hasData
+                                      ? ProfilePage(
+                                          image: snapshot.data,
+                                          isUserAuth: true,
+                                          isEmpty: true,
+                                          isUserEdit: true,
+                                          profile: profile,
+                                        )
+                                      : ProfilePage(
+                                          image: snapshot.data,
+                                          isUserAuth: true,
+                                          isUserEdit: true,
+                                          profile: profile,
+                                        ),
+                            )
+                          : FutureBuilder<ui.Image>(
+                              future:
+                                  _image(authService.profile.getHeaderImg()),
+                              builder: (BuildContext context,
+                                      AsyncSnapshot<ui.Image> snapshot) =>
+                                  !snapshot.hasData
+                                      ? ProfilePage(
+                                          image: snapshot.data,
+                                          isUserAuth: true,
+                                          isEmpty: true,
+                                          isUserEdit: true,
+                                          profile: profile,
+                                        )
+                                      : ProfilePage(
+                                          image: snapshot.data,
+                                          isUserAuth: true,
+                                          isUserEdit: true,
+                                          profile: profile,
+                                        ),
+                            ),
                     ],
                   ),
                 ),
@@ -303,8 +327,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:
-                      const BorderSide(color: Colors.yellow, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
+                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: '',
                 labelText: 'Email',
@@ -330,8 +353,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:
-                      const BorderSide(color: Colors.yellow, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
+                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: '',
                 labelText: 'Username',
@@ -358,8 +380,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:
-                      const BorderSide(color: Colors.yellow, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
+                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: '',
                 labelText: 'Name',
@@ -386,16 +407,14 @@ class EditProfilePageState extends State<EditProfilePage> {
               //  keyboardType: TextInputType.emailAddress,
 
               maxLines: 3,
-              minLines:
-                  3, // any number you need (It works as the rows for the textarea)
+              // any number you need (It works as the rows for the textarea)
               keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
                   // icon: Icon(Icons.perm_identity),
                   //  fillColor: currentTheme.accentColor,
                   focusedBorder: OutlineInputBorder(
                     borderSide:
-                        const BorderSide(color: Colors.yellow, width: 2.0),
-                    borderRadius: BorderRadius.circular(25.0),
+                        const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                   ),
                   hintText: '',
                   labelText: 'About',
@@ -421,8 +440,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
                   borderSide:
-                      const BorderSide(color: Colors.yellow, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
+                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: '',
                 labelText: 'Password',

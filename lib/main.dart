@@ -14,16 +14,12 @@ import 'package:chat/services/socket_service.dart';
 import 'package:chat/routes/routes.dart';
 
 import 'bloc/provider.dart';
-import 'models/room.dart';
 import 'package:flutter/services.dart';
 
 void main() => runApp(MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => AuthService()),
       ChangeNotifierProvider(create: (_) => SocketService()),
       ChangeNotifierProvider(create: (_) => RoomService()),
-      ChangeNotifierProvider(
-        create: (_) => Room(),
-      ),
       ChangeNotifierProvider(create: (_) => ChatService()),
       ChangeNotifierProvider(create: (_) => ThemeChanger(3)),
       ChangeNotifierProvider(create: (_) => ShoesModel()),
