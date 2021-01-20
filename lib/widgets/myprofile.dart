@@ -467,7 +467,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
                       child: (about.length > 0)
-                          ? _convertHashtag(
+                          ? convertHashtag(
                               about,
                               currentTheme.accentColor,
                             )
@@ -476,38 +476,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
               ],
             ),
           )),
-    );
-  }
-
-  RichText _convertHashtag(String text, Color color) {
-    print(text);
-    List<String> split = text.split(RegExp("#"));
-    List<String> hashtags = split.getRange(1, split.length).fold([], (t, e) {
-      var texts = e.split(" ");
-
-      if (texts.length > 1) {
-        return List.from(t)
-          ..addAll(["#${texts.first}", "${e.substring(texts.first.length)}"]);
-      }
-      return List.from(t)..add("#${texts.first}");
-    });
-    return RichText(
-      text: TextSpan(
-        children: [
-          TextSpan(
-              text: split.first,
-              style: TextStyle(
-                  color: Colors.white.withOpacity(0.60), fontSize: 16))
-        ]..addAll(hashtags
-            .map((text) => text.contains("#") || text.contains("@")
-                ? TextSpan(
-                    text: text, style: TextStyle(color: color, fontSize: 16))
-                : TextSpan(
-                    text: text,
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.60), fontSize: 16)))
-            .toList()),
-      ),
     );
   }
 
@@ -542,6 +510,16 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   Widget _buildLoadingWidget() {
     return Container(
         height: 400.0, child: Center(child: CircularProgressIndicator()));
+  }
+
+  Widget _buildErrorWidget(String error) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Error occured: $error"),
+      ],
+    ));
   }
 
   Widget itemCake() {
@@ -642,54 +620,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildErrorWidget(String error) {
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text("Error occured: $error"),
-      ],
-    ));
-  }
-
-/*   Container _buildEditCircle() {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-    //  final roomModel = Provider.of<Room>(context, listen: false);
-
-    final size = MediaQuery.of(context).size;
-
-    return (widget.isUserAuth)
-        ? Container(
-            padding: EdgeInsets.all(5.0),
-            margin: EdgeInsets.only(left: size.width / 1.3),
-            width: 50,
-            height: 50,
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              child: CircleAvatar(
-                  child: (IconButton(
-                      icon: Icon(
-                        Icons.edit,
-                        color: currentTheme.accentColor,
-                        size: 35,
-                      ),
-                      onPressed: () {
-                        if (!widget.isUserAuth)
-                          return true;
-                        else
-                          //roomModel.isRoute = true;
-                          //globalKey.currentState.openEndDrawer();
-                          //Navigator.of(context).push(createRouteRooms());
-                          //Navigator.popAndPushNamed(context, 'rooms');
-
-                          Navigator.of(context).pushNamed('rooms');
-                      })),
-                  backgroundColor: Colors.black.withOpacity(0.50)),
-            ))
-        : Container();
-  }
- */
   Container _buildCircleFavoriteProduct() {
     // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
@@ -801,6 +731,40 @@ class _SABTState extends State<SABT> {
       child: widget.child,
     );
   }
+}
+
+RichText convertHashtag(String text, Color color) {
+  print(text);
+  List<String> split = text.split(RegExp("#"));
+
+  List<String> hashtags = split.getRange(1, split.length).fold([], (t, e) {
+    var texts = e.split(" ");
+
+    if (texts.length > 1) {
+      return List.from(t)
+        ..addAll(["#${texts.first}", "${e.substring(texts.first.length)}"]);
+    }
+    return List.from(t)..add("#${texts.first}");
+  });
+
+  return RichText(
+    text: TextSpan(
+      children: [
+        TextSpan(
+            text: split.first,
+            style:
+                TextStyle(color: Colors.white.withOpacity(0.60), fontSize: 16))
+      ]..addAll(hashtags
+          .map((text) => text.contains("#")
+              ? TextSpan(
+                  text: text, style: TextStyle(color: color, fontSize: 16))
+              : TextSpan(
+                  text: text,
+                  style: TextStyle(
+                      color: Colors.white.withOpacity(0.60), fontSize: 16)))
+          .toList()),
+    ),
+  );
 }
 
 Route createRoutePrincipalPage() {

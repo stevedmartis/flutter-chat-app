@@ -5,6 +5,7 @@ import 'package:chat/bloc/room_bloc.dart';
 
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/models/rooms_response.dart';
 import 'package:chat/pages/add_room.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/profile_page.dart';
@@ -14,6 +15,8 @@ import 'package:chat/services/room_services.dart';
 
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
+import 'package:chat/widgets/room_card.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -79,17 +82,12 @@ class _RoomsListPageState extends State<RoomsListPage> {
   }
 
   _chargeRooms() async {
-    // this.rooms = await roomService.getRoomsUser();
-
     final authService = Provider.of<AuthService>(context, listen: false);
 
     profile = authService.profile;
-
-    getJobFuture = roomService.getRoomsUser(profile.user.uid);
+    roomBloc.getRooms(profile.user.uid);
+    //getJobFuture = roomBloc.getRooms(profile.user.uid);
     setState(() {});
-
-    // await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
   }
 
   @override
@@ -99,7 +97,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
     final room = new Room();
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+        // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
         appBar: AppBar(
             title: Text(
               'My rooms',
@@ -116,7 +114,8 @@ class _RoomsListPageState extends State<RoomsListPage> {
                     ),
                     iconSize: 30,
                     onPressed: () => {
-                          Navigator.of(context).push(createRouteAddRoom(room)),
+                          Navigator.of(context)
+                              .push(createRouteAddRoom(room, rooms)),
                         }),
               )
             ],
@@ -139,99 +138,21 @@ class _RoomsListPageState extends State<RoomsListPage> {
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
           },
-          child: FutureBuilder(
-              future: getJobFuture,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.data == null) {
-                  return Container(
-                      height: 400.0,
-                      child: Center(child: CircularProgressIndicator()));
+          child: Container(
+            child: StreamBuilder<RoomsResponse>(
+              stream: roomBloc.subject.stream,
+              builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
+                if (snapshot.hasData) {
+                  rooms = snapshot.data.rooms;
+                  return _buildRoomWidget();
+                } else if (snapshot.hasError) {
+                  return _buildErrorWidget(snapshot.error);
                 } else {
-                  rooms = snapshot.data;
-
-                  if (rooms.length < 1) {
-                    return Center(
-                      child: Text('No rooms, create a new'),
-                    );
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ReorderableListView(
-                        scrollController: _hideBottomNavController,
-                        children: List.generate(
-                          rooms.length,
-                          (index) {
-                            final item = rooms[index];
-                            return GestureDetector(
-                              key: ValueKey(item),
-                              onTap: () => Navigator.of(context)
-                                  .push(createRouteRoomDetail(item)),
-                              child: Card(
-                                key: ValueKey(item),
-                                color: Colors.black,
-                                child: Dismissible(
-                                  key: Key(item.id),
-                                  direction: DismissDirection.startToEnd,
-                                  onDismissed: (_) =>
-                                      {_deleteRoom(item.id, index)},
-                                  background: Container(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Icon(
-                                          Icons.delete,
-                                          color: Colors.black,
-                                        ),
-                                      )),
-                                  child: ListTile(
-                                    selectedTileColor: currentTheme.accentColor,
-                                    focusColor: currentTheme.accentColor,
-                                    hoverColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                            color: Colors.white, width: 0.5),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    visualDensity: VisualDensity.comfortable,
-                                    title: Text(item.name),
-                                    subtitle: Text(
-                                      '10 productos',
-                                      style: TextStyle(
-                                          color: currentTheme
-                                              .secondaryHeaderColor),
-                                    ),
-                                    leading: Icon(
-                                      Icons.drag_indicator,
-                                      color: currentTheme.accentColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ).toList(),
-                        onReorder: (int oldIndex, int newIndex) => {
-                              setState(() {
-                                if (newIndex > oldIndex) {
-                                  newIndex -= 1;
-                                }
-                                final Room item =
-                                    snapshot.data.removeAt(oldIndex);
-                                item.position = newIndex;
-                                snapshot.data.insert(newIndex, item);
-
-                                print(snapshot.data);
-                              }),
-                              _updateRoom(snapshot.data, newIndex, context,
-                                  profile.user.uid)
-                            }),
-                  );
+                  return _buildLoadingWidget();
                 }
-              }),
+              },
+            ),
+          ),
         ),
         /*  floatingActionButton: (FloatingActionButton(
               child: Icon(Icons.add),
@@ -251,15 +172,150 @@ class _RoomsListPageState extends State<RoomsListPage> {
   }
 
   _deleteRoom(String id, int index) async {
-    setState(() {
-      rooms.removeAt(index);
-    });
-
     final res = await this.roomService.deleteRoom(id);
-
     if (res) {
-      roomBloc.getRooms(profile.user.uid);
+      setState(() {
+        rooms.removeAt(index);
+        roomBloc.getRooms(profile.user.uid);
+      });
     }
+  }
+
+  Widget _buildRoomWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return Container(
+      child: ReorderableListView(
+          padding: EdgeInsets.only(top: 20),
+          scrollController: _hideBottomNavController,
+          children: List.generate(
+            rooms.length,
+            (index) {
+              final item = rooms[index];
+              return Container(
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(0.0)),
+                key: Key(item.id),
+                padding: EdgeInsets.only(bottom: 1.0),
+                child: Stack(
+                  children: [
+                    GestureDetector(
+                      key: Key(item.id),
+                      onTap: () => Navigator.of(context)
+                          .push(createRouteRoomDetail(item)),
+                      child: Dismissible(
+                        key: UniqueKey(),
+                        direction: DismissDirection.startToEnd,
+                        onDismissed: (direction) =>
+                            {_deleteRoom(item.id, index)},
+                        background: Container(
+                            padding: EdgeInsets.only(left: 8.09),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                            ),
+                            child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.delete,
+                                      color: Colors.black,
+                                    ),
+                                    SizedBox(
+                                      width: 12,
+                                    ),
+                                    Text(
+                                      'Delete',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
+                                ))),
+                        child: CustomListItemTwoRoom(
+                          title: item.name,
+                          subtitle: item.description,
+                          wide: '${item.wide}',
+                          long: '${item.long}',
+                          tall: '${item.tall}',
+                          timeOn: item.timeOn,
+                          timeOff: item.timeOff,
+                          publishDate: 'Dec 28',
+                          readDuration: '5 mins',
+                        ),
+
+                        /* ListTile(
+                        selectedTileColor: currentTheme.accentColor,
+                        focusColor: currentTheme.accentColor,
+                        hoverColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.white, width: 0.5),
+                            borderRadius: BorderRadius.circular(10)),
+                        visualDensity: VisualDensity.comfortable,
+                        autofocus: true,
+                        title: Text(item.name),
+                        subtitle: Text(
+                          '${item.description}',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                              color: currentTheme.secondaryHeaderColor),
+                        ),
+                        leading: Icon(
+                          Icons.drag_indicator,
+                          color: currentTheme.accentColor,
+                        ),
+                        trailing: Icon(Icons.chevron_right),
+                        isThreeLine: true,
+                      ), */
+                      ),
+                    ),
+                    SizedBox(
+                      height: 1.0,
+                      child: Center(
+                        child: Container(
+                          margin:
+                              EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
+                          height: 2.0,
+                          color: Colors.white60.withOpacity(0.10),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ).toList(),
+          onReorder: (int oldIndex, int newIndex) => {
+                setState(() {
+                  if (newIndex > oldIndex) {
+                    newIndex -= 1;
+                  }
+                  final Room item = rooms.removeAt(oldIndex);
+                  item.position = newIndex;
+                  rooms.insert(newIndex, item);
+
+                  print(rooms);
+                }),
+                _updateRoom(rooms, newIndex, context, profile.user.uid)
+              }),
+    );
+  }
+
+  Widget _buildLoadingWidget() {
+    return Container(
+        height: 400.0, child: Center(child: CircularProgressIndicator()));
+  }
+
+  Widget _buildErrorWidget(String error) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Error occured: $error"),
+      ],
+    ));
   }
 
   addNewRoom() {
@@ -444,10 +500,11 @@ Route createRouteRoomDetail(Room room) {
   );
 }
 
-Route createRouteAddRoom(Room room) {
+Route createRouteAddRoom(Room room, List<Room> rooms) {
   print(room);
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => AddRoomPage(room),
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        AddRoomPage(room: room, rooms: rooms),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

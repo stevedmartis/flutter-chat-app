@@ -130,7 +130,7 @@ class _ProfileCardState extends State<ProfileCard> {
         (widget.isUserEdit)
             ? Container(
                 padding: EdgeInsets.all(10.0),
-                alignment: Alignment.topLeft,
+                alignment: Alignment.topRight,
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   child: Container(

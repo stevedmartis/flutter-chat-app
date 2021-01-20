@@ -92,10 +92,7 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
                     child: SearchContent())),
           ),
           GestureDetector(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => TabsCustom())),
+            onTap: () => Scaffold.of(context).openEndDrawer(),
             child: Container(
                 child: Icon(
               Icons.menu,

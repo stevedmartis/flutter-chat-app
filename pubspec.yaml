@@ -44,6 +44,7 @@ dependencies:
   photo_manager: ^0.5.8
   mime_type:
   date_format: ^1.0.9
+  flutter_masked_text: ^0.8.0
 
   
 

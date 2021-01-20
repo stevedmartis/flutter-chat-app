@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/profile_page.dart';
+
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/services/socket_service.dart';
@@ -12,6 +15,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 import 'package:date_format/date_format.dart';
@@ -19,9 +23,11 @@ import 'package:date_format/date_format.dart';
 //final Color darkBlue = Color.fromARGB(255, 18, 32, 47);
 
 class AddRoomPage extends StatefulWidget {
-  AddRoomPage(this.room);
+  AddRoomPage({this.room, this.rooms});
 
   final Room room;
+
+  final List<Room> rooms;
   @override
   AddRoomPagePageState createState() => AddRoomPagePageState();
 }
@@ -31,12 +37,15 @@ class AddRoomPagePageState extends State<AddRoomPage> {
       await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
 
   final nameCtrl = TextEditingController();
-  final wideCtrl = TextEditingController();
-  final longCtrl = TextEditingController();
-  final tallCtrl = TextEditingController();
+
   final descriptionCtrl = TextEditingController();
   final timeOnCtrl = TextEditingController();
   final timeOffCtrl = TextEditingController();
+
+  var tallCtrl = new MaskedTextController(mask: '0.00');
+  var wideCtrl = new MaskedTextController(mask: '0.00');
+
+  var longCtrl = new MaskedTextController(mask: '0.00');
 
   bool isNameChange = false;
   bool isAboutChange = false;
@@ -76,27 +85,28 @@ class AddRoomPagePageState extends State<AddRoomPage> {
         _timeOn = _hourOn + ' : ' + _minuteOn;
         _timeOnController.text = _timeOn;
         _timeOnController.text = formatDate(
-            DateTime(2019, 08, 1, selectedTimeOn.hour, selectedTimeOn.minute),
-            [hh, ':', mm, " ", am]).toString();
+            DateTime(2021, 15, 1, selectedTimeOn.hour, selectedTimeOn.minute),
+            [hh, ':', _minuteOn, " ", am]).toString();
       });
   }
 
   Future<Null> _selectTimeOff(BuildContext context) async {
     FocusScope.of(context).requestFocus(new FocusNode());
-    final TimeOfDay picked = await showTimePicker(
+    final TimeOfDay pickedOff = await showTimePicker(
       context: context,
       initialTime: selectedTimeOff,
     );
-    if (picked != null)
+    if (pickedOff != null)
       setState(() {
-        selectedTimeOff = picked;
+        selectedTimeOff = pickedOff;
         _hourOff = selectedTimeOff.hour.toString();
         _minuteOff = selectedTimeOff.minute.toString();
         _timeOff = _hourOff + ' : ' + _minuteOff;
         _timeOffController.text = _timeOff;
+
         _timeOffController.text = formatDate(
-            DateTime(2019, 08, 1, selectedTimeOff.hour, selectedTimeOff.minute),
-            [hh, ':', mm, " ", am]).toString();
+            DateTime(2021, 1, 18, selectedTimeOff.hour, selectedTimeOff.minute),
+            [hh, ':', _minuteOff, " ", am]).toString();
       });
   }
 
@@ -162,11 +172,15 @@ class AddRoomPagePageState extends State<AddRoomPage> {
   @override
   void dispose() {
     nameCtrl.dispose();
-    descriptionCtrl.dispose();
     wideCtrl.dispose();
     longCtrl.dispose();
     tallCtrl.dispose();
-
+    descriptionCtrl.dispose();
+    timeOnCtrl.dispose();
+    timeOffCtrl.dispose();
+    _timeOnController.dispose();
+    _timeOffController.dispose();
+    roomBloc.disposeRooms();
     super.dispose();
   }
 
@@ -200,7 +214,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
               Navigator.pop(context),
           color: Colors.white,
         ),
-        title: Text('New Room'),
+        title: Text('New room'),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
@@ -365,7 +379,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
         return Container(
           child: TextField(
             inputFormatters: [
-              new LengthLimitingTextInputFormatter(50),
+              new LengthLimitingTextInputFormatter(100),
             ],
             controller: descriptionCtrl,
             //  keyboardType: TextInputType.emailAddress,
@@ -391,6 +405,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     );
   }
 
+/* 
   Widget _createVentilation(RoomBloc bloc) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final size = MediaQuery.of(context).size;
@@ -472,7 +487,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
       },
     );
   }
-
+ */
   Widget _createWide(RoomBloc bloc) {
     //final size = MediaQuery.of(context).size;
 
@@ -481,13 +496,10 @@ class AddRoomPagePageState extends State<AddRoomPage> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
           child: TextField(
-            onTap: () => {wideCtrl.text = "", setState(() {})},
+            onTap: () =>
+                {if (wideCtrl.text == "0") wideCtrl.text = "", setState(() {})},
             controller: wideCtrl,
             keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(4),
-              FilteringTextInputFormatter.digitsOnly
-            ],
             decoration: InputDecoration(
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
@@ -506,7 +518,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     );
   }
 
-  Widget _createWhats(RoomBloc bloc) {
+/*   Widget _createWhats(RoomBloc bloc) {
     //final size = MediaQuery.of(context).size;
 
     return StreamBuilder(
@@ -536,7 +548,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
       },
     );
   }
-
+ */
   Widget _createLong(RoomBloc bloc) {
     //final size = MediaQuery.of(context).size;
 
@@ -545,13 +557,10 @@ class AddRoomPagePageState extends State<AddRoomPage> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
           child: TextField(
-            onTap: () => {longCtrl.text = "", setState(() {})},
+            onTap: () =>
+                {if (longCtrl.text == "0") longCtrl.text = "", setState(() {})},
             controller: longCtrl,
             keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(4),
-            ],
             decoration: InputDecoration(
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
@@ -578,13 +587,10 @@ class AddRoomPagePageState extends State<AddRoomPage> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
           child: TextField(
-            onTap: () => {tallCtrl.text = "", setState(() {})},
+            onTap: () =>
+                {if (tallCtrl.text == "0") tallCtrl.text = "", setState(() {})},
             controller: tallCtrl,
             keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(4),
-            ],
             decoration: InputDecoration(
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
@@ -716,7 +722,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                       color: isControllerChange && !isInvalid
                           ? currentTheme.accentColor
                           : Colors.white.withOpacity(0.30),
-                      fontSize: 15),
+                      fontSize: 18),
                 ),
               ),
             ),
@@ -735,7 +741,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     final profile = authService.profile;
 
     final name = (bloc.name == null) ? widget.room.name : bloc.name.trim();
-    final description = (bloc.description == null)
+    final description = (descriptionCtrl.text == "")
         ? widget.room.description
         : bloc.description.trim();
 
@@ -752,24 +758,29 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     final newRoom = new Room(
         name: name,
         description: description,
-        wide: int.parse(wide),
-        long: int.parse(long),
-        tall: int.parse(tall),
+        wide: wide,
+        long: long,
+        tall: tall,
         co2: co2,
         co2Control: co2Control,
         timeOn: timeOn,
-        timeOff: timeOff);
+        timeOff: timeOff,
+        user: profile.user.uid);
 
     print(newRoom);
-    final editRoomRes = await roomService.createRoom(newRoom, profile.user.uid);
+    final editRoomRes = await roomService.createRoom(newRoom);
 
     if (editRoomRes != null) {
-      if (editRoomRes == true) {
+      if (editRoomRes.ok) {
         socketService.connect();
 
-        Navigator.push(context, createRoute());
+        widget.rooms.add(editRoomRes.room);
+        setState(() {});
+
+        roomBloc.getRooms(profile.user.uid);
+        Navigator.pop(context);
       } else {
-        mostrarAlerta(context, 'Error', editRoomRes);
+        mostrarAlerta(context, 'Error', editRoomRes.msg);
       }
     } else {
       mostrarAlerta(

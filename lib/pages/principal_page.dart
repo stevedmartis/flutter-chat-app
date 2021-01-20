@@ -9,6 +9,7 @@ import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/header_custom_search.dart';
+import 'package:chat/widgets/menu_drawer.dart';
 import 'package:chat/widgets/product_widget.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 
@@ -63,6 +64,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
     changeStatusLight();
     return SafeArea(
         child: Scaffold(
+      endDrawer: PrincipalMenu(),
       body: CollapsingList(_hideBottomNavController),
       bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
     ));
@@ -206,14 +208,9 @@ class _CollapsingListState extends State<CollapsingList>
   }
 
   _chargeProfileUsers() async {
-    //this.users = await usuarioService.getUsers();
-
     this.profiles = await usuarioService.getProfilesLastUsers();
 
     setState(() {});
-
-    // await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
   }
 
   @override

@@ -14,9 +14,9 @@ class Room {
       this.totalItems,
       this.createdAt,
       this.updatedAt,
-      this.wide = 0,
-      this.long = 0,
-      this.tall = 0,
+      this.wide = "",
+      this.long = "",
+      this.tall = "",
       this.timeOn = "",
       this.timeOff = "",
       this.co2 = false,
@@ -29,9 +29,9 @@ class Room {
   String name;
   int position;
   String description;
-  int wide;
-  int long;
-  int tall;
+  String wide;
+  String long;
+  String tall;
   String timeOn;
   String timeOff;
   bool co2;
@@ -49,6 +49,14 @@ class Room {
       createdAt: DateTime.parse(json["createdAt"]),
       updatedAt: DateTime.parse(json["updatedAt"]),
       description: json["description"],
+      wide: json["wide"],
+      long: json["long"],
+      tall: json["tall"],
+      co2: json["co2"],
+      co2Control: json["co2Control"],
+      timeOn: json["timeOn"],
+      timeOff: json["timeOff"],
+
       //products: List<Product>.from(json["products"].map((x) => x)),
       totalItems: json["totalItems"]);
 
@@ -59,6 +67,14 @@ class Room {
         "position": position,
         "description": description,
         "totalItems": totalItems,
+        "wide": wide,
+        "long": long,
+        "tall": tall,
+        "co2": co2,
+        "co2Control": co2Control,
+        "timeOn": timeOn,
+        "timeOff": timeOff,
+
         //"products": List<dynamic>.from(products.map((x) => x)),
       };
 

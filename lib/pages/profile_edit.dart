@@ -299,7 +299,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                       color: isControllerChange && !isInvalid
                           ? currentTheme.accentColor
                           : Colors.white.withOpacity(0.30),
-                      fontSize: 15),
+                      fontSize: 18),
                 ),
               ),
             ),

@@ -107,7 +107,7 @@ class RoomBloc with Validators {
     _nameController?.close();
     _ventilationController?.close();
     _co2Controller?.close();
-    _co2Controller?.close();
+
     _co2ControlController?.close();
     _descriptionController?.close();
     _kelvinController?.close();
@@ -124,6 +124,15 @@ class RoomBloc with Validators {
 
   disposeRooms() {
     _roomsController?.close();
+    _co2Controller?.close();
+    _co2ControlController?.close();
+    _descriptionController?.close();
+    _nameController?.close();
+    _wideController?.close();
+    _longController?.close();
+    _tallController?.close();
+    _timeOnController?.close();
+    _timeOffController?.close();
   }
 }
 

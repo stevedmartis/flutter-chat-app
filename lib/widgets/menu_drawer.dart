@@ -14,35 +14,26 @@ class PrincipalMenu extends StatelessWidget {
 
     final socketService = Provider.of<SocketService>(context);
     final authService = Provider.of<AuthService>(context);
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final profile = authService.profile;
 
     return Drawer(
       child: Container(
+        color: currentTheme.scaffoldBackgroundColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SafeArea(
-              child: Container(
-                margin: EdgeInsets.only(top: 30, bottom: 30),
-                width: 150,
-                height: 150,
-                child: Hero(
-                    tag: profile.user.uid,
-                    child: Material(
-                      type: MaterialType.transparency,
-                      child: ImageUserChat(
-                        width: 200,
-                        height: 200,
-                        profile: profile,
-                        fontsize: 20,
-                      ),
-                    )),
+            Container(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                profile.user.username,
+                style: TextStyle(fontSize: 20),
               ),
             ),
 /*               Expanded(
                 child: _OptionsList(),
               ), */
-            ListTile(
+            /*  ListTile(
               leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
               title: Text('Dark mode'),
               trailing: Switch.adaptive(
@@ -51,8 +42,8 @@ class PrincipalMenu extends StatelessWidget {
                   appTheme.darkTheme = value;
                 },
               ),
-            ),
-            SafeArea(
+            ), */
+            /*  SafeArea(
               bottom: true,
               top: false,
               left: false,
@@ -68,7 +59,7 @@ class PrincipalMenu extends StatelessWidget {
                   },
                 ),
               ),
-            ),
+            ), */
             GestureDetector(
               onTap: () {
                 socketService.disconnect();

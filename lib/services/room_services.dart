@@ -1,3 +1,4 @@
+import 'package:chat/models/message_error.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/room_response.dart';
 import 'package:chat/models/rooms_response.dart';
@@ -34,12 +35,10 @@ class RoomService with ChangeNotifier {
     }
   }
 
-  Future createRoom(Room room, String uid) async {
+  Future createRoom(Room room) async {
     // this.authenticated = true;
 
     final token = await this._storage.read(key: 'token');
-
-    //final data = {'name': name, 'email': description, 'uid': uid};
 
     final resp = await http.post('${Environment.apiUrl}/room/new',
         body: jsonEncode(room),
@@ -52,8 +51,9 @@ class RoomService with ChangeNotifier {
 
       return roomResponse;
     } else {
-      final respBody = jsonDecode(resp.body);
-      return respBody['msg'];
+      final respBody = errorMessageResponseFromJson(resp.body);
+
+      return respBody;
     }
   }
 
