@@ -1,9 +1,7 @@
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class PrincipalMenu extends StatelessWidget {

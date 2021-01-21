@@ -24,8 +24,11 @@ class RoomBloc with Validators {
 
   final _roomsController = BehaviorSubject<List<Room>>();
   final RoomsRepository _repository = RoomsRepository();
+
   final BehaviorSubject<RoomsResponse> _subject =
       BehaviorSubject<RoomsResponse>();
+
+  final BehaviorSubject<Room> _roomSelect = BehaviorSubject<Room>();
 
   getRooms(String userId) async {
     print(userId);
@@ -33,7 +36,16 @@ class RoomBloc with Validators {
     _subject.sink.add(response);
   }
 
+  getRoom(Room room) async {
+    print(room);
+    //RoomsResponse response = await _repository.getRooms(userId);
+    _roomSelect.sink.add(room);
+  }
+
+  BehaviorSubject<Room> get roomSelect => _roomSelect;
+
   BehaviorSubject<RoomsResponse> get subject => _subject;
+
   // Recuperar los datos del Stream
   Stream<String> get nameStream =>
       _nameController.stream.transform(validationNameRequired);
@@ -104,6 +116,7 @@ class RoomBloc with Validators {
 
   dispose() {
     _subject.close();
+    _roomSelect.close();
     _nameController?.close();
     _ventilationController?.close();
     _co2Controller?.close();

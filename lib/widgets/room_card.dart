@@ -69,10 +69,13 @@ class CustomListItemTwoRoom extends StatelessWidget {
             SizedBox(
                 width: 50,
                 child: Center(
-                    child: Icon(
-                  Icons.chevron_right,
-                  color: currentTheme.accentColor,
-                  size: 30,
+                    child: Container(
+                  margin: EdgeInsets.only(right: 10),
+                  child: Icon(
+                    Icons.format_list_bulleted,
+                    color: currentTheme.accentColor,
+                    size: 30,
+                  ),
                 ))),
           ],
         ),

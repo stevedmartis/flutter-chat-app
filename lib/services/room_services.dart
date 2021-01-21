@@ -57,6 +57,28 @@ class RoomService with ChangeNotifier {
     }
   }
 
+  Future editRoom(Room room) async {
+    // this.authenticated = true;
+
+    final token = await this._storage.read(key: 'token');
+
+    final resp = await http.post('${Environment.apiUrl}/room/update/room',
+        body: jsonEncode(room),
+        headers: {'Content-Type': 'application/json', 'x-token': token});
+
+    if (resp.statusCode == 200) {
+      // final roomResponse = roomsResponseFromJson(resp.body);
+      final roomResponse = roomResponseFromJson(resp.body);
+      // this.rooms = roomResponse.rooms;
+
+      return roomResponse;
+    } else {
+      final respBody = errorMessageResponseFromJson(resp.body);
+
+      return respBody;
+    }
+  }
+
   Future deleteRoom(String roomId) async {
     final token = await this._storage.read(key: 'token');
 

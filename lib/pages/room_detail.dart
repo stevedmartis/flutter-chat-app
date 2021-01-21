@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:chat/bloc/product_bloc.dart';
 import 'package:chat/bloc/provider.dart';
+import 'package:chat/bloc/room_bloc.dart';
 
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/products.dart';
@@ -9,11 +10,11 @@ import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/new_product.dart';
 import 'package:chat/pages/profile_page.dart';
+import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/services/product_services.dart';
 
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
-import 'package:chat/widgets/myprofile.dart';
 import 'package:chat/widgets/product_widget.dart';
 import 'package:chat/widgets/room_card.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
@@ -24,11 +25,13 @@ import 'package:provider/provider.dart';
 
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/socket_service.dart';
-import '../utils//extension.dart';
+import 'package:rxdart/rxdart.dart';
 
 class RoomDetailPage extends StatefulWidget {
   final Room room;
-  RoomDetailPage({@required this.room});
+  final List<Room> rooms;
+
+  RoomDetailPage({@required this.room, this.rooms});
 
   @override
   _RoomDetailPageState createState() => _RoomDetailPageState();
@@ -49,6 +52,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     new Tab(text: 'Light'),
   ];
   TabController _tabController;
+  BehaviorSubject<Room> roomSelect = BehaviorSubject<Room>();
+
+  Room room;
 
   @override
   void initState() {
@@ -58,6 +64,13 @@ class _RoomDetailPageState extends State<RoomDetailPage>
 
     print(widget.room);
     this._chargeProducts();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    roomSelect?.close();
   }
 
   void reorderData(int oldindex, int newindex) {
@@ -82,15 +95,32 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    final name = widget.room.name.toLowerCase();
 
-    final nameFinal = name.isEmpty ? "" : name.capitalize();
+    final bloc = CustomProvider.roomBlocIn(context);
+
+    roomSelect = bloc.roomSelect;
+
+    print(roomSelect);
+
+    //final name = room.name.toLowerCase();
+
+    //  final nameFinal = name.isEmpty ? "" : name.capitalize();
+
     return Scaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
-          title: Text(
-            nameFinal,
-            style: TextStyle(),
+          title: StreamBuilder<Room>(
+            stream: roomBloc.roomSelect.stream,
+            builder: (context, AsyncSnapshot<Room> snapshot) {
+              if (snapshot.hasData) {
+                room = snapshot.data;
+                return Container(child: Text(room.name));
+              } else if (snapshot.hasError) {
+                return _buildErrorWidget(snapshot.error);
+              } else {
+                return _buildLoadingWidget();
+              }
+            },
           ),
           backgroundColor: Colors.black,
           actions: [
@@ -129,70 +159,79 @@ class _RoomDetailPageState extends State<RoomDetailPage>
         onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
-        child: CustomScrollView(
-            physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics()),
-            controller: _scrollController,
-            slivers: <Widget>[
-              makeHeaderInfo(context),
-
-              makeHeaderTabs(context)
-              //   makeHeaderSpacer(context),
-              //  makeHeaderTabs(context),
-
-              /*  SliverList(
-                  delegate: SliverChildListDelegate(
-                      List<Widget>.generate(10, (int i) {
-                    return Stack(
-                      children: [
-                        CardProduct(index: i),
-                        GestureDetector(
-                            onTap: () {}, child: _buildCircleFavoriteProduct()),
-                      ],
-                    );
-                  })),
-                ), */
-            ]),
+        child: StreamBuilder<Room>(
+          stream: roomBloc.roomSelect.stream,
+          builder: (context, AsyncSnapshot<Room> snapshot) {
+            if (snapshot.hasData) {
+              room = snapshot.data;
+              return CustomScrollView(
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  controller: _scrollController,
+                  slivers: <Widget>[
+                    makeHeaderInfo(context),
+                    makeHeaderTabs(context)
+                  ]);
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
+            } else {
+              return _buildLoadingWidget();
+            }
+          },
+        ),
       ),
     );
+  }
+
+  Widget _buildLoadingWidget() {
+    return Container(
+        height: 400.0, child: Center(child: CircularProgressIndicator()));
+  }
+
+  Widget _buildErrorWidget(String error) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Error occured: $error"),
+      ],
+    ));
   }
 
   SliverPersistentHeader makeHeaderInfo(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    final about = widget.room.description;
+    final about = room.description;
     final size = MediaQuery.of(context).size;
 
-    final co2 = widget.room.co2 ? 'Yes' : 'No';
-    final co2Control = widget.room.co2Control ? 'Yes' : 'No';
-    final timeOn = widget.room.timeOn;
-    final timeOff = widget.room.timeOff;
+    final co2 = room.co2 ? 'Yes' : 'No';
+    final co2Control = room.co2Control ? 'Yes' : 'No';
+    final timeOn = room.timeOn;
+    final timeOff = room.timeOff;
 
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: (about.length > 0) ? 250 : 200,
-          maxHeight: (about.length > 0) ? 250 : 200,
+          minHeight: (about.length > 0) ? 230 : 180,
+          maxHeight: (about.length > 0) ? 230 : 180,
           child: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.only(bottom: 10.0, top: 10),
             color: currentTheme.scaffoldBackgroundColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.center,
-                    //margin: EdgeInsets.only(left: size.width / 6, top: 10),
-                    width: size.width / 1.3,
-                    child: Text(
-                      about,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 4,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 15.0, color: Colors.white54),
-                    ),
+                Container(
+                  alignment: Alignment.center,
+                  //margin: EdgeInsets.only(left: size.width / 6, top: 10),
+                  width: size.width / 1.3,
+                  child: Text(
+                    about,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 4,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 15.0, color: Colors.white54),
                   ),
                 ),
                 /* Expanded(
@@ -217,9 +256,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   height: 5.0,
                 ),
                 RowMeassureRoom(
-                  wide: widget.room.wide,
-                  long: widget.room.long,
-                  tall: widget.room.tall,
+                  wide: room.wide,
+                  long: room.long,
+                  tall: room.tall,
                   center: true,
                   fontSize: 15.0,
                 ),
@@ -275,7 +314,8 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         textColor: Colors.white54,
                         text: 'Editar room',
                         onPressed: () {
-                          //  Navigator.of(context).push(createRouteEditProfile());
+                          Navigator.of(context).push(
+                              createRouteAddRoom(room, widget.rooms, true));
                         }),
                   ),
                 )
@@ -296,11 +336,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             }),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   _handleAddProduct(BuildContext context) async {
@@ -362,8 +397,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   createModalSelection() {
     final currentTheme =
         Provider.of<ThemeChanger>(context, listen: false).currentTheme;
-
-    final bloc = CustomProvider.productBlocIn(context);
 
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
@@ -537,32 +570,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     Navigator.pop(context);
   }
 
-  Widget _createName(ProductBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.nameStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            //  keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-                // icon: Icon(Icons.perm_identity),
-                //  fillColor: currentTheme.accentColor,
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Colors.yellow, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: '',
-                labelText: 'Name',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeName,
-          ),
-        );
-      },
-    );
-  }
-
   SliverPersistentHeader makeHeaderTabs(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
@@ -584,17 +591,17 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         icon: Icon(Icons.local_florist,
                             color: (_tabController.index == 0)
                                 ? currentTheme.accentColor
-                                : Colors.white)),
+                                : Colors.white54)),
                     Tab(
                         icon: FaIcon(FontAwesomeIcons.wind,
                             color: (_tabController.index == 1)
                                 ? currentTheme.accentColor
-                                : Colors.white)),
+                                : Colors.white54)),
                     Tab(
                         icon: FaIcon(FontAwesomeIcons.lightbulb,
                             color: (_tabController.index == 2)
                                 ? currentTheme.accentColor
-                                : Colors.white)),
+                                : Colors.white54)),
                   ],
                   onTap: (value) => {
                         _tabController
@@ -607,32 +614,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
           ),
         ),
       ),
-    );
-  }
-
-  Widget _createDescription(ProductBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.descriptionStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            //  keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-                // icon: Icon(Icons.perm_identity),
-                //  fillColor: currentTheme.accentColor,
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Colors.yellow, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: '',
-                labelText: 'Description',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeDescription,
-          ),
-        );
-      },
     );
   }
 }

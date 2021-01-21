@@ -23,11 +23,13 @@ import 'package:date_format/date_format.dart';
 //final Color darkBlue = Color.fromARGB(255, 18, 32, 47);
 
 class AddRoomPage extends StatefulWidget {
-  AddRoomPage({this.room, this.rooms});
+  AddRoomPage({this.room, this.rooms, this.isEdit});
 
   final Room room;
+  final bool isEdit;
 
   final List<Room> rooms;
+
   @override
   AddRoomPagePageState createState() => AddRoomPagePageState();
 }
@@ -39,8 +41,6 @@ class AddRoomPagePageState extends State<AddRoomPage> {
   final nameCtrl = TextEditingController();
 
   final descriptionCtrl = TextEditingController();
-  final timeOnCtrl = TextEditingController();
-  final timeOffCtrl = TextEditingController();
 
   var tallCtrl = new MaskedTextController(mask: '0.00');
   var wideCtrl = new MaskedTextController(mask: '0.00');
@@ -53,8 +53,14 @@ class AddRoomPagePageState extends State<AddRoomPage> {
   bool isLongChange = false;
   bool isTallChange = false;
 
+  bool isTimeOnChange = false;
+  bool isTimeOffChange = false;
+
   bool isSwitchedCo2 = false;
-  bool isSwitchedCo2Complete = false;
+  bool isSwitchedCo2Control = false;
+
+  bool isCo2Change = false;
+  bool isCo2ControlChange = false;
 
   String dropdownValue = 'Ventilación';
 
@@ -117,8 +123,13 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     wideCtrl.text = widget.room.wide.toString();
     longCtrl.text = widget.room.long.toString();
     tallCtrl.text = widget.room.tall.toString();
-    timeOnCtrl.text = widget.room.timeOn;
-    timeOffCtrl.text = widget.room.timeOff;
+
+    _timeOnController.text = widget.room.timeOn;
+    _timeOffController.text = widget.room.timeOff;
+
+    isSwitchedCo2 = widget.room.co2;
+
+    isSwitchedCo2 = widget.room.co2Control;
 
     nameCtrl.addListener(() {
       // print('${nameCtrl.text}');
@@ -166,6 +177,36 @@ class AddRoomPagePageState extends State<AddRoomPage> {
       });
     });
 
+    _timeOnController.addListener(() {
+      // print('${nameCtrl.text}');
+      setState(() {
+        if (widget.room.timeOn.toString() != _timeOnController.text)
+          this.isTimeOnChange = true;
+        else
+          this.isTimeOnChange = false;
+      });
+    });
+
+    _timeOffController.addListener(() {
+      // print('${nameCtrl.text}');
+      setState(() {
+        if (widget.room.timeOn.toString() != _timeOffController.text)
+          this.isTimeOffChange = true;
+        else
+          this.isTimeOffChange = false;
+      });
+    });
+
+    _timeOffController.addListener(() {
+      // print('${nameCtrl.text}');
+      setState(() {
+        if (widget.room.timeOn.toString() != _timeOffController.text)
+          this.isTimeOffChange = true;
+        else
+          this.isTimeOffChange = false;
+      });
+    });
+
     super.initState();
   }
 
@@ -176,8 +217,6 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     longCtrl.dispose();
     tallCtrl.dispose();
     descriptionCtrl.dispose();
-    timeOnCtrl.dispose();
-    timeOffCtrl.dispose();
     _timeOnController.dispose();
     _timeOffController.dispose();
     roomBloc.disposeRooms();
@@ -197,11 +236,23 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     final isControllerChange = isNameChange && isAboutChange ||
         isWideChange && isLongChange && isTallChange && timeOn && timeOff;
 
+    final isControllerChangeEdit = isNameChange ||
+        isAboutChange ||
+        isWideChange ||
+        isLongChange ||
+        isTallChange ||
+        isTimeOnChange ||
+        isTimeOffChange ||
+        isCo2Change ||
+        isCo2ControlChange;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         actions: [
-          _createButton(bloc, isControllerChange),
+          (widget.isEdit)
+              ? _createButton(bloc, isControllerChangeEdit)
+              : _createButton(bloc, isControllerChange),
         ],
         leading: IconButton(
           icon: Icon(
@@ -214,7 +265,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
               Navigator.pop(context),
           color: Colors.white,
         ),
-        title: Text('New room'),
+        title: (widget.isEdit) ? Text('Edit room') : Text('New room'),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
@@ -630,7 +681,13 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                 isSwitchedCo2 = value;
 
                 if (!isSwitchedCo2) {
-                  isSwitchedCo2Complete = false;
+                  isSwitchedCo2Control = false;
+                }
+
+                if (isSwitchedCo2 != widget.room.co2) {
+                  this.isCo2Change = true;
+                } else {
+                  this.isCo2Change = false;
                 }
               });
             },
@@ -657,13 +714,19 @@ class AddRoomPagePageState extends State<AddRoomPage> {
               )),
           trailing: Switch.adaptive(
             activeColor: currentTheme.accentColor,
-            value: isSwitchedCo2Complete,
+            value: isSwitchedCo2Control,
             inactiveTrackColor: Colors.white.withOpacity(0.30),
             inactiveThumbColor: Colors.white.withOpacity(0.30),
             onChanged: (value) {
               setState(() {
                 if (isSwitchedCo2) {
-                  isSwitchedCo2Complete = !isSwitchedCo2Complete;
+                  isSwitchedCo2Control = !isSwitchedCo2Control;
+                }
+
+                if (isSwitchedCo2Control != widget.room.co2Control) {
+                  this.isCo2ControlChange = true;
+                } else {
+                  this.isCo2ControlChange = false;
                 }
               });
             },
@@ -673,7 +736,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     );
   }
 
-  Widget _createTypeLight(RoomBloc bloc) {
+/*   Widget _createTypeLight(RoomBloc bloc) {
     //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return StreamBuilder(
@@ -700,7 +763,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
       },
     );
   }
-
+ */
   Widget _createButton(
     RoomBloc bloc,
     bool isControllerChange,
@@ -708,7 +771,6 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     return StreamBuilder(
       stream: bloc.formValidStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        // final authService = Provider.of<AuthService>(context);
         final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
         final isInvalid = snapshot.hasError;
@@ -727,14 +789,16 @@ class AddRoomPagePageState extends State<AddRoomPage> {
               ),
             ),
             onTap: isControllerChange && !isInvalid
-                ? () =>
-                    {FocusScope.of(context).unfocus(), _editRoom(bloc, context)}
+                ? () => {
+                      FocusScope.of(context).unfocus(),
+                      (widget.isEdit) ? _editRoom(bloc) : _createRoom(bloc),
+                    }
                 : null);
       },
     );
   }
 
-  _editRoom(RoomBloc bloc, BuildContext context) async {
+  _createRoom(RoomBloc bloc) async {
     final roomService = Provider.of<RoomService>(context, listen: false);
     final socketService = Provider.of<SocketService>(context, listen: false);
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -750,7 +814,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     final tall = (bloc.tall == null) ? widget.room.tall : bloc.tall.trim();
 
     final co2 = isSwitchedCo2;
-    final co2Control = isSwitchedCo2Complete;
+    final co2Control = isSwitchedCo2Control;
 
     final timeOn = _timeOnController.text;
     final timeOff = _timeOffController.text;
@@ -768,24 +832,81 @@ class AddRoomPagePageState extends State<AddRoomPage> {
         user: profile.user.uid);
 
     print(newRoom);
-    final editRoomRes = await roomService.createRoom(newRoom);
 
-    if (editRoomRes != null) {
-      if (editRoomRes.ok) {
+    final createRoomRes = await roomService.createRoom(newRoom);
+
+    if (createRoomRes != null) {
+      if (createRoomRes.ok) {
         socketService.connect();
 
-        widget.rooms.add(editRoomRes.room);
+        widget.rooms.add(createRoomRes.room);
         setState(() {});
 
         roomBloc.getRooms(profile.user.uid);
         Navigator.pop(context);
       } else {
-        mostrarAlerta(context, 'Error', editRoomRes.msg);
+        mostrarAlerta(context, 'Error', createRoomRes.msg);
       }
     } else {
       mostrarAlerta(
           context, 'Error del servidor', 'lo sentimos, Intentelo mas tarde');
     }
+    //Navigator.pushReplacementNamed(context, '');
+  }
+
+  _editRoom(RoomBloc bloc) async {
+    final roomService = Provider.of<RoomService>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final profile = authService.profile;
+    final name = (bloc.name == null) ? widget.room.name : bloc.name.trim();
+    final description = (descriptionCtrl.text == "")
+        ? widget.room.description
+        : descriptionCtrl.text.trim();
+
+    final wide = (bloc.wide == null) ? widget.room.wide : bloc.wide.trim();
+    final long = (bloc.long == null) ? widget.room.long : bloc.long.trim();
+    final tall = (bloc.tall == null) ? widget.room.tall : bloc.tall.trim();
+
+    final co2 = isSwitchedCo2;
+    final co2Control = isSwitchedCo2Control;
+
+    final timeOn = _timeOnController.text;
+    final timeOff = _timeOffController.text;
+
+    final newRoom = new Room(
+        name: name,
+        description: description,
+        wide: wide,
+        long: long,
+        tall: tall,
+        co2: co2,
+        co2Control: co2Control,
+        timeOn: timeOn,
+        timeOff: timeOff,
+        id: widget.room.id);
+
+    print(newRoom);
+
+    if (widget.isEdit) {
+      final editRoomRes = await roomService.editRoom(newRoom);
+
+      if (editRoomRes != null) {
+        if (editRoomRes.ok) {
+          // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
+          setState(() {});
+          // room = editRoomRes.room;
+          roomBloc.getRoom(editRoomRes.room);
+          roomBloc.getRooms(profile.user.uid);
+          Navigator.pop(context);
+        } else {
+          mostrarAlerta(context, 'Error', editRoomRes.msg);
+        }
+      } else {
+        mostrarAlerta(
+            context, 'Error del servidor', 'lo sentimos, Intentelo mas tarde');
+      }
+    }
+
     //Navigator.pushReplacementNamed(context, '');
   }
 }

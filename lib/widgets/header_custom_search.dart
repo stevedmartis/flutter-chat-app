@@ -2,7 +2,6 @@ import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/search_Principal_page.dart';
-import 'package:chat/pages/tabs.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';

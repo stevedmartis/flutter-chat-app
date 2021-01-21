@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:chat/models/profiles.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
@@ -37,7 +35,6 @@ class ProfileCard extends StatefulWidget {
 
   final ui.Image image;
 
-  File imageHeader;
   final picker = ImagePicker();
 
   @override

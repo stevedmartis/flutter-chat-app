@@ -1,10 +1,4 @@
-// To parse this JSON data, do
-//
-//     final usuariosResponse = usuariosResponseFromJson(jsonString);
-
 import 'dart:convert';
-
-import 'package:chat/models/room.dart';
 
 Erroresponse errorMessageResponseFromJson(String str) =>
     Erroresponse.fromJson(json.decode(str));

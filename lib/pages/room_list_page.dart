@@ -115,7 +115,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
                     iconSize: 30,
                     onPressed: () => {
                           Navigator.of(context)
-                              .push(createRouteAddRoom(room, rooms)),
+                              .push(createRouteAddRoom(room, rooms, false)),
                         }),
               )
             ],
@@ -182,8 +182,6 @@ class _RoomsListPageState extends State<RoomsListPage> {
   }
 
   Widget _buildRoomWidget() {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     return Container(
       child: ReorderableListView(
           padding: EdgeInsets.only(top: 20),
@@ -202,37 +200,44 @@ class _RoomsListPageState extends State<RoomsListPage> {
                   children: [
                     GestureDetector(
                       key: Key(item.id),
-                      onTap: () => Navigator.of(context)
-                          .push(createRouteRoomDetail(item)),
+                      onTap: () => {
+                        roomBloc.getRoom(item),
+                        Navigator.of(context)
+                            .push(createRouteRoomDetail(item, rooms)),
+                      },
                       child: Dismissible(
                         key: UniqueKey(),
-                        direction: DismissDirection.startToEnd,
+                        direction: DismissDirection.endToStart,
                         onDismissed: (direction) =>
                             {_deleteRoom(item.id, index)},
                         background: Container(
-                            padding: EdgeInsets.only(left: 8.09),
+                            alignment: Alignment.centerRight,
                             decoration: BoxDecoration(
                               color: Colors.red,
                             ),
-                            child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.delete,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.black,
+                                    size: 30,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                /* Text(
+                                  'Delete',
+                                  style: TextStyle(
                                       color: Colors.black,
-                                    ),
-                                    SizedBox(
-                                      width: 12,
-                                    ),
-                                    Text(
-                                      'Delete',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600),
-                                    )
-                                  ],
-                                ))),
+                                      fontWeight: FontWeight.w600),
+                                ) */
+                              ],
+                            )),
                         child: CustomListItemTwoRoom(
                           title: item.name,
                           subtitle: item.description,
@@ -479,11 +484,10 @@ Route createRouteProfile() {
   );
 }
 
-Route createRouteRoomDetail(Room room) {
-  print(room);
+Route createRouteRoomDetail(Room room, List<Room> rooms) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
-        RoomDetailPage(room: room),
+        RoomDetailPage(room: room, rooms: rooms),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
@@ -500,11 +504,11 @@ Route createRouteRoomDetail(Room room) {
   );
 }
 
-Route createRouteAddRoom(Room room, List<Room> rooms) {
+Route createRouteAddRoom(Room room, List<Room> rooms, bool isEdit) {
   print(room);
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
-        AddRoomPage(room: room, rooms: rooms),
+        AddRoomPage(room: room, rooms: rooms, isEdit: isEdit),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
