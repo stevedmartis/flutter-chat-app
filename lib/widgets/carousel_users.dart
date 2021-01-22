@@ -60,7 +60,8 @@ class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
             scrollDirection: Axis.horizontal,
             itemCount: widget.profiles.length,
             itemBuilder: (BuildContext context, int index) {
-              return _buildBox(index: index);
+              return Container(
+                  padding: EdgeInsets.all(5.0), child: _buildBox(index: index));
             },
           );
   }
@@ -270,7 +271,7 @@ class _BtnOption extends StatelessWidget {
             children: <Widget>[
               Image.asset(
                 image,
-                height: 100.0,
+                height: 70.0,
                 width: 100.0,
                 fit: BoxFit.cover,
               ),
@@ -334,62 +335,62 @@ class _CategoryItemState extends State<CategoryItem> {
     return Stack(
       children: [
         Container(
-          child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(50.0)),
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    width: 100,
-                    height: 100,
-                    child: Hero(
-                        tag: widget.profile.user.uid,
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: ImageUserChat(
-                            width: 100,
-                            height: 100,
-                            profile: widget.profile,
-                            fontsize: 20,
-                          ),
-                        )),
-                  ),
-                  Positioned(
-                    bottom: 0.0,
-                    left: 30.0,
-                    top: 60.0,
-                    right: 0.0,
+          child: Stack(
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(100.0)),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  child: Hero(
+                      tag: widget.profile.user.uid,
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: ImageUserChat(
+                          width: 100,
+                          height: 100,
+                          profile: widget.profile,
+                          fontsize: 20,
+                        ),
+                      )),
+                ),
+              ),
+              Positioned(
+                bottom: 0.0,
+                left: 30.0,
+                top: 60.0,
+                right: 0.0,
+                child: Container(
                     child: Container(
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
                         child: Container(
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: Container(
-                              constraints: BoxConstraints(maxWidth: 80),
-                              child: Text(
-                                (widget.profile.user.username.length >= 10)
-                                    ? widget.profile.user.username
-                                            .substring(0, 7) +
-                                        '...'
-                                    : widget.profile.user.username,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 5,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                          constraints: BoxConstraints(maxWidth: 80),
+                          child: Text(
+                            (widget.profile.user.username.length >= 10)
+                                ? widget.profile.user.username.substring(0, 7) +
+                                    '...'
+                                : widget.profile.user.username,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 5,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    )),
+                    ],
                   ),
-                ],
-              )),
+                )),
+              ),
+            ],
+          ),
         ),
         Container(
           margin: EdgeInsets.only(left: 10, top: 65),

@@ -105,7 +105,6 @@ class DataSearch extends SearchDelegate {
                           Provider.of<ChatService>(context, listen: false);
                       chatService.userFor = profile;
                       Navigator.push(context, createRouteProfile(profile));
-                      ;
                     } else {
                       Navigator.push(context, createRoute());
                     }

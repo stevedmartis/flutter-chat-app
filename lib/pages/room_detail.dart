@@ -1,17 +1,14 @@
-import 'dart:async';
-
-import 'package:chat/bloc/product_bloc.dart';
+import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/room_bloc.dart';
 
-import 'package:chat/helpers/mostrar_alerta.dart';
-import 'package:chat/models/products.dart';
-import 'package:chat/models/profiles.dart';
+import 'package:chat/models/plant.dart';
+import 'package:chat/models/plant_response.dart';
+
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/new_product.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_list_page.dart';
-import 'package:chat/services/product_services.dart';
 
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
@@ -23,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -39,11 +35,6 @@ class RoomDetailPage extends StatefulWidget {
 
 class _RoomDetailPageState extends State<RoomDetailPage>
     with SingleTickerProviderStateMixin {
-  SocketService socketService;
-  final productService = new ProductService();
-  List<Product> products = [];
-  Future<List<Product>> getJobFuture;
-  Profiles profile;
   ScrollController _scrollController;
 
   final List<Tab> myTabs = <Tab>[
@@ -52,7 +43,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     new Tab(text: 'Light'),
   ];
   TabController _tabController;
-  BehaviorSubject<Room> roomSelect = BehaviorSubject<Room>();
+  BehaviorSubject<Plant> roomSelect = BehaviorSubject<Plant>();
 
   Room room;
 
@@ -62,8 +53,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
 
     _tabController = new TabController(vsync: this, length: myTabs.length);
 
-    print(widget.room);
-    this._chargeProducts();
+    this._chargePlants();
   }
 
   @override
@@ -73,22 +63,11 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     roomSelect?.close();
   }
 
-  void reorderData(int oldindex, int newindex) {
-    setState(() {
-      if (newindex > oldindex) {
-        newindex -= 1;
-      }
-      final items = this.products.removeAt(oldindex);
-      this.products.insert(newindex, items);
-    });
-  }
+  _chargePlants() async {
+    final roomId = widget.room.id;
+    await plantBloc.getPlants(roomId);
 
-  _chargeProducts() async {
-    final authService = Provider.of<AuthService>(context, listen: false);
-
-    profile = authService.profile;
-
-    getJobFuture = productService.geProductByRoom(profile.user.uid);
+    //getJobFuture = roomBloc.getRooms(profile.user.uid);
     setState(() {});
   }
 
@@ -96,9 +75,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    final bloc = CustomProvider.roomBlocIn(context);
+    final bloc = CustomProvider.plantBlocIn(context);
 
-    roomSelect = bloc.roomSelect;
+    roomSelect = bloc.plantSelect;
 
     print(roomSelect);
 
@@ -170,6 +149,64 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   controller: _scrollController,
                   slivers: <Widget>[
                     makeHeaderInfo(context),
+                    makeHeaderTabs(context),
+                    makePlantCard(context)
+                  ]);
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
+            } else {
+              return _buildLoadingWidget();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  SliverPersistentHeader makePlantCard(context) {
+    return SliverPersistentHeader(
+      pinned: false,
+      delegate: SliverAppBarDelegate(
+        minHeight: 150.0,
+        maxHeight: 150.0,
+        child: StreamBuilder<PlantsResponse>(
+          stream: plantBloc.subject.stream,
+          builder: (context, AsyncSnapshot<PlantsResponse> snapshot) {
+            if (snapshot.hasData) {
+              print(snapshot.data);
+              return (snapshot.data.plants.length > 0)
+                  ? _buildWidgetPlant(snapshot.data.plants)
+                  : Center(
+                      child: Text('not found'),
+                    );
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
+            } else {
+              return _buildLoadingWidget();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget makeRoomDetail(context) {
+    return SliverPersistentHeader(
+      pinned: false,
+      delegate: SliverAppBarDelegate(
+        minHeight: 200,
+        maxHeight: 200,
+        child: StreamBuilder<Room>(
+          stream: roomBloc.roomSelect.stream,
+          builder: (context, AsyncSnapshot<Room> snapshot) {
+            if (snapshot.hasData) {
+              room = snapshot.data;
+              return CustomScrollView(
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  controller: _scrollController,
+                  slivers: <Widget>[
+                    makeHeaderInfo(context),
                     makeHeaderTabs(context)
                   ]);
             } else if (snapshot.hasError) {
@@ -212,8 +249,8 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: (about.length > 0) ? 230 : 180,
-          maxHeight: (about.length > 0) ? 230 : 180,
+          minHeight: (about.length > 10) ? 230 : 200,
+          maxHeight: (about.length > 10) ? 230 : 200,
           child: Container(
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 10.0, top: 10),
@@ -325,7 +362,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     );
   }
 
-  Widget _buildWidgetProduct(data) {
+  Widget _buildWidgetPlant(data) {
     print(data);
     return Container(
       child: SizedBox(
@@ -336,62 +373,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             }),
       ),
     );
-  }
-
-  _handleAddProduct(BuildContext context) async {
-    final productService = Provider.of<ProductService>(context, listen: false);
-    final authService = Provider.of<AuthService>(context, listen: false);
-    final bloc = CustomProvider.productBlocIn(context);
-
-    print('================');
-    print('name: ${bloc.name}');
-    print('desc: ${bloc.description}');
-    print('================');
-
-    final product = new Product(
-        name: bloc.name,
-        description: bloc.description,
-        id: authService.profile.user.uid);
-
-    final addProductOk = await productService.createProduct(product);
-
-    if (addProductOk != null) {
-      if (addProductOk == true) {
-        //socketService.connect();
-        //Navigator.push(context, _createRute());
-
-        Navigator.pop(context);
-
-        Timer(
-            Duration(milliseconds: 300),
-            () => {
-                  setState(() {
-                    products.add(product);
-                  }),
-                });
-        productBloc.getProducts(authService.profile.user.uid);
-      } else {
-        mostrarAlerta(context, 'Registro incorrecto', addProductOk);
-      }
-    } else {
-      mostrarAlerta(
-          context, 'Error del servidor', 'lo sentimos, Intentelo mas tarde');
-    }
-    //Navigator.pushReplacementNamed(context, '');
-  }
-
-  _deleteProduct(String id, int index) async {
-    final res = await this.productService.deleteRoom(id);
-
-    final authService = Provider.of<AuthService>(context, listen: false);
-
-    if (res) {
-      setState(() {
-        products.removeAt(index);
-      });
-
-      productBloc.getProducts(authService.profile.user.uid);
-    }
   }
 
   createModalSelection() {

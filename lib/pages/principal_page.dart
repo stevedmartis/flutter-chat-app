@@ -237,6 +237,7 @@ class _CollapsingListState extends State<CollapsingList>
           ),
         ),
 
+        makeHeaderSpacer(context),
         SliverFixedExtentList(
           itemExtent: 100.0,
           delegate: SliverChildListDelegate(
@@ -247,7 +248,9 @@ class _CollapsingListState extends State<CollapsingList>
                 builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
                   if (snapshot.hasData) {
                     return Container(
-                        margin: EdgeInsets.only(top: 10),
+                        margin: EdgeInsets.only(
+                          left: 10,
+                        ),
                         child: CarouselUsersSliderCustom(
                             profiles: profiles)); // image is ready
                   } else {
@@ -262,7 +265,7 @@ class _CollapsingListState extends State<CollapsingList>
           ),
         ),
 
-        (profiles.length > 0)
+        /*   (profiles.length > 0)
             ? SliverFixedExtentList(
                 itemExtent: 150.0,
                 delegate: SliverChildListDelegate(
@@ -295,7 +298,7 @@ class _CollapsingListState extends State<CollapsingList>
                   [Container()],
                 ),
               ),
-
+ */
         SliverList(
           delegate: SliverChildListDelegate(List<Widget>.generate(10, (int i) {
             return Stack(
@@ -321,6 +324,20 @@ class _CollapsingListState extends State<CollapsingList>
         // Yes, this could also be a SliverFixedExtentList. Writing
         // this way just for an example of SliverList construction.
       ],
+    );
+  }
+
+  SliverPersistentHeader makeHeaderSpacer(context) {
+    //   final roomModel = Provider.of<Room>(context);
+
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+          minHeight: 10,
+          maxHeight: 10,
+          child: Row(
+            children: [Container()],
+          )),
     );
   }
 
