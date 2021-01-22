@@ -536,9 +536,11 @@ class BannerSlide extends StatelessWidget {
 }
 
 final List<String> imgList = [
-  'assets/banners/banner1.jpg',
-  'assets/banners/banner2.jpg',
-  'assets/banners/banner3.jpg',
+  'assets/banners/banner_weed4.jpg',
+  'assets/banners/banner_weed1.jpg',
+  'assets/banners/banner_weed2.jpg',
+  'assets/banners/banner_weed5.png',
+  'assets/banners/banner_weed3.jpg',
 ];
 
 final List<Widget> imageSliders = imgList
