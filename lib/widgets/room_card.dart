@@ -17,7 +17,8 @@ class CustomListItemTwoRoom extends StatelessWidget {
       this.publishDate,
       this.readDuration,
       this.timeOn,
-      this.timeOff})
+      this.timeOff,
+      this.totalProducts})
       : super(key: key);
 
   final Widget thumbnail;
@@ -31,6 +32,7 @@ class CustomListItemTwoRoom extends StatelessWidget {
   final String readDuration;
   final String timeOn;
   final String timeOff;
+  final int totalProducts;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class CustomListItemTwoRoom extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: SizedBox(
-        height: size.height / 5,
+        height: size.height / 4,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,16 +56,16 @@ class CustomListItemTwoRoom extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
                 child: _ArticleDescription(
-                  title: title,
-                  subtitle: subtitle,
-                  wide: wide,
-                  long: long,
-                  tall: tall,
-                  timeOn: timeOn,
-                  timeOff: timeOff,
-                  publishDate: publishDate,
-                  readDuration: readDuration,
-                ),
+                    title: title,
+                    subtitle: subtitle,
+                    wide: wide,
+                    long: long,
+                    tall: tall,
+                    timeOn: timeOn,
+                    timeOff: timeOff,
+                    publishDate: publishDate,
+                    readDuration: readDuration,
+                    totalProducts: totalProducts),
               ),
             ),
             SizedBox(
@@ -96,7 +98,8 @@ class _ArticleDescription extends StatelessWidget {
       this.publishDate,
       this.readDuration,
       this.timeOn,
-      this.timeOff})
+      this.timeOff,
+      this.totalProducts})
       : super(key: key);
 
   final String title;
@@ -111,9 +114,12 @@ class _ArticleDescription extends StatelessWidget {
   final String timeOff;
 
   final String readDuration;
+  final int totalProducts;
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -136,6 +142,72 @@ class _ArticleDescription extends StatelessWidget {
                 fontSize: 15.0,
                 color: Colors.white54,
               ),
+            ),
+            SizedBox(
+              height: 5.0,
+            ),
+            Row(
+              children: [
+                Icon(
+                  Icons.local_florist,
+                  color: currentTheme.accentColor,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  '$totalProducts',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 15.0,
+                    color: Colors.white54,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                FaIcon(
+                  FontAwesomeIcons.wind,
+                  color: currentTheme.accentColor,
+                  size: 20,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  '0',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 15.0,
+                    color: Colors.white54,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                FaIcon(
+                  FontAwesomeIcons.lightbulb,
+                  color: currentTheme.accentColor,
+                  size: 20,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  '0',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 15.0,
+                    color: Colors.white54,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5.0,
             ),
           ],
         ),

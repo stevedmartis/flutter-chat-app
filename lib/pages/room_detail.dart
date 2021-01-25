@@ -1,18 +1,21 @@
 import 'package:chat/bloc/plant_bloc.dart';
-import 'package:chat/bloc/provider.dart';
+
 import 'package:chat/bloc/room_bloc.dart';
 
 import 'package:chat/models/plant.dart';
-import 'package:chat/models/plant_response.dart';
 
 import 'package:chat/models/room.dart';
-import 'package:chat/pages/new_product.dart';
+import 'package:chat/pages/add_update_plant.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_list_page.dart';
+import 'package:chat/providers/plants_provider.dart';
+import 'package:chat/providers/rooms_provider.dart';
+import 'package:chat/widgets/plant_card_widget.dart';
 
+import '../utils//extension.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
-import 'package:chat/widgets/product_widget.dart';
+import 'package:chat/widgets/plant_card_widget.dart';
 import 'package:chat/widgets/room_card.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,7 +24,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/socket_service.dart';
-import 'package:rxdart/rxdart.dart';
 
 class RoomDetailPage extends StatefulWidget {
   final Room room;
@@ -37,15 +39,19 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     with SingleTickerProviderStateMixin {
   ScrollController _scrollController;
 
+  final plantService = new PlantsApiProvider();
+
+  final roomsApiProvider = new RoomsApiProvider();
+
   final List<Tab> myTabs = <Tab>[
     new Tab(text: 'Plants'),
     new Tab(text: 'Wind'),
     new Tab(text: 'Light'),
   ];
   TabController _tabController;
-  BehaviorSubject<Plant> roomSelect = BehaviorSubject<Plant>();
 
   Room room;
+  List<Plant> plants = [];
 
   @override
   void initState() {
@@ -56,35 +62,28 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     this._chargePlants();
   }
 
+  _chargePlants() async {
+    this.plants = await this.plantService.getPlantsRoom(widget.room.id);
+
+    //getJobFuture = roomBloc.getRooms(profile.user.uid);
+    room = roomBloc.getRoom(widget.room);
+    setState(() {});
+  }
+
   @override
   void dispose() {
     super.dispose();
+    _tabController?.dispose();
 
-    roomSelect?.close();
-  }
+    roomBloc.disposeRoom();
 
-  _chargePlants() async {
-    final roomId = widget.room.id;
-    await plantBloc.getPlants(roomId);
-
-    //getJobFuture = roomBloc.getRooms(profile.user.uid);
-    setState(() {});
+    plantBloc?.disposePlants();
   }
 
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-    final bloc = CustomProvider.plantBlocIn(context);
-
-    roomSelect = bloc.plantSelect;
-
-    print(roomSelect);
-
-    //final name = room.name.toLowerCase();
-
-    //  final nameFinal = name.isEmpty ? "" : name.capitalize();
-
+    String nameFinal = "";
     return Scaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -92,8 +91,19 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             stream: roomBloc.roomSelect.stream,
             builder: (context, AsyncSnapshot<Room> snapshot) {
               if (snapshot.hasData) {
-                room = snapshot.data;
-                return Container(child: Text(room.name));
+                return FutureBuilder<Room>(
+                    future: this.roomsApiProvider.getRoom(widget.room.id),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<Room> snapshot) {
+                      if (!snapshot.hasData) {
+                        return Text(nameFinal);
+                      } else {
+                        room = snapshot.data;
+                        nameFinal =
+                            room.name.isEmpty ? "" : room.name.capitalize();
+                        return Text(nameFinal);
+                      }
+                    });
               } else if (snapshot.hasError) {
                 return _buildErrorWidget(snapshot.error);
               } else {
@@ -142,16 +152,29 @@ class _RoomDetailPageState extends State<RoomDetailPage>
           stream: roomBloc.roomSelect.stream,
           builder: (context, AsyncSnapshot<Room> snapshot) {
             if (snapshot.hasData) {
-              room = snapshot.data;
-              return CustomScrollView(
-                  physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
-                  controller: _scrollController,
-                  slivers: <Widget>[
-                    makeHeaderInfo(context),
-                    makeHeaderTabs(context),
-                    makePlantCard(context)
-                  ]);
+              return FutureBuilder<Room>(
+                  future: this.roomsApiProvider.getRoom(widget.room.id),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<Room> snapshot) {
+                    if (!snapshot.hasData) {
+                      return CustomScrollView(
+                          physics: const BouncingScrollPhysics(
+                              parent: AlwaysScrollableScrollPhysics()),
+                          controller: _scrollController,
+                          slivers: <Widget>[makeHeaderLoading(context)]);
+                    } else {
+                      room = snapshot.data;
+                      return CustomScrollView(
+                          physics: const BouncingScrollPhysics(
+                              parent: AlwaysScrollableScrollPhysics()),
+                          controller: _scrollController,
+                          slivers: <Widget>[
+                            makeHeaderInfo(context),
+                            makeHeaderTabs(context),
+                            makeListPlants(context)
+                          ]);
+                    }
+                  });
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
             } else {
@@ -159,44 +182,8 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             }
           },
         ),
-      ),
-    );
-  }
 
-  SliverPersistentHeader makePlantCard(context) {
-    return SliverPersistentHeader(
-      pinned: false,
-      delegate: SliverAppBarDelegate(
-        minHeight: 150.0,
-        maxHeight: 150.0,
-        child: StreamBuilder<PlantsResponse>(
-          stream: plantBloc.subject.stream,
-          builder: (context, AsyncSnapshot<PlantsResponse> snapshot) {
-            if (snapshot.hasData) {
-              print(snapshot.data);
-              return (snapshot.data.plants.length > 0)
-                  ? _buildWidgetPlant(snapshot.data.plants)
-                  : Center(
-                      child: Text('not found'),
-                    );
-            } else if (snapshot.hasError) {
-              return _buildErrorWidget(snapshot.error);
-            } else {
-              return _buildLoadingWidget();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget makeRoomDetail(context) {
-    return SliverPersistentHeader(
-      pinned: false,
-      delegate: SliverAppBarDelegate(
-        minHeight: 200,
-        maxHeight: 200,
-        child: StreamBuilder<Room>(
+        /* StreamBuilder<Room>(
           stream: roomBloc.roomSelect.stream,
           builder: (context, AsyncSnapshot<Room> snapshot) {
             if (snapshot.hasData) {
@@ -207,7 +194,8 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   controller: _scrollController,
                   slivers: <Widget>[
                     makeHeaderInfo(context),
-                    makeHeaderTabs(context)
+                    makeHeaderTabs(context),
+                    makeListPlants(context)
                   ]);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
@@ -215,8 +203,52 @@ class _RoomDetailPageState extends State<RoomDetailPage>
               return _buildLoadingWidget();
             }
           },
-        ),
+        ), */
       ),
+    );
+  }
+
+  SliverFixedExtentList makePlantCard(context) {
+    return SliverFixedExtentList(
+      itemExtent: 100.0,
+      delegate: SliverChildListDelegate([
+        FutureBuilder(
+          future: this.plantService.getPlantsRoom(widget.room.id),
+          initialData: null,
+          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                  margin: EdgeInsets.only(
+                    left: 10,
+                  ),
+                  child: _buildWidgetPlant(snapshot.data)); // image is ready
+            } else {
+              return Container(
+                  height: 400.0,
+                  child: Center(
+                      child: CircularProgressIndicator())); // placeholder
+            }
+          },
+        ),
+        /* StreamBuilder<PlantsResponse>(
+          stream: plantBloc.subject.stream,
+          builder: (context, AsyncSnapshot<PlantsResponse> snapshot) {
+            if (snapshot.hasData) {
+              plants = snapshot.data.plants;
+
+              return (plants.length > 0)
+                  ? _buildWidgetPlant(plants)
+                  : Center(
+                      child: Text('not found'),
+                    );
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
+            } else {
+              return _buildLoadingWidget();
+            }
+          },
+        ), */
+      ]),
     );
   }
 
@@ -233,6 +265,16 @@ class _RoomDetailPageState extends State<RoomDetailPage>
         Text("Error occured: $error"),
       ],
     ));
+  }
+
+  SliverPersistentHeader makeHeaderLoading(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return SliverPersistentHeader(
+      pinned: false,
+      delegate: SliverAppBarDelegate(
+          minHeight: 200, maxHeight: 200, child: _buildLoadingWidget()),
+    );
   }
 
   SliverPersistentHeader makeHeaderInfo(context) {
@@ -351,8 +393,8 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         textColor: Colors.white54,
                         text: 'Editar room',
                         onPressed: () {
-                          Navigator.of(context).push(
-                              createRouteAddRoom(room, widget.rooms, true));
+                          Navigator.of(context).push(createRouteAddRoom(
+                              widget.room, widget.rooms, true));
                         }),
                   ),
                 )
@@ -362,23 +404,56 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     );
   }
 
-  Widget _buildWidgetPlant(data) {
-    print(data);
+  Widget _buildWidgetPlant(plants) {
     return Container(
       child: SizedBox(
         child: ListView.builder(
-            itemCount: data.length,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: plants.length,
             itemBuilder: (BuildContext ctxt, int index) {
-              return CardProduct(index: index);
+              final plant = plants[index];
+              return InkWell(
+                  onTap: () => {
+                        Navigator.of(context).push(createRouteNewPlant(
+                            plant, plants, widget.room, true)),
+                      },
+                  child: Stack(
+                    children: [
+                      CardPlant(plant: plant),
+                      _buildCircleFavoriteProduct(plant.quantity),
+                    ],
+                  ));
             }),
       ),
     );
   }
 
+  Container _buildCircleFavoriteProduct(String quantity) {
+    final size = MediaQuery.of(context).size;
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return Container(
+        alignment: Alignment.centerRight,
+        padding: EdgeInsets.all(5.0),
+        margin: EdgeInsets.only(left: size.width / 1.20, top: 0),
+        width: 50,
+        height: 50,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          child: CircleAvatar(
+              child: Text(
+                '$quantity',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              backgroundColor: currentTheme.accentColor),
+        ));
+  }
+
   createModalSelection() {
     final currentTheme =
         Provider.of<ThemeChanger>(context, listen: false).currentTheme;
-
+    final plant = new Plant();
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
@@ -415,7 +490,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   child: Text(
                     "Create",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(
@@ -431,13 +506,17 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                 Material(
                   color: currentTheme.scaffoldBackgroundColor,
                   child: InkWell(
-                    onTap: () => {},
+                    onTap: () => {
+                      Navigator.of(context).pop(),
+                      Navigator.of(context).push(createRouteNewPlant(
+                          plant, plants, widget.room, false)),
+                    },
                     child: ListTile(
                       leading: Icon(Icons.local_florist,
-                          size: 30, color: currentTheme.accentColor),
+                          size: 25, color: currentTheme.accentColor),
                       title: Text(
                         'Flower',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 18),
                       ),
                       trailing: IconButton(
                         icon: Icon(
@@ -469,10 +548,10 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     onTap: () => {},
                     child: ListTile(
                       leading: FaIcon(FontAwesomeIcons.wind,
-                          size: 30, color: currentTheme.accentColor),
+                          size: 25, color: currentTheme.accentColor),
                       title: Text(
                         'Aire',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 18),
                       ),
                       trailing: IconButton(
                         icon: Icon(
@@ -504,10 +583,10 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     onTap: () => {},
                     child: ListTile(
                       leading: FaIcon(FontAwesomeIcons.lightbulb,
-                          size: 30, color: currentTheme.accentColor),
+                          size: 25, color: currentTheme.accentColor),
                       title: Text(
                         'Luz',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 18),
                       ),
                       trailing: IconButton(
                         icon: Icon(
@@ -551,6 +630,39 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     Navigator.pop(context);
   }
 
+  SliverList makeListPlants(context) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Container(
+          child: FutureBuilder(
+            future: this.plantService.getPlantsRoom(widget.room.id),
+            initialData: null,
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              if (snapshot.hasData) {
+                return (snapshot.data.length > 0)
+                    ? Container(
+                        margin: EdgeInsets.only(
+                          left: 10,
+                        ),
+                        child: _buildWidgetPlant(snapshot.data))
+                    : Center(
+                        child: Container(
+                            padding: EdgeInsets.all(50),
+                            child: Text('No Plants, add new')),
+                      ); // image is ready
+              } else {
+                return Container(
+                    height: 400.0,
+                    child: Center(
+                        child: CircularProgressIndicator())); // placeholder
+              }
+            },
+          ),
+        ),
+      ]),
+    );
+  }
+
   SliverPersistentHeader makeHeaderTabs(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
@@ -563,7 +675,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
           length: 3,
           child: Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.black,
+              backgroundColor: currentTheme.scaffoldBackgroundColor,
               bottom: TabBar(
                   indicatorWeight: 3.0,
                   indicatorColor: currentTheme.accentColor,
@@ -619,10 +731,15 @@ Route createRouteProfile() {
   );
 }
 
-Route createRouteNewProduct(Room room) {
+Route createRouteNewPlant(
+    Plant plant, List<Plant> plants, Room room, bool isEdit) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>
-        NewProductPage(room: room),
+    pageBuilder: (context, animation, secondaryAnimation) => AddUpdatePlantPage(
+      plant: plant,
+      plants: plants,
+      room: room,
+      isEdit: isEdit,
+    ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

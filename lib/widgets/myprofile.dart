@@ -23,8 +23,6 @@ import '../utils//extension.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-import 'product_widget.dart';
-
 class MyProfile extends StatefulWidget {
   MyProfile({
     Key key,
@@ -233,7 +231,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                     ? makeHeaderInfo(context)
                     : makeHeaderSpacer(context),
                 if (!widget.isUserEdit) makeHeaderTabs(context),
-                SliverList(
+                /* SliverList(
                   delegate: SliverChildListDelegate(
                       List<Widget>.generate(10, (int i) {
                     return Stack(
@@ -244,7 +242,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       ],
                     );
                   })),
-                ),
+                ), */
               ]),
         ),
       ),
@@ -348,7 +346,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
           stream: roomBloc.subject.stream,
           builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
             if (snapshot.hasData) {
-              print(snapshot.data);
               return _buildWidgetProduct(snapshot.data.rooms);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
@@ -495,7 +492,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   }
 
   Widget _buildWidgetProduct(data) {
-    print(data);
     return Container(
       child: SizedBox(
         child: ListView.builder(
@@ -734,7 +730,6 @@ class _SABTState extends State<SABT> {
 }
 
 RichText convertHashtag(String text, Color color) {
-  print(text);
   List<String> split = text.split(RegExp("#"));
 
   List<String> hashtags = split.getRange(1, split.length).fold([], (t, e) {

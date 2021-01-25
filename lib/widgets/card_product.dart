@@ -15,8 +15,6 @@ class InfoPage extends StatefulWidget {
 class _InforPageState extends State<InfoPage> {
   @override
   Widget build(BuildContext context) {
-    print(widget.index);
-
     return Column(
       children: <Widget>[
         Stack(

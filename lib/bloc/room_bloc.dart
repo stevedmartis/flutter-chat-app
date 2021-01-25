@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:chat/bloc/validators.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
-import 'package:chat/models/ventilation.dart';
+import 'package:chat/models/fromPlant.dart';
 import 'package:chat/repository/rooms_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -31,15 +31,14 @@ class RoomBloc with Validators {
   final BehaviorSubject<Room> _roomSelect = BehaviorSubject<Room>();
 
   getRooms(String userId) async {
-    print(userId);
     RoomsResponse response = await _repository.getRooms(userId);
-    _subject.sink.add(response);
+
+    if (!_subject.isClosed) _subject.sink.add(response);
   }
 
   getRoom(Room room) async {
-    print(room);
-    //RoomsResponse response = await _repository.getRooms(userId);
-    _roomSelect.sink.add(room);
+    Room response = await _repository.getRoom(room.id);
+    _roomSelect.sink.add(response);
   }
 
   BehaviorSubject<Room> get roomSelect => _roomSelect;
@@ -116,7 +115,7 @@ class RoomBloc with Validators {
 
   dispose() {
     _subject.close();
-    _roomSelect.close();
+    _roomSelect?.close();
     _nameController?.close();
     _ventilationController?.close();
     _co2Controller?.close();
@@ -135,17 +134,13 @@ class RoomBloc with Validators {
     //  _roomsController?.close();
   }
 
+  disposeRoom() {
+    _roomSelect?.close();
+  }
+
   disposeRooms() {
     _roomsController?.close();
-    _co2Controller?.close();
-    _co2ControlController?.close();
-    _descriptionController?.close();
-    _nameController?.close();
-    _wideController?.close();
-    _longController?.close();
-    _tallController?.close();
-    _timeOnController?.close();
-    _timeOffController?.close();
+    _subject?.close();
   }
 }
 

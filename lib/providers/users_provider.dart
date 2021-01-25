@@ -7,7 +7,6 @@ import 'dart:async';
 
 class UsersProvider {
   Future<ProfilesResponse> getSearchPrincipalByQuery(String query) async {
-    print(query);
     try {
       final resp = await http.get(
         '${Environment.apiUrl}/search/principal/$query',

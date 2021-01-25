@@ -1,9 +1,5 @@
 import 'dart:convert';
 
-import 'package:chat/models/image.dart';
-import 'package:chat/models/room.dart';
-import 'package:chat/models/usuario.dart';
-
 Plant plantFromJson(String str) => Plant.fromJson(json.decode(str));
 
 String plantToJson(Plant data) => json.encode(data.toJson());
@@ -14,67 +10,71 @@ class Plant {
       this.user,
       this.name = "",
       this.description = "",
-      this.quantity,
-      this.sexo,
-      this.genoType,
-      this.germinated,
-      this.flowering,
-      this.pot,
-      this.images,
+      this.quantity = "",
+      this.sexo = "0",
+      this.genotype = "",
+      this.germinated = "",
+      this.flowering = "",
+      this.pot = "",
       this.room,
-      this.cbd,
-      this.thc,
+      this.cbd = "",
+      this.thc = "",
+      this.createdAt,
+      this.updatedAt,
+      isRoute,
       init()});
 
   String id;
   String name;
   String description;
-  int quantity;
+  String quantity;
 
   String sexo;
-  String genoType;
-  int cbd;
-  int thc;
-  User user;
-  Room room;
-  DateTime germinated;
-  DateTime flowering;
-  int pot;
-  List<Image> images;
+  String genotype;
+  String cbd;
+  String thc;
+  String user;
+  String room;
+  String germinated;
+  String flowering;
+  String pot;
+
   DateTime createdAt;
   DateTime updatedAt;
 
   factory Plant.fromJson(Map<String, dynamic> json) => new Plant(
         id: json["id"],
-        user: User.fromJson(json["user"]),
-        room: Room.fromJson(json["user"]),
+        user: json['user'],
+        room: json['room'],
         name: json["name"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        updatedAt: DateTime.parse(json["updatedAt"]),
         description: json["description"],
         quantity: json["quantity"],
         sexo: json["sexo"],
-        genoType: json["genoType"],
+        genotype: json["genotype"],
         germinated: json["germinated"],
         flowering: json["flowering"],
         pot: json["pot"],
         cbd: json["cbd"],
         thc: json["thc"],
-        images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+        //images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "user": user.toJson(),
-        "room": room.toJson(),
+        "user": user,
+        "room": room,
         "name": name,
         "description": description,
         "quantity": quantity,
-        "sexo": "sexo",
-        "genoType": "genoType",
-        "germinated": "germinated",
-        "flowering": "flowering",
-        "pot": "port",
-        "cbd": "cbd",
-        "thc": "thc",
-        "images": List<Image>.from(images.map((x) => x)),
+        "sexo": sexo,
+        "genotype": genotype,
+        "germinated": germinated,
+        "flowering": flowering,
+        "pot": pot,
+        "cbd": cbd,
+        "thc": thc,
+        // "images": List<Image>.from(images.map((x) => x)),
       };
 }

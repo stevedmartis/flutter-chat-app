@@ -48,6 +48,11 @@ class _RoomsListPageState extends State<RoomsListPage> {
     this.bottomControll();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   bottomControll() {
     _isVisible = true;
     _hideBottomNavController = ScrollController();
@@ -85,8 +90,8 @@ class _RoomsListPageState extends State<RoomsListPage> {
     final authService = Provider.of<AuthService>(context, listen: false);
 
     profile = authService.profile;
+    this.rooms = await this.roomService.getRoomsUser(profile.user.uid);
     roomBloc.getRooms(profile.user.uid);
-    //getJobFuture = roomBloc.getRooms(profile.user.uid);
     setState(() {});
   }
 
@@ -144,7 +149,29 @@ class _RoomsListPageState extends State<RoomsListPage> {
               builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
                 if (snapshot.hasData) {
                   rooms = snapshot.data.rooms;
-                  return _buildRoomWidget();
+                  return FutureBuilder(
+                    future: this.roomService.getRoomsUser(profile.user.uid),
+                    initialData: null,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<List> snapshot) {
+                      if (snapshot.hasData) {
+                        // rooms = snapshot.data;
+                        return (snapshot.data.length > 0)
+                            ? Container(child: _buildRoomWidget(snapshot.data))
+                            : Center(
+                                child: Container(
+                                    padding: EdgeInsets.all(50),
+                                    child: Text('No Plants, add new')),
+                              ); // image is ready
+                      } else {
+                        return Container(
+                            height: 400.0,
+                            child: Center(
+                                child:
+                                    CircularProgressIndicator())); // placeholder
+                      }
+                    },
+                  );
                 } else if (snapshot.hasError) {
                   return _buildErrorWidget(snapshot.error);
                 } else {
@@ -166,11 +193,6 @@ class _RoomsListPageState extends State<RoomsListPage> {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   _deleteRoom(String id, int index) async {
     final res = await this.roomService.deleteRoom(id);
     if (res) {
@@ -181,7 +203,9 @@ class _RoomsListPageState extends State<RoomsListPage> {
     }
   }
 
-  Widget _buildRoomWidget() {
+  Widget _buildRoomWidget(rooms) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
       child: ReorderableListView(
           padding: EdgeInsets.only(top: 20),
@@ -201,7 +225,6 @@ class _RoomsListPageState extends State<RoomsListPage> {
                     GestureDetector(
                       key: Key(item.id),
                       onTap: () => {
-                        roomBloc.getRoom(item),
                         Navigator.of(context)
                             .push(createRouteRoomDetail(item, rooms)),
                       },
@@ -239,16 +262,16 @@ class _RoomsListPageState extends State<RoomsListPage> {
                               ],
                             )),
                         child: CustomListItemTwoRoom(
-                          title: item.name,
-                          subtitle: item.description,
-                          wide: '${item.wide}',
-                          long: '${item.long}',
-                          tall: '${item.tall}',
-                          timeOn: item.timeOn,
-                          timeOff: item.timeOff,
-                          publishDate: 'Dec 28',
-                          readDuration: '5 mins',
-                        ),
+                            title: item.name,
+                            subtitle: item.description,
+                            wide: '${item.wide}',
+                            long: '${item.long}',
+                            tall: '${item.tall}',
+                            timeOn: item.timeOn,
+                            timeOff: item.timeOff,
+                            publishDate: 'Dec 28',
+                            readDuration: '5 mins',
+                            totalProducts: item.totalItems),
 
                         /* ListTile(
                         selectedTileColor: currentTheme.accentColor,
@@ -280,10 +303,8 @@ class _RoomsListPageState extends State<RoomsListPage> {
                       height: 1.0,
                       child: Center(
                         child: Container(
-                          margin:
-                              EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
                           height: 2.0,
-                          color: Colors.white60.withOpacity(0.10),
+                          color: currentTheme.scaffoldBackgroundColor,
                         ),
                       ),
                     ),
@@ -300,8 +321,6 @@ class _RoomsListPageState extends State<RoomsListPage> {
                   final Room item = rooms.removeAt(oldIndex);
                   item.position = newIndex;
                   rooms.insert(newIndex, item);
-
-                  print(rooms);
                 }),
                 _updateRoom(rooms, newIndex, context, profile.user.uid)
               }),
@@ -505,7 +524,6 @@ Route createRouteRoomDetail(Room room, List<Room> rooms) {
 }
 
 Route createRouteAddRoom(Room room, List<Room> rooms, bool isEdit) {
-  print(room);
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
         AddRoomPage(room: room, rooms: rooms, isEdit: isEdit),

@@ -8,8 +8,5 @@ class AppleSignInService {
         AppleIDAuthorizationScopes.fullName,
       ],
     );
-
-    print(credential);
-    print(credential.authorizationCode);
   }
 }

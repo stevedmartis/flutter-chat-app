@@ -103,10 +103,9 @@ class _MediaGridState extends State<MediaGrid> {
 //load the album list
       List<AssetPathEntity> albums =
           await PhotoManager.getAssetPathList(onlyAll: true);
-      print(albums);
+
       List<AssetEntity> media =
           await albums[0].getAssetListPaged(currentPage, 60);
-      print(media);
 
       List<Widget> temp = [];
       for (var item in media) {

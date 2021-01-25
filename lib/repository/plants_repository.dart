@@ -1,4 +1,4 @@
-import 'package:chat/models/plant_response.dart';
+import 'package:chat/models/plants_response.dart';
 import 'package:chat/providers/plants_provider.dart';
 
 class PlantsRepository {

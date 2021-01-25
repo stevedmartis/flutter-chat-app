@@ -96,22 +96,14 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
 
       final fileType = pickedFile.path.split('.');
 
-      print(fileType);
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.uploadImageHeader(
           widget.profile.user.uid, fileType[0], fileType[1], imageHeader);
 
-      print(resp);
-
       setState(() {
-        // Navigator.pushReplacementNamed(context, 'profile_edit');
         authService.profile.imageHeader = resp;
         awsService.isUpload = true;
-        //Navigator.of(context).popUntil(ModalRoute.withName('profile-edit'));
-        // Navigator.of(context).popUntil(ModalRoute.withName('/profile-edit'));
-
-        //  Navigator.of(context).pop();
       });
 
 /*       Navigator.pushAndRemoveUntil(

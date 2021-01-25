@@ -6,26 +6,24 @@ import 'dart:convert';
 
 import 'package:chat/models/plant.dart';
 
-PlantsResponse plantsResponseFromJson(String str) =>
-    PlantsResponse.fromJson(json.decode(str));
+PlantResponse plantResponseFromJson(String str) =>
+    PlantResponse.fromJson(json.decode(str));
 
-String plantsResponseToJson(PlantsResponse data) => json.encode(data.toJson());
+String plantResponseToJson(PlantResponse data) => json.encode(data.toJson());
 
-class PlantsResponse {
-  PlantsResponse({this.ok, this.plants});
+class PlantResponse {
+  PlantResponse({this.ok, this.plant});
 
   bool ok;
-  List<Plant> plants;
+  Plant plant;
 
-  factory PlantsResponse.fromJson(Map<String, dynamic> json) => PlantsResponse(
-        ok: json["ok"],
-        plants: List<Plant>.from(json["plants"].map((x) => Plant.fromJson(x))),
-      );
+  factory PlantResponse.fromJson(Map<String, dynamic> json) =>
+      PlantResponse(ok: json["ok"], plant: Plant.fromJson(json["plant"]));
 
   Map<String, dynamic> toJson() => {
         "ok": ok,
-        "plants": List<dynamic>.from(plants.map((x) => x.toJson())),
+        "plant": plant.toJson(),
       };
 
-  PlantsResponse.withError(String errorValue);
+  PlantResponse.withError(String errorValue);
 }

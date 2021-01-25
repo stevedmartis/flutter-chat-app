@@ -10,7 +10,6 @@ import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/header_custom_search.dart';
 import 'package:chat/widgets/menu_drawer.dart';
-import 'package:chat/widgets/product_widget.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -34,6 +33,11 @@ class _PrincipalPageState extends State<PrincipalPage> {
   initState() {
     super.initState();
     this.bottomControll();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   bottomControll() {
@@ -299,7 +303,7 @@ class _CollapsingListState extends State<CollapsingList>
                 ),
               ),
  */
-        SliverList(
+        /* SliverList(
           delegate: SliverChildListDelegate(List<Widget>.generate(10, (int i) {
             return Stack(
               children: [
@@ -316,7 +320,7 @@ class _CollapsingListState extends State<CollapsingList>
               ],
             );
           })),
-        ),
+        ), */
 
         //makeProductsCard(context)
 /*  s */
@@ -447,7 +451,6 @@ SliverPersistentHeader makeProductsCard(context) {
         stream: roomBloc.subject.stream,
         builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
           if (snapshot.hasData) {
-            print(snapshot.data);
             return _buildWidgetProduct(snapshot.data.rooms);
           } else if (snapshot.hasError) {
             return _buildErrorWidget(snapshot.error);
@@ -476,7 +479,6 @@ Widget _buildErrorWidget(String error) {
 }
 
 Widget _buildWidgetProduct(data) {
-  print(data);
   return Container(
     child: SizedBox(
       child: ListView.builder(
@@ -575,7 +577,7 @@ final List<Widget> imageSliders = imgList
                         padding: EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 20.0),
                         child: Text(
-                          'No. ${imgList.indexOf(item)} image',
+                          '',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20.0,

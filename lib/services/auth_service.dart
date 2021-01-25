@@ -39,9 +39,6 @@ class AuthService with ChangeNotifier {
           webAuthenticationOptions: WebAuthenticationOptions(
               clientId: clientId, redirectUri: Uri.parse(redirectUri)));
 
-      print(credential);
-      print(credential.authorizationCode);
-
       final useBundleId = Platform.isIOS ? true : false;
 
       final res = await this.siginWithApple(
@@ -118,7 +115,6 @@ class AuthService with ChangeNotifier {
       final loginResponse = loginResponseFromJson(resp.body);
       this.profile = loginResponse.profile;
 
-      print(this.profile);
       await this._guardarToken(loginResponse.token);
       // this.authenticated = true;
 
@@ -136,13 +132,9 @@ class AuthService with ChangeNotifier {
     try {
       final account = await _googleSignIn.signIn();
 
-      print(account);
-
       final googleKey = await account.authentication;
 
-      print(googleKey.idToken);
       final authBack = await siginWithGoogleBack(googleKey.idToken);
-      print(authBack);
 
       return authBack;
     } catch (e) {
@@ -169,7 +161,6 @@ class AuthService with ChangeNotifier {
       final loginResponse = loginResponseFromJson(resp.body);
       this.profile = loginResponse.profile;
 
-      print(this.profile);
       await this._guardarToken(loginResponse.token);
       // this.authenticated = true;
 

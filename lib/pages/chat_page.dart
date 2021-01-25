@@ -134,7 +134,6 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   void _chargeRecord(String userId) async {
     List<Message> chat = await this.chatService.getChat(userId);
 
-    print(chat);
     final history = chat.map((m) => new ChatMessage(
           text: m.message,
           uid: m.by,

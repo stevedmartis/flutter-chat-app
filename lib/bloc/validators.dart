@@ -31,6 +31,14 @@ class Validators {
       sink.addError('Name is required');
     }
   });
+  final validationQuantityRequired =
+      StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+    if (text.length >= 1) {
+      sink.add(text);
+    } else {
+      sink.addError('Quantity is required');
+    }
+  });
 
   final validationWideRequired =
       StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {

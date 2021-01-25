@@ -99,8 +99,6 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
       final resp = await awsService.uploadImageAvatar(
           widget.profile.user.uid, fileType[0], fileType[1], image);
 
-      print(resp);
-
       authService.profile.imageAvatar = resp;
 
       Navigator.pop(context);

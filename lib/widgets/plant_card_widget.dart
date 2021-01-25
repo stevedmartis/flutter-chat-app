@@ -1,16 +1,18 @@
+import 'package:chat/models/plant.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../utils/extension.dart';
 
-class CardProduct extends StatefulWidget {
-  final int index;
+class CardPlant extends StatefulWidget {
+  final Plant plant;
 
-  CardProduct({this.index});
+  CardPlant({this.plant});
   @override
-  _CardProductState createState() => _CardProductState();
+  _CardPlantState createState() => _CardPlantState();
 }
 
-class _CardProductState extends State<CardProduct> {
+class _CardPlantState extends State<CardPlant> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -20,7 +22,7 @@ class _CardProductState extends State<CardProduct> {
       children: <Widget>[
         Container(
           color: currentTheme.scaffoldBackgroundColor,
-          padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+          padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 5.0),
           width: size.height / 1.5,
           child: FittedBox(
             child: Card(
@@ -35,8 +37,8 @@ class _CardProductState extends State<CardProduct> {
                 children: <Widget>[
                   juiceitem(),
                   Container(
-                    width: 100,
-                    height: 100,
+                    width: 150,
+                    height: 150,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15.0),
                       child: Image(
@@ -58,77 +60,29 @@ class _CardProductState extends State<CardProduct> {
   Widget juiceitem() {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
+    final thc = (widget.plant.thc.isEmpty) ? '0' : widget.plant.thc;
+    final cbd = (widget.plant.cbd.isEmpty) ? '0' : widget.plant.cbd;
     return Container(
       //width: 150,
       child: Column(
         //mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
+          /*  Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
-                child: Container(
-                  padding: EdgeInsets.all(2.5),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    //color: Theme.of(context).accentColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    "-32%",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 10,
-                        color: Colors.white),
-                  ),
-                ),
-              ),
-              Text(
-                "",
-                style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 7,
-                    color: Colors.grey),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Icon(
-                Icons.star,
-                size: 10,
-                color: Colors.orangeAccent,
-              ),
-              Icon(
-                Icons.star,
-                size: 10,
-                color: Colors.orangeAccent,
-              ),
-              Icon(
-                Icons.star,
-                size: 10,
-                color: Colors.orangeAccent,
-              ),
-              Icon(
-                Icons.star,
-                size: 10,
-                color: Colors.orangeAccent,
-              ),
-              Icon(
-                Icons.star,
-                size: 10,
-                color: Colors.orangeAccent,
-              ),
+              
+            
             ],
-          ),
+          ), */
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5),
             child: Text(
-              "Fresh Mango Juice",
+              widget.plant.name.capitalize(),
               style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 15, color: Colors.red),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: currentTheme.accentColor),
             ),
           ),
           SizedBox(
@@ -138,7 +92,9 @@ class _CardProductState extends State<CardProduct> {
             padding: EdgeInsets.symmetric(horizontal: 5),
             width: size.width / 2.0,
             child: Text(
-              "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour.",
+              (widget.plant.description.length > 0)
+                  ? widget.plant.description.capitalize()
+                  : "No description",
               overflow: TextOverflow.ellipsis,
               maxLines: 3,
               style: TextStyle(
@@ -160,58 +116,70 @@ class _CardProductState extends State<CardProduct> {
                   padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
                   child: Container(
                     padding: EdgeInsets.all(2.5),
-                    decoration: BoxDecoration(
-                      color: currentTheme.scaffoldBackgroundColor,
-                      //color: Theme.of(context).accentColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
                     child: Text(
-                      "\$ 4.990",
+                      "THC:",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 15,
+                          fontSize: 10,
                           color: Colors.white),
                     ),
                   ),
                 ),
-                /* Icon(
-                  Icons.favorite,
-                  size: 15,
-                ), */
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
+                  child: Container(
+                    padding: EdgeInsets.all(2.5),
+                    decoration: BoxDecoration(
+                      color: Color(0xffF12937E),
+                      //color: Theme.of(context).accentColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      "$thc %",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
+                  child: Container(
+                    padding: EdgeInsets.all(2.5),
+                    child: Text(
+                      "CBD:",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
+                  child: Container(
+                    padding: EdgeInsets.all(2.5),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      //color: Theme.of(context).accentColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      "$cbd %",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
                 SizedBox(
                   width: 10,
                 ),
-                /*  Container(
-                  width: 35,
-                  decoration: BoxDecoration(
-                    color: Colors.lightBlue[100],
-                    //color: Theme.of(context).accentColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Cold",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-                  ),
-                ), */
                 SizedBox(
                   width: 5,
                 ),
-                /* Container(
-                  width: 35,
-                  decoration: BoxDecoration(
-                    color: Colors.red[100],
-                    //color: Theme.of(context).accentColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Fresh",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-                  ),
-                ), */
                 SizedBox(
                   width: 5,
                 ),

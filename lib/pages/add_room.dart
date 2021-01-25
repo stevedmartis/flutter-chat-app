@@ -61,7 +61,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
 
   bool isCo2Change = false;
   bool isCo2ControlChange = false;
-
+  bool loading = false;
   String dropdownValue = 'Ventilación';
 
   String _hourOn, _minuteOn, _timeOn;
@@ -219,7 +219,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     descriptionCtrl.dispose();
     _timeOnController.dispose();
     _timeOffController.dispose();
-    roomBloc.disposeRooms();
+    roomBloc.disposeRoom();
     super.dispose();
   }
 
@@ -250,9 +250,12 @@ class AddRoomPagePageState extends State<AddRoomPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         actions: [
-          (widget.isEdit)
-              ? _createButton(bloc, isControllerChangeEdit)
-              : _createButton(bloc, isControllerChange),
+          if (!loading)
+            (widget.isEdit)
+                ? _createButton(bloc, isControllerChangeEdit)
+                : _createButton(bloc, isControllerChange)
+          else
+            _buildLoadingWidget()
         ],
         leading: IconButton(
           icon: Icon(
@@ -326,7 +329,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                                       controller: _timeOnController,
                                       keyboardType: TextInputType.datetime,
                                       decoration: InputDecoration(
-                                        hintText: 'Time on',
+                                        hintText: 'Time on *',
                                         prefixIcon: Icon(
                                           Icons.wb_incandescent,
                                           color: Colors.white,
@@ -344,7 +347,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                                       controller: _timeOffController,
                                       keyboardType: TextInputType.datetime,
                                       decoration: InputDecoration(
-                                        hintText: 'Time off',
+                                        hintText: 'Time off *',
                                         prefixIcon: Icon(
                                           Icons.bedtime,
                                           color: Colors.white,
@@ -392,6 +395,13 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     );
   }
 
+  Widget _buildLoadingWidget() {
+    return Container(
+        padding: EdgeInsets.all(10),
+        height: 200.0,
+        child: Center(child: CircularProgressIndicator()));
+  }
+
   Widget _createName(RoomBloc bloc) {
     return StreamBuilder(
       stream: bloc.nameStream,
@@ -411,7 +421,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                       const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Name',
+                labelText: 'Name *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeName,
@@ -457,56 +467,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
   }
 
 /* 
-  Widget _createVentilation(RoomBloc bloc) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    final size = MediaQuery.of(context).size;
 
-    return StreamBuilder(
-      stream: bloc.ventilationStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
-          height: 60,
-          width: size.width,
-          child: DropdownButton<String>(
-            value: dropdownValue,
-            icon: Container(child: Icon(Icons.expand_more)),
-            iconSize: 24,
-            elevation: 50,
-            style: TextStyle(
-                fontSize: 17,
-                color: (dropdownValue == 'Ventilación')
-                    ? Colors.white.withOpacity(0.65)
-                    : currentTheme.accentColor),
-            underline: Container(
-              height: 1.5,
-              color: Colors.white.withOpacity(0.30),
-            ),
-            onChanged: (String newValue) {
-              FocusScope.of(context).unfocus();
-              setState(() {
-                dropdownValue = newValue;
-              });
-            },
-            items: <String>[
-              'Ventilación',
-              'Ventilador',
-              'Extracción',
-              'Intractor',
-              'Aire acondicionado'
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(
-                  value,
-                ),
-              );
-            }).toList(),
-          ),
-        );
-      },
-    );
-  }
 
   Widget _createKelvin(RoomBloc bloc) {
     // final size = MediaQuery.of(context).size;
@@ -559,7 +520,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                       const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Wide',
+                labelText: 'Wide *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeWide,
@@ -620,7 +581,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                       const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Long',
+                labelText: 'Long *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeLong,
@@ -650,7 +611,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                       const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Tall',
+                labelText: 'Tall *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeTall,
@@ -788,7 +749,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                 ),
               ),
             ),
-            onTap: isControllerChange && !isInvalid
+            onTap: isControllerChange && !isInvalid && !loading
                 ? () => {
                       FocusScope.of(context).unfocus(),
                       (widget.isEdit) ? _editRoom(bloc) : _createRoom(bloc),
@@ -799,8 +760,9 @@ class AddRoomPagePageState extends State<AddRoomPage> {
   }
 
   _createRoom(RoomBloc bloc) async {
+    loading = true;
+
     final roomService = Provider.of<RoomService>(context, listen: false);
-    final socketService = Provider.of<SocketService>(context, listen: false);
     final authService = Provider.of<AuthService>(context, listen: false);
     final profile = authService.profile;
 
@@ -837,17 +799,23 @@ class AddRoomPagePageState extends State<AddRoomPage> {
 
     if (createRoomRes != null) {
       if (createRoomRes.ok) {
-        socketService.connect();
-
         widget.rooms.add(createRoomRes.room);
-        setState(() {});
-
+        setState(() {
+          loading = false;
+        });
+        roomBloc.getRoom(widget.room);
         roomBloc.getRooms(profile.user.uid);
         Navigator.pop(context);
       } else {
+        setState(() {
+          loading = false;
+        });
         mostrarAlerta(context, 'Error', createRoomRes.msg);
       }
     } else {
+      setState(() {
+        loading = false;
+      });
       mostrarAlerta(
           context, 'Error del servidor', 'lo sentimos, Intentelo mas tarde');
     }
@@ -855,6 +823,8 @@ class AddRoomPagePageState extends State<AddRoomPage> {
   }
 
   _editRoom(RoomBloc bloc) async {
+    loading = true;
+
     final roomService = Provider.of<RoomService>(context, listen: false);
     final authService = Provider.of<AuthService>(context, listen: false);
     final profile = authService.profile;
@@ -892,16 +862,24 @@ class AddRoomPagePageState extends State<AddRoomPage> {
 
       if (editRoomRes != null) {
         if (editRoomRes.ok) {
-          // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
-          setState(() {});
           // room = editRoomRes.room;
+
+          setState(() {
+            loading = false;
+          });
           roomBloc.getRoom(editRoomRes.room);
           roomBloc.getRooms(profile.user.uid);
           Navigator.pop(context);
         } else {
+          setState(() {
+            loading = false;
+          });
           mostrarAlerta(context, 'Error', editRoomRes.msg);
         }
       } else {
+        setState(() {
+          loading = false;
+        });
         mostrarAlerta(
             context, 'Error del servidor', 'lo sentimos, Intentelo mas tarde');
       }
