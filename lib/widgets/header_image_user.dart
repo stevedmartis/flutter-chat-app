@@ -40,24 +40,16 @@ class _ImageHeaderExpandedState extends State<ImageHeaderExpanded> {
     return ClipRRect(
         borderRadius: BorderRadius.circular(8.0),
         clipBehavior: Clip.antiAlias,
-        child: (widget.profile.imageHeader != "")
-            ? InteractiveViewer(
-                panEnabled: false, // Set it to false to prevent panning.
-                boundaryMargin: EdgeInsets.all(80),
-                minScale: 0.5,
-                maxScale: 4,
-                child: Image(
-                  image: NetworkImage(widget.profile.getHeaderImg()),
-                  fit: BoxFit.cover,
-                  width: double.maxFinite,
-                ),
-              )
-            : Container(
-                child: Image(
-                  image: AssetImage('assets/images/empty_image.png'),
-                  fit: BoxFit.cover,
-                  width: double.maxFinite,
-                ),
-              ));
+        child: InteractiveViewer(
+          panEnabled: false, // Set it to false to prevent panning.
+          boundaryMargin: EdgeInsets.all(80),
+          minScale: 0.5,
+          maxScale: 4,
+          child: Image(
+            image: NetworkImage(widget.profile.getHeaderImg()),
+            fit: BoxFit.cover,
+            width: double.maxFinite,
+          ),
+        ));
   }
 }

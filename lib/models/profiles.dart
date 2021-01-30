@@ -68,7 +68,7 @@ class Profiles {
     if (imageHeader == "") {
       var imageDefault =
           "https://images-cdn-br.s3-sa-east-1.amazonaws.com/default_banner.jpeg";
-      var isEmpty = true;
+
       return imageDefault;
     } else {
       return imageHeader;

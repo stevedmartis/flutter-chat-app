@@ -1,3 +1,4 @@
+import 'package:chat/bloc/profile_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
@@ -67,20 +68,17 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
         ],
       ),
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // bottomNavigationBar: (widget.isUserAuth)
-
-          Material(
-            type: MaterialType.transparency,
-            child: ImageHeaderExpanded(
-              width: 100,
-              height: 100,
-              profile: widget.profile,
-              fontsize: 100,
-            ),
+      body: Hero(
+        tag: widget.profile.imageHeader,
+        child: Material(
+          type: MaterialType.transparency,
+          child: ImageHeaderExpanded(
+            width: 100,
+            height: 100,
+            profile: widget.profile,
+            fontsize: 100,
           ),
-        ],
+        ),
       ),
     );
   }
@@ -102,6 +100,7 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
           widget.profile.user.uid, fileType[0], fileType[1], imageHeader);
 
       setState(() {
+        profileBloc.imageUpdate.add(true);
         authService.profile.imageHeader = resp;
         awsService.isUpload = true;
       });

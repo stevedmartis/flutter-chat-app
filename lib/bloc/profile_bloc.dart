@@ -9,6 +9,7 @@ class ProfileBloc with Validators {
   final _nameController = BehaviorSubject<String>();
   final _lastNameController = BehaviorSubject<String>();
   final _aboutController = BehaviorSubject<String>();
+  final _imageUpdateCtrl = BehaviorSubject<bool>();
 
   // Recuperar los datos del Stream
   Stream<String> get emailStream =>
@@ -22,9 +23,13 @@ class ProfileBloc with Validators {
   Stream<String> get aboutStream => _aboutController.stream;
   Stream<String> get lastNameStream => _lastNameController.stream;
 
+  //Stream<bool> get imageUpdate => _imageUpdateCtrl.stream;
   /*  Stream<bool> get formValidStream => Observable.combineLatest3(
       emailStream, nameStream, usernameSteam, (e, n, u) => true);
  */
+
+  BehaviorSubject<bool> get imageUpdate => _imageUpdateCtrl;
+
   Stream<bool> get formValidStream => CombineLatestStream.combine3(
       emailStream, nameStream, usernameSteam, (e, n, u) => true);
 
@@ -46,6 +51,7 @@ class ProfileBloc with Validators {
   String get about => _aboutController.value;
 
   dispose() {
+    //  _imageUpdateCtrl.close();
     _emailController?.close();
     _passwordController?.close();
     _usernameController?.close();
@@ -54,5 +60,7 @@ class ProfileBloc with Validators {
     _aboutController?.close();
   }
 }
+
+disposeFieds() {}
 
 final profileBloc = ProfileBloc();

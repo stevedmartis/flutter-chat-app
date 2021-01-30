@@ -65,7 +65,7 @@ class ProfileCardPainter extends CustomPainter {
               TileMode.mirror,
               TileMode.mirror,
               Float64List.fromList(
-                  Matrix4.identity().scaled((isEmpty) ? 0.7 : 0.1).storage))
+                  Matrix4.identity().scaled((isEmpty) ? 0.7 : 0.5).storage))
           ..style = PaintingStyle.fill);
   }
 

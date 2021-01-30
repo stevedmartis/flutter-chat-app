@@ -2,10 +2,11 @@ import 'package:chat/bloc/profile_bloc.dart';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/profiles.dart';
+import 'package:chat/pages/header_image.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/profile_page2.dart';
 import 'package:chat/services/auth_service.dart';
-import 'package:chat/services/aws_service.dart';
+
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
@@ -55,6 +56,8 @@ class EditProfilePageState extends State<EditProfilePage> {
 
     emailCtrl.text = profile.user.email;
     lastName.text = profile.lastName;
+
+    profileBloc.imageUpdate.add(true);
 
     usernameCtrl.addListener(() {
       //print('${usernameCtrl.text}');
@@ -138,7 +141,7 @@ class EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final authService = Provider.of<AuthService>(context);
-    final awsService = Provider.of<AwsService>(context);
+    // final awsService = Provider.of<AwsService>(context);
 
     final bloc = CustomProvider.profileBlocIn(context);
     final size = MediaQuery.of(context).size;
@@ -182,47 +185,74 @@ class EditProfilePageState extends State<EditProfilePage> {
                   itemExtent: size.height / 3.7,
                   delegate: SliverChildListDelegate(
                     [
-                      (awsService.isUpload)
-                          ? FutureBuilder<ui.Image>(
-                              future:
-                                  _image(authService.profile.getHeaderImg()),
-                              builder: (BuildContext context,
-                                      AsyncSnapshot<ui.Image> snapshot) =>
-                                  !snapshot.hasData
-                                      ? ProfilePage(
-                                          image: snapshot.data,
-                                          isUserAuth: true,
-                                          isEmpty: true,
-                                          isUserEdit: true,
-                                          profile: profile,
-                                        )
-                                      : ProfilePage(
-                                          image: snapshot.data,
-                                          isUserAuth: true,
-                                          isUserEdit: true,
-                                          profile: profile,
-                                        ),
-                            )
-                          : FutureBuilder<ui.Image>(
-                              future:
-                                  _image(authService.profile.getHeaderImg()),
-                              builder: (BuildContext context,
-                                      AsyncSnapshot<ui.Image> snapshot) =>
-                                  !snapshot.hasData
-                                      ? ProfilePage(
-                                          image: snapshot.data,
-                                          isUserAuth: true,
-                                          isEmpty: true,
-                                          isUserEdit: true,
-                                          profile: profile,
-                                        )
-                                      : ProfilePage(
-                                          image: snapshot.data,
-                                          isUserAuth: true,
-                                          isUserEdit: true,
-                                          profile: profile,
-                                        ),
-                            ),
+                      StreamBuilder<bool>(
+                        stream: profileBloc.imageUpdate.stream,
+                        builder: (context, AsyncSnapshot<bool> snapshot) {
+                          if (snapshot.hasData) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(PageRouteBuilder(
+                                    transitionDuration:
+                                        Duration(milliseconds: 200),
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        HeaderImagePage(
+                                          profile: this.profile,
+                                        )));
+                              },
+                              child: Hero(
+                                tag: profile.imageHeader,
+                                child: Image(
+                                  image: NetworkImage(
+                                    profile.getHeaderImg(),
+                                  ),
+                                  fit: BoxFit.cover,
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  alignment: Alignment.center,
+                                ),
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return _buildErrorWidget(snapshot.error);
+                          } else {
+                            return _buildLoadingWidget();
+                          }
+                        },
+                      ),
+
+                      /*  FutureBuilder<ui.Image>(
+                          future: _image(profile.getHeaderImg()),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<ui.Image> snapshot) {
+                            if (snapshot.hasData) {
+                              if (profile.imageHeader == "") {
+                                return ProfilePage(
+                                  isEmpty: true,
+                                  image: snapshot.data,
+                                  isUserAuth: true,
+                                  isUserEdit: true,
+                                  profile: profile,
+                                );
+                              } else {
+                                return ProfilePage(
+                                  isEmpty: false,
+                                  image: snapshot.data,
+                                  isUserAuth: true,
+                                  isUserEdit: true,
+                                  profile: profile,
+                                );
+                              }
+                            } else {
+                              return ProfilePage(
+                                isEmpty: false,
+                                image: snapshot.data,
+                                isUserAuth: true,
+                                isUserEdit: true,
+                                profile: profile,
+                              );
+                            }
+                          }), */
                     ],
                   ),
                 ),
@@ -283,6 +313,21 @@ class EditProfilePageState extends State<EditProfilePage> {
         ),
       ),
     );
+  }
+
+  Widget _buildLoadingWidget() {
+    return Container(
+        height: 400.0, child: Center(child: CircularProgressIndicator()));
+  }
+
+  Widget _buildErrorWidget(String error) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Error occured: $error"),
+      ],
+    ));
   }
 
   Widget _createButton(

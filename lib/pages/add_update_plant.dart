@@ -6,6 +6,7 @@ import 'package:chat/helpers/mostrar_alerta.dart';
 
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/pages/new_product.dart';
 import 'package:chat/pages/profile_page.dart';
 
 import 'package:chat/services/auth_service.dart';
@@ -861,5 +862,26 @@ Route createRoute() {
         child: child,
       );
     },
+  );
+}
+
+Route createRouteAddImages(Room room) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => NewProductPage(
+      room: room,
+    ),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
   );
 }

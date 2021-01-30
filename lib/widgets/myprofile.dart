@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:chat/bloc/profile_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
@@ -91,6 +92,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     super.initState();
     name = widget.profile.name;
 
+    profileBloc.imageUpdate.add(true);
     roomBloc.getRooms(widget.profile.user.uid);
   }
 
@@ -206,38 +208,39 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       StretchMode.fadeTitle,
                       // StretchMode.blurBackground
                     ],
-                    background: FutureBuilder<ui.Image>(
-                        future: _image(widget.profile.getHeaderImg()),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<ui.Image> snapshot) {
-                          if (snapshot.hasData) {
-                            if (widget.profile.imageHeader == "") {
-                              return ProfilePage(
-                                isEmpty: true,
-                                image: snapshot.data,
-                                isUserAuth: widget.isUserAuth,
-                                isUserEdit: widget.isUserEdit,
-                                profile: widget.profile,
-                              );
-                            } else {
-                              return ProfilePage(
-                                isEmpty: false,
-                                image: snapshot.data,
-                                isUserAuth: widget.isUserAuth,
-                                isUserEdit: widget.isUserEdit,
-                                profile: widget.profile,
-                              );
-                            }
-                          } else {
-                            return ProfilePage(
-                              isEmpty: false,
-                              image: snapshot.data,
-                              isUserAuth: widget.isUserAuth,
-                              isUserEdit: widget.isUserEdit,
-                              profile: widget.profile,
-                            );
-                          }
-                        }),
+                    background: StreamBuilder<bool>(
+                      stream: profileBloc.imageUpdate.stream,
+                      builder: (context, AsyncSnapshot<bool> snapshot) {
+                        if (snapshot.hasData) {
+                          return FutureBuilder<ui.Image>(
+                              future: _image(widget.profile.getHeaderImg()),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<ui.Image> snapshot) {
+                                if (snapshot.hasData) {
+                                  return ProfilePage(
+                                    isEmpty: false,
+                                    loading: false,
+                                    isUserAuth: widget.isUserAuth,
+                                    isUserEdit: widget.isUserEdit,
+                                    profile: widget.profile,
+                                  );
+                                } else {
+                                  return ProfilePage(
+                                    isEmpty: true,
+                                    loading: true,
+                                    isUserAuth: widget.isUserAuth,
+                                    isUserEdit: widget.isUserEdit,
+                                    profile: widget.profile,
+                                  );
+                                }
+                              });
+                        } else if (snapshot.hasError) {
+                          return _buildErrorWidget(snapshot.error);
+                        } else {
+                          return _buildLoadingWidget();
+                        }
+                      },
+                    ),
                     centerTitle: false,
                   ),
                 ),

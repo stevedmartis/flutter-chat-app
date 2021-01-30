@@ -12,12 +12,14 @@ class ProfilePage extends StatefulWidget {
       {this.isUserAuth,
       this.isUserEdit = false,
       @required this.profile,
+      this.loading = false,
       this.isEmpty = false,
       this.image});
   final bool isUserAuth;
   final bool isUserEdit;
   final Profiles profile;
   final bool isEmpty;
+  final loading;
 
   final ui.Image image;
 
@@ -36,8 +38,11 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Container(
         height: _profileCardHeight,
         child: ProfileCard(
+            loading: widget.loading,
             image: widget.image,
             isEmpty: widget.isEmpty,
+            isUserAuth: widget.isUserAuth,
+            isUserEdit: widget.isUserEdit,
             profile: widget.profile,
             profileColor: currentTheme.scaffoldBackgroundColor),
       ),

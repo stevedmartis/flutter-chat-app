@@ -22,6 +22,7 @@ class ProfileCard extends StatefulWidget {
       this.isUserEdit = false,
       @required this.profile,
       @required this.image,
+      this.loading = false,
       this.isEmpty = false});
 
   final Color profileColor;
@@ -32,7 +33,7 @@ class ProfileCard extends StatefulWidget {
   final bool isUserEdit;
   final Profiles profile;
   final bool isEmpty;
-
+  final loading;
   final ui.Image image;
 
   final picker = ImagePicker();
@@ -50,40 +51,94 @@ class _ProfileCardState extends State<ProfileCard> {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        Container(
-          // color: currentTheme.scaffoldBackgroundColor,
-          child: AnimatedOpacity(
-            opacity: 1.0,
-            duration: Duration(milliseconds: 500),
-            child: CustomPaint(
-              size: Size.infinite,
-              painter: ProfileCardPainter(
-                isUserEdit: widget.isUserEdit,
-                isEmpty: widget.isEmpty,
-                image: widget.image,
-                color: widget.profileColor,
-                avatarRadius: ProfileCard.avatarRadius,
+        (!widget.loading)
+            ? Container(
+                // color: currentTheme.scaffoldBackgroundColor,
+                child: AnimatedOpacity(
+                    opacity: widget.loading ? 0.0 : 1.0,
+                    duration: Duration(milliseconds: 500),
+                    child: Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            /* Navigator.of(context).push(PageRouteBuilder(
+                                    transitionDuration:
+                                        Duration(milliseconds: 200),
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        HeaderImagePage(
+                                          profile: this.profile,
+                                        ))); */
+                          },
+                          child: Hero(
+                            tag: widget.profile.imageHeader,
+                            child: Image(
+                              image: NetworkImage(
+                                widget.profile.getHeaderImg(),
+                              ),
+                              fit: BoxFit.cover,
+                              height: double.infinity,
+                              width: double.infinity,
+                              alignment: Alignment.center,
+                            ),
+                          ),
+                        ),
+                        Container(
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                gradient: LinearGradient(
+                                    begin: FractionalOffset.topCenter,
+                                    end: FractionalOffset.bottomCenter,
+                                    colors: [
+                                      currentTheme.scaffoldBackgroundColor
+                                          .withOpacity(0.10),
+                                      // Colors.white.withOpacity(0.30),
+                                      currentTheme.scaffoldBackgroundColor
+                                          .withOpacity(0.0),
+                                    ],
+                                    stops: [
+                                      10.0,
+                                      5.0
+                                    ]))),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: 100,
+                            width: double.infinity,
+                            decoration: new BoxDecoration(
+                              gradient: new LinearGradient(
+                                end: Alignment(0.0, -0.5),
+                                begin: Alignment(0.0, 0.1),
+                                colors: <Color>[
+                                  currentTheme.scaffoldBackgroundColor,
+                                  currentTheme.scaffoldBackgroundColor
+                                      .withOpacity(0.0),
+                                  currentTheme.scaffoldBackgroundColor
+                                      .withOpacity(0.0),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              )
+            : Container(
+                // color: currentTheme.scaffoldBackgroundColor,
+                child: AnimatedOpacity(
+                  opacity: widget.loading ? 0.0 : 0.0,
+                  duration: Duration(milliseconds: 500),
+                  child: CustomPaint(
+                    size: Size.infinite,
+                    painter: ProfileCardEmptyPainter(
+                      isUserEdit: widget.isUserEdit,
+                      color: widget.profileColor,
+                      avatarRadius: ProfileCard.avatarRadius,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
-        Container(
-          height: double.infinity,
-          decoration: BoxDecoration(
-              color: Colors.black,
-              gradient: LinearGradient(
-                  begin: FractionalOffset.topCenter,
-                  end: FractionalOffset.bottomCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.50),
-                    // Colors.white.withOpacity(0.30),
-                    widget.profileColor.withOpacity(0.30)
-                  ],
-                  stops: [
-                    0.0,
-                    1.0
-                  ])),
-        ),
 
         /* Positioned(
           left: 0,
