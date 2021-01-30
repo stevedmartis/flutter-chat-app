@@ -50,38 +50,23 @@ class _ProfileCardState extends State<ProfileCard> {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        (!widget.isEmpty)
-            ? Container(
-                // color: currentTheme.scaffoldBackgroundColor,
-                child: AnimatedOpacity(
-                  opacity: widget.isEmpty ? 0.0 : 1.0,
-                  duration: Duration(milliseconds: 500),
-                  child: CustomPaint(
-                    size: Size.infinite,
-                    painter: ProfileCardPainter(
-                      isUserEdit: widget.isUserEdit,
-                      image: widget.image,
-                      color: widget.profileColor,
-                      avatarRadius: ProfileCard.avatarRadius,
-                    ),
-                  ),
-                ),
-              )
-            : Container(
-                // color: currentTheme.scaffoldBackgroundColor,
-                child: AnimatedOpacity(
-                  opacity: widget.isEmpty ? 0.0 : 0.0,
-                  duration: Duration(milliseconds: 500),
-                  child: CustomPaint(
-                    size: Size.infinite,
-                    painter: ProfileCardEmptyPainter(
-                      isUserEdit: widget.isUserEdit,
-                      color: widget.profileColor,
-                      avatarRadius: ProfileCard.avatarRadius,
-                    ),
-                  ),
-                ),
+        Container(
+          // color: currentTheme.scaffoldBackgroundColor,
+          child: AnimatedOpacity(
+            opacity: 1.0,
+            duration: Duration(milliseconds: 500),
+            child: CustomPaint(
+              size: Size.infinite,
+              painter: ProfileCardPainter(
+                isUserEdit: widget.isUserEdit,
+                isEmpty: widget.isEmpty,
+                image: widget.image,
+                color: widget.profileColor,
+                avatarRadius: ProfileCard.avatarRadius,
               ),
+            ),
+          ),
+        ),
         Container(
           height: double.infinity,
           decoration: BoxDecoration(

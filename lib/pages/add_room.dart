@@ -8,7 +8,6 @@ import 'package:chat/pages/profile_page.dart';
 
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/room_services.dart';
-import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +61,8 @@ class AddRoomPagePageState extends State<AddRoomPage> {
   bool isCo2Change = false;
   bool isCo2ControlChange = false;
   bool loading = false;
+  bool errorRequired = false;
+
   String dropdownValue = 'Ventilación';
 
   String _hourOn, _minuteOn, _timeOn;
@@ -118,6 +119,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
 
   @override
   void initState() {
+    errorRequired = (widget.isEdit) ? false : true;
     nameCtrl.text = widget.room.name;
     descriptionCtrl.text = widget.room.description;
     wideCtrl.text = widget.room.wide.toString();
@@ -129,7 +131,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
 
     isSwitchedCo2 = widget.room.co2;
 
-    isSwitchedCo2 = widget.room.co2Control;
+    isSwitchedCo2Control = widget.room.co2Control;
 
     nameCtrl.addListener(() {
       // print('${nameCtrl.text}');
@@ -138,6 +140,11 @@ class AddRoomPagePageState extends State<AddRoomPage> {
           this.isNameChange = true;
         else
           this.isNameChange = false;
+
+        if (nameCtrl.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
       });
     });
     descriptionCtrl.addListener(() {
@@ -156,6 +163,11 @@ class AddRoomPagePageState extends State<AddRoomPage> {
           this.isWideChange = true;
         else
           this.isWideChange = false;
+
+        if (wideCtrl.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
       });
     });
     longCtrl.addListener(() {
@@ -165,6 +177,11 @@ class AddRoomPagePageState extends State<AddRoomPage> {
           this.isLongChange = true;
         else
           this.isLongChange = false;
+
+        if (longCtrl.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
       });
     });
     tallCtrl.addListener(() {
@@ -174,6 +191,10 @@ class AddRoomPagePageState extends State<AddRoomPage> {
           this.isTallChange = true;
         else
           this.isTallChange = false;
+        if (tallCtrl.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
       });
     });
 
@@ -184,6 +205,11 @@ class AddRoomPagePageState extends State<AddRoomPage> {
           this.isTimeOnChange = true;
         else
           this.isTimeOnChange = false;
+
+        if (_timeOnController.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
       });
     });
 
@@ -194,6 +220,11 @@ class AddRoomPagePageState extends State<AddRoomPage> {
           this.isTimeOffChange = true;
         else
           this.isTimeOffChange = false;
+
+        if (_timeOffController.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
       });
     });
 
@@ -219,7 +250,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     descriptionCtrl.dispose();
     _timeOnController.dispose();
     _timeOffController.dispose();
-    roomBloc.disposeRoom();
+    // roomBloc.disposeRoom();
     super.dispose();
   }
 
@@ -734,7 +765,6 @@ class AddRoomPagePageState extends State<AddRoomPage> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-        final isInvalid = snapshot.hasError;
         return GestureDetector(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -742,14 +772,14 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                 child: Text(
                   'Done',
                   style: TextStyle(
-                      color: isControllerChange && !isInvalid
+                      color: (isControllerChange && !errorRequired)
                           ? currentTheme.accentColor
                           : Colors.white.withOpacity(0.30),
                       fontSize: 18),
                 ),
               ),
             ),
-            onTap: isControllerChange && !isInvalid && !loading
+            onTap: isControllerChange && !errorRequired && !loading
                 ? () => {
                       FocusScope.of(context).unfocus(),
                       (widget.isEdit) ? _editRoom(bloc) : _createRoom(bloc),
@@ -793,18 +823,16 @@ class AddRoomPagePageState extends State<AddRoomPage> {
         timeOff: timeOff,
         user: profile.user.uid);
 
-    print(newRoom);
-
     final createRoomRes = await roomService.createRoom(newRoom);
 
     if (createRoomRes != null) {
       if (createRoomRes.ok) {
-        widget.rooms.add(createRoomRes.room);
-        setState(() {
-          loading = false;
-        });
-        roomBloc.getRoom(widget.room);
+        // widget.rooms.add(createRoomRes.room);
         roomBloc.getRooms(profile.user.uid);
+        //roomBloc.getRoom(widget.room);
+        loading = false;
+        setState(() {});
+
         Navigator.pop(context);
       } else {
         setState(() {
@@ -855,8 +883,6 @@ class AddRoomPagePageState extends State<AddRoomPage> {
         timeOff: timeOff,
         id: widget.room.id);
 
-    print(newRoom);
-
     if (widget.isEdit) {
       final editRoomRes = await roomService.editRoom(newRoom);
 
@@ -864,11 +890,12 @@ class AddRoomPagePageState extends State<AddRoomPage> {
         if (editRoomRes.ok) {
           // room = editRoomRes.room;
 
-          setState(() {
-            loading = false;
-          });
-          roomBloc.getRoom(editRoomRes.room);
+          loading = false;
+
           roomBloc.getRooms(profile.user.uid);
+          roomBloc.getRoom(widget.room);
+
+          setState(() {});
           Navigator.pop(context);
         } else {
           setState(() {

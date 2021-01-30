@@ -1,9 +1,7 @@
 import 'dart:ui';
 
 import 'package:chat/models/profiles.dart';
-import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ImageHeaderExpanded extends StatefulWidget {
   const ImageHeaderExpanded({
@@ -37,36 +35,29 @@ class _ImageHeaderExpandedState extends State<ImageHeaderExpanded> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      clipBehavior: Clip.antiAlias,
-      child: (widget.profile.imageHeader != "")
-          ? InteractiveViewer(
-              panEnabled: false, // Set it to false to prevent panning.
-              boundaryMargin: EdgeInsets.all(80),
-              minScale: 0.5,
-              maxScale: 4,
-              child: Image(
-                image: NetworkImage(widget.profile.getHeaderImg()),
-                fit: BoxFit.cover,
-                width: double.maxFinite,
-              ),
-            )
-          : Container(
-              margin: EdgeInsets.only(bottom: 300),
-              //padding: EdgeInsets.all(0),
-              width: double.maxFinite,
-              height: double.maxFinite,
-              child: CircleAvatar(
-                child: Text(
-                  widget.profile.user.username.substring(0, 2).toUpperCase(),
-                  style: TextStyle(fontSize: widget.fontsize),
+        borderRadius: BorderRadius.circular(8.0),
+        clipBehavior: Clip.antiAlias,
+        child: (widget.profile.imageHeader != "")
+            ? InteractiveViewer(
+                panEnabled: false, // Set it to false to prevent panning.
+                boundaryMargin: EdgeInsets.all(80),
+                minScale: 0.5,
+                maxScale: 4,
+                child: Image(
+                  image: NetworkImage(widget.profile.getHeaderImg()),
+                  fit: BoxFit.cover,
+                  width: double.maxFinite,
                 ),
-                backgroundColor: currentTheme.accentColor,
-              ),
-            ),
-    );
+              )
+            : Container(
+                child: Image(
+                  image: AssetImage('assets/images/empty_image.png'),
+                  fit: BoxFit.cover,
+                  width: double.maxFinite,
+                ),
+              ));
   }
 }

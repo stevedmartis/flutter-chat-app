@@ -24,13 +24,11 @@ import 'package:provider/provider.dart';
 //final Color darkBlue = Color.fromARGB(255, 18, 32, 47);
 
 class AddUpdatePlantPage extends StatefulWidget {
-  AddUpdatePlantPage({this.plant, this.plants, this.isEdit = false, this.room});
+  AddUpdatePlantPage({this.plant, this.isEdit = false, this.room});
 
   final Plant plant;
   final bool isEdit;
   final Room room;
-
-  final List<Plant> plants;
 
   @override
   AddUpdatePlantPageState createState() => AddUpdatePlantPageState();
@@ -41,18 +39,19 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
   final descriptionCtrl = TextEditingController();
 
-  final genoTypeCtrl = TextEditingController();
-
   final quantityCtrl = TextEditingController();
 
-  final potCtrl = TextEditingController();
+  final _durationFlorationCtrl = TextEditingController();
+
+  // final potCtrl = TextEditingController();
 
   var tchCtrl = new MaskedTextController(mask: '00');
   var cbdCtrl = new MaskedTextController(mask: '00');
 
+  var potCtrl = new TextEditingController();
+
   bool isNameChange = false;
   bool isAboutChange = false;
-  bool isGenoTypeChange = false;
   bool isQuantityChange = false;
 
   bool isGerminatedChange = false;
@@ -62,6 +61,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
   bool isCbdChange = false;
   bool isPotChange = false;
+  bool errorRequired = false;
 
   bool loading = false;
 
@@ -93,30 +93,20 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
   TextEditingController _dateFController = TextEditingController();
 
-  Future<Null> _selectDateFlora(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDateF,
-        initialDatePickerMode: DatePickerMode.day,
-        firstDate: DateTime(2015),
-        lastDate: DateTime(2101));
-    if (picked != null)
-      setState(() {
-        selectedDateF = picked;
-        _dateFController.text = DateFormat('dd/MM/yyyy').format(selectedDateF);
-      });
-  }
-
   String optionItemSelected;
 
   List<DropdownMenuItem> categories = [
     DropdownMenuItem(
-      child: Text('Option 1'),
-      value: "1",
+      child: Text('Macho'),
+      value: "Macho",
     ),
     DropdownMenuItem(
-      child: Text('option 2 '),
-      value: "2",
+      child: Text('Hembra'),
+      value: "Hembra",
+    ),
+    DropdownMenuItem(
+      child: Text('Automatica'),
+      value: "Automatica",
     )
   ];
 
@@ -124,14 +114,14 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
   @override
   void initState() {
+    errorRequired = (widget.isEdit) ? false : true;
     nameCtrl.text = widget.plant.name;
     descriptionCtrl.text = widget.plant.description;
-    genoTypeCtrl.text = widget.plant.genotype;
     quantityCtrl.text = widget.plant.quantity;
 
     optionItemSelected = (widget.isEdit) ? widget.plant.sexo : null;
     _dateGController.text = widget.plant.germinated;
-    _dateFController.text = widget.plant.flowering;
+    _durationFlorationCtrl.text = widget.plant.flowering;
 
     tchCtrl.text = widget.plant.thc;
 
@@ -145,6 +135,11 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
           this.isNameChange = true;
         else
           this.isNameChange = false;
+
+        if (nameCtrl.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
       });
     });
     descriptionCtrl.addListener(() {
@@ -156,21 +151,16 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
       });
     });
 
-    genoTypeCtrl.addListener(() {
-      setState(() {
-        if (widget.plant.genotype != genoTypeCtrl.text)
-          this.isGenoTypeChange = true;
-        else
-          this.isGenoTypeChange = false;
-      });
-    });
-
     quantityCtrl.addListener(() {
       setState(() {
         if (widget.plant.quantity != quantityCtrl.text)
           this.isQuantityChange = true;
         else
           this.isQuantityChange = false;
+        if (quantityCtrl.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
       });
     });
 
@@ -198,15 +188,24 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
           this.isGerminatedChange = true;
         else
           this.isGerminatedChange = false;
+
+        if (_dateGController.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
       });
     });
 
-    _dateFController.addListener(() {
+    _durationFlorationCtrl.addListener(() {
       setState(() {
-        if (widget.plant.flowering != _dateFController.text)
+        if (widget.plant.flowering != _durationFlorationCtrl.text)
           this.isFlorationChange = true;
         else
           this.isFlorationChange = false;
+        if (_durationFlorationCtrl.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
       });
     });
 
@@ -227,11 +226,15 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
     descriptionCtrl.dispose();
 
-    genoTypeCtrl.dispose();
-
     quantityCtrl.dispose();
 
-    plantBloc?.dispose();
+    // plantBloc?.dispose();
+
+    tchCtrl.dispose();
+    cbdCtrl.dispose();
+    _dateGController.dispose();
+    _dateFController.dispose();
+    potCtrl.dispose();
 
     super.dispose();
   }
@@ -254,8 +257,15 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         isGerminatedChange &&
         isFlorationChange;
 
-    final isControllerChangeEdit =
-        isNameChange || isAboutChange || isGenoTypeChange || isQuantityChange;
+    final isControllerChangeEdit = isNameChange ||
+        isAboutChange ||
+        isQuantityChange ||
+        isSexoChange ||
+        isGerminatedChange ||
+        isFlorationChange ||
+        isThcChange ||
+        isCbdChange ||
+        isPotChange;
 
     return Scaffold(
       appBar: AppBar(
@@ -306,7 +316,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                           SizedBox(
                             height: 10,
                           ),
-                          _createGenoType(bloc),
                           SizedBox(
                             height: 10,
                           ),
@@ -353,7 +362,11 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                           SizedBox(
                             height: 20,
                           ),
-                          Expanded(
+                          _createDurationFlora(bloc),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          /* Expanded(
                             child: GestureDetector(
                               onTap: () => {
                                 FocusScope.of(context)
@@ -379,10 +392,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
+                          ), */
+
                           Row(
                             children: [
                               Expanded(child: _createThc(bloc)),
@@ -478,35 +489,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     );
   }
 
-  Widget _createGenoType(PlantBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.genoTypeStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            controller: genoTypeCtrl,
-            inputFormatters: <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(30),
-            ],
-            //  keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-                // icon: Icon(Icons.perm_identity),
-                //  fillColor: currentTheme.accentColor,
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                ),
-                hintText: '',
-                labelText: 'Genotype',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeGenoType,
-          ),
-        );
-      },
-    );
-  }
-
   Widget _createSexo(PlantBloc bloc) {
     final size = MediaQuery.of(context).size;
 
@@ -550,7 +532,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
           child: TextField(
             controller: quantityCtrl,
             inputFormatters: <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(4),
+              LengthLimitingTextInputFormatter(3),
             ],
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
@@ -565,6 +547,35 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeQuantity,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _createDurationFlora(PlantBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.floweringStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+          child: TextField(
+            controller: _durationFlorationCtrl,
+            inputFormatters: <TextInputFormatter>[
+              LengthLimitingTextInputFormatter(3),
+            ],
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+                // icon: Icon(Icons.perm_identity),
+                //  fillColor: currentTheme.accentColor,
+                focusedBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                ),
+                hintText: 'Semanas',
+                labelText: 'Duracion de floración *',
+                //counterText: snapshot.data,
+                errorText: snapshot.error),
+            onChanged: bloc.changeFlowering,
           ),
         );
       },
@@ -649,7 +660,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
           child: TextField(
             controller: potCtrl,
             inputFormatters: <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(5),
+              LengthLimitingTextInputFormatter(3),
             ],
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
@@ -660,7 +671,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                       const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Lt flower pot *',
+                labelText: 'Lt pot',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changePot,
@@ -679,7 +690,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-        final isInvalid = snapshot.hasError;
         return GestureDetector(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -687,14 +697,14 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                 child: Text(
                   'Next',
                   style: TextStyle(
-                      color: isControllerChange && !isInvalid
+                      color: (isControllerChange && !errorRequired)
                           ? currentTheme.accentColor
                           : Colors.white.withOpacity(0.30),
                       fontSize: 18),
                 ),
               ),
             ),
-            onTap: isControllerChange && !isInvalid && !loading
+            onTap: isControllerChange && !errorRequired && !loading
                 ? () => {
                       setState(() {
                         loading = true;
@@ -710,8 +720,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
   _createRoom(PlantBloc bloc) async {
     final plantService = Provider.of<PlantService>(context, listen: false);
 
-    final authService = Provider.of<AuthService>(context, listen: false);
     final room = widget.room.id;
+    final authService = Provider.of<AuthService>(context, listen: false);
 
     final uid = authService.profile.user.uid;
 
@@ -720,9 +730,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         ? widget.plant.description
         : bloc.description.trim();
 
-    final genoType =
-        (bloc.genoType == null) ? widget.plant.genotype : bloc.genoType.trim();
-
     final sexo = optionItemSelected;
 
     final quantity =
@@ -730,18 +737,17 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
     final germinated = _dateGController.text;
 
-    final flowering = _dateFController.text;
+    final flowering = _durationFlorationCtrl.text;
 
     final thc = (bloc.thc == null) ? widget.plant.thc : bloc.thc.trim();
 
     final cbd = (bloc.cbd == null) ? widget.plant.cbd : bloc.cbd.trim();
 
-    final pot = (bloc.pot == null) ? widget.plant.pot : bloc.pot.trim();
+    final pot = (bloc.pot == null) ? widget.plant.pot : potCtrl.text.trim();
 
     final newPlant = Plant(
         name: name,
         description: description,
-        genotype: genoType,
         sexo: sexo,
         quantity: quantity,
         germinated: germinated,
@@ -759,7 +765,9 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         // widget.plants.add(createPlantResp.plant);
         loading = false;
 
-        // plantBloc.getPlants(widget.plant.id);
+        // plantBloc.getPlant(widget.plant);
+        //  plantBloc.getPlant(widget.plant);
+
         roomBloc.getRooms(uid);
         Navigator.pop(context);
         setState(() {});
@@ -775,14 +783,14 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
   _editPlant(PlantBloc bloc) async {
     final plantService = Provider.of<PlantService>(context, listen: false);
+    //final authService = Provider.of<AuthService>(context, listen: false);
+
+    // final uid = authService.profile.user.uid;
 
     final name = (bloc.name == null) ? widget.plant.name : bloc.name.trim();
     final description = (descriptionCtrl.text == "")
         ? widget.plant.description
         : descriptionCtrl.text.trim();
-
-    final genoType =
-        (bloc.genoType == null) ? widget.plant.genotype : bloc.genoType.trim();
 
     final sexo = optionItemSelected;
 
@@ -791,18 +799,17 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
     final germinated = _dateGController.text;
 
-    final flowering = _dateFController.text;
+    final flowering = _durationFlorationCtrl.text;
 
     final thc = (bloc.thc == null) ? widget.plant.thc : bloc.thc.trim();
 
     final cbd = (bloc.cbd == null) ? widget.plant.cbd : bloc.cbd.trim();
 
-    final pot = (bloc.pot == null) ? widget.plant.pot : bloc.pot.trim();
+    final pot = (bloc.pot == null) ? widget.plant.pot : potCtrl.text.trim();
 
     final editPlant = Plant(
         name: name,
         description: description,
-        genotype: genoType,
         sexo: sexo,
         quantity: quantity,
         germinated: germinated,
@@ -818,13 +825,12 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
       if (editRoomRes != null) {
         if (editRoomRes.ok) {
           // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
+          plantBloc.getPlant(widget.plant);
           setState(() {
             loading = false;
           });
           // room = editRoomRes.room;
 
-          // roomBloc.getRoom(editRoomRes.room);
-          // roomBloc.getRooms(profile.user.uid);
           Navigator.pop(context);
         } else {
           mostrarAlerta(context, 'Error', editRoomRes.msg);

@@ -1,19 +1,23 @@
 import 'dart:async';
 
+import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
-import 'package:chat/models/profiles.dart';
+import 'package:chat/models/plant.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
+import 'package:chat/pages/add_update_plant.dart';
 import 'package:chat/pages/chat_page.dart';
+import 'package:chat/pages/plant_page.dart';
 import 'package:chat/pages/principal_page.dart';
-import 'package:chat/pages/profile_page2.dart';
 import 'package:chat/pages/room_list_page.dart';
+import 'package:chat/providers/plants_provider.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
-import 'package:chat/widgets/header_custom_search.dart';
+import 'package:chat/widgets/plant_card_widget.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,24 +27,23 @@ import '../utils//extension.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class MyProfile extends StatefulWidget {
-  MyProfile({
+class PlantDetailPage extends StatefulWidget {
+  PlantDetailPage({
     Key key,
     this.title,
-    this.isUserAuth = false,
-    this.isUserEdit = false,
-    @required this.profile,
+    this.plants,
+    this.room,
+    @required this.plant,
   }) : super(key: key);
 
   final String title;
 
-  final bool isUserAuth;
-
-  final bool isUserEdit;
-  final Profiles profile;
+  final Plant plant;
+  final List<Plant> plants;
+  final Room room;
 
   @override
-  _MyProfileState createState() => new _MyProfileState();
+  _PlantDetailPageState createState() => new _PlantDetailPageState();
 }
 
 class NetworkImageDecoder {
@@ -63,15 +66,16 @@ class NetworkImageDecoder {
   }
 }
 
-class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
+class _PlantDetailPageState extends State<PlantDetailPage>
+    with TickerProviderStateMixin {
   ScrollController _scrollController;
 
+  final plantsApiProvider = new PlantsApiProvider();
   String name = '';
-  bool fromRooms = false;
-  bool activeTabs = false;
 
   Future<List<Room>> getRoomsFuture;
   AuthService authService;
+  Plant plant;
 
   final roomService = new RoomService();
   double get maxHeight => 200 + MediaQuery.of(context).padding.top;
@@ -89,9 +93,11 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     _scrollController = ScrollController()..addListener(() => setState(() {}));
 
     super.initState();
-    name = widget.profile.name;
+    //  name = widget.profile.name;
+    plantBloc.getPlant(widget.plant);
 
-    roomBloc.getRooms(widget.profile.user.uid);
+    setState(() {});
+    //roomBloc.getRooms(widget.profile.user.uid);
   }
 
   @override
@@ -99,7 +105,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     super.dispose();
     _scrollController?.dispose();
     //  _heartAnimationController?.dispose();
-    //roomBloc.disposeRooms();
+    // roomBloc.disposeRoom();
+    //plantBloc.disposePlant();
   }
 
   bool get _showTitle {
@@ -159,7 +166,11 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       )),
 
                   actions: [
-                    Container(
+                    Hero(
+                        tag: widget.plant.quantity,
+                        child: _buildCircleQuantityPlant()),
+
+                    /*   Container(
                         width: 40,
                         height: 40,
                         margin: EdgeInsets.only(right: 20),
@@ -177,25 +188,43 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                 ),
                               ),
                               backgroundColor: Colors.black.withOpacity(0.60)),
-                        )),
+                        )), */
                   ],
 
                   centerTitle: false,
                   pinned: true,
-                  title: Center(
-                    child: Container(
-                        //  margin: EdgeInsets.only(left: 0),
-                        width: size.height / 3,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: (!_showTitle)
-                              ? Colors.black.withOpacity(0.60)
-                              : currentTheme.scaffoldBackgroundColor
-                                  .withOpacity(0.90),
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                          boxShadow: [],
-                        ),
-                        child: SearchContent()),
+                  title: StreamBuilder<Plant>(
+                    stream: plantBloc.plantSelect.stream,
+                    builder: (context, AsyncSnapshot<Plant> snapshot) {
+                      if (snapshot.hasData) {
+                        plant = snapshot.data;
+
+                        return Center(
+                            child: Container(
+                                //  margin: EdgeInsets.only(left: 0),
+                                width: size.height / 3,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.60),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(30)),
+                                  boxShadow: [],
+                                ),
+                                child: Container(
+                                  child: Center(
+                                    child: Text(
+                                      plant.name.capitalize(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                )));
+                      } else if (snapshot.hasError) {
+                        return _buildErrorWidget(snapshot.error);
+                      } else {
+                        return _buildLoadingWidget();
+                      }
+                    },
                   ),
 
                   expandedHeight: maxHeight,
@@ -207,60 +236,68 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       // StretchMode.blurBackground
                     ],
                     background: FutureBuilder<ui.Image>(
-                        future: _image(widget.profile.getHeaderImg()),
+                        future: _image(widget.plant.getCoverImg()),
                         builder: (BuildContext context,
-                            AsyncSnapshot<ui.Image> snapshot) {
-                          if (snapshot.hasData) {
-                            if (widget.profile.imageHeader == "") {
-                              return ProfilePage(
-                                isEmpty: true,
-                                image: snapshot.data,
-                                isUserAuth: widget.isUserAuth,
-                                isUserEdit: widget.isUserEdit,
-                                profile: widget.profile,
-                              );
-                            } else {
-                              return ProfilePage(
-                                isEmpty: false,
-                                image: snapshot.data,
-                                isUserAuth: widget.isUserAuth,
-                                isUserEdit: widget.isUserEdit,
-                                profile: widget.profile,
-                              );
-                            }
-                          } else {
-                            return ProfilePage(
-                              isEmpty: false,
-                              image: snapshot.data,
-                              isUserAuth: widget.isUserAuth,
-                              isUserEdit: widget.isUserEdit,
-                              profile: widget.profile,
-                            );
-                          }
-                        }),
+                                AsyncSnapshot<ui.Image> snapshot) =>
+                            snapshot.hasData
+                                ? PlantPage(
+                                    image: snapshot.data,
+                                    plant: widget.plant,
+                                  )
+                                : PlantPage(
+                                    isEmpty: true,
+                                    image: snapshot.data,
+                                    plant: widget.plant,
+                                  )),
                     centerTitle: false,
                   ),
                 ),
-                (!this.widget.isUserEdit)
-                    ? makeHeaderInfo(context)
-                    : makeHeaderSpacer(context),
-                if (!widget.isUserEdit) makeHeaderTabs(context),
-                /* SliverList(
-                  delegate: SliverChildListDelegate(
-                      List<Widget>.generate(10, (int i) {
-                    return Stack(
-                      children: [
-                        CardProduct(index: i),
-                        GestureDetector(
-                            onTap: () {}, child: _buildCircleFavoriteProduct()),
-                      ],
-                    );
-                  })),
-                ), */
+
+                makeHeaderInfo(context),
+
+                makeHeaderSpacer(context),
+
+                // if (!widget.isUserEdit) makeHeaderTabs(context),
               ]),
         ),
       ),
     );
+  }
+
+  Container _buildCircleQuantityPlant() {
+    //final size = MediaQuery.of(context).size;
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return Container(
+        alignment: Alignment.centerRight,
+        padding: EdgeInsets.all(6.0),
+        margin: EdgeInsets.only(right: 10, top: 0),
+        width: 50,
+        height: 50,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          child: CircleAvatar(
+              child: StreamBuilder<Plant>(
+                stream: plantBloc.plantSelect.stream,
+                builder: (context, AsyncSnapshot<Plant> snapshot) {
+                  if (snapshot.hasData) {
+                    plant = snapshot.data;
+                    final quantity = plant.quantity;
+
+                    return Text(
+                      '$quantity',
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    );
+                  } else if (snapshot.hasError) {
+                    return _buildErrorWidget(snapshot.error);
+                  } else {
+                    return _buildLoadingWidget();
+                  }
+                },
+              ),
+              backgroundColor: currentTheme.accentColor),
+        ));
   }
 
   createSelectionNvigator() {
@@ -400,93 +437,92 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     );
   }
 
-  SliverPersistentHeader makeHeaderInfo(context) {
+  SliverList makeHeaderInfo(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    final username = widget.profile.user.username.toLowerCase();
-    final about = widget.profile.about;
-    final size = MediaQuery.of(context).size;
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        StreamBuilder<Plant>(
+          stream: plantBloc.plantSelect.stream,
+          builder: (context, AsyncSnapshot<Plant> snapshot) {
+            if (snapshot.hasData) {
+              plant = snapshot.data;
 
-    final nameFinal = name.isEmpty ? "" : name.capitalize();
+              final about = plant.description;
+              final size = MediaQuery.of(context).size;
 
-    return SliverPersistentHeader(
-      pinned: false,
-      delegate: SliverAppBarDelegate(
-          minHeight: (about.length > 10) ? 100.0 : 80.0,
-          maxHeight: (about.length > 80) ? 180.0 : 80.0,
-          child: Container(
-            padding: EdgeInsets.only(top: 10.0),
-            color: currentTheme.scaffoldBackgroundColor,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (!this.widget.isUserEdit)
-                  Expanded(
-                    flex: -2,
-                    child: Container(
-                      width: size.width - 15.0,
-                      padding:
-                          EdgeInsets.only(left: size.width / 20.0, top: 5.0),
-                      //margin: EdgeInsets.only(left: size.width / 6, top: 10),
-                      child: (nameFinal == "")
-                          ? Text(
-                              username,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: (name.length >= 15) ? 20 : 22,
-                                  color: Colors.white),
-                            )
-                          : Text(
-                              (nameFinal.length >= 45)
-                                  ? nameFinal.substring(0, 45)
-                                  : nameFinal,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: (nameFinal.length >= 15) ? 20 : 22,
-                                  color: Colors.white),
-                            ),
+              final sexo = plant.sexo;
+
+              final pot = plant.pot;
+
+              //final nameFinal = name.isEmpty ? "" : name.capitalize();
+              final thc = (plant.thc.isEmpty) ? '0' : plant.thc;
+              final cbd = (plant.cbd.isEmpty) ? '0' : plant.cbd;
+
+              final flower = (plant.flowering == "") ? "0" : plant.flowering;
+
+              return Container(
+                padding: EdgeInsets.only(top: 10.0),
+                color: currentTheme.scaffoldBackgroundColor,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DateGDurationF(
+                      germina: plant.germinated,
+                      flora: flower,
                     ),
-                  ),
-                if (!this.widget.isUserEdit)
-                  Expanded(
-                    flex: -2,
-                    child: Container(
-                        width: size.width - 1.10,
-                        padding: EdgeInsets.only(
-                            left: size.width / 20.0, top: 5.0, bottom: 10),
+                    CbdthcRow(thc: thc, cbd: cbd, fontSize: 16),
+                    SexLtRow(pot: pot, sex: sexo, fontSize: 16),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Container(
+                        width: size.width - 5,
+                        padding:
+                            EdgeInsets.only(left: size.width / 10.0, right: 10),
                         //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
-                        child: Text(
-                          '@' + username,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                              fontSize: (username.length >= 16) ? 16 : 18,
-                              color: Colors.white.withOpacity(0.60)),
-                        )),
-                  ),
-                Expanded(
-                  child: Container(
-                      width: size.width - 50,
-                      padding:
-                          EdgeInsets.only(left: size.width / 20.0, right: 10),
-                      //margin: EdgeInsets.only(left: size.width / 6, top: 10),
-
-                      child: (about.length > 0)
-                          ? convertHashtag(
-                              about,
-                              currentTheme.accentColor,
-                            )
-                          : Container()),
+                        child: (about.length > 0)
+                            ? convertHashtag(
+                                about,
+                                currentTheme.accentColor,
+                              )
+                            : Container()),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Container(
+                      //top: size.height / 3.5,
+                      margin: EdgeInsets.only(left: 40, right: 40),
+                      // width: size.width / 1.5,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: ButtonSubEditProfile(
+                            color: currentTheme.scaffoldBackgroundColor,
+                            textColor: currentTheme.accentColor,
+                            text: 'Editar',
+                            onPressed: () {
+                              Navigator.of(context).push(createRouteEditPlant(
+                                  plant, widget.plants, widget.room));
+                            }),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Divider(height: 1),
+                  ],
                 ),
-              ],
-            ),
-          )),
+              );
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
+            } else {
+              return _buildLoadingWidget();
+            }
+          },
+        ),
+      ]),
     );
   }
 
@@ -495,7 +531,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
       child: Stack(fit: StackFit.expand, children: [
         TabsScrollCustom(
           rooms: data.rooms,
-          isAuthUser: widget.isUserAuth,
         ),
         /*  AnimatedOpacity(
             opacity: !_showTitle ? 1.0 : 0.0,
@@ -722,16 +757,14 @@ RichText convertHashtag(String text, Color color) {
       children: [
         TextSpan(
             text: split.first,
-            style:
-                TextStyle(color: Colors.white.withOpacity(0.60), fontSize: 16))
+            style: TextStyle(color: Colors.white, fontSize: 16))
       ]..addAll(hashtags
           .map((text) => text.contains("#")
               ? TextSpan(
                   text: text, style: TextStyle(color: color, fontSize: 16))
               : TextSpan(
                   text: text,
-                  style: TextStyle(
-                      color: Colors.white.withOpacity(0.60), fontSize: 16)))
+                  style: TextStyle(color: Colors.white, fontSize: 16)))
           .toList()),
     ),
   );
@@ -820,4 +853,27 @@ class BottomWaveClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
+Route createRouteEditPlant(Plant plant, List<Plant> plants, Room room) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => AddUpdatePlantPage(
+      plant: plant,
+      room: room,
+      isEdit: true,
+    ),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
 }

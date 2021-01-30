@@ -93,7 +93,6 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
 
       final fileType = pickedFile.path.split('.');
 
-      print(fileType);
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.uploadImageAvatar(

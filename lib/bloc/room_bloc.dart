@@ -8,6 +8,7 @@ import 'package:rxdart/rxdart.dart';
 
 class RoomBloc with Validators {
   final _nameController = BehaviorSubject<String>();
+
   final _descriptionController = BehaviorSubject<String>();
   final _co2Controller = BehaviorSubject<bool>();
   final _co2ControlController = BehaviorSubject<bool>();
@@ -33,7 +34,7 @@ class RoomBloc with Validators {
   getRooms(String userId) async {
     RoomsResponse response = await _repository.getRooms(userId);
 
-    if (!_subject.isClosed) _subject.sink.add(response);
+    _subject.sink.add(response);
   }
 
   getRoom(Room room) async {
@@ -115,7 +116,7 @@ class RoomBloc with Validators {
 
   dispose() {
     _subject.close();
-    _roomSelect?.close();
+    _roomSelect.close();
     _nameController?.close();
     _ventilationController?.close();
     _co2Controller?.close();
@@ -135,12 +136,12 @@ class RoomBloc with Validators {
   }
 
   disposeRoom() {
-    _roomSelect?.close();
+    // _roomSelect?.close();
   }
 
   disposeRooms() {
     _roomsController?.close();
-    _subject?.close();
+    _subject.close();
   }
 }
 

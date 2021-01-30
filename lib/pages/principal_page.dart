@@ -398,45 +398,6 @@ class _CollapsingListState extends State<CollapsingList>
       ),
     );
   }
-
-  Container _buildCircleFavoriteProduct() {
-    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-    //  final roomModel = Provider.of<Room>(context, listen: false);
-
-    final size = MediaQuery.of(context).size;
-
-    return Container(
-        padding: EdgeInsets.all(5.0),
-        margin: EdgeInsets.only(left: size.width / 1.20, top: 15),
-        width: 50,
-        height: 50,
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          child: CircleAvatar(
-              child: Icon(Icons.favorite_border, color: Colors.red, size: 22),
-              /* AnimatedBuilder(
-
-                animation: _heartAnimationController,
-                builder: (context, child) {
-                  return Center(
-                    child: Container(
-                      child: Center(
-                        child: Icon(
-                          (_heartAnimation.value > 22)
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: Colors.red,
-                          size: _heartAnimation.value,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ), */
-              backgroundColor: Colors.black),
-        ));
-  }
 }
 
 SliverPersistentHeader makeProductsCard(context) {

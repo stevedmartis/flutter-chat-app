@@ -56,12 +56,14 @@ class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
             ),
           )
         : ListView.builder(
+            padding: EdgeInsets.only(left: 20, right: 20),
             shrinkWrap: false,
             scrollDirection: Axis.horizontal,
             itemCount: widget.profiles.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                  padding: EdgeInsets.all(5.0), child: _buildBox(index: index));
+                  padding: EdgeInsets.only(right: 15),
+                  child: _buildBox(index: index));
             },
           );
   }

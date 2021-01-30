@@ -42,6 +42,7 @@ class EditProfilePageState extends State<EditProfilePage> {
   bool isAboutChange = false;
   bool isEmailChange = false;
   bool isPassChange = false;
+  bool errorRequired = false;
 
   @override
   void initState() {
@@ -63,6 +64,11 @@ class EditProfilePageState extends State<EditProfilePage> {
           this.isUsernameChange = true;
         else
           this.isUsernameChange = false;
+
+        if (usernameCtrl.text == "")
+          this.errorRequired = true;
+        else
+          this.errorRequired = false;
       });
     });
     nameCtrl.addListener(() {
@@ -72,6 +78,10 @@ class EditProfilePageState extends State<EditProfilePage> {
           this.isNameChange = true;
         else
           this.isNameChange = false;
+        if (nameCtrl.text == "")
+          this.errorRequired = true;
+        else
+          this.errorRequired = false;
       });
     });
     aboutCtrl.addListener(() {
@@ -90,6 +100,11 @@ class EditProfilePageState extends State<EditProfilePage> {
           this.isEmailChange = true;
         else
           this.isEmailChange = false;
+
+        if (emailCtrl.text == "")
+          this.errorRequired = true;
+        else
+          this.errorRequired = false;
       });
     });
     passCtrl.addListener(() {
@@ -113,6 +128,8 @@ class EditProfilePageState extends State<EditProfilePage> {
     passCtrl.dispose();
     lastName.dispose();
     aboutCtrl.dispose();
+
+    profileBloc.dispose();
 
     super.dispose();
   }
@@ -287,8 +304,6 @@ class EditProfilePageState extends State<EditProfilePage> {
             isPassChange ||
             isAboutChange;
 
-        final isInvalid = snapshot.hasError;
-
         return GestureDetector(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -296,14 +311,14 @@ class EditProfilePageState extends State<EditProfilePage> {
                 child: Text(
                   'Done',
                   style: TextStyle(
-                      color: isControllerChange && !isInvalid
+                      color: (isControllerChange && !errorRequired)
                           ? currentTheme.accentColor
                           : Colors.white.withOpacity(0.30),
                       fontSize: 18),
                 ),
               ),
             ),
-            onTap: isControllerChange && !isInvalid
+            onTap: (isControllerChange && !errorRequired)
                 ? () => {
                       FocusScope.of(context).unfocus(),
                       _editProfile(bloc, context)

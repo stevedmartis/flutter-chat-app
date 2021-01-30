@@ -12,7 +12,6 @@ class PlantBloc with Validators {
 
   final _quantityController = BehaviorSubject<String>();
   final _sexoController = BehaviorSubject<String>();
-  final _genotypeController = BehaviorSubject<String>();
 
   final _germinatedController = BehaviorSubject<String>();
   final _floweringController = BehaviorSubject<String>();
@@ -37,8 +36,8 @@ class PlantBloc with Validators {
   }
 
   getPlant(Plant plant) async {
-    //RoomsResponse response = await _repository.getRooms(userId);
-    if (!_plantSelect.isClosed) _plantSelect.sink.add(plant);
+    Plant response = await _repository.getPlant(plant.id);
+    if (!_plantSelect.isClosed) _plantSelect.sink.add(response);
   }
 
   BehaviorSubject<Plant> get plantSelect => _plantSelect;
@@ -54,7 +53,7 @@ class PlantBloc with Validators {
   Stream<String> get quantityStream =>
       _quantityController.stream.transform(validationQuantityRequired);
   Stream<String> get sexoStream => _sexoController.stream;
-  Stream<String> get genoTypeStream => _genotypeController.stream;
+
   Stream<String> get germinatedStream => _germinatedController.stream;
 
   Stream<String> get floweringStream => _floweringController.stream;
@@ -70,7 +69,6 @@ class PlantBloc with Validators {
   Function(List<Plant>) get addRoom => _plantsController.sink.add;
   Function(String) get changeName => _nameController.sink.add;
   Function(String) get changeDescription => _descriptionController.sink.add;
-  Function(String) get changeGenoType => _genotypeController.sink.add;
   Function(String) get changeQuantity => _quantityController.sink.add;
 
   Function(String) get changeThc => _thcController.sink.add;
@@ -78,7 +76,7 @@ class PlantBloc with Validators {
   Function(String) get changeCbd => _cbdController.sink.add;
 
   Function(String) get changePot => _potController.sink.add;
-
+  Function(String) get changeFlowering => _floweringController.sink.add;
   Function(List<Ventilation>) get changeVentilation =>
       _ventilationController.sink.add;
 
@@ -88,7 +86,6 @@ class PlantBloc with Validators {
 
   String get quantity => _quantityController.value;
   String get sexo => _sexoController.value;
-  String get genoType => _genotypeController.value;
   String get germinated => _germinatedController.value;
   String get flowering => _floweringController.value;
   String get pot => _potController.value;
@@ -103,7 +100,6 @@ class PlantBloc with Validators {
     _descriptionController?.close();
     _quantityController?.close();
     _sexoController?.close();
-    _genotypeController?.close();
     _germinatedController?.close();
     _floweringController?.close();
     _potController?.close();
@@ -115,6 +111,10 @@ class PlantBloc with Validators {
 
   disposePlants() {
     _plantsController?.close();
+  }
+
+  disposePlant() {
+    _plantSelect?.close();
   }
 }
 

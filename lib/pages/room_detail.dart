@@ -6,6 +6,7 @@ import 'package:chat/models/plant.dart';
 
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/add_update_plant.dart';
+import 'package:chat/pages/plant_detail.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/plants_provider.dart';
@@ -15,7 +16,6 @@ import 'package:chat/widgets/plant_card_widget.dart';
 import '../utils//extension.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
-import 'package:chat/widgets/plant_card_widget.dart';
 import 'package:chat/widgets/room_card.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/cupertino.dart';
@@ -60,13 +60,14 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     _tabController = new TabController(vsync: this, length: myTabs.length);
 
     this._chargePlants();
+    roomBloc.getRoom(widget.room);
   }
 
   _chargePlants() async {
     this.plants = await this.plantService.getPlantsRoom(widget.room.id);
 
     //getJobFuture = roomBloc.getRooms(profile.user.uid);
-    room = roomBloc.getRoom(widget.room);
+
     setState(() {});
   }
 
@@ -75,7 +76,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     super.dispose();
     _tabController?.dispose();
 
-    roomBloc.disposeRoom();
+    // roomBloc.disposeRoom();
 
     plantBloc?.disposePlants();
   }
@@ -83,7 +84,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    String nameFinal = "";
+
     return Scaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -91,19 +92,11 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             stream: roomBloc.roomSelect.stream,
             builder: (context, AsyncSnapshot<Room> snapshot) {
               if (snapshot.hasData) {
-                return FutureBuilder<Room>(
-                    future: this.roomsApiProvider.getRoom(widget.room.id),
-                    builder:
-                        (BuildContext context, AsyncSnapshot<Room> snapshot) {
-                      if (!snapshot.hasData) {
-                        return Text(nameFinal);
-                      } else {
-                        room = snapshot.data;
-                        nameFinal =
-                            room.name.isEmpty ? "" : room.name.capitalize();
-                        return Text(nameFinal);
-                      }
-                    });
+                final room = snapshot.data;
+                final nameFinal =
+                    room.name.isEmpty ? "" : room.name.capitalize();
+
+                return Text(nameFinal);
               } else if (snapshot.hasError) {
                 return _buildErrorWidget(snapshot.error);
               } else {
@@ -152,29 +145,17 @@ class _RoomDetailPageState extends State<RoomDetailPage>
           stream: roomBloc.roomSelect.stream,
           builder: (context, AsyncSnapshot<Room> snapshot) {
             if (snapshot.hasData) {
-              return FutureBuilder<Room>(
-                  future: this.roomsApiProvider.getRoom(widget.room.id),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<Room> snapshot) {
-                    if (!snapshot.hasData) {
-                      return CustomScrollView(
-                          physics: const BouncingScrollPhysics(
-                              parent: AlwaysScrollableScrollPhysics()),
-                          controller: _scrollController,
-                          slivers: <Widget>[makeHeaderLoading(context)]);
-                    } else {
-                      room = snapshot.data;
-                      return CustomScrollView(
-                          physics: const BouncingScrollPhysics(
-                              parent: AlwaysScrollableScrollPhysics()),
-                          controller: _scrollController,
-                          slivers: <Widget>[
-                            makeHeaderInfo(context),
-                            makeHeaderTabs(context),
-                            makeListPlants(context)
-                          ]);
-                    }
-                  });
+              room = snapshot.data;
+
+              return CustomScrollView(
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  controller: _scrollController,
+                  slivers: <Widget>[
+                    makeHeaderInfo(context),
+                    makeHeaderTabs(context),
+                    makeListPlants(context)
+                  ]);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
             } else {
@@ -268,7 +249,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 
   SliverPersistentHeader makeHeaderLoading(context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return SliverPersistentHeader(
       pinned: false,
@@ -310,7 +291,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     overflow: TextOverflow.ellipsis,
                     maxLines: 4,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 15.0, color: Colors.white54),
+                    style: TextStyle(fontSize: 15.0, color: Colors.white),
                   ),
                 ),
                 /* Expanded(
@@ -350,9 +331,18 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   children: [
                     Container(
                       child: Text(
-                        'Co2 : $co2',
+                        'Co2: ',
                         style: TextStyle(
                           color: Colors.white54,
+                          fontSize: 15.0,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Text(
+                        '$co2',
+                        style: TextStyle(
+                          color: Colors.white,
                           fontSize: 15.0,
                         ),
                       ),
@@ -362,9 +352,18 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     ),
                     Container(
                       child: Text(
-                        'Timer : $co2Control',
+                        'Timer: ',
                         style: TextStyle(
                           color: Colors.white54,
+                          fontSize: 15.0,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Text(
+                        '$co2Control',
+                        style: TextStyle(
+                          color: Colors.white,
                           fontSize: 15.0,
                         ),
                       ),
@@ -390,11 +389,11 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     alignment: Alignment.center,
                     child: ButtonSubEditProfile(
                         color: currentTheme.scaffoldBackgroundColor,
-                        textColor: Colors.white54,
-                        text: 'Editar room',
+                        textColor: currentTheme.accentColor,
+                        text: 'Editar',
                         onPressed: () {
-                          Navigator.of(context).push(createRouteAddRoom(
-                              widget.room, widget.rooms, true));
+                          Navigator.of(context)
+                              .push(createRouteAddRoom(room, true));
                         }),
                   ),
                 )
@@ -415,13 +414,15 @@ class _RoomDetailPageState extends State<RoomDetailPage>
               final plant = plants[index];
               return InkWell(
                   onTap: () => {
-                        Navigator.of(context).push(createRouteNewPlant(
+                        Navigator.of(context).push(createRoutePlantDetail(
                             plant, plants, widget.room, true)),
                       },
                   child: Stack(
                     children: [
                       CardPlant(plant: plant),
-                      _buildCircleFavoriteProduct(plant.quantity),
+                      Hero(
+                          tag: plant.quantity,
+                          child: _buildCircleFavoriteProduct(plant.quantity)),
                     ],
                   ));
             }),
@@ -525,7 +526,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         ),
                         iconSize: 30.0,
                         onPressed: () => {
-                          //Navigator.pop(context),
+                          Navigator.of(context).pop(),
+                          Navigator.of(context).push(createRouteNewPlant(
+                              plant, plants, widget.room, false)),
                         },
                       ),
                       //trailing:
@@ -736,12 +739,32 @@ Route createRouteNewPlant(
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => AddUpdatePlantPage(
       plant: plant,
-      plants: plants,
       room: room,
       isEdit: isEdit,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
+}
+
+Route createRoutePlantDetail(
+    Plant plant, List<Plant> plants, Room room, bool isEdit) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        PlantDetailPage(plant: plant, plants: plants, room: room),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
       var curve = Curves.ease;
 

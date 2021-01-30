@@ -12,7 +12,6 @@ class Plant {
       this.description = "",
       this.quantity = "",
       this.sexo = "0",
-      this.genotype = "",
       this.germinated = "",
       this.flowering = "",
       this.pot = "",
@@ -21,6 +20,7 @@ class Plant {
       this.thc = "",
       this.createdAt,
       this.updatedAt,
+      this.coverImage,
       isRoute,
       init()});
 
@@ -30,7 +30,7 @@ class Plant {
   String quantity;
 
   String sexo;
-  String genotype;
+
   String cbd;
   String thc;
   String user;
@@ -38,27 +38,28 @@ class Plant {
   String germinated;
   String flowering;
   String pot;
+  String coverImage;
 
   DateTime createdAt;
   DateTime updatedAt;
 
   factory Plant.fromJson(Map<String, dynamic> json) => new Plant(
-        id: json["id"],
-        user: json['user'],
-        room: json['room'],
-        name: json["name"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-        description: json["description"],
-        quantity: json["quantity"],
-        sexo: json["sexo"],
-        genotype: json["genotype"],
-        germinated: json["germinated"],
-        flowering: json["flowering"],
-        pot: json["pot"],
-        cbd: json["cbd"],
-        thc: json["thc"],
-        //images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+      id: json["id"],
+      user: json['user'],
+      room: json['room'],
+      name: json["name"],
+      createdAt: DateTime.parse(json["createdAt"]),
+      updatedAt: DateTime.parse(json["updatedAt"]),
+      description: json["description"],
+      quantity: json["quantity"],
+      sexo: json["sexo"],
+      germinated: json["germinated"],
+      flowering: json["flowering"],
+      pot: json["pot"],
+      cbd: json["cbd"],
+      thc: json["thc"],
+      coverImage: json["coverImage"]
+      //images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -69,12 +70,20 @@ class Plant {
         "description": description,
         "quantity": quantity,
         "sexo": sexo,
-        "genotype": genotype,
         "germinated": germinated,
         "flowering": flowering,
         "pot": pot,
         "cbd": cbd,
         "thc": thc,
+        "coverImage": coverImage
         // "images": List<Image>.from(images.map((x) => x)),
       };
+
+  getCoverImg() {
+    if (coverImage == "") {
+      return null;
+    } else {
+      return coverImage;
+    }
+  }
 }

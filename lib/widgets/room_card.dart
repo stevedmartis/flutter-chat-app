@@ -118,7 +118,7 @@ class _ArticleDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,7 +140,7 @@ class _ArticleDescription extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontSize: 15.0,
-                color: Colors.white54,
+                color: Colors.white,
               ),
             ),
             SizedBox(
@@ -150,7 +150,7 @@ class _ArticleDescription extends StatelessWidget {
               children: [
                 Icon(
                   Icons.local_florist,
-                  color: currentTheme.accentColor,
+                  color: Colors.white54,
                 ),
                 SizedBox(
                   width: 10,
@@ -161,7 +161,7 @@ class _ArticleDescription extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 15.0,
-                    color: Colors.white54,
+                    color: Colors.white,
                   ),
                 ),
                 SizedBox(
@@ -169,7 +169,7 @@ class _ArticleDescription extends StatelessWidget {
                 ),
                 FaIcon(
                   FontAwesomeIcons.wind,
-                  color: currentTheme.accentColor,
+                  color: Colors.white54,
                   size: 20,
                 ),
                 SizedBox(
@@ -181,7 +181,7 @@ class _ArticleDescription extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 15.0,
-                    color: Colors.white54,
+                    color: Colors.white,
                   ),
                 ),
                 SizedBox(
@@ -189,7 +189,7 @@ class _ArticleDescription extends StatelessWidget {
                 ),
                 FaIcon(
                   FontAwesomeIcons.lightbulb,
-                  color: currentTheme.accentColor,
+                  color: Colors.white54,
                   size: 20,
                 ),
                 SizedBox(
@@ -201,7 +201,7 @@ class _ArticleDescription extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 15.0,
-                    color: Colors.white54,
+                    color: Colors.white,
                   ),
                 ),
               ],
@@ -251,7 +251,7 @@ class RowTimeOnOffRoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Row(
       mainAxisAlignment:
@@ -260,7 +260,7 @@ class RowTimeOnOffRoom extends StatelessWidget {
       children: [
         Icon(
           Icons.wb_incandescent,
-          color: currentTheme.accentColor,
+          color: Colors.white54,
         ),
         SizedBox(
           width: 5.0,
@@ -270,7 +270,7 @@ class RowTimeOnOffRoom extends StatelessWidget {
           ' $timeOn',
           style: TextStyle(
             fontSize: size,
-            color: Colors.white54,
+            color: Colors.white,
           ),
         ),
         SizedBox(
@@ -279,7 +279,7 @@ class RowTimeOnOffRoom extends StatelessWidget {
         // FaIcon(FontAwesomeIcons.rulerHorizontal),
         Icon(
           Icons.bedtime,
-          color: currentTheme.accentColor,
+          color: Colors.white54,
         ),
         SizedBox(
           width: 5.0,
@@ -288,7 +288,7 @@ class RowTimeOnOffRoom extends StatelessWidget {
           ' $timeOff',
           style: TextStyle(
             fontSize: size,
-            color: Colors.white54,
+            color: Colors.white,
           ),
         ),
       ],
@@ -314,7 +314,7 @@ class RowMeassureRoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Row(
       mainAxisAlignment:
@@ -323,13 +323,21 @@ class RowMeassureRoom extends StatelessWidget {
       children: [
         FaIcon(
           FontAwesomeIcons.rulerHorizontal,
-          color: currentTheme.accentColor,
+          color: Colors.white54,
         ),
         SizedBox(
           width: 10,
         ),
         Text(
-          ' $wide W',
+          ' $wide',
+          style: TextStyle(
+            fontSize: fontSize,
+            color: Colors.white,
+          ),
+        ),
+
+        Text(
+          ' W',
           style: TextStyle(
             fontSize: fontSize,
             color: Colors.white54,
@@ -340,7 +348,14 @@ class RowMeassureRoom extends StatelessWidget {
         ),
         // FaIcon(FontAwesomeIcons.rulerHorizontal),
         Text(
-          ' $long L',
+          ' $long',
+          style: TextStyle(
+            fontSize: fontSize,
+            color: Colors.white,
+          ),
+        ),
+        Text(
+          ' L',
           style: TextStyle(
             fontSize: fontSize,
             color: Colors.white54,
@@ -351,7 +366,14 @@ class RowMeassureRoom extends StatelessWidget {
         ),
         // FaIcon(FontAwesomeIcons.rulerHorizontal),
         Text(
-          ' $tall T',
+          ' $tall',
+          style: TextStyle(
+            fontSize: fontSize,
+            color: Colors.white,
+          ),
+        ),
+        Text(
+          ' T',
           style: TextStyle(
             fontSize: fontSize,
             color: Colors.white54,

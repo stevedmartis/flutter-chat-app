@@ -38,12 +38,11 @@ class RoomsApiProvider {
       final resp = await http.get(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
-      print(resp);
       final roomsResponse = roomResponseFromJson(resp.body);
       return roomsResponse.room;
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
-      return new Room();
+      return new Room(id: '0');
     }
   }
 }

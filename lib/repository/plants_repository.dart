@@ -1,3 +1,4 @@
+import 'package:chat/models/plant.dart';
 import 'package:chat/models/plants_response.dart';
 import 'package:chat/providers/plants_provider.dart';
 
@@ -6,5 +7,9 @@ class PlantsRepository {
 
   Future<PlantsResponse> getPlants(String roomId) {
     return _apiProvider.getPlants(roomId);
+  }
+
+  Future<Plant> getPlant(String plantId) {
+    return _apiProvider.getPlant(plantId);
   }
 }

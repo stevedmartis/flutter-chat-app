@@ -69,8 +69,6 @@ class AwsService with ChangeNotifier {
     final resp = await http.Response.fromStream(streamResponse);
 
     if (resp.statusCode != 200 && resp.statusCode != 201) {
-      print('Algo salio mal');
-      print(resp.body);
       return null;
     }
 
