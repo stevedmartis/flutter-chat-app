@@ -2,12 +2,15 @@ import 'package:chat/bloc/profile_bloc.dart';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/profiles.dart';
+import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/header_image.dart';
+import 'package:chat/pages/profile_card.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/services/auth_service.dart';
 
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/button_gold.dart';
 import 'package:flutter/material.dart';
 
@@ -250,6 +253,61 @@ class EditProfilePageState extends State<EditProfilePage> {
                     ],
                   ),
                 ),
+                SliverFixedExtentList(
+                    itemExtent: 20,
+                    delegate: SliverChildListDelegate([Container()])),
+                SliverFixedExtentList(
+                    itemExtent: 100,
+                    delegate: SliverChildListDelegate([
+                      Container(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: CircleAvatar(
+                            radius: 55,
+                            backgroundColor:
+                                currentTheme.scaffoldBackgroundColor,
+                            child: CircleAvatar(
+                              radius: ProfileCard.avatarRadius,
+                              backgroundColor:
+                                  currentTheme.scaffoldBackgroundColor,
+                              child: GestureDetector(
+                                onTap: () => {
+                                  Navigator.of(context).push(PageRouteBuilder(
+                                      transitionDuration:
+                                          Duration(milliseconds: 200),
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          AvatarImagePage(
+                                            profile: this.profile,
+                                          ))),
+
+                                  // make changes here
+
+                                  //Navigator.of(context).push(createRouteAvatarProfile(this.user));
+                                },
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  child: Hero(
+                                    tag: profile.user.uid,
+                                    child: Material(
+                                      type: MaterialType.transparency,
+                                      child: ImageUserChat(
+                                        width: 100,
+                                        // showBorderAvatar: _showBorderAvatar,
+                                        height: 100,
+                                        profile: profile,
+                                        fontsize: 30,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ])),
                 SliverFillRemaining(
                     hasScrollBody: false,
                     child: Container(
