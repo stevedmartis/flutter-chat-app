@@ -20,6 +20,11 @@ class CustomAppBarHeader extends StatefulWidget {
 
 class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final authService = Provider.of<AuthService>(context);

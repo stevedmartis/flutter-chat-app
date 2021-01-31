@@ -18,6 +18,7 @@ class PlantBloc with Validators {
   final _potController = BehaviorSubject<String>();
   final _cbdController = BehaviorSubject<String>();
   final _thcController = BehaviorSubject<String>();
+  final _imageUpdateCtrl = BehaviorSubject<bool>();
 
   final _ventilationController = BehaviorSubject<List<Ventilation>>();
 
@@ -39,6 +40,8 @@ class PlantBloc with Validators {
     Plant response = await _repository.getPlant(plant.id);
     if (!_plantSelect.isClosed) _plantSelect.sink.add(response);
   }
+
+  BehaviorSubject<bool> get imageUpdate => _imageUpdateCtrl;
 
   BehaviorSubject<Plant> get plantSelect => _plantSelect;
 
@@ -93,6 +96,8 @@ class PlantBloc with Validators {
   String get thc => _thcController.value;
 
   dispose() {
+    _imageUpdateCtrl.close();
+
     _subject.close();
     _plantSelect.close();
     _nameController?.close();

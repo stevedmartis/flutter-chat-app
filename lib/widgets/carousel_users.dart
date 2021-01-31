@@ -82,7 +82,7 @@ class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
                           profile: widget.profiles[index],
                         )));
           },
-          child: CategoryItem(profile: widget.profiles[index]),
+          child: UserItem(profile: widget.profiles[index]),
         ),
       );
 }
@@ -319,8 +319,8 @@ class _BtnOption extends StatelessWidget {
   }
 }
 
-class CategoryItem extends StatefulWidget {
-  const CategoryItem({
+class UserItem extends StatefulWidget {
+  const UserItem({
     Key key,
     @required this.profile,
   }) : super(key: key);
@@ -328,10 +328,10 @@ class CategoryItem extends StatefulWidget {
   final Profiles profile;
 
   @override
-  _CategoryItemState createState() => _CategoryItemState();
+  _UserItemState createState() => _UserItemState();
 }
 
-class _CategoryItemState extends State<CategoryItem> {
+class _UserItemState extends State<UserItem> {
   @override
   Widget build(BuildContext context) {
     return Stack(

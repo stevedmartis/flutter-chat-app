@@ -6,6 +6,7 @@ import 'package:chat/helpers/mostrar_alerta.dart';
 
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/pages/image_plant_cover.dart';
 import 'package:chat/pages/new_product.dart';
 import 'package:chat/pages/profile_page.dart';
 
@@ -128,7 +129,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
     cbdCtrl.text = widget.plant.cbd;
     potCtrl.text = widget.plant.pot;
-
+    plantBloc.imageUpdate.add(true);
     nameCtrl.addListener(() {
       // print('${nameCtrl.text}');
       setState(() {
@@ -246,7 +247,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
     final bloc = CustomProvider.plantBlocIn(context);
 
-    //final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
     final isSexoChange =
         (widget.plant.sexo != optionItemSelected && optionItemSelected != null)
@@ -287,7 +288,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
               Navigator.pop(context),
           color: Colors.white,
         ),
-        title: (widget.isEdit) ? Text('Edit plant') : Text('New plant'),
+        title: (widget.isEdit) ? Text('Edit plant') : Text('Create plant'),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
@@ -304,6 +305,48 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                   parent: AlwaysScrollableScrollPhysics()),
               // controller: _scrollController,
               slivers: <Widget>[
+                SliverFixedExtentList(
+                  itemExtent: size.height / 3.7,
+                  delegate: SliverChildListDelegate(
+                    [
+                      StreamBuilder<bool>(
+                        stream: plantBloc.imageUpdate.stream,
+                        builder: (context, AsyncSnapshot<bool> snapshot) {
+                          if (snapshot.hasData) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(PageRouteBuilder(
+                                    transitionDuration:
+                                        Duration(milliseconds: 200),
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        CoverImagePlantPage(
+                                          plant: widget.plant,
+                                        )));
+                              },
+                              child: Hero(
+                                tag: widget.plant.coverImage,
+                                child: Image(
+                                  image: NetworkImage(
+                                    widget.plant.getCoverImg(),
+                                  ),
+                                  fit: BoxFit.cover,
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  alignment: Alignment.center,
+                                ),
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return _buildErrorWidget(snapshot.error);
+                          } else {
+                            return _buildLoadingWidget();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
                 SliverFillRemaining(
                     hasScrollBody: false,
                     child: Container(
@@ -367,34 +410,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                           SizedBox(
                             height: 20,
                           ),
-                          /* Expanded(
-                            child: GestureDetector(
-                              onTap: () => {
-                                FocusScope.of(context)
-                                    .requestFocus(new FocusNode()),
-                                _selectDateFlora(context),
-                              },
-                              child: AbsorbPointer(
-                                child: TextFormField(
-                                  controller: _dateFController,
-                                  keyboardType: TextInputType.datetime,
-                                  onSaved: (String val) {
-                                    setState(() {
-                                      setDateF = val;
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: 'Floration *',
-                                    suffixIcon: Icon(
-                                      Icons.insert_invitation,
-                                      color: Colors.white54,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ), */
-
                           Row(
                             children: [
                               Expanded(child: _createThc(bloc)),
@@ -424,6 +439,21 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         ),
       ),
     );
+  }
+
+  Widget _buildLoadingWidget() {
+    return Container(
+        height: 400.0, child: Center(child: CircularProgressIndicator()));
+  }
+
+  Widget _buildErrorWidget(String error) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Error occured: $error"),
+      ],
+    ));
   }
 
   Widget _createName(PlantBloc bloc) {

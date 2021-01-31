@@ -516,7 +516,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                       leading: Icon(Icons.local_florist,
                           size: 25, color: currentTheme.accentColor),
                       title: Text(
-                        'Flower',
+                        'Planta',
                         style: TextStyle(fontSize: 18),
                       ),
                       trailing: IconButton(

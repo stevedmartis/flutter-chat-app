@@ -1,7 +1,6 @@
 import 'package:chat/models/profiles.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
-import 'package:chat/pages/header_image.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/button_gold.dart';
@@ -9,9 +8,6 @@ import 'package:chat/widgets/sliver_header.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
-import './extensions.dart';
-import 'profile_card_painter.dart';
 
 import 'dart:ui' as ui;
 
@@ -51,35 +47,44 @@ class _ProfileCardState extends State<ProfileCard> {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        (!widget.loading)
-            ? Container(
-                // color: currentTheme.scaffoldBackgroundColor,
-                child: AnimatedOpacity(
-                    opacity: widget.loading ? 0.0 : 1.0,
-                    duration: Duration(milliseconds: 500),
-                    child: Stack(
+        Container(
+          color: currentTheme.scaffoldBackgroundColor,
+          child: AnimatedOpacity(
+              opacity: widget.loading ? 0.0 : 1.0,
+              duration: Duration(milliseconds: 500),
+              child: (!widget.isEmpty)
+                  ? Stack(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            /* Navigator.of(context).push(PageRouteBuilder(
-                                    transitionDuration:
-                                        Duration(milliseconds: 200),
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        HeaderImagePage(
-                                          profile: this.profile,
-                                        ))); */
-                          },
-                          child: Hero(
+                        Hero(
                             tag: widget.profile.imageHeader,
-                            child: Image(
-                              image: NetworkImage(
-                                widget.profile.getHeaderImg(),
-                              ),
+                            child: FadeInImage(
+                              image:
+                                  NetworkImage(widget.profile.getHeaderImg()),
+                              placeholder: AssetImage('assets/loading2.gif'),
                               fit: BoxFit.cover,
-                              height: double.infinity,
+                              height: size.height,
                               width: double.infinity,
                               alignment: Alignment.center,
+                            )),
+                        Container(
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              height: 100,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  end: Alignment(0.0, -0.5),
+                                  begin: Alignment(0.0, 0.1),
+                                  colors: <Color>[
+                                    currentTheme.scaffoldBackgroundColor,
+                                    currentTheme.scaffoldBackgroundColor
+                                        .withOpacity(0.0),
+                                    currentTheme.scaffoldBackgroundColor
+                                        .withOpacity(0.0),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -98,33 +103,14 @@ class _ProfileCardState extends State<ProfileCard> {
                                           .withOpacity(0.0),
                                     ],
                                     stops: [
-                                      10.0,
+                                      5.0,
                                       5.0
                                     ]))),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            height: 100,
-                            width: double.infinity,
-                            decoration: new BoxDecoration(
-                              gradient: new LinearGradient(
-                                end: Alignment(0.0, -0.5),
-                                begin: Alignment(0.0, 0.1),
-                                colors: <Color>[
-                                  currentTheme.scaffoldBackgroundColor,
-                                  currentTheme.scaffoldBackgroundColor
-                                      .withOpacity(0.0),
-                                  currentTheme.scaffoldBackgroundColor
-                                      .withOpacity(0.0),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
                       ],
-                    )),
-              )
-            : Container(
+                    )
+                  : Container()),
+        ),
+        /* Container(
                 // color: currentTheme.scaffoldBackgroundColor,
                 child: AnimatedOpacity(
                   opacity: widget.loading ? 0.0 : 0.0,
@@ -138,7 +124,7 @@ class _ProfileCardState extends State<ProfileCard> {
                     ),
                   ),
                 ),
-              ),
+              ), */
 
         /* Positioned(
           left: 0,
@@ -164,39 +150,7 @@ class _ProfileCardState extends State<ProfileCard> {
           ),
         ),
          */
-        (widget.isUserEdit)
-            ? Container(
-                padding: EdgeInsets.all(10.0),
-                alignment: Alignment.topRight,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    child: CircleAvatar(
-                        child: (IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              color: currentTheme.accentColor,
-                              size: 35,
-                            ),
-                            onPressed: () {
-                              if (!widget.isUserEdit)
-                                return true;
-                              else
-                                Navigator.of(context).push(PageRouteBuilder(
-                                    transitionDuration:
-                                        Duration(milliseconds: 200),
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        HeaderImagePage(
-                                          profile: this.widget.profile,
-                                        )));
-                            })),
-                        backgroundColor: Colors.black.withOpacity(0.50)),
-                  ),
-                ))
-            : Container(),
+
         Container(
           margin: EdgeInsets.only(left: (widget.isUserEdit) ? 0 : 22),
           child: Align(
@@ -204,38 +158,42 @@ class _ProfileCardState extends State<ProfileCard> {
                 ? Alignment.bottomCenter
                 : Alignment.bottomLeft,
             child: CircleAvatar(
-              radius: ProfileCard.avatarRadius,
-              backgroundColor: widget.profileColor.darker(),
-              child: GestureDetector(
-                onTap: () => {
-                  if (!widget.isUserAuth)
-                    Navigator.of(context).push(createRouteChat())
-                  else
-                    Navigator.of(context).push(PageRouteBuilder(
-                        transitionDuration: Duration(milliseconds: 200),
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            AvatarImagePage(
-                              profile: this.widget.profile,
-                            ))),
+              radius: 55,
+              backgroundColor: currentTheme.scaffoldBackgroundColor,
+              child: CircleAvatar(
+                radius: ProfileCard.avatarRadius,
+                backgroundColor: currentTheme.scaffoldBackgroundColor,
+                child: GestureDetector(
+                  onTap: () => {
+                    if (!widget.isUserAuth)
+                      Navigator.of(context).push(createRouteChat())
+                    else
+                      Navigator.of(context).push(PageRouteBuilder(
+                          transitionDuration: Duration(milliseconds: 200),
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  AvatarImagePage(
+                                    profile: this.widget.profile,
+                                  ))),
 
-                  // make changes here
+                    // make changes here
 
-                  //Navigator.of(context).push(createRouteAvatarProfile(this.user));
-                },
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  width: 100,
-                  height: 100,
-                  child: Hero(
-                    tag: widget.profile.user.uid,
-                    child: Material(
-                      type: MaterialType.transparency,
-                      child: ImageUserChat(
-                        width: 100,
-                        // showBorderAvatar: _showBorderAvatar,
-                        height: 100,
-                        profile: widget.profile,
-                        fontsize: 30,
+                    //Navigator.of(context).push(createRouteAvatarProfile(this.user));
+                  },
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    child: Hero(
+                      tag: widget.profile.user.uid,
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: ImageUserChat(
+                          width: 100,
+                          // showBorderAvatar: _showBorderAvatar,
+                          height: 100,
+                          profile: widget.profile,
+                          fontsize: 30,
+                        ),
                       ),
                     ),
                   ),

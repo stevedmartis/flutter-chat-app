@@ -36,6 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final _profileCardHeight = size.height / 3;
     return SizedBox.expand(
       child: Container(
+        color: currentTheme.scaffoldBackgroundColor,
         height: _profileCardHeight,
         child: ProfileCard(
             loading: widget.loading,

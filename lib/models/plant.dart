@@ -20,7 +20,7 @@ class Plant {
       this.thc = "",
       this.createdAt,
       this.updatedAt,
-      this.coverImage,
+      this.coverImage = "",
       isRoute,
       init()});
 
@@ -81,7 +81,9 @@ class Plant {
 
   getCoverImg() {
     if (coverImage == "") {
-      return null;
+      var imageDefault =
+          "https://images-cdn-br.s3-sa-east-1.amazonaws.com/default_banner.jpeg";
+      return imageDefault;
     } else {
       return coverImage;
     }

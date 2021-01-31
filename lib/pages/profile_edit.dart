@@ -4,19 +4,16 @@ import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/pages/header_image.dart';
 import 'package:chat/pages/profile_page.dart';
-import 'package:chat/pages/profile_page2.dart';
 import 'package:chat/services/auth_service.dart';
 
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
-import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'dart:ui' as ui;
 
 //final Color darkBlue = Color.fromARGB(255, 18, 32, 47);
 
@@ -26,9 +23,6 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class EditProfilePageState extends State<EditProfilePage> {
-  Future<ui.Image> _image(String url) async =>
-      await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
-
   Profiles profile;
 
   final usernameCtrl = TextEditingController();

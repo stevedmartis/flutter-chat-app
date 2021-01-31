@@ -14,7 +14,6 @@ import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
-import 'package:chat/widgets/header_custom_search.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,11 +76,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   final roomService = new RoomService();
   double get maxHeight => 200 + MediaQuery.of(context).padding.top;
   double get minHeight => MediaQuery.of(context).padding.bottom;
-
-  Future<ui.Image> _image(String url) async =>
-      await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
-  // Animation _heartAnimation;
-  // AnimationController _heartAnimationController;
 
   bool isLike = false;
 
@@ -184,7 +178,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
                   centerTitle: false,
                   pinned: true,
-                  title: Center(
+                  /* title: Center(
                     child: Container(
                         //  margin: EdgeInsets.only(left: 0),
                         width: size.height / 3,
@@ -199,47 +193,24 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                         ),
                         child: SearchContent()),
                   ),
-
+ */
                   expandedHeight: maxHeight,
+                  shadowColor: currentTheme.scaffoldBackgroundColor,
+
                   // collapsedHeight: 56.0001,
                   flexibleSpace: FlexibleSpaceBar(
                     stretchModes: [
                       StretchMode.zoomBackground,
-                      StretchMode.fadeTitle,
+                      // StretchMode.fadeTitle,
                       // StretchMode.blurBackground
                     ],
-                    background: StreamBuilder<bool>(
-                      stream: profileBloc.imageUpdate.stream,
-                      builder: (context, AsyncSnapshot<bool> snapshot) {
-                        if (snapshot.hasData) {
-                          return FutureBuilder<ui.Image>(
-                              future: _image(widget.profile.getHeaderImg()),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<ui.Image> snapshot) {
-                                if (snapshot.hasData) {
-                                  return ProfilePage(
-                                    isEmpty: false,
-                                    loading: false,
-                                    isUserAuth: widget.isUserAuth,
-                                    isUserEdit: widget.isUserEdit,
-                                    profile: widget.profile,
-                                  );
-                                } else {
-                                  return ProfilePage(
-                                    isEmpty: true,
-                                    loading: true,
-                                    isUserAuth: widget.isUserAuth,
-                                    isUserEdit: widget.isUserEdit,
-                                    profile: widget.profile,
-                                  );
-                                }
-                              });
-                        } else if (snapshot.hasError) {
-                          return _buildErrorWidget(snapshot.error);
-                        } else {
-                          return _buildLoadingWidget();
-                        }
-                      },
+                    background: ProfilePage(
+                      isEmpty: false,
+                      loading: false,
+                      //image: snapshot.data,
+                      isUserAuth: widget.isUserAuth,
+                      isUserEdit: widget.isUserEdit,
+                      profile: widget.profile,
                     ),
                     centerTitle: false,
                   ),

@@ -104,9 +104,6 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   void dispose() {
     super.dispose();
     _scrollController?.dispose();
-    //  _heartAnimationController?.dispose();
-    // roomBloc.disposeRoom();
-    //plantBloc.disposePlant();
   }
 
   bool get _showTitle {
