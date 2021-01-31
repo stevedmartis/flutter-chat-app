@@ -11,6 +11,7 @@ import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/plants_provider.dart';
 import 'package:chat/providers/rooms_provider.dart';
+import 'package:chat/services/plant_services.dart';
 import 'package:chat/widgets/plant_card_widget.dart';
 
 import '../utils//extension.dart';
@@ -404,6 +405,8 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 
   Widget _buildWidgetPlant(plants) {
+    final plantService = Provider.of<PlantService>(context, listen: false);
+
     return Container(
       child: SizedBox(
         child: ListView.builder(
@@ -414,6 +417,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
               final plant = plants[index];
               return InkWell(
                   onTap: () => {
+                        plantService.plant = plant,
                         Navigator.of(context).push(createRoutePlantDetail(
                             plant, plants, widget.room, true)),
                       },

@@ -102,7 +102,6 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
       setState(() {
         profileBloc.imageUpdate.add(true);
         authService.profile.imageHeader = resp;
-        awsService.isUpload = true;
       });
 
 /*       Navigator.pushAndRemoveUntil(

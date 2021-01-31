@@ -45,71 +45,54 @@ class _ProfileCardState extends State<ProfileCard> {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Stack(
-      fit: StackFit.expand,
-      children: <Widget>[
+      children: [
+        Hero(
+            tag: widget.profile.imageHeader,
+            child: FadeInImage(
+              image: NetworkImage(widget.profile.getHeaderImg()),
+              placeholder: AssetImage('assets/loading2.gif'),
+              fit: BoxFit.cover,
+              height: size.height,
+              width: double.infinity,
+              alignment: Alignment.center,
+            )),
         Container(
-          color: currentTheme.scaffoldBackgroundColor,
-          child: AnimatedOpacity(
-              opacity: widget.loading ? 0.0 : 1.0,
-              duration: Duration(milliseconds: 500),
-              child: (!widget.isEmpty)
-                  ? Stack(
-                      children: [
-                        Hero(
-                            tag: widget.profile.imageHeader,
-                            child: FadeInImage(
-                              image:
-                                  NetworkImage(widget.profile.getHeaderImg()),
-                              placeholder: AssetImage('assets/loading2.gif'),
-                              fit: BoxFit.cover,
-                              height: size.height,
-                              width: double.infinity,
-                              alignment: Alignment.center,
-                            )),
-                        Container(
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 100,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  end: Alignment(0.0, -0.5),
-                                  begin: Alignment(0.0, 0.1),
-                                  colors: <Color>[
-                                    currentTheme.scaffoldBackgroundColor,
-                                    currentTheme.scaffoldBackgroundColor
-                                        .withOpacity(0.0),
-                                    currentTheme.scaffoldBackgroundColor
-                                        .withOpacity(0.0),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                            height: double.infinity,
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                gradient: LinearGradient(
-                                    begin: FractionalOffset.topCenter,
-                                    end: FractionalOffset.bottomCenter,
-                                    colors: [
-                                      currentTheme.scaffoldBackgroundColor
-                                          .withOpacity(0.10),
-                                      // Colors.white.withOpacity(0.30),
-                                      currentTheme.scaffoldBackgroundColor
-                                          .withOpacity(0.0),
-                                    ],
-                                    stops: [
-                                      5.0,
-                                      5.0
-                                    ]))),
-                      ],
-                    )
-                  : Container()),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 100,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  end: Alignment(0.0, -0.5),
+                  begin: Alignment(0.0, 0.1),
+                  colors: <Color>[
+                    currentTheme.scaffoldBackgroundColor,
+                    currentTheme.scaffoldBackgroundColor.withOpacity(0.0),
+                    currentTheme.scaffoldBackgroundColor.withOpacity(0.0),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
+        Container(
+            height: double.infinity,
+            decoration: BoxDecoration(
+                color: Colors.black,
+                gradient: LinearGradient(
+                    begin: FractionalOffset.topCenter,
+                    end: FractionalOffset.bottomCenter,
+                    colors: [
+                      currentTheme.scaffoldBackgroundColor.withOpacity(0.10),
+                      // Colors.white.withOpacity(0.30),
+                      currentTheme.scaffoldBackgroundColor.withOpacity(0.0),
+                    ],
+                    stops: [
+                      5.0,
+                      5.0
+                    ]))),
+
         /* Container(
                 // color: currentTheme.scaffoldBackgroundColor,
                 child: AnimatedOpacity(

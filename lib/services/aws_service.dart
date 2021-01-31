@@ -18,6 +18,8 @@ class AwsService with ChangeNotifier {
 
   bool _isUpload = false;
 
+  String imageUpdate;
+
   // static String redirectUri = 'https://api.gettymarket.com/api/aws/';
 
   final _storage = new FlutterSecureStorage();
@@ -120,6 +122,90 @@ class AwsService with ChangeNotifier {
 
     final respUrl = respBody['url'];
     this.image = respUrl.toString();
+    return respUrl;
+  }
+
+  Future<String> uploadImageCoverPlant(
+      String fileName, String fileType, File image) async {
+    final url = Uri.parse('${Environment.apiUrl}/aws/upload/cover-plant');
+
+    final mimeType = mime(image.path).split('/'); //image/jpeg
+
+    final token = await this._storage.read(key: 'token');
+
+    Map<String, String> headers = {
+      "Content-Type": "image/mimeType",
+      "x-token": token,
+    };
+
+    final imageUploadRequest = http.MultipartRequest('POST', url);
+
+    final file = await http.MultipartFile.fromPath('file', image.path,
+        contentType: MediaType(mimeType[0], mimeType[1]));
+
+    imageUploadRequest.files.add(file);
+
+    imageUploadRequest.headers.addAll(headers);
+
+    final streamResponse = await imageUploadRequest.send();
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      print('Algo salio mal');
+
+      return null;
+    }
+
+    final respBody = jsonDecode(resp.body);
+
+    //final respData = imageResponseToJson(resp.body);
+    isUpload = true;
+
+    final respUrl = respBody['url'];
+    this.imageUpdate = respUrl;
+    return respUrl;
+  }
+
+  Future<String> updateImageCoverPlant(
+      String fileName, String fileType, File image, String id) async {
+    final url =
+        Uri.parse('${Environment.apiUrl}/aws/upload/update-cover-plant');
+
+    final mimeType = mime(image.path).split('/'); //image/jpeg
+
+    final token = await this._storage.read(key: 'token');
+
+    Map<String, String> headers = {
+      "Content-Type": "image/mimeType",
+      "x-token": token,
+      'id': id,
+    };
+
+    final imageUploadRequest = http.MultipartRequest('POST', url);
+
+    final file = await http.MultipartFile.fromPath('file', image.path,
+        contentType: MediaType(mimeType[0], mimeType[1]));
+
+    imageUploadRequest.files.add(file);
+
+    imageUploadRequest.headers.addAll(headers);
+
+    final streamResponse = await imageUploadRequest.send();
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      print('Algo salio mal');
+
+      return null;
+    }
+
+    final respBody = jsonDecode(resp.body);
+
+    //final respData = imageResponseToJson(resp.body);
+    isUpload = true;
+
+    final respUrl = respBody['url'];
+    this.imageUpdate = respUrl;
     return respUrl;
   }
 }

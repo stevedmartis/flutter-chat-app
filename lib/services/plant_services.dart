@@ -11,7 +11,13 @@ import 'package:chat/global/environment.dart';
 import 'package:flutter/material.dart';
 
 class PlantService with ChangeNotifier {
-  Plant plantModel;
+  Plant _plant;
+  Plant get plant => this._plant;
+
+  set plant(Plant valor) {
+    this._plant = valor;
+    notifyListeners();
+  }
 
   final _storage = new FlutterSecureStorage();
 

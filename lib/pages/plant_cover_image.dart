@@ -9,10 +9,7 @@ import 'dart:ui' as ui;
 
 class PlantCard extends StatefulWidget {
   PlantCard(
-      {@required this.plantColor,
-      @required this.plant,
-      @required this.image,
-      this.isEmpty = false});
+      {@required this.plantColor, @required this.plant, this.isEmpty = false});
 
   final Color plantColor;
   static const double avatarRadius = 48;
@@ -20,8 +17,6 @@ class PlantCard extends StatefulWidget {
 
   final Plant plant;
   final bool isEmpty;
-
-  final ui.Image image;
 
   final picker = ImagePicker();
 
@@ -40,14 +35,15 @@ class _PlantCardState extends State<PlantCard> {
       child: Hero(
         tag: widget.plant.id,
         child: Material(
-          type: MaterialType.transparency,
-          child: CoverImagePlant(
-            width: 100,
-            height: 100,
-            plant: widget.plant,
-            fontsize: 100,
-          ),
-        ),
+            type: MaterialType.transparency,
+            child: FadeInImage(
+              image: NetworkImage(widget.plant.getCoverImg()),
+              placeholder: AssetImage('assets/loading2.gif'),
+              fit: BoxFit.cover,
+              height: 100,
+              width: double.infinity,
+              alignment: Alignment.center,
+            )),
       ),
     );
   }

@@ -11,6 +11,7 @@ import 'package:chat/pages/new_product.dart';
 import 'package:chat/pages/profile_page.dart';
 
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
 
 import 'package:chat/theme/theme.dart';
@@ -37,6 +38,7 @@ class AddUpdatePlantPage extends StatefulWidget {
 }
 
 class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
+  Plant plant;
   final nameCtrl = TextEditingController();
 
   final descriptionCtrl = TextEditingController();
@@ -116,6 +118,9 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
   @override
   void initState() {
+    final plantService = Provider.of<PlantService>(context, listen: false);
+    plant = plantService.plant;
+
     errorRequired = (widget.isEdit) ? false : true;
     nameCtrl.text = widget.plant.name;
     descriptionCtrl.text = widget.plant.description;
@@ -129,6 +134,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
     cbdCtrl.text = widget.plant.cbd;
     potCtrl.text = widget.plant.pot;
+
     plantBloc.imageUpdate.add(true);
     nameCtrl.addListener(() {
       // print('${nameCtrl.text}');
@@ -321,14 +327,14 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                                     pageBuilder: (context, animation,
                                             secondaryAnimation) =>
                                         CoverImagePlantPage(
-                                          plant: widget.plant,
-                                        )));
+                                            plant: this.plant,
+                                            isEdit: widget.isEdit)));
                               },
                               child: Hero(
                                 tag: widget.plant.coverImage,
                                 child: Image(
                                   image: NetworkImage(
-                                    widget.plant.getCoverImg(),
+                                    this.plant.coverImage,
                                   ),
                                   fit: BoxFit.cover,
                                   height: double.infinity,
@@ -741,14 +747,14 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                         loading = true;
                       }),
                       FocusScope.of(context).unfocus(),
-                      (widget.isEdit) ? _editPlant(bloc) : _createRoom(bloc),
+                      (widget.isEdit) ? _editPlant(bloc) : _createPlant(bloc),
                     }
                 : null);
       },
     );
   }
 
-  _createRoom(PlantBloc bloc) async {
+  _createPlant(PlantBloc bloc) async {
     final plantService = Provider.of<PlantService>(context, listen: false);
 
     final room = widget.room.id;
@@ -780,6 +786,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         name: name,
         description: description,
         sexo: sexo,
+        coverImage: widget.plant.coverImage,
         quantity: quantity,
         germinated: germinated,
         flowering: flowering,
@@ -788,6 +795,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         pot: pot,
         room: room,
         user: uid);
+
+    print(newPlant);
 
     final createPlantResp = await plantService.createPlant(newPlant);
 
@@ -814,7 +823,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
   _editPlant(PlantBloc bloc) async {
     final plantService = Provider.of<PlantService>(context, listen: false);
-    //final authService = Provider.of<AuthService>(context, listen: false);
+    final awsService = Provider.of<AwsService>(context, listen: false);
 
     // final uid = authService.profile.user.uid;
 
@@ -842,6 +851,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         name: name,
         description: description,
         sexo: sexo,
+        coverImage: awsService.imageUpdate,
         quantity: quantity,
         germinated: germinated,
         flowering: flowering,
@@ -849,6 +859,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         cbd: cbd,
         pot: pot,
         id: widget.plant.id);
+
+    print(editPlant);
 
     if (widget.isEdit) {
       final editRoomRes = await plantService.editPlant(editPlant);

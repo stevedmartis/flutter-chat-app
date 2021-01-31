@@ -1,7 +1,9 @@
+import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/profile_bloc.dart';
 import 'package:chat/models/plant.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
+import 'package:chat/services/plant_services.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/image_cover_expanded.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +12,12 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class CoverImagePlantPage extends StatefulWidget {
-  CoverImagePlantPage({this.plant, this.isUserAuth = true});
+  CoverImagePlantPage(
+      {this.plant, this.isUserAuth = true, this.isEdit = false});
   final Plant plant;
   final bool isUserAuth;
+
+  final bool isEdit;
 
   @override
   CoverImagePlantPageState createState() => CoverImagePlantPageState();
@@ -62,7 +67,8 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
               color: currentTheme.accentColor,
             ),
             iconSize: 40,
-            onPressed: () async => _selectImage(),
+            onPressed: () async =>
+                (!widget.isEdit) ? _selectImage() : _editImage(),
             color: Colors.white,
           ),
         ],
@@ -85,7 +91,7 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
 
   _selectImage() async {
     final awsService = Provider.of<AwsService>(context, listen: false);
-    final authService = Provider.of<AuthService>(context, listen: false);
+    final plantService = Provider.of<PlantService>(context, listen: false);
 
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
@@ -96,24 +102,44 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
 
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
-      final resp = await awsService.uploadImageHeader(
-          widget.plant.user, fileType[0], fileType[1], imageCover);
+      final resp = await awsService.uploadImageCoverPlant(
+          fileType[0], fileType[1], imageCover);
 
       setState(() {
-        profileBloc.imageUpdate.add(true);
-        authService.profile.imageHeader = resp;
-        awsService.isUpload = true;
-      });
+        plantBloc.imageUpdate.add(true);
 
-/*       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => EditProfilePage()),
-          (Route<dynamic> route) => true); */
-      /*    Navigator.of(context)
-          .pushNamedAndRemoveUntil('profile-edit', (route) => true);
- */
-      //
+        plantService.plant.coverImage = resp;
+
+        // awsService.isUpload = true;
+      });
+    } else {
+      print('No image selected.');
+    }
+  }
+
+  _editImage() async {
+    final awsService = Provider.of<AwsService>(context, listen: false);
+    final plantService = Provider.of<PlantService>(context, listen: false);
+
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      imageCover = File(pickedFile.path);
+
+      final fileType = pickedFile.path.split('.');
+
+      /* awsService.uploadAvatar(
+            widget.profile.user.uid, fileType[0], fileType[1], image); */
+      final resp = await awsService.updateImageCoverPlant(
+          fileType[0], fileType[1], imageCover, widget.plant.id);
+
+      setState(() {
+        plantBloc.imageUpdate.add(true);
+
+        plantService.plant.coverImage = resp;
+
+        // awsService.isUpload = true;
+      });
     } else {
       print('No image selected.');
     }

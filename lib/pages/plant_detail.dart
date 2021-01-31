@@ -12,6 +12,7 @@ import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/plants_provider.dart';
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
@@ -91,6 +92,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   @override
   void initState() {
     _scrollController = ScrollController()..addListener(() => setState(() {}));
+    final plantService = Provider.of<PlantService>(context, listen: false);
+    plant = plantService.plant;
 
     super.initState();
     //  name = widget.profile.name;
@@ -232,20 +235,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                       StretchMode.fadeTitle,
                       // StretchMode.blurBackground
                     ],
-                    background: FutureBuilder<ui.Image>(
-                        future: _image(widget.plant.getCoverImg()),
-                        builder: (BuildContext context,
-                                AsyncSnapshot<ui.Image> snapshot) =>
-                            snapshot.hasData
-                                ? PlantPage(
-                                    image: snapshot.data,
-                                    plant: widget.plant,
-                                  )
-                                : PlantPage(
-                                    isEmpty: true,
-                                    image: snapshot.data,
-                                    plant: widget.plant,
-                                  )),
+                    background: PlantPage(
+                      plant: widget.plant,
+                    ),
                     centerTitle: false,
                   ),
                 ),

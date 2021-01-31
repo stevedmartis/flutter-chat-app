@@ -67,7 +67,7 @@ class Profiles {
   getHeaderImg() {
     if (imageHeader == "") {
       var imageDefault =
-          "https://images-cdn-br.s3-sa-east-1.amazonaws.com/default_banner.jpeg";
+          "http://images-cdn-br.s3-sa-east-1.amazonaws.com/default_banner.jpeg";
 
       return imageDefault;
     } else {

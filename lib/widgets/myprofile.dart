@@ -86,7 +86,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     super.initState();
     name = widget.profile.name;
 
-    profileBloc.imageUpdate.add(true);
+    // profileBloc.imageUpdate.add(true);
     roomBloc.getRooms(widget.profile.user.uid);
   }
 
@@ -201,7 +201,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                   flexibleSpace: FlexibleSpaceBar(
                     stretchModes: [
                       StretchMode.zoomBackground,
-                      // StretchMode.fadeTitle,
+                      StretchMode.fadeTitle,
                       // StretchMode.blurBackground
                     ],
                     background: ProfilePage(

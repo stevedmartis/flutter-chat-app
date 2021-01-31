@@ -7,18 +7,16 @@ import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 
 class PlantPage extends StatefulWidget {
-  PlantPage(
-      {this.isUserAuth,
-      this.isUserEdit = false,
-      @required this.plant,
-      this.isEmpty = false,
-      this.image});
+  PlantPage({
+    this.isUserAuth,
+    this.isUserEdit = false,
+    @required this.plant,
+    this.isEmpty = false,
+  });
   final bool isUserAuth;
   final bool isUserEdit;
   final Plant plant;
   final bool isEmpty;
-
-  final ui.Image image;
 
   @override
   _PlantPageState createState() => _PlantPageState();
@@ -35,7 +33,6 @@ class _PlantPageState extends State<PlantPage> {
       child: Container(
         height: _profileCardHeight,
         child: PlantCard(
-            image: widget.image,
             isEmpty: widget.isEmpty,
             plant: widget.plant,
             plantColor: currentTheme.scaffoldBackgroundColor),
