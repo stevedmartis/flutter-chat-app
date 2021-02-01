@@ -14,6 +14,7 @@ class Air {
       this.updatedAt,
       this.room,
       isRoute,
+      this.watts,
       init()});
 
   String id;
@@ -21,6 +22,7 @@ class Air {
   String description;
   String user;
   String room;
+  String watts;
 
   DateTime createdAt;
   DateTime updatedAt;
@@ -33,6 +35,7 @@ class Air {
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
         description: json["description"],
+        watts: json["watts"],
 
         //images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
       );
@@ -43,5 +46,6 @@ class Air {
         "room": room,
         "name": name,
         "description": description,
+        "watts": watts
       };
 }

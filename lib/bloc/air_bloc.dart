@@ -10,6 +10,8 @@ class AirBloc with Validators {
 
   final _descriptionController = BehaviorSubject<String>();
 
+  final _wattsController = BehaviorSubject<String>();
+
   final _airesController = BehaviorSubject<List<Air>>();
   final AirRepository _repository = AirRepository();
 
@@ -38,9 +40,11 @@ class AirBloc with Validators {
       _nameController.stream.transform(validationNameRequired);
   Stream<String> get descriptionStream => _descriptionController.stream;
 
+  Stream<String> get wattsStream => _wattsController.stream;
+
   Stream<bool> get formValidStream => Observable.combineLatest2(
       nameStream,
-      descriptionStream,
+      wattsStream,
       //timeOnStream,
       //timeOffStream,
       (a, b) => true);
@@ -48,14 +52,18 @@ class AirBloc with Validators {
   Function(String) get changeName => _nameController.sink.add;
   Function(String) get changeDescription => _descriptionController.sink.add;
 
+  Function(String) get changeWatts => _wattsController.sink.add;
+
   // Obtener el último valor ingresado a los streams
   String get name => _nameController.value;
   String get description => _descriptionController.value;
+  String get watts => _wattsController.value;
 
   dispose() {
     _aires.close();
     _airSelect.close();
     _nameController?.close();
+    _wattsController.close();
 
     _descriptionController?.close();
 

@@ -47,43 +47,19 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
 
   final _durationFlorationCtrl = TextEditingController();
 
+  final _wattsCtrl = TextEditingController();
+
   // final potCtrl = TextEditingController();
-
-  var tchCtrl = new MaskedTextController(mask: '00');
-  var cbdCtrl = new MaskedTextController(mask: '00');
-
-  var potCtrl = new TextEditingController();
 
   bool isNameChange = false;
   bool isAboutChange = false;
-  bool isQuantityChange = false;
 
-  bool isGerminatedChange = false;
-  bool isFlorationChange = false;
-
-  bool isThcChange = false;
-
-  bool isCbdChange = false;
-  bool isPotChange = false;
   bool errorRequired = false;
-
+  bool isControllerChangeEdit = false;
   bool loading = false;
 
-  String dropdownValue = 'Sexo';
-
-  String setDateG;
-
-  DateTime selectedDateG = DateTime.now();
-
-  TextEditingController _dateGController = TextEditingController();
-
-  String setDateF;
-
-  DateTime selectedDateF = DateTime.now();
-
-  TextEditingController _dateFController = TextEditingController();
-
-  String optionItemSelected;
+  bool isThcChange = false;
+  bool isWattsChange = false;
 
   List<DropdownMenuItem> categories = [
     DropdownMenuItem(
@@ -107,6 +83,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     errorRequired = (widget.isEdit) ? false : true;
     nameCtrl.text = widget.air.name;
     descriptionCtrl.text = widget.air.description;
+    _wattsCtrl.text = widget.air.watts;
 
     plantBloc.imageUpdate.add(true);
     nameCtrl.addListener(() {
@@ -132,6 +109,19 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
       });
     });
 
+    _wattsCtrl.addListener(() {
+      setState(() {
+        if (widget.air.watts != _wattsCtrl.text)
+          this.isWattsChange = true;
+        else
+          this.isWattsChange = false;
+
+        if (_wattsCtrl.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
+      });
+    });
     super.initState();
   }
 
@@ -145,11 +135,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
 
     // plantBloc?.dispose();
 
-    tchCtrl.dispose();
-    cbdCtrl.dispose();
-    _dateGController.dispose();
-    _dateFController.dispose();
-    potCtrl.dispose();
+    _wattsCtrl.dispose();
 
     super.dispose();
   }
@@ -162,22 +148,10 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
 
 //    final size = MediaQuery.of(context).size;
 
-    final isSexoChange =
-        (widget.air.name != optionItemSelected && optionItemSelected != null)
-            ? true
-            : false;
+    final isControllerChange = isNameChange && isWattsChange;
 
-    final isControllerChange = isNameChange;
-
-    final isControllerChangeEdit = isNameChange ||
-        isAboutChange ||
-        isQuantityChange ||
-        isSexoChange ||
-        isGerminatedChange ||
-        isFlorationChange ||
-        isThcChange ||
-        isCbdChange ||
-        isPotChange;
+    final isControllerChangeEdit =
+        isNameChange || isWattsChange || isAboutChange;
 
     return Scaffold(
       appBar: AppBar(
@@ -219,15 +193,13 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
                     hasScrollBody: false,
                     child: Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           _createName(bloc),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          _createWatts(bloc),
                           _createDescription(bloc),
                           SizedBox(
                             height: 10,
@@ -322,13 +294,13 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     );
   }
 
-  Widget _createQuantity(PlantBloc bloc) {
+  Widget _createWatts(AirBloc bloc) {
     return StreamBuilder(
-      stream: bloc.quantityStream,
+      stream: bloc.wattsStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
           child: TextField(
-            controller: quantityCtrl,
+            controller: _wattsCtrl,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(3),
             ],
@@ -341,10 +313,10 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
                       const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Quantity *',
+                labelText: 'Watts *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
-            onChanged: bloc.changeQuantity,
+            onChanged: bloc.changeWatts,
           ),
         );
       },
@@ -380,105 +352,6 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     );
   }
 
-  Widget _createThc(PlantBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.tchStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            controller: tchCtrl,
-            inputFormatters: <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(3),
-            ],
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-                suffixIcon: Container(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Text(
-                      '%',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white54),
-                    )),
-                //  fillColor: currentTheme.accentColor,
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                ),
-                hintText: '',
-                labelText: 'THC',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeThc,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _createCbd(PlantBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.tchStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            controller: cbdCtrl,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-                suffixIcon: Container(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Text(
-                      '%',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white54),
-                    )),
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                ),
-                hintText: '',
-                labelText: 'CBD',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeCbd,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _createPot(PlantBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.potStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            controller: potCtrl,
-            inputFormatters: <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(3),
-            ],
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-                // icon: Icon(Icons.perm_identity),
-                //  fillColor: currentTheme.accentColor,
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                ),
-                hintText: '',
-                labelText: 'Lt pot',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changePot,
-          ),
-        );
-      },
-    );
-  }
-
   Widget _createButton(
     AirBloc bloc,
     bool isControllerChange,
@@ -508,7 +381,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
                         loading = true;
                       }),
                       FocusScope.of(context).unfocus(),
-                      (widget.isEdit) ? _editPlant(bloc) : _createAir(bloc),
+                      (widget.isEdit) ? _editAir(bloc) : _createAir(bloc),
                     }
                 : null);
       },
@@ -555,8 +428,8 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     //Navigator.pushReplacementNamed(context, '');
   }
 
-  _editPlant(AirBloc bloc) async {
-    final plantService = Provider.of<PlantService>(context, listen: false);
+  _editAir(AirBloc bloc) async {
+    final airService = Provider.of<AirService>(context, listen: false);
 
     // final uid = authService.profile.user.uid;
 
@@ -565,13 +438,15 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
         ? widget.air.description
         : descriptionCtrl.text.trim();
 
-    final editPlant =
-        Plant(name: name, description: description, id: widget.air.id);
+    final watts = (bloc.watts == null) ? widget.air.watts : bloc.watts.trim();
+
+    final editPlant = Air(
+        name: name, description: description, watts: watts, id: widget.air.id);
 
     print(editPlant);
 
     if (widget.isEdit) {
-      final editRoomRes = await plantService.editPlant(editPlant);
+      final editRoomRes = await airService.editPlant(editPlant);
 
       if (editRoomRes != null) {
         if (editRoomRes.ok) {

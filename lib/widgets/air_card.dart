@@ -96,7 +96,7 @@ class _CardAirState extends State<CardAir> {
             ),
           ),
           SizedBox(
-            height: 10,
+            height: 60,
           ),
           /* Row(
             children: [

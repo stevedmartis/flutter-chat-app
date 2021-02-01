@@ -465,7 +465,12 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             itemCount: airs.length,
             itemBuilder: (BuildContext ctxt, int index) {
               final air = airs[index];
-              return CardAir(air: air);
+              return InkWell(
+                  onTap: () => {
+                        Navigator.of(context).push(
+                            createRouteNewAir(air, airs, widget.room, true)),
+                      },
+                  child: CardAir(air: air));
             }),
       ),
     );

@@ -45,21 +45,21 @@ class AirService with ChangeNotifier {
     }
   }
 
-  Future editPlant(Plant plant) async {
+  Future editPlant(Air plant) async {
     // this.authenticated = true;
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/plant/update/plant',
+    final resp = await http.post('${Environment.apiUrl}/air/update/air',
         body: jsonEncode(plant),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
     if (resp.statusCode == 200) {
       // final roomResponse = roomsResponseFromJson(resp.body);
-      final plantResponse = plantResponseFromJson(resp.body);
+      final airResponse = airResponseFromJson(resp.body);
       // this.rooms = roomResponse.rooms;
 
-      return plantResponse;
+      return airResponse;
     } else {
       final respBody = errorMessageResponseFromJson(resp.body);
 
