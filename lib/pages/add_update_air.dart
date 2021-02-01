@@ -1,3 +1,4 @@
+import 'package:chat/bloc/air_bloc.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/room_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:chat/models/plant.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/new_product.dart';
 import 'package:chat/pages/profile_page.dart';
+import 'package:chat/services/air_service.dart';
 
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/plant_services.dart';
@@ -156,7 +158,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    final bloc = CustomProvider.plantBlocIn(context);
+    final bloc = CustomProvider.airBlocIn(context);
 
 //    final size = MediaQuery.of(context).size;
 
@@ -165,10 +167,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
             ? true
             : false;
 
-    final isControllerChange = isNameChange &&
-        isQuantityChange &&
-        isGerminatedChange &&
-        isFlorationChange;
+    final isControllerChange = isNameChange;
 
     final isControllerChangeEdit = isNameChange ||
         isAboutChange ||
@@ -259,7 +258,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     ));
   }
 
-  Widget _createName(PlantBloc bloc) {
+  Widget _createName(AirBloc bloc) {
     return StreamBuilder(
       stream: bloc.nameStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -288,7 +287,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     );
   }
 
-  Widget _createDescription(PlantBloc bloc) {
+  Widget _createDescription(AirBloc bloc) {
     //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return StreamBuilder(
@@ -481,7 +480,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
   }
 
   Widget _createButton(
-    PlantBloc bloc,
+    AirBloc bloc,
     bool isControllerChange,
   ) {
     return StreamBuilder(
@@ -509,15 +508,17 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
                         loading = true;
                       }),
                       FocusScope.of(context).unfocus(),
-                      (widget.isEdit) ? _editPlant(bloc) : _createPlant(bloc),
+                      (widget.isEdit) ? _editPlant(bloc) : _createAir(bloc),
                     }
                 : null);
       },
     );
   }
 
-  _createPlant(PlantBloc bloc) async {
-    final plantService = Provider.of<PlantService>(context, listen: false);
+  _createAir(AirBloc bloc) async {
+    final airService = Provider.of<AirService>(context, listen: false);
+
+    print('asd');
 
     final room = widget.room.id;
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -529,26 +530,23 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
         ? widget.air.description
         : bloc.description.trim();
 
-    final newPlant =
-        Plant(name: name, description: description, room: room, user: uid);
+    final newAir =
+        Air(name: name, description: description, room: room, user: uid);
 
-    print(newPlant);
+    print(newAir);
 
-    final createPlantResp = await plantService.createPlant(newPlant);
+    final createAirResp = await airService.createAir(newAir);
 
-    if (createPlantResp != null) {
-      if (createPlantResp.ok) {
-        // widget.plants.add(createPlantResp.plant);
+    if (createAirResp != null) {
+      if (createAirResp.ok) {
         loading = false;
 
-        // plantBloc.getPlant(widget.plant);
-        //  plantBloc.getPlant(widget.plant);
-
         roomBloc.getRooms(uid);
+
         Navigator.pop(context);
         setState(() {});
       } else {
-        mostrarAlerta(context, 'Error', createPlantResp.msg);
+        mostrarAlerta(context, 'Error', createAirResp.msg);
       }
     } else {
       mostrarAlerta(
@@ -557,7 +555,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     //Navigator.pushReplacementNamed(context, '');
   }
 
-  _editPlant(PlantBloc bloc) async {
+  _editPlant(AirBloc bloc) async {
     final plantService = Provider.of<PlantService>(context, listen: false);
 
     // final uid = authService.profile.user.uid;

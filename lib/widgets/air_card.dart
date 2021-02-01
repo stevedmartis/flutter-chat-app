@@ -1,23 +1,25 @@
+import 'package:chat/models/air.dart';
 import 'package:chat/models/plant.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/extension.dart';
 
-class CardPlant extends StatefulWidget {
-  final Plant plant;
+class CardAir extends StatefulWidget {
+  final Air air;
 
-  CardPlant({this.plant});
+  CardAir({this.air});
   @override
-  _CardPlantState createState() => _CardPlantState();
+  _CardAirState createState() => _CardAirState();
 }
 
-class _CardPlantState extends State<CardPlant> {
+class _CardAirState extends State<CardAir> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
+    print(widget.air);
     return Column(
       children: <Widget>[
         Container(
@@ -35,32 +37,7 @@ class _CardPlantState extends State<CardPlant> {
               elevation: 5,
               child: Row(
                 children: <Widget>[
-                  Center(child: juiceitem()),
-                  Hero(
-                    tag: widget.plant.id,
-                    child: Container(
-                      width: 150,
-                      height: 200,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15.0),
-                          child: Material(
-                            type: MaterialType.transparency,
-                            child: (widget.plant.coverImage != "")
-                                ? FadeInImage(
-                                    image: NetworkImage(
-                                        widget.plant.getCoverImg()),
-                                    placeholder:
-                                        AssetImage('assets/loading2.gif'),
-                                    fit: BoxFit.cover)
-                                : FadeInImage(
-                                    image: AssetImage(
-                                        'assets/images/empty_image.png'),
-                                    placeholder:
-                                        AssetImage('assets/loading2.gif'),
-                                    fit: BoxFit.cover),
-                          )),
-                    ),
-                  ),
+                  Center(child: airItem()),
                 ],
               ),
             ),
@@ -70,11 +47,11 @@ class _CardPlantState extends State<CardPlant> {
     );
   }
 
-  Widget juiceitem() {
+  Widget airItem() {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    final thc = (widget.plant.thc.isEmpty) ? '0' : widget.plant.thc;
-    final cbd = (widget.plant.cbd.isEmpty) ? '0' : widget.plant.cbd;
+    //final thc = (widget.plant.thc.isEmpty) ? '0' : widget.plant.thc;
+    //final cbd = (widget.plant.cbd.isEmpty) ? '0' : widget.plant.cbd;
 
     return Container(
       //width: 150,
@@ -92,14 +69,14 @@ class _CardPlantState extends State<CardPlant> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              widget.plant.name.capitalize(),
+              widget.air.name.capitalize(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
                   color: currentTheme.accentColor),
             ),
           ),
-          CbdthcRow(thc: thc, cbd: cbd),
+          // CbdthcRow(thc: thc, cbd: cbd),
           SizedBox(
             height: 5,
           ),
@@ -107,8 +84,8 @@ class _CardPlantState extends State<CardPlant> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             width: size.width / 1.5,
             child: Text(
-              (widget.plant.description.length > 0)
-                  ? widget.plant.description.capitalize()
+              (widget.air.description.length > 0)
+                  ? widget.air.description.capitalize()
                   : "No description",
               overflow: TextOverflow.ellipsis,
               maxLines: 3,
@@ -121,7 +98,7 @@ class _CardPlantState extends State<CardPlant> {
           SizedBox(
             height: 10,
           ),
-          Row(
+          /* Row(
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -145,7 +122,7 @@ class _CardPlantState extends State<CardPlant> {
                 ),
               )
             ],
-          )
+          ) */
         ],
       ),
     );

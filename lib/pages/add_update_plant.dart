@@ -809,6 +809,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         //  plantBloc.getPlant(widget.plant);
 
         roomBloc.getRooms(uid);
+
         Navigator.pop(context);
         setState(() {});
       } else {

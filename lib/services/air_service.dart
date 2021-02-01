@@ -28,7 +28,7 @@ class AirService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/plant/new',
+    final resp = await http.post('${Environment.apiUrl}/air/new',
         body: jsonEncode(air),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 

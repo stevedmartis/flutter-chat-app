@@ -14,7 +14,9 @@ import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/air_provider.dart';
 import 'package:chat/providers/plants_provider.dart';
 import 'package:chat/providers/rooms_provider.dart';
+import 'package:chat/services/air_service.dart';
 import 'package:chat/services/plant_services.dart';
+import 'package:chat/widgets/air_card.dart';
 import 'package:chat/widgets/plant_card_widget.dart';
 
 import '../utils//extension.dart';
@@ -67,16 +69,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
 
     _tabController = new TabController(vsync: this, length: myTabs.length);
 
-    this._chargePlants();
     roomBloc.getRoom(widget.room);
-  }
-
-  _chargePlants() async {
-    this.plants = await this.plantService.getPlantsRoom(widget.room.id);
-
-    //getJobFuture = roomBloc.getRooms(profile.user.uid);
-
-    setState(() {});
   }
 
   @override
@@ -461,6 +454,23 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     );
   }
 
+  Widget _buildWidgetAir(airs) {
+    final airService = Provider.of<AirService>(context, listen: false);
+
+    return Container(
+      child: SizedBox(
+        child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: airs.length,
+            itemBuilder: (BuildContext ctxt, int index) {
+              final air = airs[index];
+              return CardAir(air: air);
+            }),
+      ),
+    );
+  }
+
   Container _buildCircleFavoriteProduct(String quantity) {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
@@ -718,7 +728,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         margin: EdgeInsets.only(
                           left: 10,
                         ),
-                        child: _buildWidgetPlant(snapshot.data))
+                        child: _buildWidgetAir(snapshot.data))
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
