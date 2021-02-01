@@ -301,6 +301,10 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
         return Container(
           child: TextField(
             controller: _wattsCtrl,
+            onTap: () => {
+              if (_wattsCtrl.text == "0") _wattsCtrl.text = "",
+              setState(() {})
+            },
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(3),
             ],

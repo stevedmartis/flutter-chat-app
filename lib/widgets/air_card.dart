@@ -50,82 +50,100 @@ class _CardAirState extends State<CardAir> {
   Widget airItem() {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    //final thc = (widget.plant.thc.isEmpty) ? '0' : widget.plant.thc;
-    //final cbd = (widget.plant.cbd.isEmpty) ? '0' : widget.plant.cbd;
-
+    final watts = widget.air.watts;
     return Container(
-      //width: 150,
-      child: Column(
-        //mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          /*  Row(
+        //width: 150,
+
+        child: Row(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            /*  Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               
             
             ],
           ), */
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              widget.air.name.capitalize(),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: currentTheme.accentColor),
-            ),
-          ),
-          // CbdthcRow(thc: thc, cbd: cbd),
-          SizedBox(
-            height: 5,
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            width: size.width / 1.5,
-            child: Text(
-              (widget.air.description.length > 0)
-                  ? widget.air.description.capitalize()
-                  : "No description",
-              overflow: TextOverflow.ellipsis,
-              maxLines: 3,
-              style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 12,
-                  color: Colors.grey),
-            ),
-          ),
-          SizedBox(
-            height: 60,
-          ),
-          /* Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'Germinación: ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                      color: Colors.white54),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  widget.plant.germinated,
-                  style: TextStyle(
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                widget.air.name.capitalize(),
+                style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                    color: Colors.white,
+                    fontSize: 15,
+                    color: currentTheme.accentColor),
+              ),
+            ),
+            // CbdthcRow(thc: thc, cbd: cbd),
+            SizedBox(
+              height: 5,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              width: size.width / 1.5,
+              child: Text(
+                (widget.air.description.length > 0)
+                    ? widget.air.description.capitalize()
+                    : "No description",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+                style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 12,
+                    color: Colors.grey),
+              ),
+            ),
+
+            SizedBox(
+              height: 10,
+            ),
+
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              width: size.width / 1.5,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Watts: ',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white54,
+                    ),
                   ),
-                ),
-              )
-            ],
-          ) */
-        ],
-      ),
-    );
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  // FaIcon(FontAwesomeIcons.rulerHorizontal),
+
+                  Text(
+                    ' $watts',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+            width: 50,
+            child: Center(
+                child: Container(
+              margin: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.chevron_right,
+                color: currentTheme.accentColor,
+                size: 30,
+              ),
+            ))),
+      ],
+    ));
   }
 }
 
