@@ -1,7 +1,5 @@
 import 'package:chat/bloc/plant_bloc.dart';
-import 'package:chat/bloc/profile_bloc.dart';
 import 'package:chat/models/plant.dart';
-import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/theme/theme.dart';

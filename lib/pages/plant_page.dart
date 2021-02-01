@@ -4,8 +4,6 @@ import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'dart:ui' as ui;
-
 class PlantPage extends StatefulWidget {
   PlantPage({
     this.isUserAuth,

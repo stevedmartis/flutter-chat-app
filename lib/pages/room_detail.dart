@@ -1,14 +1,17 @@
 import 'package:chat/bloc/plant_bloc.dart';
 
 import 'package:chat/bloc/room_bloc.dart';
+import 'package:chat/models/air.dart';
 
 import 'package:chat/models/plant.dart';
 
 import 'package:chat/models/room.dart';
+import 'package:chat/pages/add_update_air.dart';
 import 'package:chat/pages/add_update_plant.dart';
 import 'package:chat/pages/plant_detail.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_list_page.dart';
+import 'package:chat/providers/air_provider.dart';
 import 'package:chat/providers/plants_provider.dart';
 import 'package:chat/providers/rooms_provider.dart';
 import 'package:chat/services/plant_services.dart';
@@ -42,17 +45,21 @@ class _RoomDetailPageState extends State<RoomDetailPage>
 
   final plantService = new PlantsApiProvider();
 
+  final airService = new AiresApiProvider();
+
   final roomsApiProvider = new RoomsApiProvider();
 
   final List<Tab> myTabs = <Tab>[
     new Tab(text: 'Plants'),
-    new Tab(text: 'Wind'),
+    new Tab(text: 'Air'),
     new Tab(text: 'Light'),
   ];
   TabController _tabController;
 
   Room room;
   List<Plant> plants = [];
+
+  List<Air> aires = [];
 
   @override
   void initState() {
@@ -155,7 +162,13 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   slivers: <Widget>[
                     makeHeaderInfo(context),
                     makeHeaderTabs(context),
-                    makeListPlants(context)
+                    (_tabController.index == 0)
+                        ? makeListPlants(context)
+                        : (_tabController.index == 1)
+                            ? makeListAires(context)
+                            : (_tabController.index == 2)
+                                ? makeListLight(context)
+                                : makeHeaderSpacer(context)
                   ]);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
@@ -247,6 +260,20 @@ class _RoomDetailPageState extends State<RoomDetailPage>
         Text("Error occured: $error"),
       ],
     ));
+  }
+
+  SliverPersistentHeader makeHeaderSpacer(context) {
+    //   final roomModel = Provider.of<Room>(context);
+
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+          minHeight: 10,
+          maxHeight: 10,
+          child: Row(
+            children: [Container()],
+          )),
+    );
   }
 
   SliverPersistentHeader makeHeaderLoading(context) {
@@ -459,6 +486,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     final currentTheme =
         Provider.of<ThemeChanger>(context, listen: false).currentTheme;
     final plant = new Plant();
+    final air = new Air();
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
@@ -552,7 +580,11 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                 Material(
                   color: currentTheme.scaffoldBackgroundColor,
                   child: InkWell(
-                    onTap: () => {},
+                    onTap: () => {
+                      Navigator.of(context).pop(),
+                      Navigator.of(context).push(
+                          createRouteNewAir(air, aires, widget.room, false)),
+                    },
                     child: ListTile(
                       leading: FaIcon(FontAwesomeIcons.wind,
                           size: 25, color: currentTheme.accentColor),
@@ -567,7 +599,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         ),
                         iconSize: 30.0,
                         onPressed: () => {
-                          //Navigator.pop(context),
+                          Navigator.of(context).pop(),
+                          Navigator.of(context).push(createRouteNewAir(
+                              air, aires, widget.room, false)),
                         },
                       ),
                       //trailing:
@@ -655,7 +689,73 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
-                            child: Text('No Plants, add new')),
+                            child: Text('Sin Plantas, add new')),
+                      ); // image is ready
+              } else {
+                return Container(
+                    height: 400.0,
+                    child: Center(
+                        child: CircularProgressIndicator())); // placeholder
+              }
+            },
+          ),
+        ),
+      ]),
+    );
+  }
+
+  SliverList makeListAires(context) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Container(
+          child: FutureBuilder(
+            future: this.airService.getAiresRoom(widget.room.id),
+            initialData: null,
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              if (snapshot.hasData) {
+                return (snapshot.data.length > 0)
+                    ? Container(
+                        margin: EdgeInsets.only(
+                          left: 10,
+                        ),
+                        child: _buildWidgetPlant(snapshot.data))
+                    : Center(
+                        child: Container(
+                            padding: EdgeInsets.all(50),
+                            child: Text('Sin Aire, add new')),
+                      ); // image is ready
+              } else {
+                return Container(
+                    height: 400.0,
+                    child: Center(
+                        child: CircularProgressIndicator())); // placeholder
+              }
+            },
+          ),
+        ),
+      ]),
+    );
+  }
+
+  SliverList makeListLight(context) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Container(
+          child: FutureBuilder(
+            future: this.plantService.getPlantsRoom(widget.room.id),
+            initialData: null,
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              if (snapshot.hasData) {
+                return (snapshot.data.length > 0)
+                    ? Container(
+                        margin: EdgeInsets.only(
+                          left: 10,
+                        ),
+                        child: _buildWidgetPlant(snapshot.data))
+                    : Center(
+                        child: Container(
+                            padding: EdgeInsets.all(50),
+                            child: Text('Sin Luces, add new')),
                       ); // image is ready
               } else {
                 return Container(
@@ -743,6 +843,29 @@ Route createRouteNewPlant(
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => AddUpdatePlantPage(
       plant: plant,
+      room: room,
+      isEdit: isEdit,
+    ),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
+}
+
+Route createRouteNewAir(Air air, List<Air> aires, Room room, bool isEdit) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => AddUpdateAirPage(
+      air: air,
       room: room,
       isEdit: isEdit,
     ),

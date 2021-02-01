@@ -56,7 +56,7 @@ class _ProfileCardState extends State<ProfileCard> {
               width: double.infinity,
               alignment: Alignment.center,
             )),
-        Container(
+        /* Container(
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -75,8 +75,8 @@ class _ProfileCardState extends State<ProfileCard> {
               ),
             ),
           ),
-        ),
-        Container(
+        ), */
+        /* Container(
             height: double.infinity,
             decoration: BoxDecoration(
                 color: Colors.black,
@@ -91,7 +91,7 @@ class _ProfileCardState extends State<ProfileCard> {
                     stops: [
                       5.0,
                       5.0
-                    ]))),
+                    ]))), */
 
         /* Container(
                 // color: currentTheme.scaffoldBackgroundColor,
@@ -142,7 +142,8 @@ class _ProfileCardState extends State<ProfileCard> {
                 : Alignment.bottomLeft,
             child: CircleAvatar(
               radius: 55,
-              backgroundColor: currentTheme.scaffoldBackgroundColor,
+              backgroundColor:
+                  currentTheme.scaffoldBackgroundColor.withOpacity(0.60),
               child: CircleAvatar(
                 radius: ProfileCard.avatarRadius,
                 backgroundColor: currentTheme.scaffoldBackgroundColor,
@@ -196,7 +197,8 @@ class _ProfileCardState extends State<ProfileCard> {
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: ButtonSubEditProfile(
-                      color: currentTheme.scaffoldBackgroundColor,
+                      color: currentTheme.scaffoldBackgroundColor
+                          .withOpacity(0.60),
                       textColor: (widget.isUserAuth)
                           ? Colors.white.withOpacity(0.50)
                           : currentTheme.accentColor,

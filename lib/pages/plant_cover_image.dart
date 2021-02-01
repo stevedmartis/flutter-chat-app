@@ -1,11 +1,8 @@
 import 'package:chat/models/plant.dart';
 import 'package:chat/pages/chat_page.dart';
 
-import 'package:chat/widgets/cover_image_plant.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'dart:ui' as ui;
 
 class PlantCard extends StatefulWidget {
   PlantCard(

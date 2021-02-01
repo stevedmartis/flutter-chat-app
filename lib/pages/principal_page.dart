@@ -153,6 +153,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
                         : Colors.white.withOpacity(0.60)),
                 label: '',
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.sms_failed,
+                    size: 30,
+                    color: (currentPage == 3)
+                        ? currentTheme.accentColor
+                        : Colors.white.withOpacity(0.60)),
+                label: '',
+              ),
             ],
           ),
         ],

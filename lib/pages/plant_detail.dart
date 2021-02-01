@@ -82,11 +82,6 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   double get maxHeight => 200 + MediaQuery.of(context).padding.top;
   double get minHeight => MediaQuery.of(context).padding.bottom;
 
-  Future<ui.Image> _image(String url) async =>
-      await NetworkImageDecoder(image: NetworkImage(url)).uiImage;
-  // Animation _heartAnimation;
-  // AnimationController _heartAnimationController;
-
   bool isLike = false;
 
   @override

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:chat/bloc/profile_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
