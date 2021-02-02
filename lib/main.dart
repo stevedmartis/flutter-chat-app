@@ -3,6 +3,7 @@ import 'package:chat/models/shoes.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/services/air_service.dart';
 import 'package:chat/services/aws_service.dart';
+import 'package:chat/services/light_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
@@ -29,6 +30,7 @@ void main() => runApp(MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => AwsService()),
       ChangeNotifierProvider(create: (_) => PlantService()),
       ChangeNotifierProvider(create: (_) => AirService()),
+      ChangeNotifierProvider(create: (_) => LightService()),
     ], child: MyApp()));
 
 class MyApp extends StatelessWidget {

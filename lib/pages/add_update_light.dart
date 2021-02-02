@@ -1,10 +1,12 @@
 import 'package:chat/bloc/air_bloc.dart';
+import 'package:chat/bloc/light_bloc.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/room_bloc.dart';
 
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/air.dart';
+import 'package:chat/models/light.dart';
 
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/room.dart';
@@ -13,6 +15,7 @@ import 'package:chat/pages/profile_page.dart';
 import 'package:chat/services/air_service.dart';
 
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/light_service.dart';
 import 'package:chat/services/plant_services.dart';
 
 import 'package:chat/theme/theme.dart';
@@ -26,28 +29,25 @@ import 'package:provider/provider.dart';
 
 //final Color darkBlue = Color.fromARGB(255, 18, 32, 47);
 
-class AddUpdateAirPage extends StatefulWidget {
-  AddUpdateAirPage({this.air, this.isEdit = false, this.room});
+class AddUpdateLightPage extends StatefulWidget {
+  AddUpdateLightPage({this.light, this.isEdit = false, this.room});
 
-  final Air air;
+  final Light light;
   final bool isEdit;
   final Room room;
 
   @override
-  AddUpdateAirPageState createState() => AddUpdateAirPageState();
+  AddUpdateLightPageState createState() => AddUpdateLightPageState();
 }
 
-class AddUpdateAirPageState extends State<AddUpdateAirPage> {
-  Plant plant;
+class AddUpdateLightPageState extends State<AddUpdateLightPage> {
   final nameCtrl = TextEditingController();
 
   final descriptionCtrl = TextEditingController();
 
-  final quantityCtrl = TextEditingController();
-
-  final _durationFlorationCtrl = TextEditingController();
-
   final _wattsCtrl = TextEditingController();
+
+  final _kelvinCtrl = TextEditingController();
 
   // final potCtrl = TextEditingController();
 
@@ -60,6 +60,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
 
   bool isThcChange = false;
   bool isWattsChange = false;
+  bool isKelvinChange = false;
 
   List<DropdownMenuItem> categories = [
     DropdownMenuItem(
@@ -81,15 +82,15 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
   @override
   void initState() {
     errorRequired = (widget.isEdit) ? false : true;
-    nameCtrl.text = widget.air.name;
-    descriptionCtrl.text = widget.air.description;
-    _wattsCtrl.text = widget.air.watts;
+    nameCtrl.text = widget.light.name;
+    descriptionCtrl.text = widget.light.description;
+    _wattsCtrl.text = widget.light.watts;
 
     plantBloc.imageUpdate.add(true);
     nameCtrl.addListener(() {
       // print('${nameCtrl.text}');
       setState(() {
-        if (widget.air.name != nameCtrl.text)
+        if (widget.light.name != nameCtrl.text)
           this.isNameChange = true;
         else
           this.isNameChange = false;
@@ -102,7 +103,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     });
     descriptionCtrl.addListener(() {
       setState(() {
-        if (widget.air.description != descriptionCtrl.text)
+        if (widget.light.description != descriptionCtrl.text)
           this.isAboutChange = true;
         else
           this.isAboutChange = false;
@@ -111,10 +112,24 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
 
     _wattsCtrl.addListener(() {
       setState(() {
-        if (widget.air.watts != _wattsCtrl.text)
+        if (widget.light.watts != _wattsCtrl.text)
           this.isWattsChange = true;
         else
           this.isWattsChange = false;
+
+        if (_wattsCtrl.text == "")
+          errorRequired = true;
+        else
+          errorRequired = false;
+      });
+    });
+
+    _kelvinCtrl.addListener(() {
+      setState(() {
+        if (widget.light.kelvin != _kelvinCtrl.text)
+          this.isKelvinChange = true;
+        else
+          this.isKelvinChange = false;
 
         if (_wattsCtrl.text == "")
           errorRequired = true;
@@ -131,11 +146,10 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
 
     descriptionCtrl.dispose();
 
-    quantityCtrl.dispose();
-
     // plantBloc?.dispose();
 
     _wattsCtrl.dispose();
+    _kelvinCtrl.dispose();
 
     super.dispose();
   }
@@ -144,7 +158,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    final bloc = CustomProvider.airBlocIn(context);
+    final bloc = CustomProvider.lightBlocIn(context);
 
 //    final size = MediaQuery.of(context).size;
 
@@ -201,6 +215,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
                           _createName(bloc),
                           _createWatts(bloc),
                           _createDescription(bloc),
+                          _createKelvin(bloc),
                           SizedBox(
                             height: 10,
                           ),
@@ -230,7 +245,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     ));
   }
 
-  Widget _createName(AirBloc bloc) {
+  Widget _createName(LightBloc bloc) {
     return StreamBuilder(
       stream: bloc.nameStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -259,7 +274,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     );
   }
 
-  Widget _createDescription(AirBloc bloc) {
+  Widget _createDescription(LightBloc bloc) {
     //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return StreamBuilder(
@@ -294,7 +309,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     );
   }
 
-  Widget _createWatts(AirBloc bloc) {
+  Widget _createWatts(LightBloc bloc) {
     return StreamBuilder(
       stream: bloc.wattsStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -327,15 +342,19 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     );
   }
 
-  Widget _createDurationFlora(PlantBloc bloc) {
+  Widget _createKelvin(LightBloc bloc) {
     return StreamBuilder(
-      stream: bloc.floweringStream,
+      stream: bloc.kelvinStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
           child: TextField(
-            controller: _durationFlorationCtrl,
+            controller: _kelvinCtrl,
+            onTap: () => {
+              if (_kelvinCtrl.text == "0") _kelvinCtrl.text = "",
+              setState(() {})
+            },
             inputFormatters: <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(3),
+              LengthLimitingTextInputFormatter(5),
             ],
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
@@ -345,11 +364,11 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
                   borderSide:
                       const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
-                hintText: 'Semanas',
-                labelText: 'Duracion de floración *',
+                hintText: '',
+                labelText: 'Kelvin *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
-            onChanged: bloc.changeFlowering,
+            onChanged: bloc.changeKelvin,
           ),
         );
       },
@@ -357,7 +376,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
   }
 
   Widget _createButton(
-    AirBloc bloc,
+    LightBloc bloc,
     bool isControllerChange,
   ) {
     return StreamBuilder(
@@ -385,39 +404,42 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
                         loading = true;
                       }),
                       FocusScope.of(context).unfocus(),
-                      (widget.isEdit) ? _editAir(bloc) : _createAir(bloc),
+                      (widget.isEdit) ? _editLight(bloc) : _createLight(bloc),
                     }
                 : null);
       },
     );
   }
 
-  _createAir(AirBloc bloc) async {
-    final airService = Provider.of<AirService>(context, listen: false);
-
-    print('asd');
+  _createLight(LightBloc bloc) async {
+    final lightService = Provider.of<LightService>(context, listen: false);
 
     final room = widget.room.id;
     final authService = Provider.of<AuthService>(context, listen: false);
 
     final uid = authService.profile.user.uid;
 
-    final name = (bloc.name == null) ? widget.air.name : bloc.name.trim();
+    final name = (bloc.name == null) ? widget.light.name : bloc.name.trim();
     final description = (descriptionCtrl.text == "")
-        ? widget.air.description
+        ? widget.light.description
         : bloc.description.trim();
-    final watts = (bloc.watts == null) ? widget.air.watts : bloc.watts.trim();
 
-    final newAir = Air(
+    final watts = (bloc.watts == null) ? widget.light.watts : bloc.watts.trim();
+
+    final kelvin =
+        (bloc.watts == null) ? widget.light.kelvin : bloc.kelvin.trim();
+
+    final newAir = Light(
         name: name,
         description: description,
         watts: watts,
+        kelvin: kelvin,
         room: room,
         user: uid);
 
     print(newAir);
 
-    final createAirResp = await airService.createAir(newAir);
+    final createAirResp = await lightService.createLight(newAir);
 
     if (createAirResp != null) {
       if (createAirResp.ok) {
@@ -437,25 +459,31 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     //Navigator.pushReplacementNamed(context, '');
   }
 
-  _editAir(AirBloc bloc) async {
-    final airService = Provider.of<AirService>(context, listen: false);
+  _editLight(LightBloc bloc) async {
+    final lightService = Provider.of<LightService>(context, listen: false);
 
     // final uid = authService.profile.user.uid;
 
-    final name = (bloc.name == null) ? widget.air.name : bloc.name.trim();
+    final name = (bloc.name == null) ? widget.light.name : bloc.name.trim();
     final description = (descriptionCtrl.text == "")
-        ? widget.air.description
+        ? widget.light.description
         : descriptionCtrl.text.trim();
 
-    final watts = (bloc.watts == null) ? widget.air.watts : bloc.watts.trim();
+    final watts = (bloc.watts == null) ? widget.light.watts : bloc.watts.trim();
+    final kelvin =
+        (bloc.watts == null) ? widget.light.kelvin : bloc.kelvin.trim();
 
-    final editPlant = Air(
-        name: name, description: description, watts: watts, id: widget.air.id);
+    final editLight = Light(
+        name: name,
+        description: description,
+        watts: watts,
+        kelvin: kelvin,
+        id: widget.light.id);
 
-    print(editPlant);
+    print(editLight);
 
     if (widget.isEdit) {
-      final editRoomRes = await airService.editPlant(editPlant);
+      final editRoomRes = await lightService.editLight(editLight);
 
       if (editRoomRes != null) {
         if (editRoomRes.ok) {

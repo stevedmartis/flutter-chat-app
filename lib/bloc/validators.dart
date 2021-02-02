@@ -31,6 +31,24 @@ class Validators {
       sink.addError('Name is required');
     }
   });
+
+  final validationWattsRequired =
+      StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+    if (text.length >= 1) {
+      sink.add(text);
+    } else {
+      sink.addError('Watts is required');
+    }
+  });
+
+  final validationKelvinRequired =
+      StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+    if (text.length >= 1) {
+      sink.add(text);
+    } else {
+      sink.addError('Kelvin is required');
+    }
+  });
   final validationQuantityRequired =
       StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
     if (text.length >= 1) {

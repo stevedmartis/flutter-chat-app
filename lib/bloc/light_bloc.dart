@@ -5,7 +5,7 @@ import 'package:chat/models/aires_response.dart';
 import 'package:chat/repository/aires_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AirBloc with Validators {
+class LightBloc with Validators {
   final _nameController = BehaviorSubject<String>();
 
   final _descriptionController = BehaviorSubject<String>();
@@ -48,18 +48,20 @@ class AirBloc with Validators {
   Stream<String> get kelvinStream =>
       _kelvinController.stream.transform(validationKelvinRequired);
 
-  Stream<bool> get formValidStream => Observable.combineLatest2(
+  Stream<bool> get formValidStream => Observable.combineLatest3(
       nameStream,
       wattsStream,
-
+      kelvinStream,
       //timeOnStream,
       //timeOffStream,
-      (a, b) => true);
+      (a, b, c) => true);
 
   Function(String) get changeName => _nameController.sink.add;
   Function(String) get changeDescription => _descriptionController.sink.add;
 
   Function(String) get changeWatts => _wattsController.sink.add;
+
+  Function(String) get changeKelvin => _kelvinController.sink.add;
 
   // Obtener el último valor ingresado a los streams
   String get name => _nameController.value;
@@ -89,4 +91,4 @@ class AirBloc with Validators {
   }
 }
 
-final airBloc = AirBloc();
+final lightBloc = LightBloc();

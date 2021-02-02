@@ -1,4 +1,5 @@
 import 'package:chat/bloc/air_bloc.dart';
+import 'package:chat/bloc/light_bloc.dart';
 import 'package:chat/bloc/login_bloc.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/product_bloc.dart';
@@ -21,6 +22,8 @@ class CustomProvider extends InheritedWidget {
   final plantBloc = PlantBloc();
 
   final airBloc = AirBloc();
+
+  final lightBloc = LightBloc();
 
   static CustomProvider _instancia;
 
@@ -69,6 +72,11 @@ class CustomProvider extends InheritedWidget {
   static AirBloc airBlocIn(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<CustomProvider>())
         .airBloc;
+  }
+
+  static LightBloc lightBlocIn(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<CustomProvider>())
+        .lightBloc;
   }
 
   static ProductBloc productBlocIn(BuildContext context) {
