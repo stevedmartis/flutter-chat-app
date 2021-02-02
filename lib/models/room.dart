@@ -11,7 +11,9 @@ class Room {
       this.name = "",
       this.description = "",
       this.position,
-      this.totalItems,
+      this.totalPlants,
+      this.totalAirs,
+      this.totalLights,
       this.createdAt,
       this.updatedAt,
       this.wide = "",
@@ -37,7 +39,9 @@ class Room {
   bool co2;
   bool co2Control;
 
-  int totalItems;
+  int totalPlants;
+  int totalAirs;
+  int totalLights;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -58,7 +62,9 @@ class Room {
       timeOff: json["timeOff"],
 
       //products: List<Product>.from(json["products"].map((x) => x)),
-      totalItems: json["totalItems"]);
+      totalPlants: json["totalPlants"],
+      totalAirs: json["totalAirs"],
+      totalLights: json["totalLights"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -66,7 +72,6 @@ class Room {
         "name": name,
         "position": position,
         "description": description,
-        "totalItems": totalItems,
         "wide": wide,
         "long": long,
         "tall": tall,
@@ -74,7 +79,9 @@ class Room {
         "co2Control": co2Control,
         "timeOn": timeOn,
         "timeOff": timeOff,
-
+        "totalPlants": totalPlants,
+        "totalAirs": totalAirs,
+        "totalLights": totalLights,
         //"products": List<dynamic>.from(products.map((x) => x)),
       };
 

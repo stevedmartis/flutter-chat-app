@@ -85,6 +85,7 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
     nameCtrl.text = widget.light.name;
     descriptionCtrl.text = widget.light.description;
     _wattsCtrl.text = widget.light.watts;
+    _kelvinCtrl.text = widget.light.kelvin;
 
     plantBloc.imageUpdate.add(true);
     nameCtrl.addListener(() {
@@ -186,7 +187,7 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
               Navigator.pop(context),
           color: Colors.white,
         ),
-        title: (widget.isEdit) ? Text('Edit plant') : Text('Crear aire'),
+        title: (widget.isEdit) ? Text('Edit plant') : Text('Crear Luz'),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {

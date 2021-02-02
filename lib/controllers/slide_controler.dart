@@ -188,14 +188,12 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
 class StyledLogoCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         // Stroked text as border.
 
-        Stack(
+        /*  Stack(
           children: [
             Text(
               'G',
@@ -218,13 +216,13 @@ class StyledLogoCustom extends StatelessWidget {
                   color: currentTheme.scaffoldBackgroundColor),
             ),
           ],
-        ),
+        ), */
         RichText(
           textAlign: TextAlign.center,
           text: new TextSpan(
             children: [
               TextSpan(
-                text: "safety",
+                text: "gramedy",
                 style: TextStyle(
                   letterSpacing: -1,
                   fontFamily: 'GTWalsheimPro',

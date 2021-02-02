@@ -22,7 +22,7 @@ class _CardPlantState extends State<CardPlant> {
       children: <Widget>[
         Container(
           color: currentTheme.scaffoldBackgroundColor,
-          padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 5.0),
+          padding: EdgeInsets.only(top: 10, left: 0, right: 10, bottom: 5.0),
           width: size.height / 1.5,
           child: FittedBox(
             child: Card(

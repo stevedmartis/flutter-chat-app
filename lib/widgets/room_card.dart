@@ -18,7 +18,9 @@ class CustomListItemTwoRoom extends StatelessWidget {
       this.readDuration,
       this.timeOn,
       this.timeOff,
-      this.totalProducts})
+      this.totalPlants,
+      this.totalAirs,
+      this.totalLigths})
       : super(key: key);
 
   final Widget thumbnail;
@@ -32,7 +34,10 @@ class CustomListItemTwoRoom extends StatelessWidget {
   final String readDuration;
   final String timeOn;
   final String timeOff;
-  final int totalProducts;
+  final int totalPlants;
+  final int totalAirs;
+
+  final int totalLigths;
 
   @override
   Widget build(BuildContext context) {
@@ -56,16 +61,19 @@ class CustomListItemTwoRoom extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
                 child: _ArticleDescription(
-                    title: title,
-                    subtitle: subtitle,
-                    wide: wide,
-                    long: long,
-                    tall: tall,
-                    timeOn: timeOn,
-                    timeOff: timeOff,
-                    publishDate: publishDate,
-                    readDuration: readDuration,
-                    totalProducts: totalProducts),
+                  title: title,
+                  subtitle: subtitle,
+                  wide: wide,
+                  long: long,
+                  tall: tall,
+                  timeOn: timeOn,
+                  timeOff: timeOff,
+                  publishDate: publishDate,
+                  readDuration: readDuration,
+                  totalPlants: totalPlants,
+                  totalAirs: totalAirs,
+                  totalLights: totalLigths,
+                ),
               ),
             ),
             SizedBox(
@@ -99,7 +107,9 @@ class _ArticleDescription extends StatelessWidget {
       this.readDuration,
       this.timeOn,
       this.timeOff,
-      this.totalProducts})
+      this.totalPlants,
+      this.totalAirs,
+      this.totalLights})
       : super(key: key);
 
   final String title;
@@ -114,7 +124,11 @@ class _ArticleDescription extends StatelessWidget {
   final String timeOff;
 
   final String readDuration;
-  final int totalProducts;
+  final int totalPlants;
+
+  final int totalAirs;
+
+  final int totalLights;
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +170,7 @@ class _ArticleDescription extends StatelessWidget {
                   width: 10,
                 ),
                 Text(
-                  '$totalProducts',
+                  '$totalPlants',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -176,7 +190,7 @@ class _ArticleDescription extends StatelessWidget {
                   width: 10,
                 ),
                 Text(
-                  '0',
+                  '$totalAirs',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -196,7 +210,7 @@ class _ArticleDescription extends StatelessWidget {
                   width: 10,
                 ),
                 Text(
-                  '0',
+                  '$totalLights',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

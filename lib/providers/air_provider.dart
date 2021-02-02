@@ -63,4 +63,17 @@ class AiresApiProvider {
       return new Air(id: '0');
     }
   }
+
+  Future deleteAir(String airId) async {
+    final token = await this._storage.read(key: 'token');
+
+    try {
+      await http.delete('${Environment.apiUrl}/air/delete/$airId',
+          headers: {'Content-Type': 'application/json', 'x-token': token});
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

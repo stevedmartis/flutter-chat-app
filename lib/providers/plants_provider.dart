@@ -61,4 +61,17 @@ class PlantsApiProvider {
       return new Plant(id: '0');
     }
   }
+
+  Future deletePlant(String plantId) async {
+    final token = await this._storage.read(key: 'token');
+
+    try {
+      await http.delete('${Environment.apiUrl}/plant/delete/$plantId',
+          headers: {'Content-Type': 'application/json', 'x-token': token});
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

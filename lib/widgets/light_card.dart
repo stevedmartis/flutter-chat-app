@@ -25,8 +25,9 @@ class _CardLightState extends State<CardLight> {
       children: <Widget>[
         Container(
           color: currentTheme.scaffoldBackgroundColor,
-          padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 5.0),
-          width: size.height / 1.5,
+          padding:
+              EdgeInsets.only(top: 10.0, left: 0.0, right: 10.0, bottom: 10.0),
+          width: size.height / 1.4,
           child: FittedBox(
             child: Card(
               shadowColor: Colors.black,
@@ -52,6 +53,7 @@ class _CardLightState extends State<CardLight> {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final watts = widget.light.watts;
+    final kelvin = widget.light.kelvin;
     return Container(
         //width: 150,
 
@@ -122,6 +124,28 @@ class _CardLightState extends State<CardLight> {
 
                   Text(
                     ' $watts',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    'Kelvin: ',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white54,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  // FaIcon(FontAwesomeIcons.rulerHorizontal),
+
+                  Text(
+                    ' $kelvin',
                     style: TextStyle(
                       fontSize: 10,
                       color: Colors.white,

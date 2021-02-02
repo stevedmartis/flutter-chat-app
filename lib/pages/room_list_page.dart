@@ -272,6 +272,7 @@ class _RoomListState extends State<RoomList> {
     final authService = Provider.of<AuthService>(context, listen: false);
 
     profile = authService.profile;
+
     roomBloc.getRooms(profile.user.uid);
   }
 
@@ -324,7 +325,7 @@ class _RoomListState extends State<RoomList> {
                 : Center(
                     child: Container(
                         padding: EdgeInsets.all(50),
-                        child: Text('No Plants, add new')),
+                        child: Text('Sin Rooms, add new')),
                   ); // image is ready
 
           } else if (snapshot.hasError) {
@@ -362,7 +363,7 @@ class _RoomListState extends State<RoomList> {
     }
   }
 
-  Widget _buildRoomWidget(rooms) {
+  Widget _buildRoomWidget(List<Room> rooms) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Container(
@@ -421,16 +422,19 @@ class _RoomListState extends State<RoomList> {
                               ],
                             )),
                         child: CustomListItemTwoRoom(
-                            title: item.name,
-                            subtitle: item.description,
-                            wide: '${item.wide}',
-                            long: '${item.long}',
-                            tall: '${item.tall}',
-                            timeOn: item.timeOn,
-                            timeOff: item.timeOff,
-                            publishDate: 'Dec 28',
-                            readDuration: '5 mins',
-                            totalProducts: item.totalItems),
+                          title: item.name,
+                          subtitle: item.description,
+                          wide: '${item.wide}',
+                          long: '${item.long}',
+                          tall: '${item.tall}',
+                          timeOn: item.timeOn,
+                          timeOff: item.timeOff,
+                          publishDate: 'Dec 28',
+                          readDuration: '5 mins',
+                          totalPlants: item.totalPlants,
+                          totalAirs: item.totalAirs,
+                          totalLigths: item.totalLights,
+                        ),
 
                         /* ListTile(
                         selectedTileColor: currentTheme.accentColor,

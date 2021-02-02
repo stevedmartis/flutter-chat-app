@@ -13,7 +13,6 @@ import 'package:chat/pages/profile_page.dart';
 import 'package:chat/services/air_service.dart';
 
 import 'package:chat/services/auth_service.dart';
-import 'package:chat/services/plant_services.dart';
 
 import 'package:chat/theme/theme.dart';
 
@@ -21,7 +20,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 
 //final Color darkBlue = Color.fromARGB(255, 18, 32, 47);
@@ -132,8 +130,6 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     descriptionCtrl.dispose();
 
     quantityCtrl.dispose();
-
-    // plantBloc?.dispose();
 
     _wattsCtrl.dispose();
 

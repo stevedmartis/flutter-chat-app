@@ -5,6 +5,7 @@ import 'package:chat/models/air.dart';
 import 'package:chat/models/light.dart';
 
 import 'package:chat/models/plant.dart';
+import 'package:chat/models/profiles.dart';
 
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/add_update_air.dart';
@@ -17,7 +18,7 @@ import 'package:chat/providers/air_provider.dart';
 import 'package:chat/providers/light_provider.dart';
 import 'package:chat/providers/plants_provider.dart';
 import 'package:chat/providers/rooms_provider.dart';
-import 'package:chat/services/air_service.dart';
+import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/widgets/air_card.dart';
 import 'package:chat/widgets/light_card.dart';
@@ -68,11 +69,19 @@ class _RoomDetailPageState extends State<RoomDetailPage>
 
   List<Plant> plants = [];
 
-  List<Air> aires = [];
+  List<Air> airs = [];
+
+  List<Light> lights = [];
+
+  Profiles profile;
 
   @override
   void initState() {
     super.initState();
+
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    profile = authService.profile;
 
     _tabController = new TabController(vsync: this, length: myTabs.length);
 
@@ -177,28 +186,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             }
           },
         ),
-
-        /* StreamBuilder<Room>(
-          stream: roomBloc.roomSelect.stream,
-          builder: (context, AsyncSnapshot<Room> snapshot) {
-            if (snapshot.hasData) {
-              room = snapshot.data;
-              return CustomScrollView(
-                  physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
-                  controller: _scrollController,
-                  slivers: <Widget>[
-                    makeHeaderInfo(context),
-                    makeHeaderTabs(context),
-                    makeListPlants(context)
-                  ]);
-            } else if (snapshot.hasError) {
-              return _buildErrorWidget(snapshot.error);
-            } else {
-              return _buildLoadingWidget();
-            }
-          },
-        ), */
       ),
     );
   }
@@ -225,24 +212,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             }
           },
         ),
-        /* StreamBuilder<PlantsResponse>(
-          stream: plantBloc.subject.stream,
-          builder: (context, AsyncSnapshot<PlantsResponse> snapshot) {
-            if (snapshot.hasData) {
-              plants = snapshot.data.plants;
-
-              return (plants.length > 0)
-                  ? _buildWidgetPlant(plants)
-                  : Center(
-                      child: Text('not found'),
-                    );
-            } else if (snapshot.hasError) {
-              return _buildErrorWidget(snapshot.error);
-            } else {
-              return _buildLoadingWidget();
-            }
-          },
-        ), */
       ]),
     );
   }
@@ -322,24 +291,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     style: TextStyle(fontSize: 15.0, color: Colors.white),
                   ),
                 ),
-                /* Expanded(
-                  child: Container(
-                    alignment: Alignment.center,
-                    //margin: EdgeInsets.only(left: size.width / 6, top: 10),
-
-                    child: Text(
-                      (nameFinal.length >= 45)
-                          ? nameFinal.substring(0, 45)
-                          : nameFinal,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: (nameFinal.length >= 15) ? 20 : 22,
-                          color: Colors.white),
-                    ),
-                  ),
-                ), */
                 SizedBox(
                   height: 5.0,
                 ),
@@ -448,22 +399,65 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         Navigator.of(context)
                             .push(createRoutePlantDetail(plant, plants, true)),
                       },
-                  child: Stack(
-                    children: [
-                      CardPlant(plant: plant),
-                      Hero(
-                          tag: plant.quantity,
-                          child: _buildCircleFavoriteProduct(plant.quantity)),
-                    ],
-                  ));
+                  child: Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) =>
+                          {_deletePlant(plant.id, index)},
+                      background: Container(
+                          alignment: Alignment.centerRight,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: Colors.red,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.black,
+                                  size: 30,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              /* Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
+                                ) */
+                            ],
+                          )),
+                      child: Stack(
+                        children: [
+                          CardPlant(plant: plant),
+                          Hero(
+                              tag: plant.quantity,
+                              child:
+                                  _buildCircleFavoriteProduct(plant.quantity)),
+                        ],
+                      )));
             }),
       ),
     );
   }
 
-  Widget _buildWidgetAir(airs) {
-    final airService = Provider.of<AirService>(context, listen: false);
+  _deletePlant(String id, int index) async {
+    final res = await this.plantService.deletePlant(id);
+    if (res) {
+      setState(() {
+        plants.removeAt(index);
+        roomBloc.getRooms(profile.user.uid);
+      });
+    }
+  }
 
+  Widget _buildWidgetAir(airs) {
     return Container(
       child: SizedBox(
         child: ListView.builder(
@@ -477,10 +471,54 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         Navigator.of(context)
                             .push(createRouteNewAir(air, widget.room, true)),
                       },
-                  child: CardAir(air: air));
+                  child: Dismissible(
+                    child: CardAir(air: air),
+                    key: UniqueKey(),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) => {_deleteAir(air.id, index)},
+                    background: Container(
+                        alignment: Alignment.centerRight,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: Colors.red,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.black,
+                                size: 30,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            /* Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
+                                ) */
+                          ],
+                        )),
+                  ));
             }),
       ),
     );
+  }
+
+  _deleteAir(String id, int index) async {
+    final res = await this.airService.deleteAir(id);
+    if (res) {
+      setState(() {
+        airs.removeAt(index);
+        roomBloc.getRooms(profile.user.uid);
+      });
+    }
   }
 
   Widget _buildWidgetLight(lights) {
@@ -497,10 +535,54 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         Navigator.of(context).push(
                             createRouteNewLight(light, widget.room, true)),
                       },
-                  child: CardLight(light: light));
+                  child: Dismissible(
+                    child: CardLight(light: light),
+                    key: UniqueKey(),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) => {_deleteLight(light.id, index)},
+                    background: Container(
+                        alignment: Alignment.centerRight,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: Colors.red,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.black,
+                                size: 30,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            /* Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
+                                ) */
+                          ],
+                        )),
+                  ));
             }),
       ),
     );
+  }
+
+  _deleteLight(String id, int index) async {
+    final res = await this.lightService.deleteLight(id);
+    if (res) {
+      setState(() {
+        lights.removeAt(index);
+        roomBloc.getRooms(profile.user.uid);
+      });
+    }
   }
 
   Container _buildCircleFavoriteProduct(String quantity) {
@@ -728,12 +810,13 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             initialData: null,
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (snapshot.hasData) {
-                return (snapshot.data.length > 0)
+                plants = snapshot.data;
+                return (plants.length > 0)
                     ? Container(
                         margin: EdgeInsets.only(
                           left: 10,
                         ),
-                        child: _buildWidgetPlant(snapshot.data))
+                        child: _buildWidgetPlant(plants))
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
@@ -761,12 +844,13 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             initialData: null,
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (snapshot.hasData) {
-                return (snapshot.data.length > 0)
+                airs = snapshot.data;
+                return (airs.length > 0)
                     ? Container(
                         margin: EdgeInsets.only(
                           left: 10,
                         ),
-                        child: _buildWidgetAir(snapshot.data))
+                        child: _buildWidgetAir(airs))
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
@@ -794,12 +878,13 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             initialData: null,
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (snapshot.hasData) {
-                return (snapshot.data.length > 0)
+                lights = snapshot.data;
+                return (lights.length > 0)
                     ? Container(
                         margin: EdgeInsets.only(
                           left: 10,
                         ),
-                        child: _buildWidgetLight(snapshot.data))
+                        child: _buildWidgetLight(lights))
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
