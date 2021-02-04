@@ -5,13 +5,17 @@ import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
+import 'package:chat/models/visit.dart';
 import 'package:chat/pages/add_update_plant.dart';
+import 'package:chat/pages/add_update_visit.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/plant_page.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/plants_provider.dart';
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/aws_service.dart';
+import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
@@ -21,6 +25,7 @@ import 'package:chat/widgets/carousel_tabs.dart';
 import 'package:chat/widgets/plant_card_widget.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 import '../utils//extension.dart';
@@ -88,7 +93,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   void initState() {
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     final plantService = Provider.of<PlantService>(context, listen: false);
-    plant = plantService.plant;
+
+    plant = widget.plant;
 
     super.initState();
     //  name = widget.profile.name;
@@ -162,7 +168,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
                   actions: [
                     Hero(
-                        tag: widget.plant.quantity,
+                        tag: widget.plant.quantity + widget.plant.id,
                         child: _buildCircleQuantityPlant()),
 
                     /*   Container(
@@ -186,41 +192,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                         )), */
                   ],
 
-                  centerTitle: false,
+                  centerTitle: true,
                   pinned: true,
-                  title: StreamBuilder<Plant>(
-                    stream: plantBloc.plantSelect.stream,
-                    builder: (context, AsyncSnapshot<Plant> snapshot) {
-                      if (snapshot.hasData) {
-                        plant = snapshot.data;
-
-                        return Center(
-                            child: Container(
-                                //  margin: EdgeInsets.only(left: 0),
-                                width: size.height / 3,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.60),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(30)),
-                                  boxShadow: [],
-                                ),
-                                child: Container(
-                                  child: Center(
-                                    child: Text(
-                                      plant.name.capitalize(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                )));
-                      } else if (snapshot.hasError) {
-                        return _buildErrorWidget(snapshot.error);
-                      } else {
-                        return _buildLoadingWidget();
-                      }
-                    },
-                  ),
 
                   expandedHeight: maxHeight,
                   // collapsedHeight: 56.0001,
@@ -231,9 +204,35 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                       // StretchMode.blurBackground
                     ],
                     background: PlantPage(
-                      plant: widget.plant,
+                      plant: plant,
                     ),
-                    centerTitle: false,
+                    centerTitle: true,
+                    title: StreamBuilder<Plant>(
+                      stream: plantBloc.plantSelect.stream,
+                      builder: (context, AsyncSnapshot<Plant> snapshot) {
+                        if (snapshot.hasData) {
+                          plant = snapshot.data;
+
+                          return Container(
+                              //  margin: EdgeInsets.only(left: 0),
+                              width: size.height / 5,
+                              height: 30,
+                              child: Container(
+                                child: Center(
+                                  child: Text(
+                                    plant.name.capitalize(),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ));
+                        } else if (snapshot.hasError) {
+                          return _buildErrorWidget(snapshot.error);
+                        } else {
+                          return _buildLoadingWidget();
+                        }
+                      },
+                    ),
                   ),
                 ),
 
@@ -424,6 +423,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   SliverList makeHeaderInfo(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
+    final size = MediaQuery.of(context).size;
+
     return SliverList(
       delegate: SliverChildListDelegate([
         StreamBuilder<Plant>(
@@ -437,24 +438,125 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
               final sexo = plant.sexo;
 
-              final pot = plant.pot;
+              final pot = (plant.pot == "") ? "0" : plant.pot;
 
               //final nameFinal = name.isEmpty ? "" : name.capitalize();
               final thc = (plant.thc.isEmpty) ? '0' : plant.thc;
               final cbd = (plant.cbd.isEmpty) ? '0' : plant.cbd;
 
               final flower = (plant.flowering == "") ? "0" : plant.flowering;
+              final visit = new Visit();
+
+              final germina = plant.germinated;
+              final flora = plant.flowering;
+              final plantService =
+                  Provider.of<PlantService>(context, listen: false);
+              final aws = Provider.of<AwsService>(context, listen: false);
 
               return Container(
-                padding: EdgeInsets.only(top: 10.0),
+                padding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
                 color: currentTheme.scaffoldBackgroundColor,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    DateGDurationF(
-                      germina: plant.germinated,
-                      flora: flower,
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width / 15),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              padding: EdgeInsets.all(2.5),
+                              child: FaIcon(
+                                FontAwesomeIcons.seedling,
+                                color: Colors.white54,
+                              )),
+                          Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 5.0),
+                              child: Container(
+                                padding: EdgeInsets.all(2.5),
+                                child: Text(
+                                  "Germinación :",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      color: Colors.white54),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(5.0),
+                            child: Text(
+                              "$germina",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width / 15),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              padding: EdgeInsets.all(2.5),
+                              child: FaIcon(
+                                FontAwesomeIcons.cannabis,
+                                color: Colors.white54,
+                              )),
+                          Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 5.0),
+                              child: Container(
+                                padding: EdgeInsets.all(2.5),
+                                child: Text(
+                                  "Floración :",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      color: Colors.white54),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 25,
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(5.0),
+                            child: Text(
+                              "$flora",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: Colors.white),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(5.0),
+                            child: Text(
+                              "Semanas",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 10,
+                                  color: Colors.white54),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0,
                     ),
                     CbdthcRow(thc: thc, cbd: cbd, fontSize: 16),
                     SexLtRow(pot: pot, sex: sexo, fontSize: 16),
@@ -487,13 +589,31 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                             textColor: currentTheme.accentColor,
                             text: 'Editar',
                             onPressed: () {
-                              Navigator.of(context).push(createRouteEditPlant(
-                                  plant, widget.plants, widget.room));
+                              aws.isUpload = false;
+                              plantService.plant = plant;
+                              Navigator.of(context).push(
+                                  createRouteEditPlant(plant, widget.room));
                             }),
                       ),
                     ),
                     SizedBox(
                       height: 20,
+                    ),
+                    Container(
+                      //top: size.height / 3.5,
+                      margin: EdgeInsets.only(left: 40, right: 40),
+                      // width: size.width / 1.5,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: ButtonSubEditProfile(
+                            color: currentTheme.scaffoldBackgroundColor,
+                            textColor: currentTheme.accentColor,
+                            text: 'Nueva visita',
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                  createRouteNewVisit(visit, widget.plant));
+                            }),
+                      ),
                     ),
                     Divider(height: 1),
                   ],
@@ -839,12 +959,34 @@ class BottomWaveClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-Route createRouteEditPlant(Plant plant, List<Plant> plants, Room room) {
+Route createRouteEditPlant(Plant plant, Room room) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => AddUpdatePlantPage(
       plant: plant,
       room: room,
       isEdit: true,
+    ),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
+}
+
+Route createRouteNewVisit(Visit visit, Plant plant) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => AddUpdateVisitPage(
+      visit: visit,
+      plant: plant,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);

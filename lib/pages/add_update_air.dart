@@ -83,7 +83,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     descriptionCtrl.text = widget.air.description;
     _wattsCtrl.text = widget.air.watts;
 
-    plantBloc.imageUpdate.add(true);
+    //  plantBloc.imageUpdate.add(true);
     nameCtrl.addListener(() {
       // print('${nameCtrl.text}');
       setState(() {
@@ -211,21 +211,6 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     );
   }
 
-  Widget _buildLoadingWidget() {
-    return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
-  }
-
-  Widget _buildErrorWidget(String error) {
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text("Error occured: $error"),
-      ],
-    ));
-  }
-
   Widget _createName(AirBloc bloc) {
     return StreamBuilder(
       stream: bloc.nameStream,
@@ -317,35 +302,6 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeWatts,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _createDurationFlora(PlantBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.floweringStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            controller: _durationFlorationCtrl,
-            inputFormatters: <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(3),
-            ],
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-                // icon: Icon(Icons.perm_identity),
-                //  fillColor: currentTheme.accentColor,
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                ),
-                hintText: 'Semanas',
-                labelText: 'Duracion de floración *',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeFlowering,
           ),
         );
       },

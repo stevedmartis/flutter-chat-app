@@ -435,38 +435,13 @@ class _RoomListState extends State<RoomList> {
                           totalAirs: item.totalAirs,
                           totalLigths: item.totalLights,
                         ),
-
-                        /* ListTile(
-                        selectedTileColor: currentTheme.accentColor,
-                        focusColor: currentTheme.accentColor,
-                        hoverColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.white, width: 0.5),
-                            borderRadius: BorderRadius.circular(10)),
-                        visualDensity: VisualDensity.comfortable,
-                        autofocus: true,
-                        title: Text(item.name),
-                        subtitle: Text(
-                          '${item.description}',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                              color: currentTheme.secondaryHeaderColor),
-                        ),
-                        leading: Icon(
-                          Icons.drag_indicator,
-                          color: currentTheme.accentColor,
-                        ),
-                        trailing: Icon(Icons.chevron_right),
-                        isThreeLine: true,
-                      ), */
                       ),
                     ),
                     SizedBox(
                       height: 1.0,
                       child: Center(
                         child: Container(
-                          height: 2.0,
+                          height: 1.0,
                           color: currentTheme.scaffoldBackgroundColor,
                         ),
                       ),

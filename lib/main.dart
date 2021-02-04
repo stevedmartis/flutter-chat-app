@@ -6,6 +6,7 @@ import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/light_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/room_services.dart';
+import 'package:chat/services/visit_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,7 @@ void main() => runApp(MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => PlantService()),
       ChangeNotifierProvider(create: (_) => AirService()),
       ChangeNotifierProvider(create: (_) => LightService()),
+      ChangeNotifierProvider(create: (_) => VisitService()),
     ], child: MyApp()));
 
 class MyApp extends StatelessWidget {

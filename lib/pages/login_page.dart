@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Container(
-              height: _size.height + 100,
+              height: _size.height,
               child: Stack(
                 children: <Widget>[
                   WavyHeader(),
@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
-                        top: _size.width / 3.5,
+                        top: _size.width / 4.0,
                       ),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -69,12 +69,12 @@ class _LoginPageState extends State<LoginPage> {
                                   true,
                                   30),
                             ),
-                            roundedRectSignInSocialMediaButton(
+                            /*   roundedRectSignInSocialMediaButton(
                                 'Log in with Facebook',
                                 Color(0xff3C56A6),
                                 FontAwesomeIcons.facebook,
                                 false,
-                                25),
+                                25), */
                             GestureDetector(
                               onTap: () async {
                                 await _signIApple(context);
@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   Center(
                     child: Container(
-                      margin: EdgeInsets.only(top: _size.height / 1.1),
+                      margin: EdgeInsets.only(top: _size.height / 1.2),
                       child: Labels(
                         rute: 'register',
                         title: "Don't have an account?",
@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Center(
                       child: Container(
-                          margin: EdgeInsets.only(top: _size.height),
+                          margin: EdgeInsets.only(top: _size.height / 1.1),
                           child: StyledLogoCustom())),
                   //Container(child: circleYellow())
                 ],

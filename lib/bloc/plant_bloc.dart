@@ -38,7 +38,7 @@ class PlantBloc with Validators {
 
   getPlant(Plant plant) async {
     Plant response = await _repository.getPlant(plant.id);
-    if (!_plantSelect.isClosed) _plantSelect.sink.add(response);
+    _plantSelect.sink.add(response);
   }
 
   BehaviorSubject<bool> get imageUpdate => _imageUpdateCtrl;

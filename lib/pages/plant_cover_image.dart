@@ -1,8 +1,10 @@
 import 'package:chat/models/plant.dart';
 import 'package:chat/pages/chat_page.dart';
+import 'package:chat/services/plant_services.dart';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class PlantCard extends StatefulWidget {
   PlantCard(
@@ -22,6 +24,18 @@ class PlantCard extends StatefulWidget {
 }
 
 class _PlantCardState extends State<PlantCard> {
+  Plant plant;
+  @override
+  void initState() {
+    final plantService = Provider.of<PlantService>(context, listen: false);
+    plant = plantService.plant;
+
+    super.initState();
+
+    setState(() {});
+    //roomBloc.getRooms(widget.profile.user.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
     //final size = MediaQuery.of(context).size;
@@ -34,7 +48,7 @@ class _PlantCardState extends State<PlantCard> {
         child: Material(
             type: MaterialType.transparency,
             child: FadeInImage(
-              image: NetworkImage(widget.plant.getCoverImg()),
+              image: NetworkImage(plant.getCoverImg()),
               placeholder: AssetImage('assets/loading2.gif'),
               fit: BoxFit.cover,
               height: 100,

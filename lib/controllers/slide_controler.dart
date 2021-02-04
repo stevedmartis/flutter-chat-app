@@ -31,6 +31,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
     return Stack(
       children: [
         Container(
+          padding: EdgeInsets.only(top: 30),
           width: double.infinity,
           height: _size.height,
           child: PageView(
@@ -54,27 +55,6 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
                   children: _buildPageIndicator(),
                 ),
               )
-
-            /* : StyledButton(
-                label: "Ingresar",
-                borderColor: Colors.transparent,
-                press: () => {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/login', (route) => false)
-                },
-              ), */
-            /*  (_isLastPage)
-            ? StyledButton(
-                label: "Create Account",
-                backgroundColor: Colors.transparent,
-                borderColor: Color(0xff3374F8),
-                fontColor: Color(0xff3374F8),
-                borderWidth: 2,
-                press: () => {
-     
-                },
-              )
-            : */
             : Container(
                 padding: EdgeInsets.only(
                     top: _size.height * 0.8, left: 60, right: 60),

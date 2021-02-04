@@ -90,7 +90,7 @@ class NewRoomScreen extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(30),
               child: Text(
-                "New Room",
+                "Create Room",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),

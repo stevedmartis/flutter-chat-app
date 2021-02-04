@@ -87,7 +87,7 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
     _wattsCtrl.text = widget.light.watts;
     _kelvinCtrl.text = widget.light.kelvin;
 
-    plantBloc.imageUpdate.add(true);
+    // plantBloc.imageUpdate.add(true);
     nameCtrl.addListener(() {
       // print('${nameCtrl.text}');
       setState(() {

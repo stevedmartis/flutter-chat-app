@@ -368,55 +368,63 @@ class DateGDurationF extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(2.5),
-              child: Text(
-                "Germinación :",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: Colors.white54),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5.0),
+              child: Container(
+                padding: EdgeInsets.all(2.5),
+                child: Text(
+                  "Germinación :",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: fontSize,
+                      color: Colors.white54),
+                ),
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(5.0),
-              child: Text(
-                "$germina",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: Colors.white),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                child: Text(
+                  "$germina",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: fontSize,
+                      color: Colors.white),
+                ),
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(2.5),
-              child: Text(
-                "Semanas floración :",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: Colors.white54),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
+              child: Container(
+                padding: EdgeInsets.all(2.5),
+                child: Text(
+                  "Duración floración :",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: fontSize,
+                      color: Colors.white54),
+                ),
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(5.0),
-              child: Text(
-                "$flora",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: Colors.white),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                child: Text(
+                  "$flora",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: fontSize,
+                      color: Colors.white),
+                ),
               ),
             ),
           ),

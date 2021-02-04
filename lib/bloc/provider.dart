@@ -6,6 +6,7 @@ import 'package:chat/bloc/product_bloc.dart';
 import 'package:chat/bloc/profile_bloc.dart';
 import 'package:chat/bloc/register_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
+import 'package:chat/bloc/visit_bloc.dart';
 import 'package:flutter/material.dart';
 
 class CustomProvider extends InheritedWidget {
@@ -24,6 +25,8 @@ class CustomProvider extends InheritedWidget {
   final airBloc = AirBloc();
 
   final lightBloc = LightBloc();
+
+  final visitBloc = VisitBloc();
 
   static CustomProvider _instancia;
 
@@ -77,6 +80,11 @@ class CustomProvider extends InheritedWidget {
   static LightBloc lightBlocIn(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<CustomProvider>())
         .lightBloc;
+  }
+
+  static VisitBloc visitBlocIn(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<CustomProvider>())
+        .visitBloc;
   }
 
   static ProductBloc productBlocIn(BuildContext context) {

@@ -373,7 +373,7 @@ class DateGDurationF extends StatelessWidget {
       {Key key,
       @required this.germina,
       @required this.flora,
-      this.fontSize = 10})
+      this.fontSize = 12})
       : super(key: key);
 
   final String germina;
@@ -419,7 +419,7 @@ class DateGDurationF extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(2.5),
               child: Text(
-                "Semanas floración :",
+                "Duración floración :",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: fontSize,

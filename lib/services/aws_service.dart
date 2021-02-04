@@ -118,7 +118,7 @@ class AwsService with ChangeNotifier {
     final respBody = jsonDecode(resp.body);
 
     //final respData = imageResponseToJson(resp.body);
-    isUpload = true;
+    //isUpload = true;
 
     final respUrl = respBody['url'];
     this.image = respUrl.toString();
@@ -127,7 +127,7 @@ class AwsService with ChangeNotifier {
 
   Future<String> uploadImageCoverPlant(
       String fileName, String fileType, File image) async {
-    final url = Uri.parse('${Environment.apiUrl}/aws/upload/cover-plant');
+    final url = Uri.parse('${Environment.apiUrl}/aws/upload/cover-visit');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 
@@ -159,7 +159,6 @@ class AwsService with ChangeNotifier {
     final respBody = jsonDecode(resp.body);
 
     //final respData = imageResponseToJson(resp.body);
-    isUpload = true;
 
     final respUrl = respBody['url'];
     this.imageUpdate = respUrl;
@@ -168,8 +167,7 @@ class AwsService with ChangeNotifier {
 
   Future<String> updateImageCoverPlant(
       String fileName, String fileType, File image, String id) async {
-    final url =
-        Uri.parse('${Environment.apiUrl}/aws/upload/update-cover-plant');
+    final url = Uri.parse('${Environment.apiUrl}/aws/upload/cover-plant');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 
@@ -202,7 +200,6 @@ class AwsService with ChangeNotifier {
     final respBody = jsonDecode(resp.body);
 
     //final respData = imageResponseToJson(resp.body);
-    isUpload = true;
 
     final respUrl = respBody['url'];
     this.imageUpdate = respUrl;

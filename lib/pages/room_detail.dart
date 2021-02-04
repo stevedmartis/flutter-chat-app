@@ -19,6 +19,7 @@ import 'package:chat/providers/light_provider.dart';
 import 'package:chat/providers/plants_provider.dart';
 import 'package:chat/providers/rooms_provider.dart';
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/widgets/air_card.dart';
 import 'package:chat/widgets/light_card.dart';
@@ -397,7 +398,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   onTap: () => {
                         plantService.plant = plant,
                         Navigator.of(context)
-                            .push(createRoutePlantDetail(plant, plants, true)),
+                            .push(createRoutePlantDetail(plant, room, true)),
                       },
                   child: Dismissible(
                       key: UniqueKey(),
@@ -437,7 +438,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         children: [
                           CardPlant(plant: plant),
                           Hero(
-                              tag: plant.quantity,
+                              tag: plant.quantity + plant.id,
                               child:
                                   _buildCircleFavoriteProduct(plant.quantity)),
                         ],
@@ -613,6 +614,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     final air = new Air();
     final light = new Light();
 
+    final plantService = Provider.of<PlantService>(context, listen: false);
+    final aws = Provider.of<AwsService>(context, listen: false);
+
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
@@ -666,6 +670,8 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   color: currentTheme.scaffoldBackgroundColor,
                   child: InkWell(
                     onTap: () => {
+                      aws.isUpload = false,
+                      plantService.plant = plant,
                       Navigator.of(context).pop(),
                       Navigator.of(context)
                           .push(createRouteNewPlant(plant, widget.room, false)),

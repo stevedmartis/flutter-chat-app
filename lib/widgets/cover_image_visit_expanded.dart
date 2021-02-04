@@ -1,37 +1,32 @@
 import 'dart:ui';
 
 import 'package:chat/models/plant.dart';
-import 'package:chat/services/plant_services.dart';
+import 'package:chat/models/visit.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class ImageCoverPlantExpanded extends StatefulWidget {
-  const ImageCoverPlantExpanded({
+class ImageCoverVisitExpanded extends StatefulWidget {
+  const ImageCoverVisitExpanded({
     Key key,
     @required this.width,
     @required this.height,
-    @required this.plant,
+    @required this.visit,
     @required this.fontsize,
   }) : super(key: key);
 
-  final Plant plant;
+  final Visit visit;
   final double fontsize;
   final double width;
 
   final double height;
 
   @override
-  _ImageCoverPlantExpandedState createState() =>
-      _ImageCoverPlantExpandedState();
+  _ImageCoverVisitExpandedState createState() =>
+      _ImageCoverVisitExpandedState();
 }
 
-class _ImageCoverPlantExpandedState extends State<ImageCoverPlantExpanded> {
-  Plant plant;
+class _ImageCoverVisitExpandedState extends State<ImageCoverVisitExpanded> {
   @override
   void initState() {
-    final plantService = Provider.of<PlantService>(context, listen: false);
-    plant = plantService.plant;
-
     super.initState();
   }
 
@@ -53,7 +48,7 @@ class _ImageCoverPlantExpandedState extends State<ImageCoverPlantExpanded> {
           minScale: 0.5,
           maxScale: 4,
           child: Image(
-            image: NetworkImage(plant.getCoverImg()),
+            image: NetworkImage(widget.visit.getCoverImg()),
             fit: BoxFit.cover,
             width: double.maxFinite,
           ),

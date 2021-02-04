@@ -394,7 +394,7 @@ class DateGDurationF extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(2.5),
               child: Text(
-                "Semanas floración :",
+                "Duración floración :",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: fontSize,

@@ -1,27 +1,30 @@
 import 'package:chat/bloc/plant_bloc.dart';
-import 'package:chat/models/plant.dart';
+import 'package:chat/bloc/visit_bloc.dart';
+import 'package:chat/models/visit.dart';
 import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
+import 'package:chat/services/visit_service.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/cover_image_visit_expanded.dart';
 import 'package:chat/widgets/image_cover_expanded.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-class CoverImagePlantPage extends StatefulWidget {
-  CoverImagePlantPage(
-      {this.plant, this.isUserAuth = true, this.isEdit = false});
-  final Plant plant;
+class CoverImageVisitPage extends StatefulWidget {
+  CoverImageVisitPage(
+      {this.visit, this.isUserAuth = true, this.isEdit = false});
+  final Visit visit;
   final bool isUserAuth;
 
   final bool isEdit;
 
   @override
-  CoverImagePlantPageState createState() => CoverImagePlantPageState();
+  CoverImageVisitPageState createState() => CoverImageVisitPageState();
 }
 
-class CoverImagePlantPageState extends State<CoverImagePlantPage> {
+class CoverImageVisitPageState extends State<CoverImageVisitPage> {
   File imageCover;
   final picker = ImagePicker();
   // AwsService authService;
@@ -73,13 +76,13 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
       ),
       backgroundColor: Colors.black,
       body: Hero(
-        tag: widget.plant.coverImage,
+        tag: widget.visit.coverImage,
         child: Material(
           type: MaterialType.transparency,
-          child: ImageCoverPlantExpanded(
+          child: ImageCoverVisitExpanded(
             width: 100,
             height: 100,
-            plant: widget.plant,
+            visit: widget.visit,
             fontsize: 100,
           ),
         ),
@@ -89,7 +92,7 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
 
   _selectImage() async {
     final awsService = Provider.of<AwsService>(context, listen: false);
-    final plantService = Provider.of<PlantService>(context, listen: false);
+    final visitService = Provider.of<VisitService>(context, listen: false);
 
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
@@ -104,14 +107,9 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
           fileType[0], fileType[1], imageCover);
 
       setState(() {
-        //  plantBloc.imageUpdate.add(true);
+        visitBloc.imageUpdate.add(true);
 
-        plantBloc.imageUpdate.add(true);
-
-        plantService.plant.coverImage = resp;
-
-        awsService.isUpload = true;
-        // plantService.plant.coverImage = resp;
+        visitService.visit.coverImage = resp;
 
         // awsService.isUpload = true;
       });
@@ -134,14 +132,14 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.updateImageCoverPlant(
-          fileType[0], fileType[1], imageCover, widget.plant.id);
+          fileType[0], fileType[1], imageCover, widget.visit.id);
 
       setState(() {
         plantBloc.imageUpdate.add(true);
 
         plantService.plant.coverImage = resp;
 
-        awsService.isUpload = true;
+        // awsService.isUpload = true;
       });
     } else {
       print('No image selected.');

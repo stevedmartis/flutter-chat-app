@@ -158,7 +158,7 @@ class _ArticleDescription extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 5.0,
+              height: 10.0,
             ),
             Row(
               children: [
@@ -219,9 +219,6 @@ class _ArticleDescription extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            SizedBox(
-              height: 5.0,
             ),
           ],
         ),

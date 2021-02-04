@@ -250,6 +250,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final isImageUpdate = Provider.of<AwsService>(context).isUpload;
 
     final bloc = CustomProvider.plantBlocIn(context);
 
@@ -273,7 +274,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         isFlorationChange ||
         isThcChange ||
         isCbdChange ||
-        isPotChange;
+        isPotChange ||
+        isImageUpdate;
 
     return Scaffold(
       appBar: AppBar(
@@ -609,7 +611,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                       const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: 'Semanas',
-                labelText: 'Duracion de floración *',
+                labelText: 'Duración de floración *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeFlowering,
@@ -732,7 +734,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
               padding: const EdgeInsets.all(10.0),
               child: Center(
                 child: Text(
-                  'Next',
+                  'Done',
                   style: TextStyle(
                       color: (isControllerChange && !errorRequired)
                           ? currentTheme.accentColor
@@ -756,6 +758,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
   _createPlant(PlantBloc bloc) async {
     final plantService = Provider.of<PlantService>(context, listen: false);
+    final awsService = Provider.of<AwsService>(context, listen: false);
 
     final room = widget.room.id;
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -803,16 +806,20 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     if (createPlantResp != null) {
       if (createPlantResp.ok) {
         // widget.plants.add(createPlantResp.plant);
-        loading = false;
+        plantService.plant = createPlantResp.plant;
+        plantBloc.getPlant(createPlantResp.plant);
 
-        // plantBloc.getPlant(widget.plant);
-        //  plantBloc.getPlant(widget.plant);
+        setState(() {
+          loading = false;
 
-        roomBloc.getRooms(uid);
-
+          awsService.isUpload = true;
+        });
         Navigator.pop(context);
         setState(() {});
       } else {
+        setState(() {
+          loading = false;
+        });
         mostrarAlerta(context, 'Error', createPlantResp.msg);
       }
     } else {
@@ -864,20 +871,28 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     print(editPlant);
 
     if (widget.isEdit) {
-      final editRoomRes = await plantService.editPlant(editPlant);
+      final editPlantRes = await plantService.editPlant(editPlant);
 
-      if (editRoomRes != null) {
-        if (editRoomRes.ok) {
+      if (editPlantRes != null) {
+        if (editPlantRes.ok) {
           // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
-          plantBloc.getPlant(widget.plant);
+
+          plantService.plant = editPlantRes.plant;
+          plantBloc.getPlant(editPlantRes.plant);
+
           setState(() {
             loading = false;
+
+            awsService.isUpload = true;
           });
           // room = editRoomRes.room;
 
           Navigator.pop(context);
         } else {
-          mostrarAlerta(context, 'Error', editRoomRes.msg);
+          setState(() {
+            loading = false;
+          });
+          mostrarAlerta(context, 'Error', editPlantRes.msg);
         }
       } else {
         mostrarAlerta(

@@ -299,7 +299,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
               Navigator.pop(context),
           color: Colors.white,
         ),
-        title: (widget.isEdit) ? Text('Edit room') : Text('New room'),
+        title: (widget.isEdit) ? Text('Edit room') : Text('Crear room'),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
