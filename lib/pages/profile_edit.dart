@@ -54,7 +54,7 @@ class EditProfilePageState extends State<EditProfilePage> {
     emailCtrl.text = profile.user.email;
     lastName.text = profile.lastName;
 
-    //  profileBloc.imageUpdate.add(true);
+    profileBloc.imageUpdate.add(true);
 
     usernameCtrl.addListener(() {
       //print('${usernameCtrl.text}');

@@ -400,49 +400,14 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         Navigator.of(context)
                             .push(createRoutePlantDetail(plant, room, true)),
                       },
-                  child: Dismissible(
-                      key: UniqueKey(),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) =>
-                          {_deletePlant(plant.id, index)},
-                      background: Container(
-                          alignment: Alignment.centerRight,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.0),
-                            color: Colors.red,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(right: 10),
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors.black,
-                                  size: 30,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              /* Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600),
-                                ) */
-                            ],
-                          )),
-                      child: Stack(
-                        children: [
-                          CardPlant(plant: plant),
-                          Hero(
-                              tag: plant.quantity + plant.id,
-                              child:
-                                  _buildCircleFavoriteProduct(plant.quantity)),
-                        ],
-                      )));
+                  child: Stack(
+                    children: [
+                      CardPlant(plant: plant),
+                      Hero(
+                          tag: plant.quantity + plant.id,
+                          child: _buildCircleFavoriteProduct(plant.quantity)),
+                    ],
+                  ));
             }),
       ),
     );

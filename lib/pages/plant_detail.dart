@@ -13,6 +13,7 @@ import 'package:chat/pages/plant_page.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/plants_provider.dart';
+import 'package:chat/providers/visit_provider.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/aws_service.dart';
@@ -24,6 +25,7 @@ import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
 import 'package:chat/widgets/plant_card_widget.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
+import 'package:chat/widgets/visit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +48,7 @@ class PlantDetailPage extends StatefulWidget {
 
   final Plant plant;
   final List<Plant> plants;
+
   final Room room;
 
   @override
@@ -74,7 +77,12 @@ class NetworkImageDecoder {
 
 class _PlantDetailPageState extends State<PlantDetailPage>
     with TickerProviderStateMixin {
+  List<Visit> visits = [];
   ScrollController _scrollController;
+
+  final visitApiProvider = new VisitApiProvider();
+
+  TabController _tabController;
 
   final plantsApiProvider = new PlantsApiProvider();
   String name = '';
@@ -92,6 +100,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   @override
   void initState() {
     _scrollController = ScrollController()..addListener(() => setState(() {}));
+    _tabController = new TabController(vsync: this, length: 1);
+
     final plantService = Provider.of<PlantService>(context, listen: false);
 
     plant = widget.plant;
@@ -114,135 +124,267 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     return _scrollController.hasClients && _scrollController.offset >= 130;
   }
 
+  bool get _activateScroll {
+    return _scrollController.hasClients && _scrollController.offset >= 250;
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final size = MediaQuery.of(context).size;
     //final username = widget.profile.user.username.toLowerCase();
+    final visit = new Visit();
 
     return Scaffold(
-      // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
-      body: NotificationListener<ScrollEndNotification>(
-        onNotification: (_) {
-          _snapAppbar();
-          if (_scrollController.offset >= 250) {}
-          return false;
-        },
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: CustomScrollView(
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              controller: _scrollController,
-              slivers: <Widget>[
-                SliverAppBar(
-                  stretch: true,
-                  stretchTriggerOffset: 250.0,
+        // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+        body: NotificationListener<ScrollEndNotification>(
+            /*  onNotification: (_) {
+              _snapAppbar();
+              if (_scrollController.offset >= 250) {}
+              return false;
+            }, */
+            child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                },
+                child: CustomScrollView(
+                    physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics()),
+                    controller: _scrollController,
+                    slivers: <Widget>[
+                      SliverAppBar(
+                        stretch: true,
+                        stretchTriggerOffset: 250.0,
 
-                  backgroundColor: _showTitle
-                      ? Colors.black
-                      : currentTheme.scaffoldBackgroundColor,
-                  leading: Container(
-                      margin: EdgeInsets.only(left: 15),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        child: CircleAvatar(
-                            child: IconButton(
-                                icon: Icon(Icons.arrow_back_ios,
-                                    size: size.width / 20,
-                                    color: (_showTitle)
-                                        ? currentTheme.accentColor
-                                        : Colors.white),
-                                onPressed: () => {
-                                      {
-                                        Provider.of<MenuModel>(context,
-                                                listen: false)
-                                            .currentPage = 0,
-                                      },
-                                      Navigator.pop(context),
-                                    }),
-                            backgroundColor: Colors.black.withOpacity(0.60)),
-                      )),
+                        backgroundColor: _showTitle
+                            ? Colors.black
+                            : currentTheme.scaffoldBackgroundColor,
+                        leading: Container(
+                            margin: EdgeInsets.only(left: 15),
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              child: CircleAvatar(
+                                  child: IconButton(
+                                      icon: Icon(Icons.arrow_back_ios,
+                                          size: size.width / 20,
+                                          color: (_showTitle)
+                                              ? currentTheme.accentColor
+                                              : Colors.white),
+                                      onPressed: () => {
+                                            {
+                                              Provider.of<MenuModel>(context,
+                                                      listen: false)
+                                                  .currentPage = 0,
+                                            },
+                                            Navigator.pop(context),
+                                          }),
+                                  backgroundColor:
+                                      Colors.black.withOpacity(0.60)),
+                            )),
 
-                  actions: [
-                    Hero(
-                        tag: widget.plant.quantity + widget.plant.id,
-                        child: _buildCircleQuantityPlant()),
+                        actions: [
+                          Container(
+                              margin: EdgeInsets.only(left: 10, right: 10),
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                child: CircleAvatar(
+                                    child: IconButton(
+                                        icon: Icon(Icons.add,
+                                            size: size.width / 15,
+                                            color: (_showTitle)
+                                                ? currentTheme.accentColor
+                                                : Colors.white),
+                                        onPressed: () => {
+                                              Navigator.of(context).push(
+                                                  createRouteNewVisit(
+                                                      visit, plant)),
+                                            }),
+                                    backgroundColor:
+                                        Colors.black.withOpacity(0.60)),
+                              )),
+                          Hero(
+                              tag: widget.plant.quantity + widget.plant.id,
+                              child: _buildCircleQuantityPlant()),
+                        ],
 
-                    /*   Container(
-                        width: 40,
-                        height: 40,
-                        margin: EdgeInsets.only(right: 20),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          child: CircleAvatar(
-                              child: Center(
-                                child: IconButton(
-                                  icon: Icon(Icons.add,
-                                      size: size.width / 15,
-                                      color: (_showTitle)
-                                          ? currentTheme.accentColor
-                                          : Colors.white),
-                                  onPressed: () => createSelectionNvigator(),
-                                ),
-                              ),
-                              backgroundColor: Colors.black.withOpacity(0.60)),
-                        )), */
-                  ],
+                        centerTitle: true,
+                        pinned: true,
 
-                  centerTitle: true,
-                  pinned: true,
+                        expandedHeight: maxHeight,
+                        // collapsedHeight: 56.0001,
+                        flexibleSpace: FlexibleSpaceBar(
+                          stretchModes: [
+                            StretchMode.zoomBackground,
+                            StretchMode.fadeTitle,
+                            // StretchMode.blurBackground
+                          ],
+                          background: PlantPage(
+                            plant: plant,
+                          ),
+                          centerTitle: true,
+                          title: StreamBuilder<Plant>(
+                            stream: plantBloc.plantSelect.stream,
+                            builder: (context, AsyncSnapshot<Plant> snapshot) {
+                              if (snapshot.hasData) {
+                                plant = snapshot.data;
 
-                  expandedHeight: maxHeight,
-                  // collapsedHeight: 56.0001,
-                  flexibleSpace: FlexibleSpaceBar(
-                    stretchModes: [
-                      StretchMode.zoomBackground,
-                      StretchMode.fadeTitle,
-                      // StretchMode.blurBackground
-                    ],
-                    background: PlantPage(
-                      plant: plant,
-                    ),
-                    centerTitle: true,
-                    title: StreamBuilder<Plant>(
-                      stream: plantBloc.plantSelect.stream,
-                      builder: (context, AsyncSnapshot<Plant> snapshot) {
-                        if (snapshot.hasData) {
-                          plant = snapshot.data;
+                                return Container(
+                                    //  margin: EdgeInsets.only(left: 0),
+                                    width: size.height / 5,
+                                    height: 30,
+                                    child: Container(
+                                      child: Center(
+                                        child: Text(
+                                          plant.name.capitalize(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ));
+                              } else if (snapshot.hasError) {
+                                return _buildErrorWidget(snapshot.error);
+                              } else {
+                                return _buildLoadingWidget();
+                              }
+                            },
+                          ),
+                        ),
+                      ),
 
-                          return Container(
-                              //  margin: EdgeInsets.only(left: 0),
-                              width: size.height / 5,
-                              height: 30,
-                              child: Container(
-                                child: Center(
-                                  child: Text(
-                                    plant.name.capitalize(),
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ));
-                        } else if (snapshot.hasError) {
-                          return _buildErrorWidget(snapshot.error);
-                        } else {
-                          return _buildLoadingWidget();
-                        }
-                      },
-                    ),
-                  ),
-                ),
+                      // makeHeaderSpacer(context),
+                      makeHeaderInfo(context),
+                      // makeHeaderSpacer(context),
+                      makeHeaderTabs(context),
+                      makeListVisits(context)
+                    ]))));
+  }
 
-                makeHeaderInfo(context),
-
-                makeHeaderSpacer(context),
-
-                // if (!widget.isUserEdit) makeHeaderTabs(context),
-              ]),
+  SliverList makeListVisits(context) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Container(
+          child: FutureBuilder(
+            future: this.visitApiProvider.getVisitPlant(widget.plant.id),
+            initialData: null,
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              if (snapshot.hasData) {
+                visits = snapshot.data;
+                return (visits.length > 0)
+                    ? Container(
+                        margin: EdgeInsets.only(
+                          left: 10,
+                        ),
+                        child: _buildWidgetVisits(visits))
+                    : Center(
+                        child: Container(
+                            padding: EdgeInsets.all(50),
+                            child: Text('Sin Plantas, add new')),
+                      ); // image is ready
+              } else {
+                return Container(
+                    height: 400.0,
+                    child: Center(
+                        child: CircularProgressIndicator())); // placeholder
+              }
+            },
+          ),
         ),
+      ]),
+    );
+  }
+
+  SliverList makeVisitCard(context) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Container(
+          child: FutureBuilder(
+            future: this.visitApiProvider.getVisitPlant(widget.plant.id),
+            initialData: null,
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              if (snapshot.hasData) {
+                visits = snapshot.data;
+                return (visits.length > 0)
+                    ? Container(
+                        margin: EdgeInsets.only(
+                          left: 10,
+                        ),
+                        child:
+                            _buildWidgetVisits(snapshot.data)) // image is ready
+                    : Center(
+                        child: Container(
+                            padding: EdgeInsets.all(50),
+                            child: Text('Sin Plantas, add new')),
+                      ); // image is ready
+              } else {
+                return Container(
+                    height: 400.0,
+                    child: Center(
+                        child: CircularProgressIndicator())); // placeholder
+              }
+            },
+          ),
+        ),
+      ]),
+    );
+  }
+
+  SliverPersistentHeader makeHeaderTabs(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+        minHeight: 70.0,
+        maxHeight: 70.0,
+        child: DefaultTabController(
+          length: 1,
+          child: Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: currentTheme.scaffoldBackgroundColor,
+              bottom: TabBar(
+                indicatorWeight: 3.0,
+                indicatorColor: currentTheme.accentColor,
+                tabs: [
+                  Tab(
+                      child: Text('Visitas',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: (_tabController.index == 0)
+                                  ? currentTheme.accentColor
+                                  : Colors.white54)))
+                ],
+                /* onTap: (value) => {
+                        _tabController
+                            .animateTo((_tabController.index + 1) % 2),
+                        setState(() {
+                          _tabController.index = value;
+                        })
+                      }
+                       */
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWidgetVisits(visits) {
+    final plantService = Provider.of<PlantService>(context, listen: false);
+
+    return Container(
+      child: SizedBox(
+        child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: visits.length,
+            itemBuilder: (BuildContext ctxt, int index) {
+              final visit = visits[index];
+              return CardVisit(visit: visit);
+            }),
       ),
     );
   }
@@ -344,7 +486,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     );
   }
 
-  SliverPersistentHeader makeHeaderTabs(context) {
+  SliverPersistentHeader makeHeaderTabVisit(context) {
     //   final roomModel = Provider.of<Room>(context);
 
     return SliverPersistentHeader(
@@ -558,8 +700,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                     SizedBox(
                       height: 10.0,
                     ),
-                    CbdthcRow(thc: thc, cbd: cbd, fontSize: 16),
-                    SexLtRow(pot: pot, sex: sexo, fontSize: 16),
+                    //CbdthcRow(thc: thc, cbd: cbd, fontSize: 16),
+                    //SexLtRow(pot: pot, sex: sexo, fontSize: 16),
                     SizedBox(
                       height: 10.0,
                     ),
@@ -596,26 +738,6 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                             }),
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      //top: size.height / 3.5,
-                      margin: EdgeInsets.only(left: 40, right: 40),
-                      // width: size.width / 1.5,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: ButtonSubEditProfile(
-                            color: currentTheme.scaffoldBackgroundColor,
-                            textColor: currentTheme.accentColor,
-                            text: 'Nueva visita',
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                  createRouteNewVisit(visit, widget.plant));
-                            }),
-                      ),
-                    ),
-                    Divider(height: 1),
                   ],
                 ),
               );
