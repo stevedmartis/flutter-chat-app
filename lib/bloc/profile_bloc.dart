@@ -51,7 +51,7 @@ class ProfileBloc with Validators {
   String get about => _aboutController.value;
 
   dispose() {
-    // _imageUpdateCtrl?.close();
+    _imageUpdateCtrl?.close();
     _emailController?.close();
     _passwordController?.close();
     _usernameController?.close();

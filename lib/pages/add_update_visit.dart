@@ -1,4 +1,3 @@
-import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/visit_bloc.dart';
 
@@ -89,7 +88,16 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     visitService.visit = widget.visit;
     visit = visitService.visit;
 
+    isSwitchedCut = widget.visit.cut;
+    isSwitchedClean = widget.visit.clean;
+    isSwitchedTemp = widget.visit.temperature;
+    isSwitchedWater = widget.visit.water;
+
     // nameCtrl.text = widget.visit.name;
+
+    degreesCtrl.text = widget.visit.degrees;
+    electroCtrl.text = widget.visit.electro;
+    phCtrl.text = widget.visit.ph;
     descriptionCtrl.text = widget.visit.description;
 
     visitBloc.imageUpdate.add(true);
@@ -109,6 +117,42 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
           this.isAboutChange = true;
         else
           this.isAboutChange = false;
+      });
+    });
+
+    degreesCtrl.addListener(() {
+      setState(() {
+        if (widget.visit.degrees != degreesCtrl.text)
+          this.isDegreesChange = true;
+        else
+          this.isDegreesChange = false;
+      });
+    });
+
+    electroCtrl.addListener(() {
+      setState(() {
+        if (widget.visit.electro != electroCtrl.text)
+          this.isElectoChange = true;
+        else
+          this.isElectoChange = false;
+      });
+    });
+
+    phCtrl.addListener(() {
+      setState(() {
+        if (widget.visit.ph != phCtrl.text)
+          this.isPhChange = true;
+        else
+          this.isPhChange = false;
+      });
+    });
+
+    mlCtrl.addListener(() {
+      setState(() {
+        if (widget.visit.ml != mlCtrl.text)
+          this.isMlChange = true;
+        else
+          this.isMlChange = false;
       });
     });
 
@@ -607,7 +651,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
           padding: const EdgeInsets.all(10.0),
           child: Center(
             child: Text(
-              'Next',
+              'Done',
               style: TextStyle(
                   color: (isControllerChange) || isUpload
                       ? currentTheme.accentColor

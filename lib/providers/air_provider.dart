@@ -2,8 +2,6 @@ import 'package:chat/global/environment.dart';
 import 'package:chat/models/air.dart';
 import 'package:chat/models/air_response.dart';
 import 'package:chat/models/aires_response.dart';
-import 'package:chat/models/plant.dart';
-import 'package:chat/models/plant_response.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 

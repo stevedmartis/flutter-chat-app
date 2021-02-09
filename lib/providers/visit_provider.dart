@@ -1,7 +1,6 @@
 import 'package:chat/global/environment.dart';
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/plant_response.dart';
-import 'package:chat/models/plants_response.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/models/visits_response.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

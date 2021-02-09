@@ -13,14 +13,14 @@ class Visit {
       this.createdAt,
       this.updatedAt,
       this.coverImage = "",
-      this.clean,
-      this.temperature,
-      this.cut,
+      this.clean = false,
+      this.temperature = false,
+      this.cut = false,
       this.electro,
       this.ph,
       this.ml,
       this.degrees,
-      this.water,
+      this.water = false,
       isRoute,
       init()});
 

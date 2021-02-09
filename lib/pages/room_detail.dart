@@ -413,16 +413,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     );
   }
 
-  _deletePlant(String id, int index) async {
-    final res = await this.plantService.deletePlant(id);
-    if (res) {
-      setState(() {
-        plants.removeAt(index);
-        roomBloc.getRooms(profile.user.uid);
-      });
-    }
-  }
-
   Widget _buildWidgetAir(airs) {
     return Container(
       child: SizedBox(

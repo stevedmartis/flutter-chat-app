@@ -1,5 +1,4 @@
 import 'package:chat/bloc/air_bloc.dart';
-import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/room_bloc.dart';
 
@@ -132,6 +131,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     quantityCtrl.dispose();
 
     _wattsCtrl.dispose();
+    _durationFlorationCtrl.clear();
 
     super.dispose();
   }

@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:chat/models/plant.dart';
 import 'package:chat/models/visit.dart';
 
 VisitResponse visitResponseFromJson(String str) =>

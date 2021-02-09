@@ -1,22 +1,16 @@
-import 'package:chat/bloc/air_bloc.dart';
 import 'package:chat/bloc/light_bloc.dart';
-import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/room_bloc.dart';
 
 import 'package:chat/helpers/mostrar_alerta.dart';
-import 'package:chat/models/air.dart';
 import 'package:chat/models/light.dart';
 
-import 'package:chat/models/plant.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/new_product.dart';
 import 'package:chat/pages/profile_page.dart';
-import 'package:chat/services/air_service.dart';
 
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/light_service.dart';
-import 'package:chat/services/plant_services.dart';
 
 import 'package:chat/theme/theme.dart';
 
@@ -24,7 +18,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 
 //final Color darkBlue = Color.fromARGB(255, 18, 32, 47);
@@ -229,21 +222,6 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
         ),
       ),
     );
-  }
-
-  Widget _buildLoadingWidget() {
-    return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
-  }
-
-  Widget _buildErrorWidget(String error) {
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text("Error occured: $error"),
-      ],
-    ));
   }
 
   Widget _createName(LightBloc bloc) {

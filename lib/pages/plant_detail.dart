@@ -16,9 +16,9 @@ import 'package:chat/providers/plants_provider.dart';
 import 'package:chat/providers/visit_provider.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
-import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/room_services.dart';
+import 'package:chat/services/visit_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/card_product.dart';
@@ -81,6 +81,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
   final visitApiProvider = new VisitApiProvider();
 
+  final visitService = VisitService();
+
   TabController _tabController;
 
   final plantsApiProvider = new PlantsApiProvider();
@@ -119,21 +121,17 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   void dispose() {
     super.dispose();
     _scrollController?.dispose();
+    _tabController.dispose();
   }
 
   bool get _showTitle {
     return _scrollController.hasClients && _scrollController.offset >= 130;
   }
 
-  bool get _activateScroll {
-    return _scrollController.hasClients && _scrollController.offset >= 250;
-  }
-
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final size = MediaQuery.of(context).size;
-    //final username = widget.profile.user.username.toLowerCase();
     final visit = new Visit();
 
     return Scaffold(
@@ -292,6 +290,15 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     );
   }
 
+  _deleteVisit(String id, int index) async {
+    final res = await this.visitService.deleteVisit(id);
+    if (res) {
+      setState(() {
+        visits.removeAt(index);
+      });
+    }
+  }
+
   SliverList makeVisitCard(context) {
     return SliverList(
       delegate: SliverChildListDelegate([
@@ -330,29 +337,27 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   SliverAppBar makeHeaderTabs(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    final size = MediaQuery.of(context).size;
-
     return SliverAppBar(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
 
-      title: Text(
-        'Visitas',
-        style: TextStyle(color: currentTheme.accentColor),
+      title: Container(
+        padding: EdgeInsets.only(bottom: 10),
+        child: Text(
+          'Visitas',
+          style: TextStyle(color: currentTheme.accentColor),
+        ),
       ),
       automaticallyImplyLeading: false,
-      toolbarHeight: 50,
+      toolbarHeight: 40,
 
       centerTitle: true,
       pinned: true,
 
-      expandedHeight: 0,
       // collapsedHeight: 56.0001,
     );
   }
 
   Widget _buildWidgetVisits(visits) {
-    final plantService = Provider.of<PlantService>(context, listen: false);
-
     return Container(
       child: SizedBox(
         child: ListView.builder(
@@ -361,7 +366,45 @@ class _PlantDetailPageState extends State<PlantDetailPage>
             itemCount: visits.length,
             itemBuilder: (BuildContext ctxt, int index) {
               final visit = visits[index];
-              return CardVisit(visit: visit);
+              return Dismissible(
+                  child: CardVisit(visit: visit),
+                  key: UniqueKey(),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (direction) => {_deleteVisit(visit.id, index)},
+                  background: Container(
+                    height: 170.0,
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        margin:
+                            EdgeInsets.only(bottom: 20, left: 10, right: 20),
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.black,
+                                size: 30,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            /* Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
+                                ) */
+                          ],
+                        )),
+                  ));
             }),
       ),
     );
@@ -543,8 +586,6 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   SliverList makeHeaderInfo(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    final size = MediaQuery.of(context).size;
-
     return SliverList(
       delegate: SliverChildListDelegate([
         StreamBuilder<Plant>(
@@ -556,16 +597,16 @@ class _PlantDetailPageState extends State<PlantDetailPage>
               final about = plant.description;
               final size = MediaQuery.of(context).size;
 
-              final sexo = plant.sexo;
+              //  final sexo = plant.sexo;
 
-              final pot = (plant.pot == "") ? "0" : plant.pot;
+              //  final pot = (plant.pot == "") ? "0" : plant.pot;
 
               //final nameFinal = name.isEmpty ? "" : name.capitalize();
-              final thc = (plant.thc.isEmpty) ? '0' : plant.thc;
-              final cbd = (plant.cbd.isEmpty) ? '0' : plant.cbd;
+              //  final thc = (plant.thc.isEmpty) ? '0' : plant.thc;
+              //  final cbd = (plant.cbd.isEmpty) ? '0' : plant.cbd;
 
-              final flower = (plant.flowering == "") ? "0" : plant.flowering;
-              final visit = new Visit();
+              // final flower = (plant.flowering == "") ? "0" : plant.flowering;
+              // final visit = new Visit();
 
               final germina = plant.germinated;
               final flora = plant.flowering;
@@ -712,10 +753,10 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                       ),
                     ),
                     SizedBox(
-                      height: 10.0,
+                      height: 20.0,
                     ),
                     Divider(
-                      height: 1,
+                      height: 1.0,
                     )
                   ],
                 ),
@@ -870,7 +911,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     );
   }
 
-  void _snapAppbar() {
+/*   void _snapAppbar() {
     final scrollDistance = maxHeight - minHeight;
 
     if (_scrollController.offset > 0 &&
@@ -881,7 +922,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
       Future.microtask(() => _scrollController.animateTo(snapOffset,
           duration: Duration(milliseconds: 200), curve: Curves.easeIn));
     }
-  }
+  } */
 }
 
 class SABT extends StatefulWidget {

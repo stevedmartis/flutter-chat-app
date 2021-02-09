@@ -1,6 +1,5 @@
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/register_bloc.dart';
-import 'package:chat/controllers/slide_controler.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/theme/theme.dart';

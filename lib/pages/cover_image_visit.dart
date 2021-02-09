@@ -6,7 +6,6 @@ import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/visit_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/cover_image_visit_expanded.dart';
-import 'package:chat/widgets/image_cover_expanded.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';

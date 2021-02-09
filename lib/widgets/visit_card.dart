@@ -1,5 +1,6 @@
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/visit.dart';
+import 'package:chat/pages/plant_detail.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,7 +11,9 @@ import '../utils/extension.dart';
 class CardVisit extends StatefulWidget {
   final Visit visit;
 
-  CardVisit({this.visit});
+  final Plant plant;
+
+  CardVisit({this.visit, this.plant});
   @override
   _CardVisitState createState() => _CardVisitState();
 }
@@ -46,7 +49,10 @@ class _CardVisitState extends State<CardVisit> {
                 clipBehavior: Clip.hardEdge,
                 child: InkWell(
                     borderRadius: BorderRadius.circular(10.0),
-                    onTap: () => {},
+                    onTap: () => {
+                          Navigator.of(context).push(
+                              createRouteNewVisit(widget.visit, widget.plant)),
+                        },
                     child: ColorFiltered(
                       colorFilter: ColorFilter.mode(
                           Colors.black.withOpacity(0.50), BlendMode.dstATop),
@@ -160,7 +166,6 @@ class _CardVisitState extends State<CardVisit> {
 
   Widget juiceitem() {
     final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     String formattedDateCreate =
         DateFormat('yyyy-MM-dd – kk:mm').format(widget.visit.createdAt);
     return Container(

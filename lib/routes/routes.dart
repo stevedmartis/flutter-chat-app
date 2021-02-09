@@ -3,7 +3,6 @@ import 'package:chat/pages/onBoarding_page.dart';
 import 'package:chat/pages/profile_edit.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_list_page.dart';
-import 'package:chat/pages/sliver_collapsing.dart';
 import 'package:chat/pages/tabs.dart';
 import 'package:chat/pages/user_page.dart';
 import 'package:flutter/material.dart';

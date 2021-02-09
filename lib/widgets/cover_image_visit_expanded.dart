@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:chat/models/plant.dart';
 import 'package:chat/models/visit.dart';
 import 'package:flutter/material.dart';
 

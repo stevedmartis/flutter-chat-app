@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:chat/bloc/validators.dart';
-import 'package:chat/models/air.dart';
 import 'package:chat/models/aires_response.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/repository/aires_repository.dart';
@@ -26,7 +25,7 @@ class VisitBloc with Validators {
   final _imageUpdateCtrl = BehaviorSubject<bool>();
 
   final _visitsController = BehaviorSubject<List<Visit>>();
-  final AirRepository _repository = AirRepository();
+  final AirRepository repository = AirRepository();
 
   final BehaviorSubject<AiresResponse> _vist = BehaviorSubject<AiresResponse>();
 
@@ -77,7 +76,7 @@ class VisitBloc with Validators {
   String get description => _descriptionController.value;
 
   dispose() {
-    //_imageUpdateCtrl?.close();
+    _imageUpdateCtrl?.close();
     _vist?.close();
     _visitSelect?.close();
     _descriptionController.close();

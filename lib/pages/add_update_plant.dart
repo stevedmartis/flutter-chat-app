@@ -1,6 +1,5 @@
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/provider.dart';
-import 'package:chat/bloc/room_bloc.dart';
 
 import 'package:chat/helpers/mostrar_alerta.dart';
 

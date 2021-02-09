@@ -1,5 +1,4 @@
 import 'package:chat/models/air.dart';
-import 'package:chat/models/air_response.dart';
 import 'package:chat/models/aires_response.dart';
 
 import 'package:chat/providers/air_provider.dart';

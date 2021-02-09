@@ -67,11 +67,11 @@ class VisitService with ChangeNotifier {
     }
   }
 
-  Future deletePlant(String plantId) async {
+  Future deleteVisit(String visitId) async {
     final token = await this._storage.read(key: 'token');
 
     try {
-      await http.delete('${Environment.apiUrl}/room/delete/$plantId',
+      await http.delete('${Environment.apiUrl}/visit/delete/$visitId',
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       return true;
