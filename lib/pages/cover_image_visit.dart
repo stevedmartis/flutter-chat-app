@@ -111,7 +111,7 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
 
         visitService.visit.coverImage = resp;
 
-        // awsService.isUpload = true;
+        awsService.isUpload = true;
       });
     } else {
       print('No image selected.');

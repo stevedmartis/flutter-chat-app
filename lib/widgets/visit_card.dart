@@ -2,6 +2,7 @@ import 'package:chat/models/plant.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../utils/extension.dart';
@@ -20,19 +21,31 @@ class _CardVisitState extends State<CardVisit> {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    return Stack(
-      children: [
-        Container(
-          width: size.width,
-          height: 170.0,
-          child: Card(
-            color: Colors.transparent,
-            semanticContainer: true,
-            elevation: 5,
-            margin: EdgeInsets.only(bottom: 20, left: 10, right: 20),
-            clipBehavior: Clip.hardEdge,
-            child: (widget.visit.coverImage != "")
-                ? InkWell(
+    String formattedDateCreate =
+        DateFormat('yyyy:MM:dd | kk:mm').format(widget.visit.createdAt);
+
+    bool clean = widget.visit.clean;
+
+    bool cut = widget.visit.cut;
+    bool temp = widget.visit.temperature;
+
+    bool water = widget.visit.water;
+
+    return Container(
+      child: Stack(
+        children: [
+          Container(
+              width: size.width,
+              height: 170.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                margin: EdgeInsets.only(bottom: 20, left: 10, right: 20),
+                clipBehavior: Clip.hardEdge,
+                child: InkWell(
+                    borderRadius: BorderRadius.circular(10.0),
                     onTap: () => {},
                     child: ColorFiltered(
                       colorFilter: ColorFilter.mode(
@@ -41,25 +54,107 @@ class _CardVisitState extends State<CardVisit> {
                           image: NetworkImage(widget.visit.getCoverImg()),
                           placeholder: AssetImage('assets/loading2.gif'),
                           fit: BoxFit.cover),
-                    ),
-                  )
-                : InkWell(
-                    onTap: () => {},
-                    child: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.50), BlendMode.dstATop),
-                      child: FadeInImage(
-                          image: AssetImage('assets/images/empty_image.png'),
-                          placeholder: AssetImage('assets/loading2.gif'),
-                          fit: BoxFit.cover),
-                    ),
+                    )),
+              )),
+          Positioned(
+              width: size.width,
+              top:
+                  -10.0, //TRY TO CHANGE THIS **0.30** value to achieve your goal
+              child: Container(
+                width: 10,
+                padding: EdgeInsets.only(right: 50, top: 5.0, left: 5.0),
+                margin: EdgeInsets.all(16.0),
+                child: Text(
+                  formattedDateCreate,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.white,
+                      fontFamily: 'Open Sans',
+                      fontWeight: FontWeight.bold),
+                ),
+              )),
+          Positioned(
+              width: size.width,
+              top:
+                  25.0, //TRY TO CHANGE THIS **0.30** value to achieve your goal
+              child: Container(
+                width: 10,
+                padding: EdgeInsets.only(
+                  left: size.width / 10.0,
+                  right: 50,
+                ),
+                margin: EdgeInsets.all(16.0),
+                child: Text(
+                  widget.visit.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontFamily: 'Open Sans',
+                      fontWeight: FontWeight.bold),
+                ),
+              )),
+          Positioned(
+            bottom: 20.0,
+            left: 10.0,
+            right: 20.0,
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(200, 0, 0, 0),
+                      Color.fromARGB(0, 0, 0, 0)
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
                   ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: FaIcon(
+                        FontAwesomeIcons.broom,
+                        color: (clean)
+                            ? currentTheme.accentColor
+                            : Colors.white38.withOpacity(0.20),
+                      ),
+                    ),
+                    Container(
+                      child: FaIcon(
+                        FontAwesomeIcons.cut,
+                        color: (cut)
+                            ? currentTheme.accentColor
+                            : Colors.white38.withOpacity(0.20),
+                      ),
+                    ),
+                    Container(
+                      child: FaIcon(
+                        FontAwesomeIcons.thermometerEmpty,
+                        color: (temp)
+                            ? currentTheme.accentColor
+                            : Colors.white38.withOpacity(0.20),
+                      ),
+                    ),
+                    Container(
+                      child: FaIcon(
+                        FontAwesomeIcons.handHoldingWater,
+                        color: (water)
+                            ? currentTheme.accentColor
+                            : Colors.white38.withOpacity(0.20),
+                      ),
+                    ),
+                  ],
+                )),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

@@ -140,8 +140,6 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
         plantBloc.imageUpdate.add(true);
 
         plantService.plant.coverImage = resp;
-
-        awsService.isUpload = true;
       });
     } else {
       print('No image selected.');

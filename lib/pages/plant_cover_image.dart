@@ -48,7 +48,7 @@ class _PlantCardState extends State<PlantCard> {
         child: Material(
             type: MaterialType.transparency,
             child: FadeInImage(
-              image: NetworkImage(plant.getCoverImg()),
+              image: NetworkImage(widget.plant.getCoverImg()),
               placeholder: AssetImage('assets/loading2.gif'),
               fit: BoxFit.cover,
               height: 100,

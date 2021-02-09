@@ -1,3 +1,4 @@
+import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/visit_bloc.dart';
 
@@ -599,6 +600,8 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   ) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
+    final isUpload = Provider.of<AwsService>(context).isUpload;
+
     return GestureDetector(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -606,14 +609,14 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
             child: Text(
               'Next',
               style: TextStyle(
-                  color: (isControllerChange)
+                  color: (isControllerChange) || isUpload
                       ? currentTheme.accentColor
                       : Colors.white.withOpacity(0.30),
                   fontSize: 18),
             ),
           ),
         ),
-        onTap: isControllerChange && !loading
+        onTap: isControllerChange || isUpload && !loading
             ? () => {
                   setState(() {
                     loading = true;
@@ -677,7 +680,6 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
 
     if (createVisitResp != null) {
       if (createVisitResp.ok) {
-        // widget.plants.add(createPlantResp.plant);
         loading = false;
 
         Navigator.pop(context);

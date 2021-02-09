@@ -167,7 +167,8 @@ class AwsService with ChangeNotifier {
 
   Future<String> updateImageCoverPlant(
       String fileName, String fileType, File image, String id) async {
-    final url = Uri.parse('${Environment.apiUrl}/aws/upload/cover-plant');
+    final url =
+        Uri.parse('${Environment.apiUrl}/aws/upload/update-cover-plant');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 

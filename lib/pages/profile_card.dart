@@ -76,22 +76,6 @@ class _ProfileCardState extends State<ProfileCard> {
             ),
           ),
         ), */
-        /* Container(
-            height: double.infinity,
-            decoration: BoxDecoration(
-                color: Colors.black,
-                gradient: LinearGradient(
-                    begin: FractionalOffset.topCenter,
-                    end: FractionalOffset.bottomCenter,
-                    colors: [
-                      currentTheme.scaffoldBackgroundColor.withOpacity(0.10),
-                      // Colors.white.withOpacity(0.30),
-                      currentTheme.scaffoldBackgroundColor.withOpacity(0.0),
-                    ],
-                    stops: [
-                      5.0,
-                      5.0
-                    ]))), */
 
         /* Container(
                 // color: currentTheme.scaffoldBackgroundColor,

@@ -23,7 +23,6 @@ import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
-import 'package:chat/widgets/plant_card_widget.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:chat/widgets/visit_card.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +103,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
     final plantService = Provider.of<PlantService>(context, listen: false);
 
-    plant = widget.plant;
+    plant = plantService.plant;
+
+    plantBloc.imageUpdate.add(true);
 
     super.initState();
     //  name = widget.profile.name;
@@ -137,128 +138,124 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
     return Scaffold(
         // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
-        body: NotificationListener<ScrollEndNotification>(
-            /*  onNotification: (_) {
-              _snapAppbar();
-              if (_scrollController.offset >= 250) {}
-              return false;
-            }, */
-            child: GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                },
-                child: CustomScrollView(
-                    physics: const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics()),
-                    controller: _scrollController,
-                    slivers: <Widget>[
-                      SliverAppBar(
-                        stretch: true,
-                        stretchTriggerOffset: 250.0,
+        body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: CustomScrollView(
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                controller: _scrollController,
+                slivers: <Widget>[
+                  SliverAppBar(
+                    stretch: true,
+                    stretchTriggerOffset: 250.0,
 
-                        backgroundColor: _showTitle
-                            ? Colors.black
-                            : currentTheme.scaffoldBackgroundColor,
-                        leading: Container(
-                            margin: EdgeInsets.only(left: 15),
-                            child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.0)),
-                              child: CircleAvatar(
-                                  child: IconButton(
-                                      icon: Icon(Icons.arrow_back_ios,
-                                          size: size.width / 20,
-                                          color: (_showTitle)
-                                              ? currentTheme.accentColor
-                                              : Colors.white),
-                                      onPressed: () => {
-                                            {
-                                              Provider.of<MenuModel>(context,
-                                                      listen: false)
-                                                  .currentPage = 0,
-                                            },
-                                            Navigator.pop(context),
-                                          }),
-                                  backgroundColor:
-                                      Colors.black.withOpacity(0.60)),
-                            )),
+                    backgroundColor: _showTitle
+                        ? Colors.black
+                        : currentTheme.scaffoldBackgroundColor,
+                    leading: Container(
+                        margin: EdgeInsets.only(left: 15),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                          child: CircleAvatar(
+                              child: IconButton(
+                                  icon: Icon(Icons.arrow_back_ios,
+                                      size: size.width / 20,
+                                      color: (_showTitle)
+                                          ? currentTheme.accentColor
+                                          : Colors.white),
+                                  onPressed: () => {
+                                        {
+                                          Provider.of<MenuModel>(context,
+                                                  listen: false)
+                                              .currentPage = 0,
+                                        },
+                                        Navigator.pop(context),
+                                      }),
+                              backgroundColor: Colors.black.withOpacity(0.60)),
+                        )),
 
-                        actions: [
-                          Container(
-                              margin: EdgeInsets.only(left: 10, right: 10),
-                              child: ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                child: CircleAvatar(
-                                    child: IconButton(
-                                        icon: Icon(Icons.add,
-                                            size: size.width / 15,
-                                            color: (_showTitle)
-                                                ? currentTheme.accentColor
-                                                : Colors.white),
-                                        onPressed: () => {
-                                              Navigator.of(context).push(
-                                                  createRouteNewVisit(
-                                                      visit, plant)),
-                                            }),
-                                    backgroundColor:
-                                        Colors.black.withOpacity(0.60)),
-                              )),
-                          Hero(
-                              tag: widget.plant.quantity + widget.plant.id,
-                              child: _buildCircleQuantityPlant()),
-                        ],
+                    actions: [
+                      Container(
+                          margin: EdgeInsets.only(left: 10, right: 10),
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                            child: CircleAvatar(
+                                child: IconButton(
+                                    icon: Icon(Icons.add,
+                                        size: size.width / 15,
+                                        color: (_showTitle)
+                                            ? currentTheme.accentColor
+                                            : Colors.white),
+                                    onPressed: () => {
+                                          Navigator.of(context).push(
+                                              createRouteNewVisit(
+                                                  visit, plant)),
+                                        }),
+                                backgroundColor:
+                                    Colors.black.withOpacity(0.60)),
+                          )),
+                      Hero(
+                          tag: widget.plant.quantity + widget.plant.id,
+                          child: _buildCircleQuantityPlant()),
+                    ],
 
-                        centerTitle: true,
-                        pinned: true,
+                    centerTitle: true,
+                    pinned: true,
 
-                        expandedHeight: maxHeight,
-                        // collapsedHeight: 56.0001,
-                        flexibleSpace: FlexibleSpaceBar(
-                          stretchModes: [
-                            StretchMode.zoomBackground,
-                            StretchMode.fadeTitle,
-                            // StretchMode.blurBackground
-                          ],
-                          background: PlantPage(
-                            plant: plant,
-                          ),
-                          centerTitle: true,
-                          title: StreamBuilder<Plant>(
-                            stream: plantBloc.plantSelect.stream,
-                            builder: (context, AsyncSnapshot<Plant> snapshot) {
-                              if (snapshot.hasData) {
-                                plant = snapshot.data;
-
-                                return Container(
-                                    //  margin: EdgeInsets.only(left: 0),
-                                    width: size.height / 5,
-                                    height: 30,
-                                    child: Container(
-                                      child: Center(
-                                        child: Text(
-                                          plant.name.capitalize(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ));
-                              } else if (snapshot.hasError) {
-                                return _buildErrorWidget(snapshot.error);
-                              } else {
-                                return _buildLoadingWidget();
-                              }
-                            },
-                          ),
+                    expandedHeight: maxHeight,
+                    // collapsedHeight: 56.0001,
+                    flexibleSpace: FlexibleSpaceBar(
+                      stretchModes: [
+                        StretchMode.zoomBackground,
+                        StretchMode.fadeTitle,
+                        // StretchMode.blurBackground
+                      ],
+                      background: SafeArea(
+                        child: PlantPage(
+                          plant: plant,
                         ),
                       ),
+                      centerTitle: true,
+                      title: StreamBuilder<Plant>(
+                        stream: plantBloc.plantSelect.stream,
+                        builder: (context, AsyncSnapshot<Plant> snapshot) {
+                          if (snapshot.hasData) {
+                            plant = snapshot.data;
 
-                      // makeHeaderSpacer(context),
-                      makeHeaderInfo(context),
-                      // makeHeaderSpacer(context),
-                      makeHeaderTabs(context),
-                      makeListVisits(context)
-                    ]))));
+                            return Container(
+                                //  margin: EdgeInsets.only(left: 0),
+                                width: size.height / 5,
+                                height: 30,
+                                child: Container(
+                                  child: Center(
+                                    child: Text(
+                                      plant.name.capitalize(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ));
+                          } else if (snapshot.hasError) {
+                            return _buildErrorWidget(snapshot.error);
+                          } else {
+                            return _buildLoadingWidget();
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+
+                  // makeHeaderSpacer(context),
+                  makeHeaderInfo(context),
+                  // makeHeaderSpacer(context),
+
+                  makeHeaderTabs(context),
+
+                  makeListVisits(context)
+                ])));
   }
 
   SliverList makeListVisits(context) {
@@ -280,7 +277,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
-                            child: Text('Sin Plantas, add new')),
+                            child: Text('No hay visitas, Agrega una nueva!')),
                       ); // image is ready
               } else {
                 return Container(
@@ -330,45 +327,26 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     );
   }
 
-  SliverPersistentHeader makeHeaderTabs(context) {
+  SliverAppBar makeHeaderTabs(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    return SliverPersistentHeader(
-      pinned: true,
-      delegate: SliverAppBarDelegate(
-        minHeight: 70.0,
-        maxHeight: 70.0,
-        child: DefaultTabController(
-          length: 1,
-          child: Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: currentTheme.scaffoldBackgroundColor,
-              bottom: TabBar(
-                indicatorWeight: 3.0,
-                indicatorColor: currentTheme.accentColor,
-                tabs: [
-                  Tab(
-                      child: Text('Visitas',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: (_tabController.index == 0)
-                                  ? currentTheme.accentColor
-                                  : Colors.white54)))
-                ],
-                /* onTap: (value) => {
-                        _tabController
-                            .animateTo((_tabController.index + 1) % 2),
-                        setState(() {
-                          _tabController.index = value;
-                        })
-                      }
-                       */
-              ),
-            ),
-          ),
-        ),
+    final size = MediaQuery.of(context).size;
+
+    return SliverAppBar(
+      backgroundColor: currentTheme.scaffoldBackgroundColor,
+
+      title: Text(
+        'Visitas',
+        style: TextStyle(color: currentTheme.accentColor),
       ),
+      automaticallyImplyLeading: false,
+      toolbarHeight: 50,
+
+      centerTitle: true,
+      pinned: true,
+
+      expandedHeight: 0,
+      // collapsedHeight: 56.0001,
     );
   }
 
@@ -700,11 +678,6 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                     SizedBox(
                       height: 10.0,
                     ),
-                    //CbdthcRow(thc: thc, cbd: cbd, fontSize: 16),
-                    //SexLtRow(pot: pot, sex: sexo, fontSize: 16),
-                    SizedBox(
-                      height: 10.0,
-                    ),
                     Container(
                         width: size.width - 5,
                         padding:
@@ -738,6 +711,12 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                             }),
                       ),
                     ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Divider(
+                      height: 1,
+                    )
                   ],
                 ),
               );
