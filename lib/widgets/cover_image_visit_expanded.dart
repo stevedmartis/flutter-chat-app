@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:chat/models/visit.dart';
+import 'package:chat/services/visit_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ImageCoverVisitExpanded extends StatefulWidget {
   const ImageCoverVisitExpanded({
@@ -24,8 +26,11 @@ class ImageCoverVisitExpanded extends StatefulWidget {
 }
 
 class _ImageCoverVisitExpandedState extends State<ImageCoverVisitExpanded> {
+  Visit visit;
   @override
   void initState() {
+    final visitService = Provider.of<VisitService>(context, listen: false);
+    visit = visitService.visit;
     super.initState();
   }
 
@@ -47,7 +52,7 @@ class _ImageCoverVisitExpandedState extends State<ImageCoverVisitExpanded> {
           minScale: 0.5,
           maxScale: 4,
           child: Image(
-            image: NetworkImage(widget.visit.getCoverImg()),
+            image: NetworkImage(visit.getCoverImg()),
             fit: BoxFit.cover,
             width: double.maxFinite,
           ),

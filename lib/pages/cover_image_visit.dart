@@ -1,8 +1,6 @@
-import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/visit_bloc.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/services/aws_service.dart';
-import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/visit_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/cover_image_visit_expanded.dart';
@@ -119,7 +117,7 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
 
   _editImage() async {
     final awsService = Provider.of<AwsService>(context, listen: false);
-    final plantService = Provider.of<PlantService>(context, listen: false);
+    final visitService = Provider.of<VisitService>(context, listen: false);
 
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
@@ -134,11 +132,11 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
           fileType[0], fileType[1], imageCover, widget.visit.id);
 
       setState(() {
-        plantBloc.imageUpdate.add(true);
+        visitBloc.imageUpdate.add(true);
 
-        plantService.plant.coverImage = resp;
+        visitService.visit.coverImage = resp;
 
-        // awsService.isUpload = true;
+        awsService.isUpload = true;
       });
     } else {
       print('No image selected.');

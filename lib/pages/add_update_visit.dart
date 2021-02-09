@@ -12,7 +12,6 @@ import 'package:chat/pages/profile_page.dart';
 
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
-import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/visit_service.dart';
 
 import 'package:chat/theme/theme.dart';
@@ -85,8 +84,8 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   void initState() {
     final visitService = Provider.of<VisitService>(context, listen: false);
 
-    visitService.visit = widget.visit;
-    visit = visitService.visit;
+    //visitService.visit = widget.visit;
+    visit = (widget.isEdit) ? visitService.visit : widget.visit;
 
     isSwitchedCut = widget.visit.cut;
     isSwitchedClean = widget.visit.clean;
@@ -188,16 +187,10 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         isTempChange ||
         isWaterChange;
 
-    final isControllerChangeEdit = isAboutChange;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        actions: [
-          (widget.isEdit)
-              ? _createButton(bloc, isControllerChangeEdit)
-              : _createButton(bloc, isControllerChange),
-        ],
+        actions: [_createButton(bloc, isControllerChange)],
         leading: IconButton(
           icon: Icon(
             Icons.chevron_left,
@@ -660,7 +653,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
             ),
           ),
         ),
-        onTap: isControllerChange || isUpload && !loading
+        onTap: isControllerChange && !loading || isUpload
             ? () => {
                   setState(() {
                     loading = true;
@@ -693,7 +686,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     final electro =
         (electroCtrl.text == "") ? widget.visit.electro : bloc.electro.trim();
 
-    final ph = (phCtrl.text == "") ? widget.visit.ph : bloc.ph.trim();
+    final ph = (phCtrl.text == "") ? widget.visit.ph : false;
 
     final ml = (mlCtrl.text == "") ? widget.visit.ml : bloc.ml.trim();
 
@@ -739,44 +732,70 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   }
 
   _editVisit(VisitBloc bloc) async {
-    final plantService = Provider.of<PlantService>(context, listen: false);
-    final awsService = Provider.of<AwsService>(context, listen: false);
+    final visitService = Provider.of<VisitService>(context, listen: false);
 
     // final uid = authService.profile.user.uid;
 
     // final name = (bloc.name == null) ? widget.visit.name : bloc.name.trim();
+
+    final clean = isSwitchedClean;
+
+    final temp = isSwitchedTemp;
+
+    final cut = isSwitchedCut;
+
+    final water = isSwitchedWater;
+
+    final degrees =
+        (bloc.degrees == null) ? widget.visit.degrees : bloc.degrees.trim();
+
+    final electro =
+        (bloc.electro == null) ? widget.visit.electro : bloc.electro.trim();
+
+    final ph = (bloc.ph == null) ? widget.visit.ph : bloc.ph.trim();
+
+    final ml = (bloc.ml == null) ? widget.visit.ml : bloc.ml.trim();
+
     final description = (descriptionCtrl.text == "")
         ? widget.visit.description
         : descriptionCtrl.text.trim();
 
-    final editPlant = Plant(
-        //   name: name,
-        description: description,
-        coverImage: awsService.imageUpdate,
-        id: widget.visit.id);
+    final newVisit = Visit(
+      // name: name,
+      coverImage: widget.visit.coverImage,
 
-    print(editPlant);
+      id: widget.visit.id,
+      clean: clean,
+      cut: cut,
+      temperature: temp,
+      degrees: degrees,
+      water: water,
+      electro: electro,
+      ph: ph,
+      ml: ml,
+      description: description,
+    );
 
-    if (widget.isEdit) {
-      final editRoomRes = await plantService.editPlant(editPlant);
+    print(newVisit);
 
-      if (editRoomRes != null) {
-        if (editRoomRes.ok) {
-          // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
-          // plantBloc.getPlant(widget.visit);
-          setState(() {
-            loading = false;
-          });
-          // room = editRoomRes.room;
+    final editRoomRes = await visitService.editVisit(newVisit);
 
-          Navigator.pop(context);
-        } else {
-          mostrarAlerta(context, 'Error', editRoomRes.msg);
-        }
+    if (editRoomRes != null) {
+      if (editRoomRes.ok) {
+        // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
+        // plantBloc.getPlant(widget.visit);
+        setState(() {
+          loading = false;
+        });
+        // room = editRoomRes.room;
+
+        Navigator.pop(context);
       } else {
-        mostrarAlerta(
-            context, 'Error del servidor', 'lo sentimos, Intentelo mas tarde');
+        mostrarAlerta(context, 'Error', editRoomRes.msg);
       }
+    } else {
+      mostrarAlerta(
+          context, 'Error del servidor', 'lo sentimos, Intentelo mas tarde');
     }
 
     //Navigator.pushReplacementNamed(context, '');

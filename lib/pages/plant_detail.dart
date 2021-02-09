@@ -134,6 +134,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     final size = MediaQuery.of(context).size;
     final visit = new Visit();
 
+    final visitService = Provider.of<VisitService>(context, listen: false);
+    final aws = Provider.of<AwsService>(context, listen: false);
+
     return Scaffold(
         // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
         body: GestureDetector(
@@ -188,9 +191,11 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                             ? currentTheme.accentColor
                                             : Colors.white),
                                     onPressed: () => {
+                                          aws.isUpload = false,
+                                          visitService.visit = visit,
                                           Navigator.of(context).push(
                                               createRouteNewVisit(
-                                                  visit, plant)),
+                                                  visit, plant, false)),
                                         }),
                                 backgroundColor:
                                     Colors.black.withOpacity(0.60)),
@@ -1124,11 +1129,12 @@ Route createRouteEditPlant(Plant plant, Room room) {
   );
 }
 
-Route createRouteNewVisit(Visit visit, Plant plant) {
+Route createRouteNewVisit(Visit visit, Plant plant, bool isEdit) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => AddUpdateVisitPage(
       visit: visit,
       plant: plant,
+      isEdit: isEdit,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);

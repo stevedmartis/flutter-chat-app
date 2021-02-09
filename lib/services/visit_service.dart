@@ -1,6 +1,4 @@
 import 'package:chat/models/message_error.dart';
-import 'package:chat/models/plant.dart';
-import 'package:chat/models/plant_response.dart';
 
 import 'package:chat/models/room.dart';
 import 'package:chat/models/visit.dart';
@@ -18,7 +16,7 @@ class VisitService with ChangeNotifier {
 
   set visit(Visit valor) {
     this._visit = valor;
-    //notifyListeners();
+    notifyListeners();
   }
 
   final _storage = new FlutterSecureStorage();
@@ -45,21 +43,21 @@ class VisitService with ChangeNotifier {
     }
   }
 
-  Future editVisit(Plant plant) async {
+  Future editVisit(Visit visit) async {
     // this.authenticated = true;
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/plant/update/plant',
-        body: jsonEncode(plant),
+    final resp = await http.post('${Environment.apiUrl}/visit/update/visit',
+        body: jsonEncode(visit),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
     if (resp.statusCode == 200) {
       // final roomResponse = roomsResponseFromJson(resp.body);
-      final plantResponse = plantResponseFromJson(resp.body);
+      final visitResponse = visitResponseFromJson(resp.body);
       // this.rooms = roomResponse.rooms;
-
-      return plantResponse;
+      print(visitResponse);
+      return visitResponse;
     } else {
       final respBody = errorMessageResponseFromJson(resp.body);
 
