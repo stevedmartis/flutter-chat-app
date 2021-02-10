@@ -1,16 +1,24 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
+import 'package:chat/models/plant.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/rooms_response.dart';
+import 'package:chat/models/visit.dart';
+import 'package:chat/pages/room_detail.dart';
 import 'package:chat/routes/routes.dart';
+import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/plant_services.dart';
+import 'package:chat/services/visit_service.dart';
 
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/header_custom_search.dart';
 import 'package:chat/widgets/menu_drawer.dart';
+import 'package:chat/widgets/plant_card_widget.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
+import 'package:chat/widgets/visit_card.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -201,6 +209,10 @@ class _CollapsingListState extends State<CollapsingList>
     with SingleTickerProviderStateMixin {
   final usuarioService = new UsuariosService();
 
+  final visitService = new VisitService();
+
+  final plantService = new PlantService();
+
   final List<Tab> myTabs = <Tab>[
     new Tab(text: 'LEFT'),
     new Tab(text: 'RIGHT'),
@@ -210,11 +222,24 @@ class _CollapsingListState extends State<CollapsingList>
 
   List<Profiles> profiles = [];
 
+  List<Visit> visits = [];
+
+  List<Plant> plants = [];
+
+  Profiles profile;
+
   @override
   void initState() {
     _tabController = new TabController(vsync: this, length: myTabs.length);
 
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    profile = authService.profile;
     this._chargeProfileUsers();
+
+    this._chargeLastPlantsByUser();
+
+    this._chargeLastVisitByUser();
 
     super.initState();
   }
@@ -223,6 +248,26 @@ class _CollapsingListState extends State<CollapsingList>
     this.profiles = await usuarioService.getProfilesLastUsers();
 
     setState(() {});
+  }
+
+  _chargeLastPlantsByUser() async {
+    this.plants = await plantService.getLastPlantsByUser(profile.user.uid);
+
+    setState(() {});
+  }
+
+  _chargeLastVisitByUser() async {
+    this.visits = await visitService.getLastVisitsByUser(profile.user.uid);
+
+    setState(() {});
+  }
+
+  pullToRefreshData() async {
+    this._chargeProfileUsers();
+
+    this._chargeLastPlantsByUser();
+
+    this._chargeLastVisitByUser();
   }
 
   @override
@@ -240,8 +285,8 @@ class _CollapsingListState extends State<CollapsingList>
       slivers: <Widget>[
         makeHeaderCustom(),
 
-        CupertinoSliverRefreshControl(onRefresh: () => _chargeProfileUsers()),
-
+        CupertinoSliverRefreshControl(onRefresh: () => pullToRefreshData()),
+        makeHeaderSpacer(context),
         SliverFixedExtentList(
           itemExtent: 150.0,
           delegate: SliverChildListDelegate(
@@ -265,6 +310,58 @@ class _CollapsingListState extends State<CollapsingList>
                         ),
                         child: CarouselUsersSliderCustom(
                             profiles: profiles)); // image is ready
+                  } else {
+                    return Container(
+                        height: 400.0,
+                        child: Center(
+                            child: CircularProgressIndicator())); // placeholder
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+        makeHeaderSpacer(context),
+
+        SliverFixedExtentList(
+          itemExtent: 200.0,
+          delegate: SliverChildListDelegate(
+            [
+              FutureBuilder(
+                future: this.plantService.getLastPlantsByUser(profile.user.uid),
+                initialData: null,
+                builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                  if (snapshot.hasData) {
+                    return _buildWidgetPlants(
+                        this.plants, context); // image is ready
+                  } else {
+                    return Container(
+                        height: 400.0,
+                        child: Center(
+                            child: CircularProgressIndicator())); // placeholder
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+
+        makeHeaderSpacer(context),
+        SliverFixedExtentList(
+          itemExtent: 150.0,
+          delegate: SliverChildListDelegate(
+            [
+              FutureBuilder(
+                future: this.visitService.getLastVisitsByUser(profile.user.uid),
+                initialData: null,
+                builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                  if (snapshot.hasData) {
+                    return Container(
+                        margin: EdgeInsets.only(
+                          left: 10,
+                        ),
+                        child:
+                            _buildWidgetVisits(this.visits)); // image is ready
                   } else {
                     return Container(
                         height: 400.0,
@@ -345,8 +442,8 @@ class _CollapsingListState extends State<CollapsingList>
     return SliverPersistentHeader(
       pinned: true,
       delegate: SliverAppBarDelegate(
-          minHeight: 10,
-          maxHeight: 10,
+          minHeight: 20,
+          maxHeight: 20,
           child: Row(
             children: [Container()],
           )),
@@ -504,6 +601,89 @@ class BannerSlide extends StatelessWidget {
             ),
             items: imageSliders));
   }
+}
+
+class LastVisitsByUser extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
+    return Container(
+        child: CarouselSlider(
+            options: CarouselOptions(
+              autoPlay: true,
+              aspectRatio: (screenSize.height > 500) ? 2.2 : 2.6,
+              enlargeCenterPage: true,
+              autoPlayInterval: Duration(seconds: 5),
+            ),
+            items: imageSliders));
+  }
+}
+
+Widget _buildWidgetPlants(List<Plant> plants, context) {
+  final plantService = Provider.of<PlantService>(context, listen: false);
+
+  return (plants.length > 0)
+      ? CarouselSlider.builder(
+          options: CarouselOptions(
+            height: 200,
+            viewportFraction: 0.99,
+            initialPage: 0,
+            enableInfiniteScroll: false,
+            reverse: false,
+            autoPlay: true,
+            autoPlayInterval: Duration(seconds: 4),
+            autoPlayAnimationDuration: Duration(milliseconds: 800),
+            autoPlayCurve: Curves.fastOutSlowIn,
+            enlargeCenterPage: false,
+            scrollDirection: Axis.horizontal,
+          ),
+          itemCount: plants.length,
+          itemBuilder: (BuildContext context, int index) {
+            final plant = plants[index];
+            return GestureDetector(
+                onTap: () => {
+                      plantService.plant = plant,
+                      Navigator.of(context)
+                          .push(createRoutePlantDetail(plant, true)),
+                    },
+                child: Stack(
+                  children: [
+                    CardPlant(plant: plant),
+                    Hero(
+                        tag: plant.quantity + plant.id,
+                        child: buildCircleFavoriteProduct(
+                            plant.quantity, context)),
+                  ],
+                ));
+          },
+        )
+      : Container();
+}
+
+Widget _buildWidgetVisits(List<Visit> visits) {
+  return (visits.length > 0)
+      ? CarouselSlider.builder(
+          options: CarouselOptions(
+            height: 200,
+            viewportFraction: 0.90,
+            initialPage: 0,
+            enableInfiniteScroll: false,
+            reverse: false,
+            autoPlay: true,
+            autoPlayInterval: Duration(seconds: 4),
+            autoPlayAnimationDuration: Duration(milliseconds: 800),
+            autoPlayCurve: Curves.fastOutSlowIn,
+            enlargeCenterPage: false,
+            scrollDirection: Axis.horizontal,
+          ),
+          itemCount: visits.length,
+          itemBuilder: (BuildContext context, int index) => GestureDetector(
+            onTap: () {},
+            child: CardVisit(visit: visits[index]),
+          ),
+        )
+      : Container();
 }
 
 final List<String> imgList = [

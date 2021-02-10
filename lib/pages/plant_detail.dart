@@ -39,7 +39,6 @@ class PlantDetailPage extends StatefulWidget {
     Key key,
     this.title,
     this.plants,
-    this.room,
     @required this.plant,
   }) : super(key: key);
 
@@ -47,8 +46,6 @@ class PlantDetailPage extends StatefulWidget {
 
   final Plant plant;
   final List<Plant> plants;
-
-  final Room room;
 
   @override
   _PlantDetailPageState createState() => new _PlantDetailPageState();
@@ -752,8 +749,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                             onPressed: () {
                               aws.isUpload = false;
                               plantService.plant = plant;
-                              Navigator.of(context).push(
-                                  createRouteEditPlant(plant, widget.room));
+                              Navigator.of(context)
+                                  .push(createRouteEditPlant(plant));
                             }),
                       ),
                     ),
@@ -1106,11 +1103,10 @@ class BottomWaveClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-Route createRouteEditPlant(Plant plant, Room room) {
+Route createRouteEditPlant(Plant plant) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => AddUpdatePlantPage(
       plant: plant,
-      room: room,
       isEdit: true,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {

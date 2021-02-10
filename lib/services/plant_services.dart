@@ -1,6 +1,7 @@
 import 'package:chat/models/message_error.dart';
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/plant_response.dart';
+import 'package:chat/models/plants_response.dart';
 
 import 'package:chat/models/room.dart';
 
@@ -100,6 +101,22 @@ class PlantService with ChangeNotifier {
     } else {
       final respBody = jsonDecode(resp.body);
       return respBody['msg'];
+    }
+  }
+
+  Future<List<Plant>> getLastPlantsByUser(String userId) async {
+    try {
+      final token = await this._storage.read(key: 'token');
+
+      final resp = await http.get(
+          '${Environment.apiUrl}/plant/plants/user/$userId',
+          headers: {'Content-Type': 'application/json', 'x-token': token});
+
+      final plantsResponse = plantsResponseFromJson(resp.body);
+
+      return plantsResponse.plants;
+    } catch (e) {
+      return [];
     }
   }
 }

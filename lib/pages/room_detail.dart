@@ -398,14 +398,15 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   onTap: () => {
                         plantService.plant = plant,
                         Navigator.of(context)
-                            .push(createRoutePlantDetail(plant, room, true)),
+                            .push(createRoutePlantDetail(plant, true)),
                       },
                   child: Stack(
                     children: [
                       CardPlant(plant: plant),
                       Hero(
                           tag: plant.quantity + plant.id,
-                          child: _buildCircleFavoriteProduct(plant.quantity)),
+                          child: buildCircleFavoriteProduct(
+                              plant.quantity, context)),
                     ],
                   ));
             }),
@@ -539,27 +540,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
         roomBloc.getRooms(profile.user.uid);
       });
     }
-  }
-
-  Container _buildCircleFavoriteProduct(String quantity) {
-    final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-    return Container(
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.all(5.0),
-        margin: EdgeInsets.only(left: size.width / 1.20, top: 0),
-        width: 50,
-        height: 50,
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          child: CircleAvatar(
-              child: Text(
-                '$quantity',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-              backgroundColor: currentTheme.accentColor),
-        ));
   }
 
   createModalSelection() {
@@ -912,6 +892,27 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 }
 
+Container buildCircleFavoriteProduct(String quantity, context) {
+  final size = MediaQuery.of(context).size;
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+  return Container(
+      alignment: Alignment.topRight,
+      padding: EdgeInsets.all(5.0),
+      margin: EdgeInsets.only(left: size.width / 1.2, top: 0),
+      width: 50,
+      height: 50,
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        child: CircleAvatar(
+            child: Text(
+              '$quantity',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            backgroundColor: currentTheme.accentColor),
+      ));
+}
+
 Route createRouteProfile() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
@@ -1001,10 +1002,10 @@ Route createRouteNewLight(Light light, Room room, bool isEdit) {
   );
 }
 
-Route createRoutePlantDetail(Plant plant, Room room, bool isEdit) {
+Route createRoutePlantDetail(Plant plant, bool isEdit) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
-        PlantDetailPage(plant: plant, room: room),
+        PlantDetailPage(plant: plant),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;

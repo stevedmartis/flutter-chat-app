@@ -3,6 +3,7 @@ import 'package:chat/models/message_error.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/models/visit_response.dart';
+import 'package:chat/models/visits_response.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -100,6 +101,22 @@ class VisitService with ChangeNotifier {
     } else {
       final respBody = jsonDecode(resp.body);
       return respBody['msg'];
+    }
+  }
+
+  Future<List<Visit>> getLastVisitsByUser(String userId) async {
+    try {
+      final token = await this._storage.read(key: 'token');
+
+      final resp = await http.get(
+          '${Environment.apiUrl}/visit/visits/user/$userId',
+          headers: {'Content-Type': 'application/json', 'x-token': token});
+
+      final visitsResponse = visitsResponseFromJson(resp.body);
+
+      return visitsResponse.visits;
+    } catch (e) {
+      return [];
     }
   }
 }
