@@ -44,13 +44,9 @@ class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
                 final chatService =
                     Provider.of<ChatService>(context, listen: false);
                 chatService.userFor = widget.profiles[index];
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => MyProfile(
-                              title: '',
-                              profile: widget.profiles[index],
-                            )));
+
+                Navigator.of(context)
+                    .push(createRouteProfileSelect(widget.profiles[index]));
               },
               child: Preview(profile: widget.profiles[index]),
             ),
@@ -74,13 +70,8 @@ class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
             final chatService =
                 Provider.of<ChatService>(context, listen: false);
             chatService.userFor = widget.profiles[index];
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => MyProfile(
-                          title: '',
-                          profile: widget.profiles[index],
-                        )));
+            Navigator.of(context)
+                .push(createRouteProfileSelect(widget.profiles[index]));
           },
           child: UserItem(profile: widget.profiles[index]),
         ),
@@ -408,4 +399,26 @@ class _UserItemState extends State<UserItem> {
       ],
     );
   }
+}
+
+Route createRouteProfileSelect(Profiles profile) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => MyProfile(
+      title: '',
+      profile: profile,
+    ),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
 }

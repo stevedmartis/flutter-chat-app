@@ -798,8 +798,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         room: room,
         user: uid);
 
-    print(newPlant);
-
     final createPlantResp = await plantService.createPlant(newPlant);
 
     if (createPlantResp != null) {
@@ -866,8 +864,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         cbd: cbd,
         pot: pot,
         id: widget.plant.id);
-
-    print(editPlant);
 
     if (widget.isEdit) {
       final editPlantRes = await plantService.editPlant(editPlant);

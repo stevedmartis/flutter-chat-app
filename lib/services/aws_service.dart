@@ -18,6 +18,8 @@ class AwsService with ChangeNotifier {
 
   bool _isUpload = false;
 
+  bool _isUploadRecipe = false;
+
   String imageUpdate;
 
   // static String redirectUri = 'https://api.gettymarket.com/api/aws/';
@@ -27,6 +29,12 @@ class AwsService with ChangeNotifier {
   bool get isUpload => this._isUpload;
   set isUpload(bool valor) {
     this._isUpload = valor;
+    notifyListeners();
+  }
+
+  bool get isUploadRecipe => this._isUploadRecipe;
+  set isUploadRecipe(bool valor) {
+    this._isUploadRecipe = valor;
     notifyListeners();
   }
 

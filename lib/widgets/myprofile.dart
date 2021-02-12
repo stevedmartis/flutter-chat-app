@@ -217,7 +217,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                 (!this.widget.isUserEdit)
                     ? makeHeaderInfo(context)
                     : makeHeaderSpacer(context),
-                if (!widget.isUserEdit) makeHeaderTabs(context),
+                //   if (!widget.isUserEdit) makeHeaderTabs(context),
                 /* SliverList(
                   delegate: SliverChildListDelegate(
                       List<Widget>.generate(10, (int i) {
@@ -385,8 +385,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: (about.length > 10) ? 100.0 : 80.0,
-          maxHeight: (about.length > 80) ? 180.0 : 80.0,
+          minHeight: (about.length > 10) ? 150.0 : 80.0,
+          maxHeight: (about.length > 80) ? 200.0 : 80.0,
           child: Container(
             padding: EdgeInsets.only(top: 10.0),
             color: currentTheme.scaffoldBackgroundColor,

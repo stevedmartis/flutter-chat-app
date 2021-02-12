@@ -15,11 +15,16 @@ class LoadingPage extends StatelessWidget {
         future: checkLoginState(context),
         builder: (context, snapshot) {
           return Center(
-            child: Text('Espere...'),
+            child: _buildLoadingWidget(),
           );
         },
       ),
     );
+  }
+
+  Widget _buildLoadingWidget() {
+    return Container(
+        height: 400.0, child: Center(child: CircularProgressIndicator()));
   }
 
   Future checkLoginState(BuildContext context) async {

@@ -9,8 +9,8 @@
     <application
     
         android:name="io.flutter.app.FlutterApplication"
-        android:label="chat"
-        android:icon="@mipmap/ic_launcher"
+        android:label="growify"
+        android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true">
 
         <!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect -->

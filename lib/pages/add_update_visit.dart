@@ -711,8 +711,6 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
       description: description,
     );
 
-    print(newVisit);
-
     final createVisitResp = await visitService.createVisit(newVisit);
 
     if (createVisitResp != null) {
@@ -775,8 +773,6 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
       ml: ml,
       description: description,
     );
-
-    print(newVisit);
 
     final editRoomRes = await visitService.editVisit(newVisit);
 

@@ -54,6 +54,19 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  flutter_launcher_icons: "^0.8.0"
+  flutter_launcher_name: ^0.0.1
+
+flutter_icons:
+    android: "launcher_icon"
+    ios: true
+    image_path: "assets/icon/leaf.png"
+    adaptive_icon_background: "assets/icon/leaf.png"
+
+flutter_launcher_name:
+  name: "Growery"
+
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

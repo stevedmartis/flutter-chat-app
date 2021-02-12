@@ -258,7 +258,7 @@ class SearchContent extends StatelessWidget {
             SizedBox(width: 20),
             Container(
                 // margin: EdgeInsets.only(top: 0, left: 0),
-                child: Text('¿Qué quieres hoy?',
+                child: Text('Buscar',
                     style: TextStyle(
                         color: color,
                         fontSize: 16,

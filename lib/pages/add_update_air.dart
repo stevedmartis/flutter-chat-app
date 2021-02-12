@@ -347,8 +347,6 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
   _createAir(AirBloc bloc) async {
     final airService = Provider.of<AirService>(context, listen: false);
 
-    print('asd');
-
     final room = widget.room.id;
     final authService = Provider.of<AuthService>(context, listen: false);
 
@@ -366,8 +364,6 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
         watts: watts,
         room: room,
         user: uid);
-
-    print(newAir);
 
     final createAirResp = await airService.createAir(newAir);
 
@@ -403,8 +399,6 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
 
     final editPlant = Air(
         name: name, description: description, watts: watts, id: widget.air.id);
-
-    print(editPlant);
 
     if (widget.isEdit) {
       final editRoomRes = await airService.editPlant(editPlant);

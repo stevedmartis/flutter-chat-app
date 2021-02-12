@@ -244,6 +244,48 @@ Widget roundedRectButton(
   });
 }
 
+Widget roundedRectButtonIcon(
+    String title, List<Color> gradient, IconData icon) {
+  return Builder(builder: (BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return Padding(
+      padding: EdgeInsets.only(top: 25),
+      child: Stack(
+        alignment: Alignment(0.0, 0.1),
+        children: <Widget>[
+          Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width / 1.7,
+            decoration: ShapeDecoration(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)),
+              gradient: LinearGradient(
+                  colors: gradient,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight),
+            ),
+            child: Text(title,
+                style: TextStyle(
+                    color: currentTheme.accentColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500)),
+            padding: EdgeInsets.only(top: 16, bottom: 16),
+          ),
+          Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 22),
+              child: FaIcon(
+                icon,
+                color: currentTheme.accentColor,
+                size: 18,
+              )),
+        ],
+      ),
+    );
+  });
+}
+
 Widget roundedRectSignInSocialMediaButton(
     String title, Color color, IconData icon, bool isGoogle, double sizeIcon) {
   return Builder(builder: (BuildContext context) {

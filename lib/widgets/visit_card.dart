@@ -29,7 +29,7 @@ class _CardVisitState extends State<CardVisit> {
     final awsService = Provider.of<AwsService>(context, listen: false);
 
     String formattedDateCreate =
-        DateFormat('yyyy:MM:dd | kk:mm').format(widget.visit.createdAt);
+        DateFormat('dd/MM/yy - kk:mm').format(widget.visit.createdAt);
 
     bool clean = widget.visit.clean;
 
@@ -95,7 +95,7 @@ class _CardVisitState extends State<CardVisit> {
                 width: 10,
                 padding: EdgeInsets.only(
                   left: size.width / 10.0,
-                  right: 50,
+                  right: 90.0,
                 ),
                 margin: EdgeInsets.all(16.0),
                 child: Text(
@@ -103,7 +103,7 @@ class _CardVisitState extends State<CardVisit> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 15,
                       color: Colors.white,
                       fontFamily: 'Open Sans',
                       fontWeight: FontWeight.bold),

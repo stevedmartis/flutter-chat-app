@@ -416,8 +416,6 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
         room: room,
         user: uid);
 
-    print(newAir);
-
     final createAirResp = await lightService.createLight(newAir);
 
     if (createAirResp != null) {
@@ -458,8 +456,6 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
         watts: watts,
         kelvin: kelvin,
         id: widget.light.id);
-
-    print(editLight);
 
     if (widget.isEdit) {
       final editRoomRes = await lightService.editLight(editLight);
