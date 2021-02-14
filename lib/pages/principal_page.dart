@@ -23,6 +23,7 @@ import 'package:chat/widgets/visit_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/users_service.dart';
@@ -154,9 +155,17 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.notifications,
+                icon: FaIcon(FontAwesomeIcons.comments,
                     size: 30,
                     color: (currentPage == 2)
+                        ? currentTheme.accentColor
+                        : Colors.white.withOpacity(0.60)),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: FaIcon(FontAwesomeIcons.bell,
+                    size: 30,
+                    color: (currentPage == 3)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
                 label: '',

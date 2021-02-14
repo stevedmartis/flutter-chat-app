@@ -1,4 +1,6 @@
+import 'package:chat/pages/messages.dart';
 import 'package:chat/pages/my_profile.dart';
+import 'package:chat/pages/notification_page.dart';
 import 'package:chat/pages/onBoarding_page.dart';
 import 'package:chat/pages/profile_edit.dart';
 import 'package:chat/pages/profile_page.dart';
@@ -32,6 +34,8 @@ final Map<String, Widget Function(BuildContext)> appRoutes = {
 final pageRouter = <_Route>[
   _Route(FontAwesomeIcons.home, 'principal', PrincipalPage()),
   _Route(FontAwesomeIcons.home, 'rooms', RoomsListPage()),
+  _Route(FontAwesomeIcons.comments, 'messages', MessagesPage()),
+  _Route(FontAwesomeIcons.comments, 'notifications', NotificationsPage()),
   _Route(FontAwesomeIcons.user, 'profile', SliverAppBarProfilepPage()),
   _Route(FontAwesomeIcons.democrat, 'onboard', OnBoardingScreen()),
   _Route(FontAwesomeIcons.user, 'profile_auth', UserPage()),

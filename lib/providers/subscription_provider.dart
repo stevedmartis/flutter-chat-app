@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:chat/global/environment.dart';
 import 'package:chat/models/air.dart';
 import 'package:chat/models/air_response.dart';
 import 'package:chat/models/aires_response.dart';
+import 'package:chat/models/message_error.dart';
+import 'package:chat/models/profiles_response.dart';
 import 'package:chat/models/subscribe.dart';
 import 'package:chat/models/subscription_response.dart';
+import 'package:chat/services/auth_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -78,6 +83,71 @@ class SubscriptionApiProvider {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  Future disapproveSubscription(String subId) async {
+    // this.authenticated = true;
+
+    final token = await this._storage.read(key: 'token');
+    final data = {'id': subId};
+
+    final resp = await http.post(
+        '${Environment.apiUrl}/subscription/disapprove',
+        body: jsonEncode(data),
+        headers: {'Content-Type': 'application/json', 'x-token': token});
+
+    if (resp.statusCode == 200) {
+      // final roomResponse = roomsResponseFromJson(resp.body);
+      final subscriptionResponse = subscriptionResponseFromJson(resp.body);
+      // this.rooms = roomResponse.rooms;
+
+      return subscriptionResponse.ok;
+    } else {
+      final respBody = errorMessageResponseFromJson(resp.body);
+
+      return respBody;
+    }
+  }
+
+  Future approveSubscription(String subId) async {
+    // this.authenticated = true;
+
+    final token = await this._storage.read(key: 'token');
+    final data = {'id': subId};
+
+    final resp = await http.post('${Environment.apiUrl}/subscription/approve',
+        body: jsonEncode(data),
+        headers: {'Content-Type': 'application/json', 'x-token': token});
+
+    if (resp.statusCode == 200) {
+      // final roomResponse = roomsResponseFromJson(resp.body);
+      final subscriptionResponse = subscriptionResponseFromJson(resp.body);
+      // this.rooms = roomResponse.rooms;
+
+      return subscriptionResponse.ok;
+    } else {
+      final respBody = errorMessageResponseFromJson(resp.body);
+
+      return respBody;
+    }
+  }
+
+  Future<ProfilesResponse> getProfilesSubscriptionsByUser(String userId) async {
+    try {
+      final resp = await http.get(
+        '${Environment.apiUrl}/notification/profiles/subscriptions/$userId',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-token': await AuthService.getToken(),
+        },
+      );
+
+      final profilesResponse = profilesResponseFromJson(resp.body);
+
+      return profilesResponse;
+    } catch (error) {
+      return ProfilesResponse.withError("$error");
     }
   }
 }

@@ -6,12 +6,13 @@ import 'dart:convert';
 
 import 'package:chat/models/usuario.dart';
 
-Profiles profilesFromJson(String str) => Profiles.fromJson(json.decode(str));
+ProfilesChat profileschatFromJson(String str) =>
+    ProfilesChat.fromJson(json.decode(str));
 
-String profilesToJson(Profiles data) => json.encode(data.toJson());
+String profileschatToJson(ProfilesChat data) => json.encode(data.toJson());
 
-class Profiles {
-  Profiles(
+class ProfilesChat {
+  ProfilesChat(
       {this.id,
       this.name,
       this.lastName,
@@ -20,10 +21,8 @@ class Profiles {
       this.imageHeader,
       this.imageAvatar,
       this.user,
-      this.imageRecipe,
       this.message = "",
       this.messageDate,
-      this.subId = "0",
       this.about = ""});
 
   String id;
@@ -34,26 +33,22 @@ class Profiles {
   String imageHeader;
   String about;
   String imageAvatar;
-  String imageRecipe;
   User user;
   String message;
   DateTime messageDate;
-  String subId;
-
-  factory Profiles.fromJson(Map<String, dynamic> json) => Profiles(
-      id: json["id"],
-      name: json["name"],
-      lastName: json["lastName"],
-      createdAt: DateTime.parse(json["createdAt"]),
-      updatedAt: DateTime.parse(json["updatedAt"]),
-      imageAvatar: json["imageAvatar"],
-      about: json["about"],
-      message: json["message"],
-      messageDate: DateTime.parse(json["messageDate"]),
-      imageHeader: json["imageHeader"],
-      user: User.fromJson(json["user"]),
-      imageRecipe: json["imageRecipe"],
-      subId: json["subId"]);
+  factory ProfilesChat.fromJson(Map<String, dynamic> json) => ProfilesChat(
+        id: json["id"],
+        name: json["name"],
+        lastName: json["lastName"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        updatedAt: DateTime.parse(json["updatedAt"]),
+        imageAvatar: json["imageAvatar"],
+        about: json["about"],
+        message: json["message"],
+        messageDate: DateTime.parse(json["messageDate"]),
+        imageHeader: json["imageHeader"],
+        user: User.fromJson(json["user"]),
+      );
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -67,8 +62,6 @@ class Profiles {
         "imageAvatar:": imageAvatar,
         "imageHeader": imageHeader,
         "user": user.toJson(),
-        "imageRecipe": imageRecipe,
-        "subId": subId
       };
 
   getAvatarImg() {
@@ -87,17 +80,6 @@ class Profiles {
       return imageDefault;
     } else {
       return imageHeader;
-    }
-  }
-
-  getRecipeImg() {
-    if (imageRecipe == "") {
-      var imageDefault =
-          "http://images-cdn-br.s3-sa-east-1.amazonaws.com/default_banner.jpeg";
-
-      return imageDefault;
-    } else {
-      return imageRecipe;
     }
   }
 }

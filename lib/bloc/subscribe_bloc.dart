@@ -1,4 +1,5 @@
 import 'package:chat/bloc/validators.dart';
+import 'package:chat/models/profiles_response.dart';
 import 'package:chat/models/subscribe.dart';
 import 'package:chat/repository/subscription_repository.dart';
 
@@ -8,12 +9,22 @@ class SubscribeBloc with Validators {
   final BehaviorSubject<Subscription> _subscriptionCtrl =
       BehaviorSubject<Subscription>();
 
+  final BehaviorSubject<ProfilesResponse> _subscriptionsPending =
+      BehaviorSubject<ProfilesResponse>();
+
   final SubscriptionRepository _repository = SubscriptionRepository();
 
   getSubscription(subscriptorId, clubid) async {
     Subscription response =
         await _repository.getSubscription(subscriptorId, clubid);
     _subscriptionCtrl.sink.add(response);
+  }
+
+  getSubscriptionsPending(String userId) async {
+    ProfilesResponse response =
+        await _repository.getProfilesSubsciptionsPending(userId);
+
+    _subscriptionsPending.sink.add(response);
   }
 
   BehaviorSubject<Subscription> get subscription => _subscriptionCtrl;
@@ -23,7 +34,11 @@ class SubscribeBloc with Validators {
   // Obtener el último valor ingresado a los streams
   Subscription get recipeUpload => _subscriptionCtrl.value;
 
+  BehaviorSubject<ProfilesResponse> get subscriptionsPending =>
+      _subscriptionsPending;
+
   dispose() {
+    _subscriptionsPending?.close();
     _subscriptionCtrl?.close();
   }
 }

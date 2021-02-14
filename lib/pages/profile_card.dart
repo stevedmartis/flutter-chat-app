@@ -152,7 +152,9 @@ class _ProfileCardState extends State<ProfileCard> {
                   isData = snapshot.hasData;
 
                   if (isData) {
-                    if (snapshot.data.subscribeActive) {
+                    if (snapshot.data.subscribeActive &&
+                        snapshot.data.isUpload &&
+                        !snapshot.data.subscribeApproved) {
                       return Container(
                         //top: size.height / 3.5,
                         padding: EdgeInsets.only(top: 35.0),
@@ -163,10 +165,44 @@ class _ProfileCardState extends State<ProfileCard> {
                         child: Align(
                           alignment: Alignment.bottomRight,
                           child: ButtonSubEditProfile(
-                              color: currentTheme.accentColor,
+                              color: currentTheme.scaffoldBackgroundColor
+                                  .withOpacity(0.60),
                               textColor: (widget.isUserAuth)
                                   ? Colors.white.withOpacity(0.50)
                                   : Colors.white,
+                              text: widget.isUserAuth
+                                  ? 'Editar perfil'
+                                  : 'Pendiente',
+                              onPressed: () {
+                                (widget.isUserAuth)
+                                    ? Navigator.of(context)
+                                        .push(createRouteEditProfile())
+                                    : unSubscribe(
+                                        context,
+                                        bloc,
+                                        currentTheme.accentColor,
+                                        awsService.isUploadRecipe);
+                              }),
+                        ),
+                      );
+                    } else if (snapshot.data.subscribeActive &&
+                        snapshot.data.isUpload &&
+                        snapshot.data.subscribeApproved) {
+                      return Container(
+                        //top: size.height / 3.5,
+                        padding: EdgeInsets.only(top: 35.0),
+                        margin: EdgeInsets.only(
+                            top: size.height / 4.5,
+                            left: size.width / 1.9,
+                            right: size.width / 20),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: ButtonSubEditProfile(
+                              color: currentTheme.scaffoldBackgroundColor
+                                  .withOpacity(0.60),
+                              textColor: (widget.isUserAuth)
+                                  ? Colors.white.withOpacity(0.50)
+                                  : currentTheme.accentColor,
                               text: widget.isUserAuth
                                   ? 'Editar perfil'
                                   : 'SUSCRITO',

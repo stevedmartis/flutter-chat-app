@@ -34,10 +34,13 @@ class _RoomsListPageState extends State<RoomsListPage> {
   SocketService socketService;
 
   RoomBloc roomBlocInstance = RoomBloc();
+  ScrollController _hideBottomNavController;
 
+  var _isVisible;
   @override
   void initState() {
     super.initState();
+    this.bottomControll();
   }
 
   @override
@@ -49,8 +52,30 @@ class _RoomsListPageState extends State<RoomsListPage> {
   @override
   void didUpdateWidget(RoomsListPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     setState(() {});
+  }
+
+  bottomControll() {
+    _isVisible = true;
+    _hideBottomNavController = ScrollController();
+    _hideBottomNavController.addListener(
+      () {
+        if (_hideBottomNavController.position.userScrollDirection ==
+            ScrollDirection.reverse) {
+          if (_isVisible)
+            setState(() {
+              _isVisible = false;
+            });
+        }
+        if (_hideBottomNavController.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          if (!_isVisible)
+            setState(() {
+              _isVisible = true;
+            });
+        }
+      },
+    );
   }
 
   @override
@@ -98,6 +123,8 @@ class _RoomsListPageState extends State<RoomsListPage> {
               color: Colors.white,
             )),
         body: RoomList(),
+        bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+
         /*  floatingActionButton: (FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {

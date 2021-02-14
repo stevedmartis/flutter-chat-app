@@ -15,6 +15,7 @@ class Subscription {
       this.imageRecipe = "",
       this.isUpload = false,
       this.subscribeActive = false,
+      this.subscribeApproved = false,
       isRoute,
       init()});
 
@@ -25,6 +26,7 @@ class Subscription {
   String imageRecipe;
   bool isUpload;
   bool subscribeActive;
+  bool subscribeApproved;
 
   DateTime createdAt;
   DateTime updatedAt;
@@ -35,6 +37,8 @@ class Subscription {
         subscriptor: json["subscriptor"],
         imageRecipe: json["imageRecipe"],
         subscribeActive: json["subscribeActive"],
+        subscribeApproved: json["subscribeApproved"],
+
         isUpload: json["isUpload"],
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
@@ -46,6 +50,7 @@ class Subscription {
         "id": id,
         "club": club,
         "subscribeActive": subscribeActive,
+        "subscribeApproved": subscribeApproved,
         "subscriptor": subscriptor,
         "imageRecipe": imageRecipe,
         "isUpload": isUpload
