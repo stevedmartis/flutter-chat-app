@@ -66,7 +66,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
         child: GestureDetector(
           onTap: () {
             {
-              Provider.of<MenuModel>(context, listen: false).currentPage = 2;
               Navigator.push(context, _createRoute());
             }
           },

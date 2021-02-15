@@ -47,8 +47,6 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
             child: GestureDetector(
               onTap: () {
                 {
-                  Provider.of<MenuModel>(context, listen: false).currentPage =
-                      2;
                   Navigator.push(context, _createRoute());
                 }
               },

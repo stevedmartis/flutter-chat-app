@@ -164,11 +164,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                           ? currentTheme.accentColor
                                           : Colors.white),
                                   onPressed: () => {
-                                        {
-                                          Provider.of<MenuModel>(context,
-                                                  listen: false)
-                                              .currentPage = 0,
-                                        },
+                                        {},
                                         Navigator.pop(context),
                                       }),
                               backgroundColor: Colors.black.withOpacity(0.60)),
