@@ -13,4 +13,8 @@ class SubscriptionRepository {
   Future<ProfilesResponse> getProfilesSubsciptionsPending(String userId) {
     return _apiProvider.getProfilesSubscriptionsByUser(userId);
   }
+
+  Future<ProfilesResponse> getProfilesSubsciptionsApprove(String userId) {
+    return _apiProvider.getProfilesSubsciptionsApproveBySubId(userId);
+  }
 }

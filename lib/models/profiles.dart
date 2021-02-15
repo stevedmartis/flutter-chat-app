@@ -24,6 +24,7 @@ class Profiles {
       this.message = "",
       this.messageDate,
       this.subId = "0",
+      this.isClub = false,
       this.about = ""});
 
   String id;
@@ -39,6 +40,7 @@ class Profiles {
   String message;
   DateTime messageDate;
   String subId;
+  bool isClub;
 
   factory Profiles.fromJson(Map<String, dynamic> json) => Profiles(
       id: json["id"],
@@ -53,7 +55,8 @@ class Profiles {
       imageHeader: json["imageHeader"],
       user: User.fromJson(json["user"]),
       imageRecipe: json["imageRecipe"],
-      subId: json["subId"]);
+      subId: json["subId"],
+      isClub: json["isClub"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -68,7 +71,8 @@ class Profiles {
         "imageHeader": imageHeader,
         "user": user.toJson(),
         "imageRecipe": imageRecipe,
-        "subId": subId
+        "subId": subId,
+        "isClub": isClub
       };
 
   getAvatarImg() {

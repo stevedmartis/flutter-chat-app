@@ -6,6 +6,7 @@ import 'package:chat/pages/principal_page.dart';
 import 'package:chat/providers/messages_providers.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
+import 'package:chat/widgets/text_emoji.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -18,6 +19,8 @@ import 'package:chat/services/socket_service.dart';
 
 import 'package:chat/models/mensajes_response.dart';
 import 'package:chat/widgets/chat_message.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/widgets.dart';
 
 class CustomAppBar extends StatefulWidget with PreferredSizeWidget {
   @override
@@ -220,18 +223,18 @@ class _MessagesPageState extends State<MessagesPage>
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            message.message,
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.white54),
-                          ),
+                          EmojiText(
+                              text: message.message,
+                              style: TextStyle(
+                                  fontSize: 15, color: Colors.white54),
+                              emojiFontMultiplier: 1.5),
                           SizedBox(
                             width: 10.0,
                           ),
                           Text(
                             '· $formatted',
                             style:
-                                TextStyle(color: Colors.white54, fontSize: 12),
+                                TextStyle(color: Colors.white54, fontSize: 15),
                           ),
                         ],
                       ),

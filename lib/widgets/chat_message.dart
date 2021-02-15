@@ -1,3 +1,4 @@
+import 'package:chat/widgets/text_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:provider/provider.dart';
@@ -38,12 +39,12 @@ class ChatMessage extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(8.0),
         margin: EdgeInsets.only(right: 5, bottom: 5, left: 50),
-        child: Text(
-          this.text,
-          style: TextStyle(color: Colors.white),
-        ),
+        child: EmojiText(
+            text: this.text,
+            style: TextStyle(color: Colors.white, fontSize: 15),
+            emojiFontMultiplier: 2),
         decoration: BoxDecoration(
-            color: Colors.black, borderRadius: BorderRadius.circular(20)),
+            color: Colors.black, borderRadius: BorderRadius.circular(50)),
       ),
     );
   }
@@ -54,12 +55,12 @@ class ChatMessage extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(8.0),
         margin: EdgeInsets.only(left: 5, bottom: 5, right: 50),
-        child: Text(
-          this.text,
-          style: TextStyle(color: Colors.black87),
-        ),
+        child: EmojiText(
+            text: this.text,
+            style: TextStyle(color: Colors.white, fontSize: 15),
+            emojiFontMultiplier: 2),
         decoration: BoxDecoration(
-            color: Color(0xff969B9B), borderRadius: BorderRadius.circular(20)),
+            color: Color(0xff969B9B), borderRadius: BorderRadius.circular(50)),
       ),
     );
   }
