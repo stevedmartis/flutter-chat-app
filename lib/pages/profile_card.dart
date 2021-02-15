@@ -91,59 +91,76 @@ class _ProfileCardState extends State<ProfileCard> {
               width: double.infinity,
               alignment: Alignment.center,
             )),
-        Positioned(
-          child: Container(
-            margin: EdgeInsets.only(left: (widget.isUserEdit) ? 0 : 22),
-            child: Align(
-              alignment: (widget.isUserEdit)
-                  ? Alignment.bottomCenter
-                  : Alignment.bottomLeft,
-              child: CircleAvatar(
-                radius: 55,
-                backgroundColor: currentTheme.scaffoldBackgroundColor,
-                child: CircleAvatar(
-                  radius: ProfileCard.avatarRadius + 120,
-                  backgroundColor: currentTheme.scaffoldBackgroundColor,
-                  child: GestureDetector(
-                    onTap: () => {
-                      if (!widget.isUserAuth)
-                        Navigator.of(context).push(createRouteChat())
-                      else
-                        Navigator.of(context).push(PageRouteBuilder(
-                            transitionDuration: Duration(milliseconds: 200),
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    AvatarImagePage(
-                                      profile: this.widget.profile,
-                                    ))),
+        StreamBuilder<Subscription>(
+            stream: subscriptionBloc.subscription.stream,
+            builder:
+                (BuildContext context, AsyncSnapshot<Subscription> snapshot) {
+              if (snapshot.hasData) {
+                final isSuscribeApprove = snapshot.data.subscribeApproved;
+                final isSuscribeActive = snapshot.data.subscribeActive;
 
-                      // make changes here
+                return Positioned(
+                  child: Container(
+                    margin: EdgeInsets.only(left: (widget.isUserEdit) ? 0 : 22),
+                    child: Align(
+                      alignment: (widget.isUserEdit)
+                          ? Alignment.bottomCenter
+                          : Alignment.bottomLeft,
+                      child: CircleAvatar(
+                        radius: 55,
+                        backgroundColor: currentTheme.scaffoldBackgroundColor,
+                        child: CircleAvatar(
+                          radius: ProfileCard.avatarRadius + 120,
+                          backgroundColor: currentTheme.scaffoldBackgroundColor,
+                          child: GestureDetector(
+                            onTap: () => {
+                              if (!widget.isUserAuth &&
+                                  isSuscribeApprove &&
+                                  isSuscribeActive)
+                                Navigator.of(context).push(createRouteChat())
+                              else
+                                Navigator.of(context).push(PageRouteBuilder(
+                                    transitionDuration:
+                                        Duration(milliseconds: 200),
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        AvatarImagePage(
+                                          profile: this.widget.profile,
+                                        ))),
 
-                      //Navigator.of(context).push(createRouteAvatarProfile(this.user));
-                    },
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      child: Hero(
-                        tag: widget.profile.user.uid,
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: ImageUserChat(
-                            width: 100,
-                            // showBorderAvatar: _showBorderAvatar,
-                            height: 100,
-                            profile: widget.profile,
-                            fontsize: 30,
+                              // make changes here
+
+                              //Navigator.of(context).push(createRouteAvatarProfile(this.user));
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              child: Hero(
+                                tag: widget.profile.user.uid,
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: ImageUserChat(
+                                    width: 100,
+                                    // showBorderAvatar: _showBorderAvatar,
+                                    height: 100,
+                                    profile: widget.profile,
+                                    fontsize: 30,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
-          ),
-        ),
+                );
+              } else if (snapshot.hasError) {
+                return _buildErrorWidget(snapshot.error);
+              } else {
+                return _buildLoadingWidget();
+              }
+            }),
         (!widget.isUserEdit)
             ? StreamBuilder<Subscription>(
                 stream: subscriptionBloc.subscription.stream,
