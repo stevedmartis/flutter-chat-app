@@ -26,6 +26,7 @@ class Profiles {
       this.subId = "0",
       this.isClub = false,
       this.subscribeApproved = false,
+      this.subscribeActive = false,
       this.about = ""});
 
   String id;
@@ -43,6 +44,7 @@ class Profiles {
   String subId;
   bool isClub;
   bool subscribeApproved;
+  bool subscribeActive;
 
   factory Profiles.fromJson(Map<String, dynamic> json) => Profiles(
       id: json["id"],
@@ -59,7 +61,8 @@ class Profiles {
       imageRecipe: json["imageRecipe"],
       subId: json["subId"],
       isClub: json["isClub"],
-      subscribeApproved: json["subscribeApproved"]);
+      subscribeApproved: json["subscribeApproved"],
+      subscribeActive: json["subscribeActive"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -76,7 +79,8 @@ class Profiles {
         "imageRecipe": imageRecipe,
         "subId": subId,
         "isClub": isClub,
-        "subscribeApproved": subscribeApproved
+        "subscribeApproved": subscribeApproved,
+        "subscribeActive": subscribeActive
       };
 
   getAvatarImg() {

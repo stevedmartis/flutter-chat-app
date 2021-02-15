@@ -8,17 +8,21 @@ import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CustomAppBarHeader extends StatefulWidget {
+class CustomAppBarHeaderPages extends StatefulWidget {
   final bool showContent;
+  final String title;
+
+  final Widget action;
 
   @override
-  CustomAppBarHeader({this.showContent = true});
+  CustomAppBarHeaderPages(
+      {this.showContent = true, @required this.title, this.action});
 
   @override
   _CustomAppBarHeaderState createState() => _CustomAppBarHeaderState();
 }
 
-class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
+class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
   @override
   void initState() {
     super.initState();
@@ -36,19 +40,21 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
     return Container(
       color: Colors.black,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
             child: GestureDetector(
               onTap: () {
                 {
+                  Provider.of<MenuModel>(context, listen: false).currentPage =
+                      2;
                   Navigator.push(context, _createRoute());
                 }
               },
               child: Container(
                 padding: EdgeInsets.all(5.0),
-                // margin: EdgeInsets.only(left: 15),
+                margin: EdgeInsets.only(left: 10),
                 child: Hero(
                   tag: profile.user.uid,
                   child: Material(
@@ -64,44 +70,14 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
               ),
             ),
           ),
-          GestureDetector(
-            onTap: () => showSearch(
-                context: context, delegate: DataSearch(userAuth: profile)),
-            child: Center(
-                child: Container(
-                    // color: Colors.black,
-                    //  margin: EdgeInsets.only(left: 10, right: 10),
-                    width: size.height / 3.0,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xff202020),
-                            Color(0xff1D1D1D),
-                            Color(0xff161616),
-                          ]),
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black54,
-                            spreadRadius: -5,
-                            blurRadius: 10,
-                            offset: Offset(0, 5))
-                      ],
-                    ),
-                    child: SearchContent())),
+          Container(
+            margin: EdgeInsets.only(left: 0),
+            child: Text(
+              widget.title,
+              style: TextStyle(fontSize: 20),
+            ),
           ),
-          GestureDetector(
-            onTap: () => Scaffold.of(context).openEndDrawer(),
-            child: Container(
-                child: Icon(
-              Icons.menu,
-              size: 35,
-              color: currentTheme.accentColor,
-            )),
-          )
+          widget.action
         ],
       ),
     );

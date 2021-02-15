@@ -143,11 +143,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                         ? currentTheme.accentColor
                                         : Colors.white),
                                 onPressed: () => {
-                                      {
-                                        Provider.of<MenuModel>(context,
-                                                listen: false)
-                                            .currentPage = 0,
-                                      },
+                                      {},
                                       Navigator.pop(context),
                                     }),
                             backgroundColor: Colors.black.withOpacity(0.60)),

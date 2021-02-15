@@ -285,7 +285,6 @@ class _CollapsingListState extends State<CollapsingList>
           const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       slivers: <Widget>[
         makeHeaderCustom(),
-
         CupertinoSliverRefreshControl(onRefresh: () => pullToRefreshData()),
         makeHeaderSpacer(context),
         SliverFixedExtentList(
@@ -294,7 +293,6 @@ class _CollapsingListState extends State<CollapsingList>
             [BannerSlide()],
           ),
         ),
-
         makeHeaderSpacer(context),
         SliverFixedExtentList(
           itemExtent: 100.0,
@@ -323,7 +321,6 @@ class _CollapsingListState extends State<CollapsingList>
           ),
         ),
         makeHeaderSpacer(context),
-
         SliverFixedExtentList(
           itemExtent: 200.0,
           delegate: SliverChildListDelegate(
@@ -346,7 +343,6 @@ class _CollapsingListState extends State<CollapsingList>
             ],
           ),
         ),
-
         makeHeaderSpacer(context),
         SliverFixedExtentList(
           itemExtent: 150.0,
@@ -374,65 +370,6 @@ class _CollapsingListState extends State<CollapsingList>
             ],
           ),
         ),
-
-        /*   (profiles.length > 0)
-            ? SliverFixedExtentList(
-                itemExtent: 150.0,
-                delegate: SliverChildListDelegate(
-                  [
-                    FutureBuilder(
-                      future: this.usuarioService.getProfilesLastUsers(),
-                      initialData: null,
-                      builder:
-                          (BuildContext context, AsyncSnapshot<List> snapshot) {
-                        if (snapshot.hasData) {
-                          return Container(
-                              margin: EdgeInsets.only(top: 10),
-                              child: CarouselCategorySliderCustom(
-                                  profiles: profiles)); // image is ready
-                        } else {
-                          return Container(
-                              height: 400.0,
-                              child: Center(
-                                  child:
-                                      CircularProgressIndicator())); // placeholder
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              )
-            : SliverFixedExtentList(
-                itemExtent: 0.0,
-                delegate: SliverChildListDelegate(
-                  [Container()],
-                ),
-              ),
- */
-        /* SliverList(
-          delegate: SliverChildListDelegate(List<Widget>.generate(10, (int i) {
-            return Stack(
-              children: [
-                CardProduct(index: i),
-                GestureDetector(
-                    onTap: () {
-                      /* if (_heartAnimation.value <= 23.0)
-                                _heartAnimationController.forward();
-                              else if (_heartAnimation.value >= 25.0) {
-                                _heartAnimationController.reverse();
-                              } */
-                    },
-                    child: _buildCircleFavoriteProduct()),
-              ],
-            );
-          })),
-        ), */
-
-        //makeProductsCard(context)
-/*  s */
-
-        // Yes, this could also be a SliverFixedExtentList. Writing
-        // this way just for an example of SliverList construction.
       ],
     );
   }

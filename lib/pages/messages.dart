@@ -3,9 +3,11 @@ import 'package:chat/models/profiles_response.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/principal_page.dart';
+import 'package:chat/pages/profile_page.dart';
 import 'package:chat/providers/messages_providers.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
+import 'package:chat/widgets/header_appbar_pages.dart';
 import 'package:chat/widgets/text_emoji.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +29,11 @@ class CustomAppBar extends StatefulWidget with PreferredSizeWidget {
   final Size preferredSize;
 
   final String title;
+  final Profiles profile;
 
   CustomAppBar({
     this.title,
+    this.profile,
     Key key,
   })  : preferredSize = Size.fromHeight(60.0),
         super(key: key);
@@ -43,6 +47,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     return AppBar(
+      leadingWidth: 65,
       backgroundColor: Colors.black,
       actions: [
         Padding(
@@ -55,23 +60,54 @@ class _CustomAppBarState extends State<CustomAppBar> {
         ),
       ],
       title: Text('Mensajes'),
-      leading: IconButton(
-        icon: Icon(
-          Icons.chevron_left,
-          color: currentTheme.accentColor,
+      leading: Container(
+        padding: EdgeInsets.all(8.0),
+        margin: EdgeInsets.only(left: 10.0),
+        child: GestureDetector(
+          onTap: () {
+            {
+              Provider.of<MenuModel>(context, listen: false).currentPage = 2;
+              Navigator.push(context, _createRoute());
+            }
+          },
+          child: Container(
+            child: Hero(
+              tag: widget.profile.user.uid,
+              child: Material(
+                type: MaterialType.transparency,
+                child: ImageUserChat(
+                  width: 100,
+                  height: 100,
+                  profile: widget.profile,
+                  fontsize: 12,
+                ),
+              ),
+            ),
+          ),
         ),
-        iconSize: 35,
-        onPressed: () => {
-          setState(() {
-            Provider.of<MenuModel>(context, listen: false).currentPage = 0;
-          }),
-          Navigator.pop(context),
-        },
-        color: Colors.white,
       ),
       automaticallyImplyLeading: true,
     );
   }
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        SliverAppBarProfilepPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(-0.5, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }
 
 class MessagesPage extends StatefulWidget {
@@ -167,18 +203,53 @@ class _MessagesPageState extends State<MessagesPage>
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    return Scaffold(
-      backgroundColor: currentTheme.scaffoldBackgroundColor,
-      appBar: CustomAppBar(),
-      body: CustomScrollView(
-          physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics()),
-          slivers: <Widget>[makeListVisits(context)]),
-      bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: currentTheme.scaffoldBackgroundColor,
+        body: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
+            slivers: <Widget>[
+              makeHeaderCustom('Mensajes'),
+              makeListChats(context)
+            ]),
+        bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+      ),
     );
   }
 
-  SliverList makeListVisits(context) {
+  SliverPersistentHeader makeHeaderCustom(String title) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return SliverPersistentHeader(
+        floating: true,
+        delegate: SliverCustomHeaderDelegate(
+            minHeight: 60,
+            maxHeight: 60,
+            child: Container(
+                color: Colors.black,
+                child: Container(
+                    color: Colors.black,
+                    child: CustomAppBarHeaderPages(
+                      title: title,
+                      action:
+                          //  Container()
+
+                          GestureDetector(
+                        onTap: () => {},
+
+                        //Scaffold.of(context).openEndDrawer(),
+                        child: Container(
+                            child: Icon(
+                          Icons.menu,
+                          size: 35,
+                          color: currentTheme.accentColor,
+                        )),
+                      ),
+                    )))));
+  }
+
+  SliverList makeListChats(context) {
     return SliverList(
         delegate: SliverChildListDelegate([
       buildSuggestions(context),
@@ -201,7 +272,7 @@ class _MessagesPageState extends State<MessagesPage>
             itemCount: profiles.length,
             itemBuilder: (BuildContext ctxt, int index) {
               final message = profiles[index];
-              if (message.subscribeApproved) {
+              if (message.subscribeApproved && message.subscribeActive) {
                 final DateTime dateMessage = message.messageDate;
                 final DateFormat formatter = DateFormat('kk:mm a');
                 final String formatted = formatter.format(dateMessage);

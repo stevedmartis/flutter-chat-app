@@ -15,6 +15,7 @@ import 'package:chat/services/room_services.dart';
 
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
+import 'package:chat/widgets/header_appbar_pages.dart';
 import 'package:chat/widgets/room_card.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -82,59 +83,63 @@ class _RoomsListPageState extends State<RoomsListPage> {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     // final roomsModel = Provider.of<Room>(context);
-    final room = new Room();
+
     return SafeArea(
       child: Scaffold(
-        // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
-        appBar: AppBar(
-            title: Text(
-              'My rooms',
-              style: TextStyle(),
-            ),
-            backgroundColor: Colors.black,
-            actions: [
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: IconButton(
-                    icon: Icon(
-                      Icons.add,
-                      color: currentTheme.accentColor,
-                    ),
-                    iconSize: 30,
-                    onPressed: () => {
-                          Navigator.of(context)
-                              .push(createRouteAddRoom(room, false)),
-                        }),
-              )
-            ],
-            leading: IconButton(
-              icon: Icon(
-                Icons.chevron_left,
-                color: currentTheme.accentColor,
-              ),
-              iconSize: 30,
-              onPressed: () => {
-                setState(() {
-                  Provider.of<MenuModel>(context, listen: false).currentPage =
-                      0;
-                }),
-                Navigator.pop(context),
-              },
-              color: Colors.white,
-            )),
-        body: RoomList(),
+        backgroundColor: currentTheme.scaffoldBackgroundColor,
+        body: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
+            slivers: <Widget>[
+              makeHeaderCustom('My rooms'),
+              makeListRooms(context)
+            ]),
         bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
-
-        /*  floatingActionButton: (FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                setState(() {
-                  var j = Room(name: 'sfddsfsdf', description: 'sdfsdf');
-                  rooms.add(j);
-                });
-              }) */
       ),
     );
+  }
+
+  SliverList makeListRooms(
+    context,
+  ) {
+    return SliverList(
+        delegate: SliverChildListDelegate([
+      RoomList(),
+    ]));
+  }
+
+  SliverPersistentHeader makeHeaderCustom(String title) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    final room = new Room();
+
+    return SliverPersistentHeader(
+        floating: true,
+        delegate: SliverCustomHeaderDelegate(
+            minHeight: 60,
+            maxHeight: 60,
+            child: Container(
+                color: Colors.black,
+                child: Container(
+                    color: Colors.black,
+                    child: CustomAppBarHeaderPages(
+                      title: title,
+                      action:
+                          //   Container()
+                          Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.add,
+                              color: currentTheme.accentColor,
+                            ),
+                            iconSize: 30,
+                            onPressed: () => {
+                                  Navigator.of(context)
+                                      .push(createRouteAddRoom(room, false)),
+                                }),
+                      ),
+                    )))));
   }
 
   addNewRoom() {
@@ -351,7 +356,7 @@ class _RoomListState extends State<RoomList> {
                 ? Container(child: _buildRoomWidget(rooms))
                 : Center(
                     child: Container(
-                        padding: EdgeInsets.all(50),
+                        padding: EdgeInsets.only(top: 100),
                         child: Text('Sin Rooms, add new')),
                   ); // image is ready
 

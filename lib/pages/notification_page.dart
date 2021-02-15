@@ -12,6 +12,7 @@ import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/chat_message.dart';
+import 'package:chat/widgets/header_appbar_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -147,55 +148,61 @@ class _NotificationsPageState extends State<NotificationsPage>
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        actions: [
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Icon(
-              Icons.more_vert,
-              color: currentTheme.accentColor,
-              size: 30,
-            ),
-          ),
-        ],
-        title: Text('Notificaciones'),
-        leading: IconButton(
-          icon: Icon(
-            Icons.chevron_left,
-            color: currentTheme.accentColor,
-          ),
-          iconSize: 35,
-          onPressed: () => {
-            setState(() {
-              Provider.of<MenuModel>(context, listen: false).currentPage = 0;
-            }),
-            Navigator.pop(context),
-          },
-          color: Colors.white,
-        ),
-        automaticallyImplyLeading: true,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: currentTheme.scaffoldBackgroundColor,
+        body: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
+            slivers: <Widget>[
+              makeHeaderCustom('Notificaciones'),
+              makeListNotifications(context)
+            ]),
+        bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
       ),
-      body: Container(
+    );
+  }
+
+  SliverList makeListNotifications(
+    context,
+  ) {
+    return SliverList(
+        delegate: SliverChildListDelegate([
+      Container(
         child: _buildList(
           context,
           Axis.vertical,
         ),
       ),
-      bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+    ]));
+  }
 
-      /*  floatingActionButton: FloatingActionButton(
-        backgroundColor: _fabColor,
-        onPressed: null,
-        child: _rotationAnimation == null
-            ? Icon(Icons.add)
-            : RotationTransition(
-                turns: _rotationAnimation,
-                child: Icon(Icons.add),
-              ),
-      ), */
-    );
+  SliverPersistentHeader makeHeaderCustom(String title) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return SliverPersistentHeader(
+        floating: true,
+        delegate: SliverCustomHeaderDelegate(
+            minHeight: 60,
+            maxHeight: 60,
+            child: Container(
+                color: Colors.black,
+                child: Container(
+                    color: Colors.black,
+                    child: CustomAppBarHeaderPages(
+                      title: title,
+                      action:
+                          // Container()
+
+                          Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Icon(
+                          Icons.more_vert,
+                          color: currentTheme.accentColor,
+                          size: 30,
+                        ),
+                      ),
+                    )))));
   }
 
   Widget _buildList(BuildContext context, Axis direction) {
@@ -396,7 +403,9 @@ class _NotificationsPageState extends State<NotificationsPage>
                   );
                 } else {
                   return Center(
-                    child: Container(child: Text('Vacio')),
+                    child: Container(
+                        padding: EdgeInsets.only(top: 100),
+                        child: Text('Vacio')),
                   );
                 }
               } else if (snapshot.hasError) {
