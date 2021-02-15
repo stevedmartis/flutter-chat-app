@@ -18,7 +18,6 @@ class _CardLightState extends State<CardLight> {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    print(widget.light);
     return Column(
       children: <Widget>[
         Container(

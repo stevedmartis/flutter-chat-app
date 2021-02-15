@@ -354,11 +354,7 @@ class _RoomListState extends State<RoomList> {
 
             return (rooms.length > 0)
                 ? Container(child: _buildRoomWidget(rooms))
-                : Center(
-                    child: Container(
-                        padding: EdgeInsets.only(top: 100),
-                        child: Text('Sin Rooms, add new')),
-                  ); // image is ready
+                : _buildEmptyWidget(); // image is ready
 
           } else if (snapshot.hasError) {
             return _buildErrorWidget(snapshot.error);
@@ -373,6 +369,11 @@ class _RoomListState extends State<RoomList> {
   Widget _buildLoadingWidget() {
     return Container(
         height: 400.0, child: Center(child: CircularProgressIndicator()));
+  }
+
+  Widget _buildEmptyWidget() {
+    return Container(
+        height: 400.0, child: Center(child: Text('Sin Rooms, add new')));
   }
 
   Widget _buildErrorWidget(String error) {

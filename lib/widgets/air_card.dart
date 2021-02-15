@@ -18,7 +18,6 @@ class _CardAirState extends State<CardAir> {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    print(widget.air);
     return Column(
       children: <Widget>[
         Container(

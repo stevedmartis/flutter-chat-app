@@ -363,8 +363,6 @@ class _ProfileCardState extends State<ProfileCard> {
               content: StreamBuilder(
                   stream: bloc.subscription.stream,
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    print(snapshot);
-
                     isData = snapshot.hasData;
                     return (!isData)
                         ? Column(
@@ -561,8 +559,6 @@ class _ProfileCardState extends State<ProfileCard> {
       final resp = await awsService.uploadImageCoverPlant(
           fileType[0], fileType[1], imageCover);
 
-      print(resp);
-
       final newSubscription = new Subscription(
         id: subscription.id,
         subscriptor: profileSub.user.uid,
@@ -602,7 +598,6 @@ void unSubscription(context, SubscribeBloc bloc) async {
       Provider.of<SubscriptionService>(context, listen: false);
 
   final resp = await subscriptionService.unSubscription(subscription);
-  print(resp);
 
   if (resp.ok) {
     subscriptionBloc.getSubscription(

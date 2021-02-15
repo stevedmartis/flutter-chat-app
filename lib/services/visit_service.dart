@@ -57,7 +57,6 @@ class VisitService with ChangeNotifier {
       // final roomResponse = roomsResponseFromJson(resp.body);
       final visitResponse = visitResponseFromJson(resp.body);
       // this.rooms = roomResponse.rooms;
-      print(visitResponse);
       return visitResponse;
     } else {
       final respBody = errorMessageResponseFromJson(resp.body);
