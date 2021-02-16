@@ -686,7 +686,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     final electro =
         (electroCtrl.text == "") ? widget.visit.electro : bloc.electro.trim();
 
-    final ph = (phCtrl.text == "") ? widget.visit.ph : false;
+    final ph = (phCtrl.text == "") ? widget.visit.ph : bloc.ph.trim();
 
     final ml = (mlCtrl.text == "") ? widget.visit.ml : bloc.ml.trim();
 
