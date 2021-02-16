@@ -5,6 +5,7 @@ import 'package:chat/pages/onBoarding_page.dart';
 import 'package:chat/pages/profile_edit.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_list_page.dart';
+import 'package:chat/pages/subscriptors_page.dart';
 import 'package:chat/pages/tabs.dart';
 import 'package:chat/pages/user_page.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ final Map<String, Widget Function(BuildContext)> appRoutes = {
 
 final pageRouter = <_Route>[
   _Route(FontAwesomeIcons.home, 'principal', PrincipalPage()),
-  _Route(FontAwesomeIcons.comments, 'notifications', NotificationsPage()),
+  _Route(FontAwesomeIcons.comments, 'subscriptors', SubscriptorsPage()),
   _Route(FontAwesomeIcons.home, 'rooms', RoomsListPage()),
   _Route(FontAwesomeIcons.comments, 'messages', MessagesPage()),
   _Route(FontAwesomeIcons.comments, 'notifications', NotificationsPage()),

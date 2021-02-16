@@ -20,16 +20,16 @@ import 'package:intl/intl.dart';
 
 import 'package:provider/provider.dart';
 
-class NotificationsPage extends StatefulWidget {
-  NotificationsPage({Key key, this.title}) : super(key: key);
+class SubscriptorsPage extends StatefulWidget {
+  SubscriptorsPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _NotificationsPageState createState() => _NotificationsPageState();
+  _SubscriptorsPageState createState() => _SubscriptorsPageState();
 }
 
-class _NotificationsPageState extends State<NotificationsPage>
+class _SubscriptorsPageState extends State<SubscriptorsPage>
     with TickerProviderStateMixin {
   final notificationsProvider = new NotificationsProvider();
 
@@ -151,7 +151,7 @@ class _NotificationsPageState extends State<NotificationsPage>
             physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics()),
             slivers: <Widget>[
-              makeHeaderCustom('Notificaciones'),
+              makeHeaderCustom('Suscriptores'),
               makeListNotifications(context)
             ]),
         bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
