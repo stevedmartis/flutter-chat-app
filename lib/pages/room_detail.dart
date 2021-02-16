@@ -898,8 +898,8 @@ Container buildCircleFavoriteProduct(String quantity, context) {
 
   return Container(
       alignment: Alignment.topRight,
-      padding: EdgeInsets.all(5.0),
-      margin: EdgeInsets.only(left: size.width / 1.2, top: 0),
+      padding: EdgeInsets.all(0.0),
+      margin: EdgeInsets.only(left: size.width / 1.3, top: 0),
       width: 50,
       height: 50,
       child: ClipRRect(

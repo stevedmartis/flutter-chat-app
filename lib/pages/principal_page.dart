@@ -573,7 +573,7 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
       ? CarouselSlider.builder(
           options: CarouselOptions(
             height: 200,
-            viewportFraction: 0.99,
+            viewportFraction: 0.90,
             initialPage: 0,
             enableInfiniteScroll: false,
             reverse: false,
