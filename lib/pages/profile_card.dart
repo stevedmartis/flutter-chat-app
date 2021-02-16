@@ -7,6 +7,7 @@ import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/register_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
+import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/subscription_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
@@ -113,11 +114,16 @@ class _ProfileCardState extends State<ProfileCard> {
                           radius: ProfileCard.avatarRadius + 120,
                           backgroundColor: currentTheme.scaffoldBackgroundColor,
                           child: GestureDetector(
-                            onTap: () => {
+                            onTap: () {
+                              final chatService = Provider.of<ChatService>(
+                                  context,
+                                  listen: false);
+                              chatService.userFor = this.widget.profile;
+
                               if (!widget.isUserAuth &&
                                   isSuscribeApprove &&
                                   isSuscribeActive)
-                                Navigator.of(context).push(createRouteChat())
+                                Navigator.of(context).push(createRouteChat());
                               else
                                 Navigator.of(context).push(PageRouteBuilder(
                                     transitionDuration:
@@ -126,7 +132,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                             secondaryAnimation) =>
                                         AvatarImagePage(
                                           profile: this.widget.profile,
-                                        ))),
+                                        )));
 
                               // make changes here
 
