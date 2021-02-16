@@ -28,14 +28,14 @@ class SubscribeBloc with Validators {
     ProfilesResponse response =
         await _repository.getProfilesSubsciptionsPending(userId);
 
-    _subscriptionsApproveBySubId.sink.add(response);
+    _subscriptionsPending.sink.add(response);
   }
 
   getSubscriptionsClubsApprove(String subId) async {
     ProfilesResponse response =
         await _repository.getProfilesSubsciptionsApprove(subId);
 
-    _subscriptionsPending.sink.add(response);
+    _subscriptionsApproveBySubId.sink.add(response);
   }
 
   getSubscriptionsApprove(String subId) async {

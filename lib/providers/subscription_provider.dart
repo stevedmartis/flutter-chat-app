@@ -136,7 +136,7 @@ class SubscriptionApiProvider {
   Future<ProfilesResponse> getProfilesSubscriptionsByUser(String userId) async {
     try {
       final resp = await http.get(
-        '${Environment.apiUrl}/notification/profiles/subscriptions/$userId',
+        '${Environment.apiUrl}/notification/profiles/subscriptions/pending/$userId',
         headers: {
           'Content-Type': 'application/json',
           'x-token': await AuthService.getToken(),
