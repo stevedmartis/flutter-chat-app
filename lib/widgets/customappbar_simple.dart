@@ -1,27 +1,26 @@
 import 'package:chat/models/usuario.dart';
-import 'package:chat/pages/messages.dart';
-import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/profile_page.dart';
-import 'package:chat/pages/search_Principal_page.dart';
-import 'package:chat/routes/routes.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-class CustomAppBarHeader extends StatefulWidget {
+class CustomAppBarSimplePages extends StatefulWidget {
   final bool showContent;
+  final String title;
+
+  final Widget action;
 
   @override
-  CustomAppBarHeader({this.showContent = true});
+  CustomAppBarSimplePages(
+      {this.showContent = true, @required this.title, this.action});
 
   @override
-  _CustomAppBarHeaderState createState() => _CustomAppBarHeaderState();
+  _CustomAppBarSimplePagesState createState() =>
+      _CustomAppBarSimplePagesState();
 }
 
-class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
+class _CustomAppBarSimplePagesState extends State<CustomAppBarSimplePages> {
   @override
   void initState() {
     super.initState();
@@ -32,9 +31,6 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final authService = Provider.of<AuthService>(context);
 
-    final currentPage =
-        Provider.of<MenuModel>(context, listen: false).currentPage;
-
     final profile = authService.profile;
 
     final size = MediaQuery.of(context).size;
@@ -42,132 +38,39 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
     return Container(
       color: Colors.black,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Center(
-            child: GestureDetector(
-              onTap: () {
-                {
-                  Navigator.push(context, _createRoute());
-                }
-              },
-              child: Container(
-                padding: EdgeInsets.all(5.0),
-                // margin: EdgeInsets.only(left: 15),
-                child: Hero(
-                  tag: profile.user.uid,
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: ImageUserChat(
-                      width: 100,
-                      height: 100,
-                      profile: profile,
-                      fontsize: 12,
-                    ),
-                  ),
-                ),
-              ),
+          IconButton(
+            icon: Icon(
+              Icons.chevron_left,
+              color: currentTheme.accentColor,
+            ),
+            iconSize: 30,
+            onPressed: () =>
+                //  Navigator.pushReplacement(context, createRouteProfile()),
+                Navigator.pop(context),
+            color: Colors.white,
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 0),
+            child: Text(
+              widget.title,
+              style: TextStyle(fontSize: 20),
             ),
           ),
-          GestureDetector(
-            onTap: () => showSearch(
-                context: context, delegate: DataSearch(userAuth: profile)),
-            child: Center(
-                child: Container(
-                    // color: Colors.black,
-                    //  margin: EdgeInsets.only(left: 10, right: 10),
-                    width: size.height / 3.0,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xff202020),
-                            Color(0xff1D1D1D),
-                            Color(0xff161616),
-                          ]),
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black54,
-                            spreadRadius: -5,
-                            blurRadius: 10,
-                            offset: Offset(0, 5))
-                      ],
-                    ),
-                    child: SearchContent())),
-          ),
-          GestureDetector(
-            onTap: () => {Navigator.push(context, _createRouteMessages())},
-            child: Container(
-                child: FaIcon(
-              FontAwesomeIcons.commentDots,
-              size: 35,
-              color: Colors.white54,
-            )),
-          )
+          Container(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.more_vert,
+                size: 25,
+                color: currentTheme.accentColor,
+              )),
         ],
       ),
     );
   }
 }
-
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>
-        SliverAppBarProfilepPage(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(-0.5, 0.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}
-
-Route _createRouteMessages() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => MessagesPage(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(1.0, 0.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-    transitionDuration: Duration(milliseconds: 400),
-  );
-}
-/* Route _createRute() {
-  return PageRouteBuilder(
-      pageBuilder: (BuildContext context, Animation<double> animation,
-              Animation<double> secondaryAnimation) =>
-          SliverAppBarProfilepPage(),
-      transitionDuration: Duration(seconds: 1),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final curvedAnimation =
-            CurvedAnimation(parent: animation, curve: Curves.easeInOut);
-
-        return SlideTransition(
-          position: Tween<Offset>(begin: Offset(-1.0, 10.0), end: Offset.zero)
-              .animate(curvedAnimation),
-          child: child,
-        );
-      });
-} */
 
 class CustomSliverAppBarHeader extends StatelessWidget {
   CustomSliverAppBarHeader({this.user});

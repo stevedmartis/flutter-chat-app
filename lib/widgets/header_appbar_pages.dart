@@ -1,4 +1,5 @@
 import 'package:chat/models/usuario.dart';
+import 'package:chat/pages/messages.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/search_Principal_page.dart';
@@ -6,17 +7,22 @@ import 'package:chat/services/auth_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class CustomAppBarHeaderPages extends StatefulWidget {
   final bool showContent;
   final String title;
+  final bool isAdd;
 
   final Widget action;
 
   @override
   CustomAppBarHeaderPages(
-      {this.showContent = true, @required this.title, this.action});
+      {this.showContent = true,
+      @required this.title,
+      this.action,
+      this.isAdd = false});
 
   @override
   _CustomAppBarHeaderState createState() => _CustomAppBarHeaderState();
@@ -68,14 +74,39 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(left: 0),
-            child: Text(
-              widget.title,
-              style: TextStyle(fontSize: 20),
+          (widget.isAdd)
+              ? SizedBox(
+                  width: 50,
+                )
+              : SizedBox(
+                  width: 0,
+                ),
+          Expanded(
+            child: Center(
+              child: Container(
+                child: Text(
+                  widget.title,
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
             ),
           ),
-          widget.action
+          widget.action,
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            child: GestureDetector(
+              onTap: () => {Navigator.push(context, _createRouteMessages())},
+              child: Container(
+                  margin: EdgeInsets.only(right: 10),
+                  child: FaIcon(
+                    FontAwesomeIcons.commentDots,
+                    size: 35,
+                    color: Colors.white54,
+                  )),
+            ),
+          )
         ],
       ),
     );
@@ -98,6 +129,25 @@ Route _createRoute() {
         child: child,
       );
     },
+  );
+}
+
+Route _createRouteMessages() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => MessagesPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
   );
 }
 

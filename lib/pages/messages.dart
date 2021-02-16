@@ -7,6 +7,7 @@ import 'package:chat/pages/profile_page.dart';
 import 'package:chat/providers/messages_providers.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
+import 'package:chat/widgets/customappbar_simple.dart';
 import 'package:chat/widgets/header_appbar_pages.dart';
 import 'package:chat/widgets/text_emoji.dart';
 import 'package:flutter/cupertino.dart';
@@ -212,7 +213,7 @@ class _MessagesPageState extends State<MessagesPage>
               makeHeaderCustom('Mensajes'),
               makeListChats(context)
             ]),
-        bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+        //bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
       ),
     );
   }
@@ -229,22 +230,8 @@ class _MessagesPageState extends State<MessagesPage>
                 color: Colors.black,
                 child: Container(
                     color: Colors.black,
-                    child: CustomAppBarHeaderPages(
+                    child: CustomAppBarSimplePages(
                       title: title,
-                      action:
-                          //  Container()
-
-                          GestureDetector(
-                        onTap: () => {},
-
-                        //Scaffold.of(context).openEndDrawer(),
-                        child: Container(
-                            child: Icon(
-                          Icons.menu,
-                          size: 35,
-                          color: currentTheme.accentColor,
-                        )),
-                      ),
                     )))));
   }
 

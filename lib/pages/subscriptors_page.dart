@@ -186,19 +186,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                 child: Container(
                     color: Colors.black,
                     child: CustomAppBarHeaderPages(
-                      title: title,
-                      action:
-                          // Container()
-
-                          Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Icon(
-                          Icons.more_vert,
-                          color: currentTheme.accentColor,
-                          size: 30,
-                        ),
-                      ),
-                    )))));
+                        title: title, action: Container())))));
   }
 
   Widget _buildList(BuildContext context, Axis direction) {

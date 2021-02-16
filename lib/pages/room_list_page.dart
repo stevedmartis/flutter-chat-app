@@ -91,7 +91,7 @@ class _RoomsListPageState extends State<RoomsListPage> {
             physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics()),
             slivers: <Widget>[
-              makeHeaderCustom('My rooms'),
+              makeHeaderCustom('Rooms'),
               makeListRooms(context)
             ]),
         bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
@@ -124,21 +124,19 @@ class _RoomsListPageState extends State<RoomsListPage> {
                     color: Colors.black,
                     child: CustomAppBarHeaderPages(
                       title: title,
+                      isAdd: true,
                       action:
                           //   Container()
-                          Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: IconButton(
-                            icon: Icon(
-                              Icons.add,
-                              color: currentTheme.accentColor,
-                            ),
-                            iconSize: 30,
-                            onPressed: () => {
-                                  Navigator.of(context)
-                                      .push(createRouteAddRoom(room, false)),
-                                }),
-                      ),
+                          IconButton(
+                              icon: Icon(
+                                Icons.add,
+                                color: currentTheme.accentColor,
+                              ),
+                              iconSize: 30,
+                              onPressed: () => {
+                                    Navigator.of(context)
+                                        .push(createRouteAddRoom(room, false)),
+                                  }),
                     )))));
   }
 
