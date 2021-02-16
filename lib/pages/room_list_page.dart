@@ -346,6 +346,7 @@ class _RoomListState extends State<RoomList> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: double.maxFinite,
       child: StreamBuilder<RoomsResponse>(
         stream: roomBloc.subject.stream,
         builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {

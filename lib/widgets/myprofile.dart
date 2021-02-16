@@ -213,7 +213,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                 (!this.widget.isUserEdit)
                     ? makeHeaderInfo(context)
                     : makeHeaderSpacer(context),
-                //   if (!widget.isUserEdit) makeHeaderTabs(context),
+                if (!widget.isUserEdit) makeHeaderTabs(context),
                 /* SliverList(
                   delegate: SliverChildListDelegate(
                       List<Widget>.generate(10, (int i) {

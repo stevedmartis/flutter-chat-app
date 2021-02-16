@@ -271,59 +271,64 @@ class _MessagesPageState extends State<MessagesPage>
             itemCount: profiles.length,
             itemBuilder: (BuildContext ctxt, int index) {
               final message = profiles[index];
-              if (message.subscribeApproved && message.subscribeActive) {
-                final DateTime dateMessage = message.messageDate;
-                final DateFormat formatter = DateFormat('kk:mm a');
-                final String formatted = formatter.format(dateMessage);
-                final nameSub =
-                    (message.name == "") ? message.user.username : message.name;
-                return Column(
-                  children: [
-                    Material(
-                      child: ListTile(
-                        tileColor: currentTheme.scaffoldBackgroundColor,
-                        leading: ImageUserChat(
-                            width: 100,
-                            height: 100,
-                            profile: message,
-                            fontsize: 20),
-                        title: Text(nameSub,
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18)),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            EmojiText(
-                                text: message.message,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.white54),
-                                emojiFontMultiplier: 1.5),
-                            SizedBox(
-                              width: 10.0,
-                            ),
-                            Text(
-                              '· $formatted',
-                              style: TextStyle(
-                                  color: Colors.white54, fontSize: 15),
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          final chatService =
-                              Provider.of<ChatService>(context, listen: false);
-                          chatService.userFor = message;
 
-                          Navigator.push(context, createRouteChat());
-                        },
+              final suscriptionEnabled =
+                  message.subscribeApproved && message.subscribeActive;
+
+              final DateTime dateMessage = message.messageDate;
+              final DateFormat formatter = DateFormat('kk:mm a');
+              final String formatted = formatter.format(dateMessage);
+              final nameSub =
+                  (message.name == "") ? message.user.username : message.name;
+              return Column(
+                children: [
+                  Material(
+                    child: ListTile(
+                      tileColor: currentTheme.scaffoldBackgroundColor,
+                      leading: ImageUserChat(
+                          width: 100,
+                          height: 100,
+                          profile: message,
+                          fontsize: 20),
+                      title: Text(nameSub,
+                          style: TextStyle(color: Colors.white, fontSize: 18)),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          EmojiText(
+                              text: message.message,
+                              style: TextStyle(
+                                  fontSize: 15, color: Colors.white54),
+                              emojiFontMultiplier: 1.5),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Text(
+                            '· $formatted',
+                            style:
+                                TextStyle(color: Colors.white54, fontSize: 15),
+                          ),
+                        ],
                       ),
+                      trailing: (suscriptionEnabled)
+                          ? Text(
+                              'SUSCRITO',
+                              style: TextStyle(color: currentTheme.accentColor),
+                            )
+                          : Text(''),
+                      onTap: () {
+                        final chatService =
+                            Provider.of<ChatService>(context, listen: false);
+                        chatService.userFor = message;
+
+                        Navigator.push(context, createRouteChat());
+                      },
                     ),
-                    Divider(height: 1),
-                  ],
-                );
-              } else {
-                return Container();
-              }
+                  ),
+                  Divider(height: 1),
+                ],
+              );
             },
           );
         } else {

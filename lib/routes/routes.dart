@@ -33,6 +33,7 @@ final Map<String, Widget Function(BuildContext)> appRoutes = {
 
 final pageRouter = <_Route>[
   _Route(FontAwesomeIcons.home, 'principal', PrincipalPage()),
+  _Route(FontAwesomeIcons.comments, 'notifications', NotificationsPage()),
   _Route(FontAwesomeIcons.home, 'rooms', RoomsListPage()),
   _Route(FontAwesomeIcons.comments, 'messages', MessagesPage()),
   _Route(FontAwesomeIcons.comments, 'notifications', NotificationsPage()),

@@ -147,7 +147,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.meeting_room,
+                icon: FaIcon(FontAwesomeIcons.users,
                     size: 30,
                     color: (currentPage == 1)
                         ? currentTheme.accentColor
@@ -155,7 +155,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: FaIcon(FontAwesomeIcons.comments,
+                icon: Icon(Icons.meeting_room,
                     size: 30,
                     color: (currentPage == 2)
                         ? currentTheme.accentColor
@@ -163,9 +163,17 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: FaIcon(FontAwesomeIcons.bell,
+                icon: FaIcon(FontAwesomeIcons.comments,
                     size: 30,
                     color: (currentPage == 3)
+                        ? currentTheme.accentColor
+                        : Colors.white.withOpacity(0.60)),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: FaIcon(FontAwesomeIcons.bell,
+                    size: 30,
+                    color: (currentPage == 4)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
                 label: '',

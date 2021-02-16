@@ -73,17 +73,18 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             ),
           ),
           Container(
+              margin: EdgeInsets.only(left: 10),
               child: Text(
-            (profile.name.length >= 20)
-                ? profile.name.substring(0, 20)
-                : profile.name,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: (profile.name.length >= 15) ? 15 : 20,
-                color: Colors.white),
-          ))
+                (profile.name.length >= 20)
+                    ? profile.name.substring(0, 20)
+                    : profile.name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: (profile.name.length >= 15) ? 15 : 18,
+                    color: Colors.white),
+              ))
         ],
       ),
       leading: IconButton(
@@ -167,6 +168,10 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     final userFor = chatService.userFor;
+
+    final suscriptionEnabled =
+        userFor.subscribeApproved && userFor.subscribeActive;
+
     return Scaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       appBar: CustomAppBar(profile: userFor),
@@ -184,7 +189,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
             Divider(height: 1),
             Container(
               color: Colors.black,
-              child: _inputChat(),
+              child: (suscriptionEnabled) ? _inputChat() : _inputDisabled(),
             )
           ],
         ),
@@ -253,6 +258,41 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                     ),
                   ),
                 )
+        ],
+      ),
+    ));
+  }
+
+  Widget _inputDisabled() {
+    return SafeArea(
+        child: Container(
+      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        children: <Widget>[
+          Flexible(
+            child: Icon(
+              Icons.error_outline,
+              color: Colors.white54,
+            ),
+          ),
+          SizedBox(
+            width: 15,
+          ),
+          Flexible(
+              child: Container(
+            child: (authService.profile.isClub)
+                ? Text(
+                    'Suscripción inactiva.',
+                    style: TextStyle(color: Colors.white54),
+                  )
+                : Text(
+                    'No estas suscrito, no se pueden enviar ni recibir mensajes.',
+                    style: TextStyle(color: Colors.white54),
+                  ),
+          )),
+
+          // Botón de enviar
         ],
       ),
     ));
