@@ -163,7 +163,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: FaIcon(FontAwesomeIcons.store,
+                icon: FaIcon(FontAwesomeIcons.handHoldingMedical,
                     size: (currentPage == 3) ? 25 : 22,
                     color: (currentPage == 3)
                         ? currentTheme.accentColor
@@ -311,12 +311,13 @@ class _CollapsingListState extends State<CollapsingList>
                 initialData: null,
                 builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
                   if (snapshot.hasData) {
+                    profiles = snapshot.data;
                     return Container(
                         margin: EdgeInsets.only(
                           left: 10,
                         ),
                         child: CarouselUsersSliderCustom(
-                            profiles: profiles)); // image is ready
+                            profiles: snapshot.data)); // image is ready
                   } else {
                     return Container(
                         height: 400.0,

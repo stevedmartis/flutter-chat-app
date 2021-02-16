@@ -53,6 +53,8 @@ class ProfileCard extends StatefulWidget {
 class _ProfileCardState extends State<ProfileCard> {
   Profiles profileSub;
 
+  Subscription subscription;
+
   @override
   void initState() {
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -97,8 +99,9 @@ class _ProfileCardState extends State<ProfileCard> {
             builder:
                 (BuildContext context, AsyncSnapshot<Subscription> snapshot) {
               if (snapshot.hasData) {
-                final isSuscribeApprove = snapshot.data.subscribeApproved;
-                final isSuscribeActive = snapshot.data.subscribeActive;
+                subscription = snapshot.data;
+                final isSuscribeApprove = subscription.subscribeApproved;
+                final isSuscribeActive = subscription.subscribeActive;
 
                 return Positioned(
                   child: Container(
@@ -115,24 +118,16 @@ class _ProfileCardState extends State<ProfileCard> {
                           backgroundColor: currentTheme.scaffoldBackgroundColor,
                           child: GestureDetector(
                             onTap: () {
+                              this.widget.profile.subscribeActive =
+                                  isSuscribeActive;
+                              this.widget.profile.subscribeApproved =
+                                  isSuscribeApprove;
                               final chatService = Provider.of<ChatService>(
                                   context,
                                   listen: false);
                               chatService.userFor = this.widget.profile;
 
-                              if (!widget.isUserAuth &&
-                                  isSuscribeApprove &&
-                                  isSuscribeActive)
-                                Navigator.of(context).push(createRouteChat());
-                              else
-                                Navigator.of(context).push(PageRouteBuilder(
-                                    transitionDuration:
-                                        Duration(milliseconds: 200),
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        AvatarImagePage(
-                                          profile: this.widget.profile,
-                                        )));
+                              Navigator.of(context).push(createRouteChat());
 
                               // make changes here
 

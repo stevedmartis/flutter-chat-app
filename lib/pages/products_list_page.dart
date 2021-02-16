@@ -91,7 +91,7 @@ class _ProductsListPageState extends State<ProductsListPage> {
             physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics()),
             slivers: <Widget>[
-              makeHeaderCustom('Productos'),
+              makeHeaderCustom('Tratamientos'),
               makeListRooms(context)
             ]),
         bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
