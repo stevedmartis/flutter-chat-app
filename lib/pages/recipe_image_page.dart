@@ -1,9 +1,6 @@
-import 'package:chat/bloc/profile_bloc.dart';
 import 'package:chat/models/profiles.dart';
-import 'package:chat/services/auth_service.dart';
-import 'package:chat/services/aws_service.dart';
+
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/header_image_user.dart';
 import 'package:chat/widgets/recipe_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

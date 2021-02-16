@@ -1,6 +1,5 @@
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/profiles_response.dart';
-import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/profile_page.dart';
@@ -8,7 +7,6 @@ import 'package:chat/providers/messages_providers.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/customappbar_simple.dart';
-import 'package:chat/widgets/header_appbar_pages.dart';
 import 'package:chat/widgets/text_emoji.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +18,6 @@ import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/socket_service.dart';
 
-import 'package:chat/models/mensajes_response.dart';
 import 'package:chat/widgets/chat_message.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
@@ -117,8 +114,6 @@ class MessagesPage extends StatefulWidget {
 
 class _MessagesPageState extends State<MessagesPage>
     with TickerProviderStateMixin {
-  final _textController = new TextEditingController();
-  final _focusNode = new FocusNode();
   final messagesProvider = new MessagesProvider();
 
   ChatService chatService;
@@ -126,7 +121,6 @@ class _MessagesPageState extends State<MessagesPage>
   AuthService authService;
   Profiles profile;
   List<ChatMessage> _messages = [];
-  bool _isWriting = false;
 
   ScrollController _hideBottomNavController;
 
@@ -168,22 +162,6 @@ class _MessagesPageState extends State<MessagesPage>
     );
   }
 
-  void _chargeRecord(String userId) async {
-    List<Message> chat = await this.chatService.getChat(userId);
-
-    final history = chat.map((m) => new ChatMessage(
-          text: m.message,
-          uid: m.by,
-          animationController: new AnimationController(
-              vsync: this, duration: Duration(milliseconds: 0))
-            ..forward(),
-        ));
-
-    setState(() {
-      _messages.insertAll(0, history);
-    });
-  }
-
   void _listenMessage(dynamic payload) {
     ChatMessage message = new ChatMessage(
       text: payload['message'],
@@ -219,8 +197,6 @@ class _MessagesPageState extends State<MessagesPage>
   }
 
   SliverPersistentHeader makeHeaderCustom(String title) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     return SliverPersistentHeader(
         floating: true,
         delegate: SliverCustomHeaderDelegate(
@@ -348,104 +324,6 @@ class _MessagesPageState extends State<MessagesPage>
       },
       transitionDuration: Duration(milliseconds: 400),
     );
-  }
-
-  Widget _inputChat() {
-    return SafeArea(
-        child: Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-              child: TextField(
-            controller: _textController,
-            onSubmitted: _handleSubmit,
-            onChanged: (texto) {
-              setState(() {
-                if (texto.trim().length > 0) {
-                  _isWriting = true;
-                } else {
-                  _isWriting = false;
-                }
-              });
-            },
-            decoration: InputDecoration.collapsed(hintText: 'Enviar mensaje'),
-            focusNode: _focusNode,
-          )),
-
-          // Botón de enviar
-
-          (_isWriting)
-              ? Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4.0),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 4.0),
-                    child: IconTheme(
-                      data: IconThemeData(color: Color(0xffE8C213)),
-                      child: IconButton(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        icon: Icon(Icons.send),
-                        onPressed: _isWriting
-                            ? () => _handleSubmit(_textController.text.trim())
-                            : null,
-                      ),
-                    ),
-                  ),
-                )
-              : Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4.0),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 4.0),
-                    child: IconTheme(
-                      data: IconThemeData(color: Color(0xffE87213)),
-                      child: IconButton(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        icon: Icon(Icons.camera_alt),
-                        onPressed: _isWriting
-                            ? () => _handleSubmit(_textController.text.trim())
-                            : null,
-                      ),
-                    ),
-                  ),
-                )
-        ],
-      ),
-    ));
-  }
-
-  _handleSubmit(String text) {
-    if (text.length == 0) return;
-
-    _textController.clear();
-    _focusNode.requestFocus();
-
-    final newMessage = new ChatMessage(
-      uid: authService.profile.user.uid,
-      text: text,
-      animationController: AnimationController(
-          vsync: this, duration: Duration(milliseconds: 200)),
-    );
-    _messages.insert(0, newMessage);
-    newMessage.animationController.forward();
-
-    setState(() {
-      _isWriting = false;
-    });
-
-    this.socketService.emit('personal-message', {
-      'by': this.authService.profile.user.uid,
-      'for': this.chatService.userFor.user.uid,
-      'message': text
-    });
-
-    /*    this.socketService.emit('personal-message', {
-      'by': this.authService.profile.user.uid,
-      'for': this.chatService.userFor.user.uid,
-      'message': text
-    }); */
   }
 
   @override

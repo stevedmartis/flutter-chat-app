@@ -140,7 +140,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home,
-                    size: 30,
+                    size: (currentPage == 0) ? 30 : 25,
                     color: (currentPage == 0)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
@@ -148,7 +148,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               ),
               BottomNavigationBarItem(
                 icon: FaIcon(FontAwesomeIcons.users,
-                    size: 28,
+                    size: (currentPage == 1) ? 30 : 25,
                     color: (currentPage == 1)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
@@ -156,7 +156,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.meeting_room,
-                    size: 35,
+                    size: (currentPage == 2) ? 35 : 30,
                     color: (currentPage == 2)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
@@ -164,7 +164,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               ),
               BottomNavigationBarItem(
                 icon: FaIcon(FontAwesomeIcons.store,
-                    size: 25,
+                    size: (currentPage == 3) ? 25 : 22,
                     color: (currentPage == 3)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
@@ -172,7 +172,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               ),
               BottomNavigationBarItem(
                 icon: FaIcon(FontAwesomeIcons.bell,
-                    size: 30,
+                    size: (currentPage == 4) ? 30 : 25,
                     color: (currentPage == 4)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),

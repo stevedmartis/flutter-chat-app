@@ -125,18 +125,18 @@ class _NotificationsPageState extends State<NotificationsPage>
     message.animationController.forward();
   }
 
-  Animation<double> _rotationAnimation;
-  Color _fabColor = Colors.blue;
+  Animation<double> rotationAnimation;
+  Color fabColor = Colors.blue;
 
   void handleSlideAnimationChanged(Animation<double> slideAnimation) {
     setState(() {
-      _rotationAnimation = slideAnimation;
+      rotationAnimation = slideAnimation;
     });
   }
 
   void handleSlideIsOpenChanged(bool isOpen) {
     setState(() {
-      _fabColor = isOpen ? Colors.green : Colors.blue;
+      fabColor = isOpen ? Colors.green : Colors.blue;
     });
   }
 
@@ -174,8 +174,6 @@ class _NotificationsPageState extends State<NotificationsPage>
   }
 
   SliverPersistentHeader makeHeaderCustom(String title) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     return SliverPersistentHeader(
         floating: true,
         delegate: SliverCustomHeaderDelegate(

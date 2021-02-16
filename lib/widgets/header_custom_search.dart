@@ -1,9 +1,7 @@
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/messages.dart';
-import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/search_Principal_page.dart';
-import 'package:chat/routes/routes.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
@@ -29,11 +27,7 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final authService = Provider.of<AuthService>(context);
-
-    final currentPage =
-        Provider.of<MenuModel>(context, listen: false).currentPage;
 
     final profile = authService.profile;
 
@@ -102,11 +96,12 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeader> {
           GestureDetector(
             onTap: () => {Navigator.push(context, _createRouteMessages())},
             child: Container(
+                margin: EdgeInsets.only(right: 10),
                 child: FaIcon(
-              FontAwesomeIcons.commentDots,
-              size: 35,
-              color: Colors.white54,
-            )),
+                  FontAwesomeIcons.commentDots,
+                  size: 30,
+                  color: Colors.white54,
+                )),
           )
         ],
       ),

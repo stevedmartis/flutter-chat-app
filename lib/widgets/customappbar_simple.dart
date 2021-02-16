@@ -1,6 +1,5 @@
 import 'package:chat/models/usuario.dart';
-import 'package:chat/pages/profile_page.dart';
-import 'package:chat/services/auth_service.dart';
+
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,11 +28,6 @@ class _CustomAppBarSimplePagesState extends State<CustomAppBarSimplePages> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    final authService = Provider.of<AuthService>(context);
-
-    final profile = authService.profile;
-
-    final size = MediaQuery.of(context).size;
 
     return Container(
       color: Colors.black,
