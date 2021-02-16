@@ -23,11 +23,14 @@ class SubscriptionApiProvider {
     final token = await this._storage.read(key: 'token');
 
     try {
+      print(urlFinal);
       final resp = await http.get(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
+      print(resp.body);
       final subscriptionResponse = subscriptionResponseFromJson(resp.body);
 
+      print(subscriptionResponse);
       return subscriptionResponse.subscription;
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
@@ -148,11 +151,10 @@ class SubscriptionApiProvider {
     }
   }
 
-  Future<ProfilesResponse> getProfilesSubsciptionsApproveBySubId(
-      String subId) async {
+  Future<ProfilesResponse> getProfilesSubsciptionsApprove(String subId) async {
     try {
       final resp = await http.get(
-        '${Environment.apiUrl}/notification/profiles/subscriptions/sub/$subId',
+        '${Environment.apiUrl}/notification/profiles/subscriptions/approve/$subId',
         headers: {
           'Content-Type': 'application/json',
           'x-token': await AuthService.getToken(),

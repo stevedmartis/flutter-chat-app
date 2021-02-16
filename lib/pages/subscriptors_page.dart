@@ -13,6 +13,7 @@ import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/chat_message.dart';
 import 'package:chat/widgets/header_appbar_pages.dart';
+import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -70,7 +71,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
     this.socketService.socket.on('personal-message', _listenMessage);
 
     (profile.isClub)
-        ? subscriptionBloc.getSubscriptionsPending(profile.user.uid)
+        ? subscriptionBloc.getSubscriptionsApprove(profile.user.uid)
         : subscriptionBloc.getSubscriptionsClubsApprove(profile.user.uid);
 
     this.bottomControll();
@@ -192,7 +193,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
 
     return (profile.isClub)
         ? StreamBuilder<ProfilesResponse>(
-            stream: subscriptionBloc.subscriptionsPending.stream,
+            stream: subscriptionBloc.subscriptionsApprove.stream,
             builder: (context, AsyncSnapshot<ProfilesResponse> snapshot) {
               if (snapshot.hasData) {
                 profiles = snapshot.data.profiles;
@@ -259,7 +260,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                     children: [
                                       Container(
                                         child: Text(
-                                          'Solicitud: $formatted',
+                                          'Aprobado: $formatted',
                                           style: TextStyle(
                                               color: Colors.white54,
                                               fontSize: 15),
@@ -267,9 +268,9 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                       ),
                                       Container(
                                         child: Text(
-                                          'Aprobación pendiente.',
+                                          'SUSCRITO',
                                           style: TextStyle(
-                                              color: Colors.white54,
+                                              color: currentTheme.accentColor,
                                               fontSize: 15),
                                         ),
                                       ),
@@ -290,12 +291,12 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                     chatService.userFor = item;
 
                                     Navigator.push(context,
-                                        createRouteRecipeViewImage(item));
+                                        createRouteProfileSelect(item));
                                   },
                                 ),
                               ),
                             ),
-                            actionDelegate: SlideActionBuilderDelegate(
+                            /*  actionDelegate: SlideActionBuilderDelegate(
                                 actionCount: 1,
                                 builder:
                                     (context, index, animation, renderingMode) {
@@ -315,7 +316,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                       state.dismiss();
                                     },
                                   );
-                                }),
+                                }), */
                             secondaryActionDelegate: SlideActionBuilderDelegate(
                                 actionCount: 1,
                                 builder:
@@ -604,7 +605,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
     final res = await this.subscriptionApiProvider.disapproveSubscription(id);
     if (res) {
       setState(() {
-        subscriptionBloc.getSubscriptionsPending(profile.user.uid);
+        subscriptionBloc.getSubscriptionsApprove(profile.user.uid);
       });
     }
   }
@@ -613,9 +614,32 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
     final res = await this.subscriptionApiProvider.approveSubscription(id);
     if (res) {
       setState(() {
-        subscriptionBloc.getSubscriptionsPending(profile.user.uid);
+        subscriptionBloc.getSubscriptionsApprove(profile.user.uid);
       });
     }
+  }
+
+  Route createRouteProfileSelect(Profiles profile) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => MyProfile(
+        title: '',
+        profile: profile,
+      ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(1.0, 0.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+      transitionDuration: Duration(milliseconds: 400),
+    );
   }
 
   Widget _buildErrorWidget(String error) {
