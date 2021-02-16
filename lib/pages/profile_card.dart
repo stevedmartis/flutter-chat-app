@@ -315,7 +315,7 @@ class _ProfileCardState extends State<ProfileCard> {
                             (BuildContext context, AsyncSnapshot snapshot) {
                           return GestureDetector(
                               child: roundedRectButton(
-                                  "Let's get Started", orangeGradients, false),
+                                  "Empecemos!", orangeGradients, false),
                               onTap: isUploadRecipe
                                   ? null
                                   : () => {
@@ -466,7 +466,7 @@ class _ProfileCardState extends State<ProfileCard> {
                             (BuildContext context, AsyncSnapshot snapshot) {
                           return GestureDetector(
                               child: roundedRectButton(
-                                  "Let's get Started", orangeGradients, false),
+                                  "Empecemos!", orangeGradients, false),
                               onTap: isUploadRecipe
                                   ? null
                                   : () => {

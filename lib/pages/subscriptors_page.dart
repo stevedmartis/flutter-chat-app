@@ -10,7 +10,6 @@ import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
-import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/chat_message.dart';
 import 'package:chat/widgets/header_appbar_pages.dart';
 import 'package:chat/widgets/myprofile.dart';

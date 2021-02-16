@@ -201,7 +201,7 @@ class __FormState extends State<_Form> {
               onTap: () {
                 _login(bloc, context);
               },
-              child: roundedRectButton("Log in", orangeGradients, false)),
+              child: roundedRectButton("Entrar", orangeGradients, false)),
           SizedBox(
             height: 30,
           ),
