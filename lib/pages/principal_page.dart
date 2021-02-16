@@ -140,7 +140,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home,
-                    size: (currentPage == 0) ? 30 : 25,
+                    size: (currentPage == 0) ? 35 : 30,
                     color: (currentPage == 0)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
