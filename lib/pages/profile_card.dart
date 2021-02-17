@@ -173,10 +173,12 @@ class _ProfileCardState extends State<ProfileCard> {
                     AsyncSnapshot<Subscription> snapshot) {
                   isData = snapshot.hasData;
 
+                  final subscription = snapshot.data;
+
                   if (isData) {
-                    if (snapshot.data.subscribeActive &&
-                        snapshot.data.isUpload &&
-                        !snapshot.data.subscribeApproved) {
+                    if (subscription.subscribeActive &&
+                        subscription.isUpload &&
+                        !subscription.subscribeApproved) {
                       return Container(
                         //top: size.height / 3.5,
                         padding: EdgeInsets.only(top: 35.0),
@@ -207,9 +209,9 @@ class _ProfileCardState extends State<ProfileCard> {
                               }),
                         ),
                       );
-                    } else if (snapshot.data.subscribeActive &&
-                        snapshot.data.isUpload &&
-                        snapshot.data.subscribeApproved) {
+                    } else if (subscription.subscribeActive &&
+                        subscription.isUpload &&
+                        subscription.subscribeApproved) {
                       return Container(
                         //top: size.height / 3.5,
                         padding: EdgeInsets.only(top: 35.0),
@@ -267,7 +269,8 @@ class _ProfileCardState extends State<ProfileCard> {
                                         context,
                                         bloc,
                                         currentTheme.accentColor,
-                                        awsService.isUploadRecipe);
+                                        subscription,
+                                      );
                               }),
                         ),
                       );
@@ -299,7 +302,7 @@ class _ProfileCardState extends State<ProfileCard> {
   }
 
   updateFieldToSubscribe(
-      context, SubscribeBloc bloc, color, bool isUploadRecipe) {
+      context, SubscribeBloc bloc, color, Subscription subscription) {
     const List<Color> orangeGradients = [
       Color(0xff1C3041),
       Color(0xff1C3041),
@@ -321,7 +324,7 @@ class _ProfileCardState extends State<ProfileCard> {
                           return GestureDetector(
                               child: roundedRectButton(
                                   "Empecemos!", orangeGradients, false),
-                              onTap: isUploadRecipe
+                              onTap: subscription.isUpload
                                   ? null
                                   : () => {
                                         FocusScope.of(context).unfocus(),
@@ -341,8 +344,8 @@ class _ProfileCardState extends State<ProfileCard> {
                                     child: Text('Enviar'),
                                     elevation: 5,
                                     textColor: Colors.blue,
-                                    onPressed: () =>
-                                        addSubscription(context, bloc))),
+                                    onPressed: () => addSubscription(
+                                        context, bloc, subscription))),
                             Expanded(
                               child: MaterialButton(
                                   child: Text(
@@ -369,7 +372,9 @@ class _ProfileCardState extends State<ProfileCard> {
                   stream: bloc.subscription.stream,
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     isData = snapshot.hasData;
-                    return (!isData)
+
+                    print(subscription.isUpload);
+                    return (!subscription.isUpload && !isData)
                         ? Column(
                             children: [
                               GestureDetector(
@@ -400,7 +405,9 @@ class _ProfileCardState extends State<ProfileCard> {
                                   child: Container(
                                     child: FadeInImage(
                                       image: NetworkImage(
-                                          snapshot.data.imageRecipe),
+                                          (!subscription.isUpload && !isData)
+                                              ? snapshot.data.imageRecipe
+                                              : subscription.imageRecipe),
                                       placeholder:
                                           AssetImage('assets/loading2.gif'),
                                       fit: BoxFit.cover,
@@ -425,14 +432,15 @@ class _ProfileCardState extends State<ProfileCard> {
                                 child: Text(
                                   'ENVIAR',
                                   style: TextStyle(
-                                      color: isData ? color : Colors.white54),
+                                      color: (subscription.isUpload || isData)
+                                          ? color
+                                          : Colors.white54),
                                 ),
-                                onPressed: () => (isData)
-                                    ? addSubscription(
-                                        context,
-                                        bloc,
-                                      )
-                                    : null),
+                                onPressed: () =>
+                                    (subscription.isUpload || isData)
+                                        ? addSubscription(
+                                            context, bloc, subscription)
+                                        : null),
                           ),
                           Expanded(
                             child: CupertinoDialogAction(
@@ -492,8 +500,8 @@ class _ProfileCardState extends State<ProfileCard> {
                                     child: Text('Enviar'),
                                     elevation: 5,
                                     textColor: Colors.blue,
-                                    onPressed: () =>
-                                        addSubscription(context, bloc))),
+                                    onPressed: () => addSubscription(
+                                        context, bloc, subscription))),
                             Expanded(
                               child: MaterialButton(
                                   child: Text(
@@ -579,8 +587,11 @@ class _ProfileCardState extends State<ProfileCard> {
   }
 }
 
-void addSubscription(context, SubscribeBloc bloc) async {
-  final subscription = bloc.subscription.value;
+void addSubscription(
+    context, SubscribeBloc bloc, Subscription subscriptionExist) async {
+  Subscription subscription = (bloc.subscription.value != null)
+      ? bloc.subscription.value
+      : subscriptionExist;
   //final socketService = Provider.of<SocketService>(context, listen: false);
   //  socketService.emit('add-band', {'name': name});
   final subscriptionService =

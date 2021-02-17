@@ -69,9 +69,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
     profile = authService.profile;
     this.socketService.socket.on('personal-message', _listenMessage);
 
-    (profile.isClub)
-        ? subscriptionBloc.getSubscriptionsApprove(profile.user.uid)
-        : subscriptionBloc.getSubscriptionsClubsApprove(profile.user.uid);
+    subscriptionBloc.getSubscriptionsApprove(profile.user.uid);
 
     this.bottomControll();
 
