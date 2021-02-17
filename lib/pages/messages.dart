@@ -240,7 +240,10 @@ class _MessagesPageState extends State<MessagesPage>
 
               final DateTime dateMessage = message.messageDate;
 
-              final DateFormat tFormatter = DateFormat('dd/MM');
+              final DateFormat formatter = DateFormat('dd MMM');
+              final String formatted = formatter.format(dateMessage);
+
+              final DateFormat tFormatter = DateFormat('dd MM');
               final DateFormat dFormatter = DateFormat('kk:mm a');
               final String dateFormatted = tFormatter.format(dateMessage);
               final String timeFormatted = dFormatter.format(dateMessage);
@@ -279,7 +282,7 @@ class _MessagesPageState extends State<MessagesPage>
                       ),
                       trailing: (suscriptionEnabled)
                           ? Text(
-                              dateFormatted,
+                              formatted,
                               style: TextStyle(color: currentTheme.accentColor),
                             )
                           : Text(''),
