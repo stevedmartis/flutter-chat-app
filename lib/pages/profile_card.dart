@@ -51,7 +51,7 @@ class ProfileCard extends StatefulWidget {
 }
 
 class _ProfileCardState extends State<ProfileCard> {
-  Profiles profileSub;
+  Profiles profileClub;
 
   Subscription subscription;
 
@@ -59,12 +59,12 @@ class _ProfileCardState extends State<ProfileCard> {
   void initState() {
     final authService = Provider.of<AuthService>(context, listen: false);
 
-    profileSub = authService.profile;
+    profileClub = authService.profile;
 
     super.initState();
 
     subscriptionBloc.getSubscription(
-        profileSub.user.uid, widget.profile.user.uid);
+        profileClub.user.uid, widget.profile.user.uid);
 
     setState(() {});
   }
@@ -119,9 +119,13 @@ class _ProfileCardState extends State<ProfileCard> {
                           child: GestureDetector(
                             onTap: () {
                               this.widget.profile.subscribeActive =
-                                  isSuscribeActive;
+                                  (profileClub.isClub)
+                                      ? true
+                                      : isSuscribeActive;
                               this.widget.profile.subscribeApproved =
-                                  isSuscribeApprove;
+                                  (profileClub.isClub)
+                                      ? true
+                                      : isSuscribeApprove;
                               final chatService = Provider.of<ChatService>(
                                   context,
                                   listen: false);
@@ -562,7 +566,7 @@ class _ProfileCardState extends State<ProfileCard> {
 
       final newSubscription = new Subscription(
         id: subscription.id,
-        subscriptor: profileSub.user.uid,
+        subscriptor: profileClub.user.uid,
         club: widget.profile.user.uid,
         imageRecipe: resp,
       );

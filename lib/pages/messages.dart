@@ -239,8 +239,11 @@ class _MessagesPageState extends State<MessagesPage>
                   message.subscribeApproved && message.subscribeActive;
 
               final DateTime dateMessage = message.messageDate;
-              final DateFormat formatter = DateFormat('kk:mm a');
-              final String formatted = formatter.format(dateMessage);
+
+              final DateFormat tFormatter = DateFormat('dd/MM');
+              final DateFormat dFormatter = DateFormat('kk:mm a');
+              final String dateFormatted = tFormatter.format(dateMessage);
+              final String timeFormatted = dFormatter.format(dateMessage);
               final nameSub =
                   (message.name == "") ? message.user.username : message.name;
               return Column(
@@ -268,7 +271,7 @@ class _MessagesPageState extends State<MessagesPage>
                             width: 10.0,
                           ),
                           Text(
-                            '· $formatted',
+                            '· $timeFormatted',
                             style:
                                 TextStyle(color: Colors.white54, fontSize: 15),
                           ),
@@ -276,7 +279,7 @@ class _MessagesPageState extends State<MessagesPage>
                       ),
                       trailing: (suscriptionEnabled)
                           ? Text(
-                              'SUSCRITO',
+                              dateFormatted,
                               style: TextStyle(color: currentTheme.accentColor),
                             )
                           : Text(''),
