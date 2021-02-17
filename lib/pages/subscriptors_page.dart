@@ -151,7 +151,8 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
             physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics()),
             slivers: <Widget>[
-              makeHeaderCustom('Suscriptores'),
+              makeHeaderCustom(
+                  (profile.isClub) ? 'Suscriptores' : 'Suscripciones'),
               makeListNotifications(context)
             ]),
         bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
