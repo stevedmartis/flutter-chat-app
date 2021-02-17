@@ -152,7 +152,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                 parent: AlwaysScrollableScrollPhysics()),
             slivers: <Widget>[
               makeHeaderCustom(
-                  (profile.isClub) ? 'Suscriptores' : 'Suscripciones'),
+                  (profile.isClub) ? 'Mis Pacientes' : 'Mis clubes'),
               makeListNotifications(context)
             ]),
         bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
@@ -191,112 +191,109 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
   Widget _buildList(BuildContext context, Axis direction) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    return (profile.isClub)
-        ? StreamBuilder<ProfilesResponse>(
-            stream: subscriptionBloc.subscriptionsApprove.stream,
-            builder: (context, AsyncSnapshot<ProfilesResponse> snapshot) {
-              if (snapshot.hasData) {
-                profiles = snapshot.data.profiles;
+    return StreamBuilder<ProfilesResponse>(
+      stream: subscriptionBloc.subscriptionsApprove.stream,
+      builder: (context, AsyncSnapshot<ProfilesResponse> snapshot) {
+        if (snapshot.hasData) {
+          profiles = snapshot.data.profiles;
 
-                if (profiles.length > 0) {
-                  return ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: profiles.length,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      var item = profiles[index];
+          if (profiles.length > 0) {
+            return ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: profiles.length,
+              itemBuilder: (BuildContext ctxt, int index) {
+                var item = profiles[index];
 
-                      final DateTime dateMessage = item.messageDate;
+                final DateTime dateMessage = item.messageDate;
 
-                      final DateFormat formatter =
-                          DateFormat('dd MMM - kk:mm a');
-                      final String formatted = formatter.format(dateMessage);
-                      final nameSub =
-                          (item.name == "") ? item.user.username : item.name;
-                      return Column(
-                        children: [
-                          //final int t = index;
-                          Slidable.builder(
-                            key: Key(item.id),
-                            controller: slidableController,
-                            direction: Axis.horizontal,
-                            dismissal: SlidableDismissal(
-                              child: SlidableDrawerDismissal(),
-                              onDismissed: (actionType) => {
-                                _showSnackBar(
-                                    context,
-                                    actionType == SlideActionType.primary
-                                        ? 'Aprobado!, se agrego en "Mis pacientes"'
-                                        : 'Solicitud Rechazada'),
-                                setState(() {
-                                  profiles.removeAt(index);
-                                }),
-                                actionType == SlideActionType.primary
-                                    ? _approveSubscription(item.subId, index)
-                                    : _deleteSubscription(item.subId, index),
-                              },
-                            ),
-                            actionPane: _getActionPane(index),
-                            actionExtentRatio: 0.25,
-                            child: InkWell(
-                              onTap: () {},
-                              child: Material(
-                                child: ListTile(
-                                  tileColor:
-                                      currentTheme.scaffoldBackgroundColor,
-                                  leading: ImageUserChat(
-                                      width: 100,
-                                      height: 100,
-                                      profile: item,
-                                      fontsize: 20),
-                                  title: Text(nameSub,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 18)),
-                                  subtitle: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        child: Text(
-                                          'Aprobado: $formatted',
-                                          style: TextStyle(
-                                              color: Colors.white54,
-                                              fontSize: 15),
-                                        ),
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          'SUSCRITO',
-                                          style: TextStyle(
-                                              color: currentTheme.accentColor,
-                                              fontSize: 15),
-                                        ),
-                                      ),
-                                    ],
+                final DateFormat formatter = DateFormat('dd MMM - kk:mm a');
+                final String formatted = formatter.format(dateMessage);
+                final nameSub =
+                    (item.name == "") ? item.user.username : item.name;
+                return Column(
+                  children: [
+                    //final int t = index;
+                    Slidable.builder(
+                      key: Key(item.id),
+                      controller: slidableController,
+                      direction: Axis.horizontal,
+                      dismissal: SlidableDismissal(
+                        child: SlidableDrawerDismissal(),
+                        onDismissed: (actionType) => {
+                          _showSnackBar(
+                              context,
+                              actionType == SlideActionType.primary
+                                  ? 'Aprobado!, se agrego en "Mis pacientes"'
+                                  : 'Solicitud Rechazada'),
+                          setState(() {
+                            profiles.removeAt(index);
+                          }),
+                          actionType == SlideActionType.primary
+                              ? _approveSubscription(item.subId, index)
+                              : _deleteSubscription(item.subId, index),
+                        },
+                      ),
+                      actionPane: _getActionPane(index),
+                      actionExtentRatio: 0.25,
+                      child: InkWell(
+                        onTap: () {},
+                        child: Material(
+                          child: ListTile(
+                            tileColor: currentTheme.scaffoldBackgroundColor,
+                            leading: ImageUserChat(
+                                width: 100,
+                                height: 100,
+                                profile: item,
+                                fontsize: 20),
+                            title: Text(nameSub,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18)),
+                            subtitle: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    'Aprobado: $formatted',
+                                    style: TextStyle(
+                                        color: Colors.white54, fontSize: 15),
                                   ),
-                                  trailing: Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Icon(
-                                      Icons.chevron_right,
-                                      color: currentTheme.accentColor,
-                                      size: 30,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    final chatService =
-                                        Provider.of<ChatService>(context,
-                                            listen: false);
-                                    chatService.userFor = item;
-
-                                    Navigator.push(context,
-                                        createRouteProfileSelect(item));
-                                  },
                                 ),
+                                Container(
+                                  child: Text(
+                                    'SUSCRITO',
+                                    style: TextStyle(
+                                        color: currentTheme.accentColor,
+                                        fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            trailing: Container(
+                              padding: EdgeInsets.all(10),
+                              child: Icon(
+                                Icons.chevron_right,
+                                color: currentTheme.accentColor,
+                                size: 30,
                               ),
                             ),
-                            /*  actionDelegate: SlideActionBuilderDelegate(
+                            onTap: () {
+                              final chatService = Provider.of<ChatService>(
+                                  context,
+                                  listen: false);
+                              chatService.userFor = item;
+
+                              (profile.isClub)
+                                  ? Navigator.push(
+                                      context, createRouteRecipeViewImage(item))
+                                  : Navigator.push(
+                                      context, createRouteProfileSelect(item));
+                            },
+                          ),
+                        ),
+                      ),
+                      /*  actionDelegate: SlideActionBuilderDelegate(
                                 actionCount: 1,
                                 builder:
                                     (context, index, animation, renderingMode) {
@@ -317,284 +314,76 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                     },
                                   );
                                 }), */
-                            secondaryActionDelegate: SlideActionBuilderDelegate(
-                                actionCount: 1,
-                                builder:
-                                    (context, index, animation, renderingMode) {
-                                  return IconSlideAction(
-                                    caption: 'Eliminar',
-                                    color: renderingMode ==
-                                            SlidableRenderingMode.slide
-                                        ? Colors.red
-                                            .withOpacity(animation.value)
-                                        : Colors.red,
-                                    icon: Icons.delete,
-                                    onTap: () async {
-                                      var state = Slidable.of(context);
-                                      var dismiss = await showDialog<bool>(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            backgroundColor: Colors.black,
-                                            title: Text(
-                                              'Eliminar Solicitud',
-                                              style: TextStyle(
-                                                  color: Colors.white54),
-                                            ),
-                                            content: Text(
-                                              'Se desaprobara la solicitud',
-                                              style: TextStyle(
-                                                  color: Colors.white54),
-                                            ),
-                                            actions: <Widget>[
-                                              FlatButton(
-                                                child: Text(
-                                                  'Cancelar',
-                                                  style: TextStyle(
-                                                      color: Colors.white54),
-                                                ),
-                                                onPressed: () =>
-                                                    Navigator.of(context)
-                                                        .pop(false),
-                                              ),
-                                              FlatButton(
-                                                child: Text(
-                                                  'Ok',
-                                                  style: TextStyle(
-                                                      color: Colors.red),
-                                                ),
-                                                onPressed: () =>
-                                                    Navigator.of(context)
-                                                        .pop(true),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-
-                                      if (dismiss) {
-                                        state.dismiss();
-                                      }
-                                    },
-                                  );
-                                }),
-                          ),
-                          Divider(height: 1),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  return _buildEmptyWidget();
-                }
-              } else if (snapshot.hasError) {
-                return _buildErrorWidget(snapshot.error);
-              } else {
-                return _buildLoadingWidget();
-              }
-            },
-          )
-        : StreamBuilder<ProfilesResponse>(
-            stream: subscriptionBloc.subscriptionsApproveBySubId.stream,
-            builder: (context, AsyncSnapshot<ProfilesResponse> snapshot) {
-              if (snapshot.hasData) {
-                profiles = snapshot.data.profiles;
-
-                if (profiles.length > 0) {
-                  return ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: profiles.length,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      var item = profiles[index];
-
-                      final DateTime dateMessage = item.messageDate;
-
-                      final DateFormat formatter =
-                          DateFormat('dd MMM - kk:mm a');
-                      final String formatted = formatter.format(dateMessage);
-                      final nameSub =
-                          (item.name == "") ? item.user.username : item.name;
-                      return Column(
-                        children: [
-                          //final int t = index;
-                          Slidable.builder(
-                            key: Key(item.id),
-                            controller: slidableController,
-                            direction: Axis.horizontal,
-                            dismissal: SlidableDismissal(
-                              child: SlidableDrawerDismissal(),
-                              onDismissed: (actionType) => {
-                                _showSnackBar(
-                                    context,
-                                    actionType == SlideActionType.primary
-                                        ? 'Aprobado!, se agrego en "Mis pacientes"'
-                                        : 'Solicitud Rechazada'),
-                                setState(() {
-                                  profiles.removeAt(index);
-                                }),
-                                actionType == SlideActionType.primary
-                                    ? _approveSubscription(item.subId, index)
-                                    : _deleteSubscription(item.subId, index),
-                              },
-                            ),
-                            actionPane: _getActionPane(index),
-                            actionExtentRatio: 0.25,
-                            child: InkWell(
-                              onTap: () {},
-                              child: Material(
-                                child: ListTile(
-                                  tileColor:
-                                      currentTheme.scaffoldBackgroundColor,
-                                  leading: ImageUserChat(
-                                      width: 100,
-                                      height: 100,
-                                      profile: item,
-                                      fontsize: 20),
-                                  title: Text(nameSub,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 18)),
-                                  subtitle: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        child: Text(
-                                          'Solicitud: $formatted',
-                                          style: TextStyle(
-                                              color: Colors.white54,
-                                              fontSize: 15),
-                                        ),
+                      secondaryActionDelegate: SlideActionBuilderDelegate(
+                          actionCount: 1,
+                          builder: (context, index, animation, renderingMode) {
+                            return IconSlideAction(
+                              caption: 'Eliminar',
+                              color:
+                                  renderingMode == SlidableRenderingMode.slide
+                                      ? Colors.red.withOpacity(animation.value)
+                                      : Colors.red,
+                              icon: Icons.delete,
+                              onTap: () async {
+                                var state = Slidable.of(context);
+                                var dismiss = await showDialog<bool>(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      backgroundColor: Colors.black,
+                                      title: Text(
+                                        'Eliminar Solicitud',
+                                        style: TextStyle(color: Colors.white54),
                                       ),
-                                      Container(
-                                        child: Text(
-                                          'Solicitud Aprobada!',
-                                          style: TextStyle(
-                                              color: currentTheme.accentColor,
-                                              fontSize: 15),
-                                        ),
+                                      content: Text(
+                                        'Se desaprobara la solicitud',
+                                        style: TextStyle(color: Colors.white54),
                                       ),
-                                    ],
-                                  ),
-                                  trailing: Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Icon(
-                                      Icons.chevron_right,
-                                      color: currentTheme.accentColor,
-                                      size: 30,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    final chatService =
-                                        Provider.of<ChatService>(context,
-                                            listen: false);
-                                    chatService.userFor = item;
-                                    Navigator.of(context)
-                                        .push(createRouteProfileSelect(item));
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text(
+                                            'Cancelar',
+                                            style: TextStyle(
+                                                color: Colors.white54),
+                                          ),
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(false),
+                                        ),
+                                        FlatButton(
+                                          child: Text(
+                                            'Ok',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                        ),
+                                      ],
+                                    );
                                   },
-                                ),
-                              ),
-                            ),
-                            /* actionDelegate: SlideActionBuilderDelegate(
-                                actionCount: 1,
-                                builder:
-                                    (context, index, animation, renderingMode) {
-                                  return IconSlideAction(
-                                    caption: 'Aprobar',
-                                    color: renderingMode ==
-                                            SlidableRenderingMode.slide
-                                        ? Colors.blue
-                                            .withOpacity(animation.value)
-                                        : (renderingMode ==
-                                                SlidableRenderingMode.dismiss
-                                            ? Colors.blue
-                                            : currentTheme.accentColor),
-                                    icon: Icons.check_circle,
-                                    onTap: () async {
-                                      var state = Slidable.of(context);
-                                      state.dismiss();
-                                    },
-                                  );
-                                }), */
-                            secondaryActionDelegate: SlideActionBuilderDelegate(
-                                actionCount: 1,
-                                builder:
-                                    (context, index, animation, renderingMode) {
-                                  return IconSlideAction(
-                                    caption: 'Eliminar',
-                                    color: renderingMode ==
-                                            SlidableRenderingMode.slide
-                                        ? Colors.red
-                                            .withOpacity(animation.value)
-                                        : Colors.red,
-                                    icon: Icons.delete,
-                                    onTap: () async {
-                                      var state = Slidable.of(context);
-                                      var dismiss = await showDialog<bool>(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            backgroundColor: Colors.black,
-                                            title: Text(
-                                              'Eliminar Solicitud',
-                                              style: TextStyle(
-                                                  color: Colors.white54),
-                                            ),
-                                            content: Text(
-                                              'Se desaprobara la solicitud',
-                                              style: TextStyle(
-                                                  color: Colors.white54),
-                                            ),
-                                            actions: <Widget>[
-                                              FlatButton(
-                                                child: Text(
-                                                  'Cancelar',
-                                                  style: TextStyle(
-                                                      color: Colors.white54),
-                                                ),
-                                                onPressed: () =>
-                                                    Navigator.of(context)
-                                                        .pop(false),
-                                              ),
-                                              FlatButton(
-                                                child: Text(
-                                                  'Ok',
-                                                  style: TextStyle(
-                                                      color: Colors.red),
-                                                ),
-                                                onPressed: () =>
-                                                    Navigator.of(context)
-                                                        .pop(true),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
+                                );
 
-                                      if (dismiss) {
-                                        state.dismiss();
-                                      }
-                                    },
-                                  );
-                                }),
-                          ),
-                          Divider(height: 1),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  return _buildEmptyWidget();
-                }
-              } else if (snapshot.hasError) {
-                return _buildErrorWidget(snapshot.error);
-              } else {
-                return _buildLoadingWidget();
-              }
-            },
-          );
+                                if (dismiss) {
+                                  state.dismiss();
+                                }
+                              },
+                            );
+                          }),
+                    ),
+                    Divider(height: 1),
+                  ],
+                );
+              },
+            );
+          } else {
+            return _buildEmptyWidget();
+          }
+        } else if (snapshot.hasError) {
+          return _buildErrorWidget(snapshot.error);
+        } else {
+          return _buildLoadingWidget();
+        }
+      },
+    );
   }
 
   Widget _buildEmptyWidget() {

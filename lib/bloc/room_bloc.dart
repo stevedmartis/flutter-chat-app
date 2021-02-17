@@ -26,15 +26,24 @@ class RoomBloc with Validators {
   final _roomsController = BehaviorSubject<List<Room>>();
   final RoomsRepository _repository = RoomsRepository();
 
-  final BehaviorSubject<RoomsResponse> _subject =
+  final BehaviorSubject<RoomsResponse> _myRooms =
+      BehaviorSubject<RoomsResponse>();
+
+  final BehaviorSubject<RoomsResponse> _roomsProfile =
       BehaviorSubject<RoomsResponse>();
 
   final BehaviorSubject<Room> _roomSelect = BehaviorSubject<Room>();
 
-  getRooms(String userId) async {
+  getMyRooms(String userId) async {
     RoomsResponse response = await _repository.getRooms(userId);
 
-    _subject.sink.add(response);
+    _myRooms.sink.add(response);
+  }
+
+  getRoomsProfile(String userId) async {
+    RoomsResponse response = await _repository.getRooms(userId);
+
+    _roomsProfile.sink.add(response);
   }
 
   getRoom(Room room) async {
@@ -44,7 +53,8 @@ class RoomBloc with Validators {
 
   BehaviorSubject<Room> get roomSelect => _roomSelect;
 
-  BehaviorSubject<RoomsResponse> get subject => _subject;
+  BehaviorSubject<RoomsResponse> get myRooms => _myRooms;
+  BehaviorSubject<RoomsResponse> get roomsProfile => _roomsProfile;
 
   // Recuperar los datos del Stream
   Stream<String> get nameStream =>
@@ -115,7 +125,8 @@ class RoomBloc with Validators {
   String get timeOff => _timeOffController.value;
 
   dispose() {
-    _subject.close();
+    _roomsProfile.close();
+    _myRooms.close();
     _roomSelect.close();
     _nameController?.close();
     _ventilationController?.close();
@@ -141,7 +152,7 @@ class RoomBloc with Validators {
 
   disposeRooms() {
     _roomsController?.close();
-    _subject.close();
+    _myRooms.close();
   }
 }
 

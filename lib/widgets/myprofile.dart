@@ -78,6 +78,10 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
   bool isLike = false;
 
+  Profiles profile;
+
+  bool myProfile = false;
+
   @override
   void initState() {
     _scrollController = ScrollController()..addListener(() => setState(() {}));
@@ -85,8 +89,18 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     super.initState();
     name = widget.profile.name;
 
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    profile = authService.profile;
+
     // profileBloc.imageUpdate.add(true);
-    roomBloc.getRooms(widget.profile.user.uid);
+
+    if (widget.profile.user.uid == profile.user.uid) {
+      myProfile = true;
+      roomBloc.getMyRooms(widget.profile.user.uid);
+    } else {
+      roomBloc.getRoomsProfile(widget.profile.user.uid);
+    }
   }
 
   @override
@@ -302,7 +316,9 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
         minHeight: 70.0,
         maxHeight: 70.0,
         child: StreamBuilder<RoomsResponse>(
-          stream: roomBloc.subject.stream,
+          stream: (!myProfile)
+              ? roomBloc.roomsProfile.stream
+              : roomBloc.myRooms.stream,
           builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
             if (snapshot.hasData) {
               return _buildUserWidget(snapshot.data);
@@ -326,7 +342,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
         minHeight: 70.0,
         maxHeight: 70.0,
         child: StreamBuilder<RoomsResponse>(
-          stream: roomBloc.subject.stream,
+          stream: roomBloc.myRooms.stream,
           builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
             if (snapshot.hasData) {
               return _buildWidgetProduct(snapshot.data.rooms);

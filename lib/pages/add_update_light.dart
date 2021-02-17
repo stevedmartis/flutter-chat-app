@@ -422,7 +422,7 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
       if (createAirResp.ok) {
         loading = false;
 
-        roomBloc.getRooms(uid);
+        roomBloc.getMyRooms(uid);
 
         Navigator.pop(context);
         setState(() {});

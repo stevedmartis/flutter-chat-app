@@ -514,7 +514,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
         minHeight: 70.0,
         maxHeight: 70.0,
         child: StreamBuilder<RoomsResponse>(
-          stream: roomBloc.subject.stream,
+          stream: roomBloc.myRooms.stream,
           builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
             if (snapshot.hasData) {
               return _buildUserWidget(snapshot.data);
@@ -538,7 +538,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
         minHeight: 70.0,
         maxHeight: 70.0,
         child: StreamBuilder<RoomsResponse>(
-          stream: roomBloc.subject.stream,
+          stream: roomBloc.myRooms.stream,
           builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
             if (snapshot.hasData) {
               return _buildWidgetProduct(snapshot.data.rooms);

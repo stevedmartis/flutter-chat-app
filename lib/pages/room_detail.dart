@@ -473,7 +473,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     if (res) {
       setState(() {
         airs.removeAt(index);
-        roomBloc.getRooms(profile.user.uid);
+        roomBloc.getMyRooms(profile.user.uid);
       });
     }
   }
@@ -537,7 +537,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     if (res) {
       setState(() {
         lights.removeAt(index);
-        roomBloc.getRooms(profile.user.uid);
+        roomBloc.getMyRooms(profile.user.uid);
       });
     }
   }

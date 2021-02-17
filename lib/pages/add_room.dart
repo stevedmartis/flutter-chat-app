@@ -828,7 +828,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     if (createRoomRes != null) {
       if (createRoomRes.ok) {
         // widget.rooms.add(createRoomRes.room);
-        roomBloc.getRooms(profile.user.uid);
+        roomBloc.getMyRooms(profile.user.uid);
         //roomBloc.getRoom(widget.room);
         loading = false;
         setState(() {});
@@ -892,7 +892,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
 
           loading = false;
 
-          roomBloc.getRooms(profile.user.uid);
+          roomBloc.getMyRooms(profile.user.uid);
           roomBloc.getRoom(widget.room);
 
           setState(() {});

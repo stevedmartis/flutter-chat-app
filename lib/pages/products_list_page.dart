@@ -303,7 +303,7 @@ class _RoomListState extends State<RoomList> {
 
     profile = authService.profile;
 
-    roomBloc.getRooms(profile.user.uid);
+    roomBloc.getMyRooms(profile.user.uid);
   }
 
   void reorderData(int oldindex, int newindex) {
@@ -346,7 +346,7 @@ class _RoomListState extends State<RoomList> {
     return Container(
       height: double.maxFinite,
       child: StreamBuilder<RoomsResponse>(
-        stream: roomBloc.subject.stream,
+        stream: roomBloc.myRooms.stream,
         builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
           if (snapshot.hasData) {
             rooms = snapshot.data.rooms;
@@ -390,7 +390,7 @@ class _RoomListState extends State<RoomList> {
     if (res) {
       setState(() {
         rooms.removeAt(index);
-        roomBloc.getRooms(profile.user.uid);
+        roomBloc.getMyRooms(profile.user.uid);
       });
     }
   }
@@ -504,7 +504,7 @@ _updateRoom(List<Room> room, int newIndex, context, String userId) async {
   final resp = await roomService.updatePositionRoom(room, newIndex, userId);
 
   if (resp) {
-    roomBloc.getRooms(userId);
+    roomBloc.getMyRooms(userId);
   }
 }
 

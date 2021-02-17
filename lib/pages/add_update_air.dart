@@ -371,7 +371,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
       if (createAirResp.ok) {
         loading = false;
 
-        roomBloc.getRooms(uid);
+        roomBloc.getMyRooms(uid);
 
         Navigator.pop(context);
         setState(() {});
