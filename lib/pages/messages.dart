@@ -243,9 +243,7 @@ class _MessagesPageState extends State<MessagesPage>
               final DateFormat formatter = DateFormat('dd MMM');
               final String formatted = formatter.format(dateMessage);
 
-              final DateFormat tFormatter = DateFormat('dd MM');
               final DateFormat dFormatter = DateFormat('kk:mm a');
-              final String dateFormatted = tFormatter.format(dateMessage);
               final String timeFormatted = dFormatter.format(dateMessage);
               final nameSub =
                   (message.name == "") ? message.user.username : message.name;

@@ -202,7 +202,7 @@ class StyledLogoCustom extends StatelessWidget {
           text: new TextSpan(
             children: [
               TextSpan(
-                text: "growery",
+                text: "Safeweed",
                 style: TextStyle(
                   letterSpacing: -1,
                   fontFamily: 'GTWalsheimPro',

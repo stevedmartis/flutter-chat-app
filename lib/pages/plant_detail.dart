@@ -184,7 +184,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                             ? currentTheme.accentColor
                                             : Colors.white),
                                     onPressed: () => {
-                                          aws.isUpload = false,
+                                          aws.isUploadImagePlant = false,
                                           visitService.visit = visit,
                                           Navigator.of(context).push(
                                               createRouteNewVisit(
@@ -743,7 +743,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                             textColor: currentTheme.accentColor,
                             text: 'Editar',
                             onPressed: () {
-                              aws.isUpload = false;
+                              aws.isUploadImagePlant = false;
                               plantService.plant = plant;
                               Navigator.of(context)
                                   .push(createRouteEditPlant(plant));

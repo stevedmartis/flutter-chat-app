@@ -27,6 +27,22 @@ class PlantsApiProvider {
     }
   }
 
+  Future<PlantsResponse> getLastPlantsByUser(String userId) async {
+    try {
+      final token = await this._storage.read(key: 'token');
+
+      final resp = await http.get(
+          '${Environment.apiUrl}/plant/plants/user/$userId',
+          headers: {'Content-Type': 'application/json', 'x-token': token});
+
+      final plantsResponse = plantsResponseFromJson(resp.body);
+
+      return plantsResponse;
+    } catch (error) {
+      return PlantsResponse.withError("$error");
+    }
+  }
+
   Future<List<Plant>> getPlantsRoom(String roomId) async {
     final urlFinal = _endpoint + '$roomId';
 

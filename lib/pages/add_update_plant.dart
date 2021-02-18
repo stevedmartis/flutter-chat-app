@@ -4,6 +4,7 @@ import 'package:chat/bloc/provider.dart';
 import 'package:chat/helpers/mostrar_alerta.dart';
 
 import 'package:chat/models/plant.dart';
+import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/image_plant_cover.dart';
 import 'package:chat/pages/new_product.dart';
@@ -114,11 +115,16 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
   ];
 
   bool isDefault;
+  Profiles profile;
 
   @override
   void initState() {
     final plantService = Provider.of<PlantService>(context, listen: false);
     plant = (widget.isEdit) ? plantService.plant : widget.plant;
+
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    profile = authService.profile;
 
     errorRequired = (widget.isEdit) ? false : true;
     nameCtrl.text = widget.plant.name;
@@ -249,7 +255,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    final isImageUpdate = Provider.of<AwsService>(context).isUpload;
+    final isImageUpdate = Provider.of<AwsService>(context).isUploadImagePlant;
 
     final bloc = CustomProvider.plantBlocIn(context);
 
@@ -809,7 +815,9 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         setState(() {
           loading = false;
 
-          awsService.isUpload = true;
+          plantBloc.getPlantsByUser(profile.user.uid);
+
+          awsService.isUploadImagePlant = true;
         });
         Navigator.pop(context);
         setState(() {});
@@ -856,7 +864,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         name: name,
         description: description,
         sexo: sexo,
-        coverImage: awsService.imageUpdate,
+        coverImage: plantService.plant.coverImage,
         quantity: quantity,
         germinated: germinated,
         flowering: flowering,
@@ -874,11 +882,11 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
           plantService.plant = editPlantRes.plant;
           plantBloc.getPlant(editPlantRes.plant);
+          plantBloc.getPlantsByUser(profile.user.uid);
 
           setState(() {
             loading = false;
-
-            awsService.isUpload = true;
+            awsService.isUploadImagePlant = true;
           });
           // room = editRoomRes.room;
 

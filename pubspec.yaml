@@ -61,11 +61,11 @@ dev_dependencies:
 flutter_icons:
     android: "launcher_icon"
     ios: true
-    image_path: "assets/icon/leaf.png"
-    adaptive_icon_background: "assets/icon/leaf.png"
+    image_path: "assets/icon/weedshield.png"
+    adaptive_icon_background: "assets/icon/weedshield.png"
 
 flutter_launcher_name:
-  name: "Growery"
+  name: "Safeweed"
 
 
 # For information on the generic Dart part of this file, see the

@@ -9,6 +9,10 @@ class PlantsRepository {
     return _apiProvider.getPlants(roomId);
   }
 
+  Future<PlantsResponse> getPlantsUser(String uid) {
+    return _apiProvider.getLastPlantsByUser(uid);
+  }
+
   Future<Plant> getPlant(String plantId) {
     return _apiProvider.getPlant(plantId);
   }

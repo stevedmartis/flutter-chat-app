@@ -2,7 +2,6 @@ import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/subscribe_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/subscribe.dart';
-import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/register_page.dart';
 import 'package:chat/services/auth_service.dart';

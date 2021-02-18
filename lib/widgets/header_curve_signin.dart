@@ -19,9 +19,9 @@ class WavyHeader extends StatelessWidget {
 }
 
 const List<Color> orangeGradients = [
-  Color(0xff25C94D),
+  Color(0xff26BAD2),
   Color(0xff20FFD7),
-  Color(0xff25C94D),
+  Color(0xff26BAD2),
 ];
 
 class TopWaveClipper extends CustomClipper<Path> {

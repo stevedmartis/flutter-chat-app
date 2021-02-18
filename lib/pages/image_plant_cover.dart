@@ -1,5 +1,7 @@
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/models/plant.dart';
+import 'package:chat/models/profiles.dart';
+import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/theme/theme.dart';
@@ -24,6 +26,7 @@ class CoverImagePlantPage extends StatefulWidget {
 class CoverImagePlantPageState extends State<CoverImagePlantPage> {
   File imageCover;
   final picker = ImagePicker();
+  Profiles profile;
   // AwsService authService;
 
   @override
@@ -33,6 +36,9 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
 
   @override
   void initState() {
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    profile = authService.profile;
     super.initState();
   }
 
@@ -100,7 +106,7 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
 
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
-      final resp = await awsService.uploadImageCoverPlant(
+      final resp = await awsService.uploadImageCoverVisit(
           fileType[0], fileType[1], imageCover);
 
       setState(() {
@@ -109,8 +115,9 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
         plantBloc.imageUpdate.add(true);
 
         plantService.plant.coverImage = resp;
+        plantBloc.getPlantsByUser(profile.user.uid);
 
-        awsService.isUpload = true;
+        awsService.isUploadImagePlant = true;
         // plantService.plant.coverImage = resp;
 
         // awsService.isUpload = true;
@@ -138,6 +145,7 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
 
       setState(() {
         plantBloc.imageUpdate.add(true);
+        plantBloc.getPlantsByUser(profile.user.uid);
 
         plantService.plant.coverImage = resp;
       });

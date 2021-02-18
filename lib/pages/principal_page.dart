@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/models/plant.dart';
+import 'package:chat/models/plants_response.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/rooms_response.dart';
 import 'package:chat/models/visit.dart';
@@ -244,6 +246,7 @@ class _CollapsingListState extends State<CollapsingList>
     final authService = Provider.of<AuthService>(context, listen: false);
 
     profile = authService.profile;
+
     this._chargeProfileUsers();
 
     this._chargeLastPlantsByUser();
@@ -261,7 +264,7 @@ class _CollapsingListState extends State<CollapsingList>
 
   _chargeLastPlantsByUser() async {
     this.plants = await plantService.getLastPlantsByUser(profile.user.uid);
-
+    plantBloc.getPlantsByUser(profile.user.uid);
     setState(() {});
   }
 
@@ -287,7 +290,10 @@ class _CollapsingListState extends State<CollapsingList>
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
+    return
+        // room = snapshot.data;
+
+        CustomScrollView(
       controller: widget._hideBottomNavController,
       physics:
           const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
@@ -334,13 +340,13 @@ class _CollapsingListState extends State<CollapsingList>
           itemExtent: 200.0,
           delegate: SliverChildListDelegate(
             [
-              FutureBuilder(
-                future: this.plantService.getLastPlantsByUser(profile.user.uid),
-                initialData: null,
-                builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              StreamBuilder<PlantsResponse>(
+                stream: plantBloc.plantsUser.stream,
+                builder: (context, AsyncSnapshot<PlantsResponse> snapshot) {
                   if (snapshot.hasData) {
+                    plants = snapshot.data.plants;
                     return _buildWidgetPlants(
-                        this.plants, context); // image is ready
+                        plants, context); // image is ready
                   } else {
                     return Container(
                         height: 400.0,
@@ -352,7 +358,7 @@ class _CollapsingListState extends State<CollapsingList>
             ],
           ),
         ),
-        makeHeaderSpacer(context),
+        // makeHeaderSpacer(context),
         SliverFixedExtentList(
           itemExtent: 150.0,
           delegate: SliverChildListDelegate(
@@ -599,7 +605,7 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
                     CardPlant(plant: plant),
                     Hero(
                         tag: plant.quantity + plant.id,
-                        child: buildCircleFavoriteProduct(
+                        child: buildCircleFavoritePlantDash(
                             plant.quantity, context)),
                   ],
                 ));

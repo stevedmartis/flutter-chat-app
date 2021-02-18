@@ -18,13 +18,22 @@ class AwsService with ChangeNotifier {
 
   bool _isUpload = false;
 
+  bool _isUploadImagePlant = false;
+
   bool _isUploadRecipe = false;
 
-  String imageUpdate;
+  String imageUpdateVisit;
+  String imageUpdatePlant;
 
   // static String redirectUri = 'https://api.gettymarket.com/api/aws/';
 
   final _storage = new FlutterSecureStorage();
+
+  bool get isUploadImagePlant => this._isUploadImagePlant;
+  set isUploadImagePlant(bool valor) {
+    this._isUploadImagePlant = valor;
+    notifyListeners();
+  }
 
   bool get isUpload => this._isUpload;
   set isUpload(bool valor) {
@@ -133,7 +142,7 @@ class AwsService with ChangeNotifier {
     return respUrl;
   }
 
-  Future<String> uploadImageCoverPlant(
+  Future<String> uploadImageCoverVisit(
       String fileName, String fileType, File image) async {
     final url = Uri.parse('${Environment.apiUrl}/aws/upload/cover-visit');
 
@@ -169,7 +178,7 @@ class AwsService with ChangeNotifier {
     //final respData = imageResponseToJson(resp.body);
 
     final respUrl = respBody['url'];
-    this.imageUpdate = respUrl;
+    this.imageUpdateVisit = respUrl;
     return respUrl;
   }
 
@@ -211,7 +220,89 @@ class AwsService with ChangeNotifier {
     //final respData = imageResponseToJson(resp.body);
 
     final respUrl = respBody['url'];
-    this.imageUpdate = respUrl;
+    this.imageUpdatePlant = respUrl;
+    return respUrl;
+  }
+
+  Future<String> uploadImageCoverPlant(
+      String fileName, String fileType, File image) async {
+    final url = Uri.parse('${Environment.apiUrl}/aws/upload/cover-plant');
+
+    final mimeType = mime(image.path).split('/'); //image/jpeg
+
+    final token = await this._storage.read(key: 'token');
+
+    Map<String, String> headers = {
+      "Content-Type": "image/mimeType",
+      "x-token": token,
+    };
+
+    final imageUploadRequest = http.MultipartRequest('POST', url);
+
+    final file = await http.MultipartFile.fromPath('file', image.path,
+        contentType: MediaType(mimeType[0], mimeType[1]));
+
+    imageUploadRequest.files.add(file);
+
+    imageUploadRequest.headers.addAll(headers);
+
+    final streamResponse = await imageUploadRequest.send();
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      print('Algo salio mal');
+
+      return null;
+    }
+
+    final respBody = jsonDecode(resp.body);
+
+    //final respData = imageResponseToJson(resp.body);
+
+    final respUrl = respBody['url'];
+    this.imageUpdatePlant = respUrl;
+    return respUrl;
+  }
+
+  Future<String> updateImageCoverVisit(
+      String fileName, String fileType, File image, String id) async {
+    final url =
+        Uri.parse('${Environment.apiUrl}/aws/upload/update-cover-visit');
+
+    final mimeType = mime(image.path).split('/'); //image/jpeg
+
+    final token = await this._storage.read(key: 'token');
+
+    Map<String, String> headers = {
+      "Content-Type": "image/mimeType",
+      "x-token": token,
+      'id': id,
+    };
+
+    final imageUploadRequest = http.MultipartRequest('POST', url);
+
+    final file = await http.MultipartFile.fromPath('file', image.path,
+        contentType: MediaType(mimeType[0], mimeType[1]));
+
+    imageUploadRequest.files.add(file);
+
+    imageUploadRequest.headers.addAll(headers);
+
+    final streamResponse = await imageUploadRequest.send();
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      print('Algo salio mal');
+
+      return null;
+    }
+
+    final respBody = jsonDecode(resp.body);
+
+    //final respData = imageResponseToJson(resp.body);
+
+    final respUrl = respBody['url'];
+    this.imageUpdatePlant = respUrl;
     return respUrl;
   }
 }

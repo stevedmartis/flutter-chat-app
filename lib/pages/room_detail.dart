@@ -191,32 +191,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     );
   }
 
-  SliverFixedExtentList makePlantCard(context) {
-    return SliverFixedExtentList(
-      itemExtent: 100.0,
-      delegate: SliverChildListDelegate([
-        FutureBuilder(
-          future: this.plantService.getPlantsRoom(widget.room.id),
-          initialData: null,
-          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-            if (snapshot.hasData) {
-              return Container(
-                  margin: EdgeInsets.only(
-                    left: 10,
-                  ),
-                  child: _buildWidgetPlant(snapshot.data)); // image is ready
-            } else {
-              return Container(
-                  height: 400.0,
-                  child: Center(
-                      child: CircularProgressIndicator())); // placeholder
-            }
-          },
-        ),
-      ]),
-    );
-  }
-
   Widget _buildLoadingWidget() {
     return Container(
         height: 400.0, child: Center(child: CircularProgressIndicator()));
@@ -405,7 +379,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                       CardPlant(plant: plant),
                       Hero(
                           tag: plant.quantity + plant.id,
-                          child: buildCircleFavoriteProduct(
+                          child: buildCircleFavoritePlant(
                               plant.quantity, context)),
                     ],
                   ));
@@ -605,7 +579,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   color: currentTheme.scaffoldBackgroundColor,
                   child: InkWell(
                     onTap: () => {
-                      aws.isUpload = false,
+                      aws.isUploadImagePlant = false,
                       plantService.plant = plant,
                       Navigator.of(context).pop(),
                       Navigator.of(context)
@@ -754,14 +728,12 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                 plants = snapshot.data;
                 return (plants.length > 0)
                     ? Container(
-                        margin: EdgeInsets.only(
-                          left: 10,
-                        ),
+                        margin: EdgeInsets.only(left: 10, top: 10),
                         child: _buildWidgetPlant(plants))
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
-                            child: Text('Sin Plantas, add new')),
+                            child: Text('Sin Plantas, crea una +')),
                       ); // image is ready
               } else {
                 return Container(
@@ -892,7 +864,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 }
 
-Container buildCircleFavoriteProduct(String quantity, context) {
+Container buildCircleFavoritePlantDash(String quantity, context) {
   final size = MediaQuery.of(context).size;
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
@@ -900,6 +872,27 @@ Container buildCircleFavoriteProduct(String quantity, context) {
       alignment: Alignment.topRight,
       padding: EdgeInsets.all(0.0),
       margin: EdgeInsets.only(left: size.width / 1.3, top: 0),
+      width: 40,
+      height: 40,
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        child: CircleAvatar(
+            child: Text(
+              '$quantity',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            backgroundColor: currentTheme.accentColor),
+      ));
+}
+
+Container buildCircleFavoritePlant(String quantity, context) {
+  final size = MediaQuery.of(context).size;
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+  return Container(
+      alignment: Alignment.topRight,
+      padding: EdgeInsets.all(0.0),
+      margin: EdgeInsets.only(left: size.width / 1.22, top: 5.0),
       width: 50,
       height: 50,
       child: ClipRRect(

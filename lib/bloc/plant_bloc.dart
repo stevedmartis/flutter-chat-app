@@ -19,6 +19,7 @@ class PlantBloc with Validators {
   final _cbdController = BehaviorSubject<String>();
   final _thcController = BehaviorSubject<String>();
   final _imageUpdateCtrl = BehaviorSubject<bool>();
+  final _plantEdit = BehaviorSubject<bool>();
 
   final _ventilationController = BehaviorSubject<List<Ventilation>>();
 
@@ -26,6 +27,9 @@ class PlantBloc with Validators {
   final PlantsRepository _repository = PlantsRepository();
 
   final BehaviorSubject<PlantsResponse> _subject =
+      BehaviorSubject<PlantsResponse>();
+
+  final BehaviorSubject<PlantsResponse> _plantsUser =
       BehaviorSubject<PlantsResponse>();
 
   final BehaviorSubject<Plant> _plantSelect = BehaviorSubject<Plant>();
@@ -36,16 +40,25 @@ class PlantBloc with Validators {
     if (!_subject.isClosed) _subject.sink.add(response);
   }
 
+  getPlantsByUser(String uid) async {
+    PlantsResponse response = await _repository.getPlantsUser(uid);
+
+    if (!_plantsUser.isClosed) _plantsUser.sink.add(response);
+  }
+
   getPlant(Plant plant) async {
     Plant response = await _repository.getPlant(plant.id);
     _plantSelect.sink.add(response);
   }
 
   BehaviorSubject<bool> get imageUpdate => _imageUpdateCtrl;
+  BehaviorSubject<bool> get planEdit => _plantEdit;
 
   BehaviorSubject<Plant> get plantSelect => _plantSelect;
 
   BehaviorSubject<PlantsResponse> get subject => _subject;
+
+  BehaviorSubject<PlantsResponse> get plantsUser => _plantsUser;
 
   // Recuperar los datos del Stream
   Stream<String> get nameStream =>
@@ -97,7 +110,8 @@ class PlantBloc with Validators {
 
   dispose() {
     _imageUpdateCtrl.close();
-
+    _plantEdit.close();
+    _plantsUser.close();
     _subject.close();
     _plantSelect.close();
     _nameController?.close();

@@ -100,7 +100,7 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
 
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
-      final resp = await awsService.uploadImageCoverPlant(
+      final resp = await awsService.uploadImageCoverVisit(
           fileType[0], fileType[1], imageCover);
 
       setState(() {
