@@ -2,7 +2,6 @@ import 'package:chat/bloc/subscribe_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/profiles_response.dart';
 import 'package:chat/pages/principalCustom_page.dart';
-import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/recipe_image_page.dart';
 import 'package:chat/providers/notifications_provider.dart';
 import 'package:chat/providers/subscription_provider.dart';
@@ -43,10 +42,6 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
   List<ChatMessage> _messages = [];
   List<Profiles> profiles = [];
   SlidableController slidableController;
-
-  ScrollController _hideBottomNavController;
-
-  var _isVisible;
 
   final List<_HomeItem> items = List.generate(
     20,

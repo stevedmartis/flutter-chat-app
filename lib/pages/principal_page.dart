@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 
 import 'package:chat/routes/routes.dart';
@@ -61,12 +62,30 @@ class _PrincipalPageState extends State<PrincipalPage> {
   Widget build(BuildContext context) {
     final currentPage = Provider.of<MenuModel>(context).currentPage;
 
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    final _onFirstPage = (currentPage == 0) ? true : false;
+
     print(currentPage);
     changeStatusLight();
     return SafeArea(
         child: Scaffold(
       endDrawer: PrincipalMenu(),
-      body: pageRouter[currentPage].page,
+      body: PageTransitionSwitcher(
+        duration: Duration(milliseconds: 500),
+        reverse: !_onFirstPage,
+        transitionBuilder: (Widget child, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return SharedAxisTransition(
+            fillColor: currentTheme.scaffoldBackgroundColor,
+            transitionType: SharedAxisTransitionType.horizontal,
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            child: child,
+          );
+        },
+        child: pageRouter[currentPage].page,
+      ),
 
       //CollapsingList(_hideBottomNavController),
       bottomNavigationBar: BottomNavigation(isVisible: _isVisible),

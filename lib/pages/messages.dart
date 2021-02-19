@@ -122,10 +122,6 @@ class _MessagesPageState extends State<MessagesPage>
   Profiles profile;
   List<ChatMessage> _messages = [];
 
-  ScrollController _hideBottomNavController;
-
-  var _isVisible;
-
   @override
   void initState() {
     super.initState();

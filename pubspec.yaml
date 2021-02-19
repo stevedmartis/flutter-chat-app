@@ -47,6 +47,7 @@ dependencies:
   flutter_masked_text: ^0.8.0
   intl: ^0.16.1
   flutter_slidable: ^0.5.7
+  animations: ^1.1.2
 
 
   

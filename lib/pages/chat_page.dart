@@ -1,5 +1,4 @@
 import 'package:chat/models/profiles.dart';
-import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/carousel_users.dart';
