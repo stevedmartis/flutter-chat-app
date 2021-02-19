@@ -46,17 +46,14 @@ class _CardVisitState extends State<CardVisit> {
                 ),
                 margin: EdgeInsets.only(bottom: 20, left: 10, right: 20),
                 clipBehavior: Clip.hardEdge,
-                child: InkWell(
-                    borderRadius: BorderRadius.circular(10.0),
-                    onTap: () => {},
-                    child: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.50), BlendMode.dstATop),
-                      child: FadeInImage(
-                          image: NetworkImage(widget.visit.getCoverImg()),
-                          placeholder: AssetImage('assets/loading2.gif'),
-                          fit: BoxFit.cover),
-                    )),
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.50), BlendMode.dstATop),
+                  child: FadeInImage(
+                      image: NetworkImage(widget.visit.getCoverImg()),
+                      placeholder: AssetImage('assets/loading2.gif'),
+                      fit: BoxFit.cover),
+                ),
               )),
           Positioned(
               width: size.width,

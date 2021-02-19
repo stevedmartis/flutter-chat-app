@@ -31,7 +31,7 @@ class DataSearch extends SearchDelegate {
   }
 
   @override
-  String get searchFieldLabel => 'Search for store or product';
+  String get searchFieldLabel => 'Buscar club o tratamiento';
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -75,7 +75,7 @@ class DataSearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    if (query.isEmpty) {
+    if (query.isEmpty && query.length < 3) {
       return Container();
     }
 
