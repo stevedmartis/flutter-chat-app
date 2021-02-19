@@ -1,7 +1,7 @@
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/profiles_response.dart';
 import 'package:chat/pages/chat_page.dart';
-import 'package:chat/pages/principal_page.dart';
+import 'package:chat/pages/principalCustom_page.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/providers/messages_providers.dart';
 import 'package:chat/theme/theme.dart';
@@ -135,31 +135,6 @@ class _MessagesPageState extends State<MessagesPage>
     this.authService = Provider.of<AuthService>(context, listen: false);
     profile = authService.profile;
     this.socketService.socket.on('personal-message', _listenMessage);
-    this.bottomControll();
-    //_chargeRecord(this.chatService.userFor.user.uid);
-  }
-
-  bottomControll() {
-    _isVisible = true;
-    _hideBottomNavController = ScrollController();
-    _hideBottomNavController.addListener(
-      () {
-        if (_hideBottomNavController.position.userScrollDirection ==
-            ScrollDirection.reverse) {
-          if (_isVisible)
-            setState(() {
-              _isVisible = false;
-            });
-        }
-        if (_hideBottomNavController.position.userScrollDirection ==
-            ScrollDirection.forward) {
-          if (!_isVisible)
-            setState(() {
-              _isVisible = true;
-            });
-        }
-      },
-    );
   }
 
   void _listenMessage(dynamic payload) {

@@ -1,6 +1,7 @@
 import 'package:chat/bloc/subscribe_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/profiles_response.dart';
+import 'package:chat/pages/principalCustom_page.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/recipe_image_page.dart';
 import 'package:chat/providers/notifications_provider.dart';
@@ -71,8 +72,6 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
 
     subscriptionBloc.getSubscriptionsApprove(profile.user.uid);
 
-    this.bottomControll();
-
     super.initState();
   }
 
@@ -83,29 +82,6 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
     }
 
     super.dispose();
-  }
-
-  bottomControll() {
-    _isVisible = true;
-    _hideBottomNavController = ScrollController();
-    _hideBottomNavController.addListener(
-      () {
-        if (_hideBottomNavController.position.userScrollDirection ==
-            ScrollDirection.reverse) {
-          if (_isVisible)
-            setState(() {
-              _isVisible = false;
-            });
-        }
-        if (_hideBottomNavController.position.userScrollDirection ==
-            ScrollDirection.forward) {
-          if (!_isVisible)
-            setState(() {
-              _isVisible = true;
-            });
-        }
-      },
-    );
   }
 
   void _listenMessage(dynamic payload) {
@@ -153,7 +129,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                   (profile.isClub) ? 'Mis Pacientes' : 'Mis clubes'),
               makeListNotifications(context)
             ]),
-        bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+        // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
       ),
     );
   }
