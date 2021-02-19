@@ -1,7 +1,9 @@
 import 'package:chat/models/profiles.dart';
+import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/carousel_users.dart';
+import 'package:chat/widgets/sliver_header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,10 +21,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
 
   final String title;
   final Profiles profile;
+  final bool isFromMessage;
 
   CustomAppBar({
     @required this.profile,
     this.title,
+    this.isFromMessage,
     Key key,
   })  : preferredSize = Size.fromHeight(60.0),
         super(key: key);
@@ -47,8 +51,9 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: () =>
-                Navigator.of(context).push(createRouteProfileSelect(profile)),
+            onTap: () => (isFromMessage)
+                ? Navigator.of(context).push(createRouteProfileSelect(profile))
+                : Navigator.of(context).push(createRouteAvatarProfile(profile)),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(100.0)),
               child: Container(
@@ -99,6 +104,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
 }
 
 class ChatPage extends StatefulWidget {
+  final bool isFromMessage;
+  ChatPage({this.isFromMessage = false});
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -169,7 +176,10 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
     return Scaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
-      appBar: CustomAppBar(profile: userFor),
+      appBar: CustomAppBar(
+        profile: userFor,
+        isFromMessage: widget.isFromMessage,
+      ),
       body: Container(
         padding: EdgeInsets.all(0),
         child: Column(

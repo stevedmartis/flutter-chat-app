@@ -287,7 +287,9 @@ class _MessagesPageState extends State<MessagesPage>
 
   Route createRouteChat() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => ChatPage(),
+      pageBuilder: (context, animation, secondaryAnimation) => ChatPage(
+        isFromMessage: true,
+      ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);
         var end = Offset.zero;

@@ -65,7 +65,7 @@ flutter_icons:
     adaptive_icon_background: "assets/icon/weedshield.png"
 
 flutter_launcher_name:
-  name: "Safeweed"
+  name: "Leafety"
 
 
 # For information on the generic Dart part of this file, see the

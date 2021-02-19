@@ -168,6 +168,8 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
 class StyledLogoCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -202,11 +204,11 @@ class StyledLogoCustom extends StatelessWidget {
           text: new TextSpan(
             children: [
               TextSpan(
-                text: "Safeweed",
+                text: "Leafety",
                 style: TextStyle(
                   letterSpacing: -1,
                   fontFamily: 'GTWalsheimPro',
-                  color: Colors.white,
+                  color: currentTheme.accentColor,
                   fontSize: 28,
                   fontWeight: FontWeight.w500,
                   fontStyle: FontStyle.normal,
