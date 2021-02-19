@@ -1,8 +1,5 @@
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/visit.dart';
-import 'package:chat/pages/plant_detail.dart';
-import 'package:chat/services/aws_service.dart';
-import 'package:chat/services/visit_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,8 +22,6 @@ class _CardVisitState extends State<CardVisit> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    final visitService = Provider.of<VisitService>(context, listen: false);
-    final awsService = Provider.of<AwsService>(context, listen: false);
 
     String formattedDateCreate =
         DateFormat('dd/MM/yy - kk:mm').format(widget.visit.createdAt);
@@ -53,12 +48,7 @@ class _CardVisitState extends State<CardVisit> {
                 clipBehavior: Clip.hardEdge,
                 child: InkWell(
                     borderRadius: BorderRadius.circular(10.0),
-                    onTap: () => {
-                          awsService.isUpload = false,
-                          visitService.visit = widget.visit,
-                          Navigator.of(context).push(createRouteNewVisit(
-                              widget.visit, widget.plant, true)),
-                        },
+                    onTap: () => {},
                     child: ColorFiltered(
                       colorFilter: ColorFilter.mode(
                           Colors.black.withOpacity(0.50), BlendMode.dstATop),

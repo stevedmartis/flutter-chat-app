@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:chat/bloc/validators.dart';
 import 'package:chat/models/aires_response.dart';
 import 'package:chat/models/visit.dart';
+import 'package:chat/models/visits_response.dart';
 import 'package:chat/repository/aires_repository.dart';
+import 'package:chat/repository/visits_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class VisitBloc with Validators {
@@ -26,6 +28,11 @@ class VisitBloc with Validators {
 
   final _visitsController = BehaviorSubject<List<Visit>>();
   final AirRepository repository = AirRepository();
+
+  final VisitRepository repositoryVisit = VisitRepository();
+
+  final BehaviorSubject<VisitsResponse> _visitsUser =
+      BehaviorSubject<VisitsResponse>();
 
   final BehaviorSubject<AiresResponse> _vist = BehaviorSubject<AiresResponse>();
 
@@ -56,6 +63,14 @@ class VisitBloc with Validators {
       //timeOffStream,
       (a, b, c) => true); */
 
+  getVisitsByUser(String uid) async {
+    VisitsResponse response = await repositoryVisit.getVisits(uid);
+
+    if (!_visitsUser.isClosed) _visitsUser.sink.add(response);
+  }
+
+  BehaviorSubject<VisitsResponse> get visitsUser => _visitsUser;
+
   Function(String) get changeDescription => _descriptionController.sink.add;
   Function(String) get changeDegrees => _degreesController.sink.add;
 
@@ -76,6 +91,7 @@ class VisitBloc with Validators {
   String get description => _descriptionController.value;
 
   dispose() {
+    _visitsUser?.close();
     _imageUpdateCtrl?.close();
     _vist?.close();
     _visitSelect?.close();

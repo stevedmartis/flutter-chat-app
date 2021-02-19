@@ -282,11 +282,8 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                   listen: false);
                               chatService.userFor = item;
 
-                              (profile.isClub)
-                                  ? Navigator.push(
-                                      context, createRouteRecipeViewImage(item))
-                                  : Navigator.push(
-                                      context, createRouteProfileSelect(item));
+                              Navigator.of(context)
+                                  .push(createRouteProfileSelect(item));
                             },
                           ),
                         ),

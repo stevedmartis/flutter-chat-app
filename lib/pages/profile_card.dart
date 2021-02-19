@@ -3,6 +3,7 @@ import 'package:chat/bloc/subscribe_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/subscribe.dart';
 import 'package:chat/pages/chat_page.dart';
+import 'package:chat/pages/recipe_image_page.dart';
 import 'package:chat/pages/register_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
@@ -125,16 +126,17 @@ class _ProfileCardState extends State<ProfileCard> {
                                   (profileClub.isClub)
                                       ? true
                                       : isSuscribeApprove;
+
                               final chatService = Provider.of<ChatService>(
                                   context,
                                   listen: false);
                               chatService.userFor = this.widget.profile;
-
-                              Navigator.of(context).push(createRouteChat());
-
-                              // make changes here
-
-                              //Navigator.of(context).push(createRouteAvatarProfile(this.user));
+                              (!widget.isUserAuth)
+                                  ? Navigator.of(context)
+                                      .push(createRouteChat())
+                                  : Navigator.of(context).push(
+                                      createRouteAvatarProfile(
+                                          this.widget.profile));
                             },
                             child: Container(
                               width: 100,
@@ -165,7 +167,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 return _buildLoadingWidget();
               }
             }),
-        (!widget.isUserEdit)
+        (widget.profile.isClub)
             ? StreamBuilder<Subscription>(
                 stream: subscriptionBloc.subscription.stream,
                 builder: (BuildContext context,
@@ -280,8 +282,48 @@ class _ProfileCardState extends State<ProfileCard> {
                     return _buildLoadingWidget();
                   }
                 })
-            : Container(),
+            : Container(
+                //top: size.height / 3.5,
+                padding: EdgeInsets.only(top: 35.0),
+                margin: EdgeInsets.only(
+                    top: size.height / 4.5,
+                    left: size.width / 1.8,
+                    right: size.width / 20),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: ButtonSubEditProfile(
+                      color: currentTheme.scaffoldBackgroundColor
+                          .withOpacity(0.60),
+                      textColor: Colors.white,
+                      text: 'Ver receta',
+                      onPressed: () {
+                        Navigator.push(context,
+                            createRouteRecipeViewImage(widget.profile));
+                      }),
+                ),
+              ),
       ],
+    );
+  }
+
+  Route createRouteRecipeViewImage(Profiles item) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          RecipeImagePage(profile: item),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(1.0, 0.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+      transitionDuration: Duration(milliseconds: 400),
     );
   }
 

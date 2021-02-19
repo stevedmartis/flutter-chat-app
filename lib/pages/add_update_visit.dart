@@ -3,7 +3,6 @@ import 'package:chat/bloc/visit_bloc.dart';
 
 import 'package:chat/helpers/mostrar_alerta.dart';
 
-import 'package:chat/models/plant.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/pages/cover_image_visit.dart';
@@ -30,7 +29,7 @@ class AddUpdateVisitPage extends StatefulWidget {
 
   final Visit visit;
   final bool isEdit;
-  final Plant plant;
+  final String plant;
 
   @override
   AddUpdateVisitPageState createState() => AddUpdateVisitPageState();
@@ -697,7 +696,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     final newVisit = Visit(
       // name: name,
       coverImage: widget.visit.coverImage,
-      plant: widget.plant.id,
+      plant: widget.plant,
       user: uid,
 
       clean: clean,
@@ -718,7 +717,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         loading = false;
 
         Navigator.pop(context);
-        setState(() {});
+        setState(() {
+          visitBloc.getVisitsByUser(uid);
+        });
       } else {
         mostrarAlerta(context, 'Error', createVisitResp.msg);
       }
@@ -732,7 +733,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   _editVisit(VisitBloc bloc) async {
     final visitService = Provider.of<VisitService>(context, listen: false);
 
-    // final uid = authService.profile.user.uid;
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    final uid = authService.profile.user.uid;
 
     // final name = (bloc.name == null) ? widget.visit.name : bloc.name.trim();
 
@@ -782,6 +785,8 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         // plantBloc.getPlant(widget.visit);
         setState(() {
           loading = false;
+
+          visitBloc.getVisitsByUser(uid);
         });
         // room = editRoomRes.room;
 

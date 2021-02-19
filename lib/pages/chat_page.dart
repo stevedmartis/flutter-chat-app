@@ -1,7 +1,7 @@
 import 'package:chat/models/profiles.dart';
-import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
+import 'package:chat/widgets/carousel_users.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,13 +47,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: () => Navigator.of(context).push(PageRouteBuilder(
-                transitionDuration: Duration(milliseconds: 200),
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    AvatarImagePage(
-                      profile: this.profile,
-                      isUserAuth: false,
-                    ))),
+            onTap: () =>
+                Navigator.of(context).push(createRouteProfileSelect(profile)),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(100.0)),
               child: Container(

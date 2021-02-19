@@ -61,23 +61,17 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
         ],
       ),
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // bottomNavigationBar: (widget.isUserAuth)
-
-          Hero(
-            tag: widget.profile.user.uid,
-            child: Material(
-              type: MaterialType.transparency,
-              child: ImageAvatarExpanded(
-                width: 100,
-                height: 100,
-                profile: widget.profile,
-                fontsize: 100,
-              ),
-            ),
+      body: Hero(
+        tag: widget.profile.user.uid,
+        child: Material(
+          type: MaterialType.transparency,
+          child: ImageAvatarExpanded(
+            width: 100,
+            height: 100,
+            profile: widget.profile,
+            fontsize: 100,
           ),
-        ],
+        ),
       ),
     );
   }

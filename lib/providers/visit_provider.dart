@@ -44,6 +44,22 @@ class VisitApiProvider {
     }
   }
 
+  Future<VisitsResponse> getLastVisitsByUser(String userId) async {
+    try {
+      final token = await this._storage.read(key: 'token');
+
+      final resp = await http.get(
+          '${Environment.apiUrl}/visit/visits/user/$userId',
+          headers: {'Content-Type': 'application/json', 'x-token': token});
+
+      final visitsResponse = visitsResponseFromJson(resp.body);
+
+      return visitsResponse;
+    } catch (error) {
+      return VisitsResponse.withError("$error");
+    }
+  }
+
   final String _endpointRoom = '${Environment.apiUrl}/plant/plant/';
 
   Future<Plant> getPlant(String roomId) async {

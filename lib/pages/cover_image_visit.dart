@@ -106,6 +106,8 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
       setState(() {
         visitBloc.imageUpdate.add(true);
 
+        visitBloc.getVisitsByUser(widget.visit.user);
+
         visitService.visit.coverImage = resp;
 
         awsService.isUpload = true;
@@ -133,6 +135,7 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
 
       setState(() {
         visitBloc.imageUpdate.add(true);
+        visitBloc.getVisitsByUser(widget.visit.user);
 
         visitService.visit.coverImage = resp;
 

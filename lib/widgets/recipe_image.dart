@@ -39,15 +39,15 @@ class _RecipeImageExpandedState extends State<RecipeImageExpanded> {
         borderRadius: BorderRadius.circular(8.0),
         clipBehavior: Clip.antiAlias,
         child: InteractiveViewer(
-          panEnabled: false, // Set it to false to prevent panning.
-          boundaryMargin: EdgeInsets.all(80),
-          minScale: 0.5,
-          maxScale: 4,
-          child: Image(
-            image: NetworkImage(widget.profile.getRecipeImg()),
-            fit: BoxFit.cover,
-            width: double.maxFinite,
-          ),
-        ));
+            panEnabled: false, // Set it to false to prevent panning.
+            boundaryMargin: EdgeInsets.all(80),
+            minScale: 0.5,
+            maxScale: 4,
+            child: FadeInImage(
+              image: NetworkImage(widget.profile.getRecipeImg()),
+              placeholder: AssetImage('assets/loading2.gif'),
+              fit: BoxFit.cover,
+              width: double.maxFinite,
+            )));
   }
 }

@@ -230,7 +230,7 @@ class _NotificationsPageState extends State<NotificationsPage>
                                     context,
                                     actionType == SlideActionType.primary
                                         ? 'Aprobado!, se agrego en "Mis pacientes"'
-                                        : 'Solicitud Rechazada'),
+                                        : 'Suscripción cancelada.'),
                                 setState(() {
                                   profiles.removeAt(index);
                                 }),
@@ -288,13 +288,8 @@ class _NotificationsPageState extends State<NotificationsPage>
                                     ),
                                   ),
                                   onTap: () {
-                                    final chatService =
-                                        Provider.of<ChatService>(context,
-                                            listen: false);
-                                    chatService.userFor = item;
-
-                                    Navigator.push(context,
-                                        createRouteRecipeViewImage(item));
+                                    Navigator.of(context)
+                                        .push(createRouteProfileSelect(item));
                                   },
                                 ),
                               ),

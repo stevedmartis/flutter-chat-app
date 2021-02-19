@@ -1,5 +1,4 @@
 import 'package:chat/models/profiles.dart';
-import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/my_profile.dart';
@@ -216,7 +215,7 @@ Route createRouteEditProfile() {
   );
 }
 
-Route createRouteAvatarProfile(User user, Profiles profile) {
+Route createRouteAvatarProfile(Profiles profile) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
         AvatarImagePage(profile: profile),

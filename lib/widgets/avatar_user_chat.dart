@@ -100,18 +100,21 @@ class _ImageAvatarExpandedState extends State<ImageAvatarExpanded> {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
+      borderRadius: BorderRadius.circular(1.0),
       clipBehavior: Clip.antiAlias,
       child: (widget.profile.imageAvatar != "")
-          ? InteractiveViewer(
-              panEnabled: false, // Set it to false to prevent panning.
-              boundaryMargin: EdgeInsets.all(80),
-              minScale: 0.5,
-              maxScale: 4,
-              child: Image(
-                image: NetworkImage(widget.profile.getAvatarImg()),
-                fit: BoxFit.cover,
-                width: double.maxFinite,
+          ? Container(
+              margin: EdgeInsets.only(bottom: 300),
+              //padding: EdgeInsets.all(0),
+              width: double.maxFinite,
+              height: double.maxFinite,
+              child: CircleAvatar(
+                child: Image(
+                  image: NetworkImage(widget.profile.imageAvatar),
+                  fit: BoxFit.cover,
+                  width: double.maxFinite,
+                ),
+                backgroundColor: Colors.white,
               ),
             )
           : Container(

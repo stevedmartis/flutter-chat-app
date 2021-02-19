@@ -187,8 +187,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                           aws.isUploadImagePlant = false,
                                           visitService.visit = visit,
                                           Navigator.of(context).push(
-                                              createRouteNewVisit(
-                                                  visit, plant, false)),
+                                              createRouteNewVisit(visit,
+                                                  widget.plant.id, false)),
                                         }),
                                 backgroundColor:
                                     Colors.black.withOpacity(0.60)),
@@ -1121,7 +1121,7 @@ Route createRouteEditPlant(Plant plant) {
   );
 }
 
-Route createRouteNewVisit(Visit visit, Plant plant, bool isEdit) {
+Route createRouteNewVisit(Visit visit, String plant, bool isEdit) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => AddUpdateVisitPage(
       visit: visit,

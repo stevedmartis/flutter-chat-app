@@ -1,15 +1,19 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
+import 'package:chat/bloc/visit_bloc.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/plants_response.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/rooms_response.dart';
 import 'package:chat/models/visit.dart';
+import 'package:chat/models/visits_response.dart';
+import 'package:chat/pages/plant_detail.dart';
 import 'package:chat/pages/room_detail.dart';
 import 'package:chat/routes/routes.dart';
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/visit_service.dart';
 
@@ -263,13 +267,15 @@ class _CollapsingListState extends State<CollapsingList>
   }
 
   _chargeLastPlantsByUser() async {
-    this.plants = await plantService.getLastPlantsByUser(profile.user.uid);
+    // this.plants = await plantService.getLastPlantsByUser(profile.user.uid);
     plantBloc.getPlantsByUser(profile.user.uid);
     setState(() {});
   }
 
   _chargeLastVisitByUser() async {
-    this.visits = await visitService.getLastVisitsByUser(profile.user.uid);
+    // this.visits = await visitService.getLastVisitsByUser(profile.user.uid);
+
+    visitBloc.getVisitsByUser(profile.user.uid);
 
     setState(() {});
   }
@@ -363,17 +369,13 @@ class _CollapsingListState extends State<CollapsingList>
           itemExtent: 150.0,
           delegate: SliverChildListDelegate(
             [
-              FutureBuilder(
-                future: this.visitService.getLastVisitsByUser(profile.user.uid),
-                initialData: null,
-                builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              StreamBuilder<VisitsResponse>(
+                stream: visitBloc.visitsUser.stream,
+                builder: (context, AsyncSnapshot<VisitsResponse> snapshot) {
                   if (snapshot.hasData) {
-                    return Container(
-                        margin: EdgeInsets.only(
-                          left: 10,
-                        ),
-                        child:
-                            _buildWidgetVisits(this.visits)); // image is ready
+                    visits = snapshot.data.visits;
+                    return _buildWidgetVisits(
+                        visits, context); // image is ready
                   } else {
                     return Container(
                         height: 400.0,
@@ -381,7 +383,7 @@ class _CollapsingListState extends State<CollapsingList>
                             child: CircularProgressIndicator())); // placeholder
                   }
                 },
-              ),
+              )
             ],
           ),
         ),
@@ -614,7 +616,10 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
       : Container();
 }
 
-Widget _buildWidgetVisits(List<Visit> visits) {
+Widget _buildWidgetVisits(List<Visit> visits, context) {
+  final visitService = Provider.of<VisitService>(context, listen: false);
+  final awsService = Provider.of<AwsService>(context, listen: false);
+
   return (visits.length > 0)
       ? CarouselSlider.builder(
           options: CarouselOptions(
@@ -632,7 +637,12 @@ Widget _buildWidgetVisits(List<Visit> visits) {
           ),
           itemCount: visits.length,
           itemBuilder: (BuildContext context, int index) => GestureDetector(
-            onTap: () {},
+            onTap: () => {
+              awsService.isUpload = false,
+              visitService.visit = visits[index],
+              Navigator.of(context).push(createRouteNewVisit(
+                  visits[index], visits[index].plant, true)),
+            },
             child: CardVisit(visit: visits[index]),
           ),
         )
