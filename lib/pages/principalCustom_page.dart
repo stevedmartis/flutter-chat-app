@@ -20,7 +20,6 @@ import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/header_appbar_pages.dart';
-import 'package:chat/widgets/header_custom_search.dart';
 import 'package:chat/widgets/plant_card_widget.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:chat/widgets/visit_card.dart';

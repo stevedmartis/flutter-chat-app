@@ -359,7 +359,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 
   Widget _buildWidgetPlant(plants) {
-    final plantService = Provider.of<PlantService>(context, listen: false);
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Container(

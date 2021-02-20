@@ -12,7 +12,6 @@ import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/subscription_service.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/sliver_header.dart';
 import 'package:flutter/material.dart';
