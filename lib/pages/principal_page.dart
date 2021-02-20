@@ -160,7 +160,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.meeting_room,
-                    size: (currentPage == 2) ? 30 : 25,
+                    size: (currentPage == 2) ? 30 : 28,
                     color: (currentPage == 2)
                         ? currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),

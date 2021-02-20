@@ -1,7 +1,9 @@
+import 'package:animations/animations.dart';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/subscribe_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/subscribe.dart';
+import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/recipe_image_page.dart';
 import 'package:chat/pages/register_page.dart';
@@ -104,63 +106,113 @@ class _ProfileCardState extends State<ProfileCard> {
                 final isSuscribeActive = subscription.subscribeActive;
 
                 return Positioned(
-                  child: Container(
-                    margin: EdgeInsets.only(left: (widget.isUserEdit) ? 0 : 22),
-                    child: Align(
-                      alignment: (widget.isUserEdit)
-                          ? Alignment.bottomCenter
-                          : Alignment.bottomLeft,
+                    child: Container(
+                  margin: EdgeInsets.only(left: (widget.isUserEdit) ? 0 : 22),
+                  child: Align(
+                    alignment: (widget.isUserEdit)
+                        ? Alignment.bottomCenter
+                        : Alignment.bottomLeft,
+                    child: CircleAvatar(
+                      radius: 55,
+                      backgroundColor: currentTheme.scaffoldBackgroundColor,
                       child: CircleAvatar(
-                        radius: 55,
+                        radius: ProfileCard.avatarRadius + 120,
                         backgroundColor: currentTheme.scaffoldBackgroundColor,
-                        child: CircleAvatar(
-                          radius: ProfileCard.avatarRadius + 120,
-                          backgroundColor: currentTheme.scaffoldBackgroundColor,
-                          child: GestureDetector(
-                            onTap: () {
-                              this.widget.profile.subscribeActive =
-                                  (profileClub.isClub)
-                                      ? true
-                                      : isSuscribeActive;
-                              this.widget.profile.subscribeApproved =
-                                  (profileClub.isClub)
-                                      ? true
-                                      : isSuscribeApprove;
+                        child: GestureDetector(
+                          onTap: () {
+                            this.widget.profile.subscribeActive =
+                                (profileClub.isClub) ? true : isSuscribeActive;
+                            this.widget.profile.subscribeApproved =
+                                (profileClub.isClub) ? true : isSuscribeApprove;
 
-                              final chatService = Provider.of<ChatService>(
-                                  context,
-                                  listen: false);
-                              chatService.userFor = this.widget.profile;
-                              (!widget.isUserAuth)
-                                  ? Navigator.of(context)
-                                      .push(createRouteChat())
-                                  : Navigator.of(context).push(
-                                      createRouteAvatarProfile(
-                                          this.widget.profile));
-                            },
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              child: Hero(
-                                tag: widget.profile.user.uid,
-                                child: Material(
+                            final chatService = Provider.of<ChatService>(
+                                context,
+                                listen: false);
+                            chatService.userFor = this.widget.profile;
+                            (!widget.isUserAuth)
+                                ? Navigator.of(context).push(createRouteChat())
+                                : Navigator.of(context).push(
+                                    createRouteAvatarProfile(
+                                        this.widget.profile));
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            child: Hero(
+                              tag: widget.profile.user.uid,
+                              child: Material(
                                   type: MaterialType.transparency,
-                                  child: ImageUserChat(
-                                    width: 100,
-                                    // showBorderAvatar: _showBorderAvatar,
-                                    height: 100,
-                                    profile: widget.profile,
-                                    fontsize: 30,
-                                  ),
-                                ),
-                              ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(100)),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(100.0)),
+                                      child: (widget.profile.imageAvatar != "")
+                                          ? OpenContainer(
+                                              closedColor: Colors.black,
+                                              openColor: Colors.black,
+                                              transitionType:
+                                                  ContainerTransitionType.fade,
+                                              openShape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                              ),
+                                              closedShape:
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              100)),
+                                              openBuilder: (_, closeContainer) {
+                                                return AvatarImagePage(
+                                                    profile:
+                                                        this.widget.profile);
+                                              },
+                                              closedBuilder:
+                                                  (_, openContainer) {
+                                                return CircleAvatar(
+                                                  child: Container(
+                                                    color: Colors.white,
+                                                    width: 100,
+                                                    height: 100,
+                                                    child: FadeInImage(
+                                                        image: NetworkImage(
+                                                            widget.profile
+                                                                .getAvatarImg()),
+                                                        placeholder: AssetImage(
+                                                            'assets/loading2.gif'),
+                                                        fit: BoxFit.cover),
+                                                  ),
+                                                );
+                                              })
+                                          : CircleAvatar(
+                                              child: Container(
+                                                width: 100,
+                                                height: 100,
+                                                child: Center(
+                                                  child: Text(
+                                                    widget.profile.user.username
+                                                        .substring(0, 2)
+                                                        .toUpperCase(),
+                                                    style:
+                                                        TextStyle(fontSize: 15),
+                                                  ),
+                                                ),
+                                              ),
+                                              backgroundColor:
+                                                  currentTheme.accentColor,
+                                            ),
+                                    ),
+                                  )),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                );
+                ));
               } else if (snapshot.hasError) {
                 return _buildErrorWidget(snapshot.error);
               } else {
@@ -294,14 +346,18 @@ class _ProfileCardState extends State<ProfileCard> {
                   child: ButtonSubEditProfile(
                       color: currentTheme.scaffoldBackgroundColor
                           .withOpacity(0.60),
-                      textColor: Colors.white,
-                      text: 'Ver receta',
+                      textColor: (widget.isUserAuth)
+                          ? Colors.white.withOpacity(0.50)
+                          : currentTheme.accentColor,
+                      text: widget.isUserAuth ? 'Editar perfil' : 'Ver receta',
                       onPressed: () {
-                        Navigator.push(context,
-                            createRouteRecipeViewImage(widget.profile));
+                        (widget.isUserAuth)
+                            ? Navigator.of(context)
+                                .push(createRouteEditProfile())
+                            : Navigator.push(context,
+                                createRouteRecipeViewImage(widget.profile));
                       }),
-                ),
-              ),
+                ))
       ],
     );
   }
