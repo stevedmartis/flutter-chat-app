@@ -99,37 +99,36 @@ class _ImageAvatarExpandedState extends State<ImageAvatarExpanded> {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(1.0),
-      clipBehavior: Clip.antiAlias,
-      child: (widget.profile.imageAvatar != "")
-          ? Container(
-              margin: EdgeInsets.only(bottom: 300),
-              //padding: EdgeInsets.all(0),
-              width: double.maxFinite,
-              height: double.maxFinite,
-              child: CircleAvatar(
-                child: Image(
-                  image: NetworkImage(widget.profile.imageAvatar),
-                  fit: BoxFit.cover,
-                  width: double.maxFinite,
-                ),
-                backgroundColor: Colors.white,
+    return (widget.profile.imageAvatar != "")
+        ? Container(
+            color: Colors.white,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                clipBehavior: Clip.antiAlias,
+                child: InteractiveViewer(
+                  panEnabled: false, // Set it to false to prevent panning.
+                  boundaryMargin: EdgeInsets.all(80),
+                  minScale: 0.5,
+                  maxScale: 10,
+                  child: Image(
+                    image: NetworkImage(widget.profile.getAvatarImg()),
+                    fit: BoxFit.cover,
+                    width: double.maxFinite,
+                  ),
+                )),
+          )
+        : Container(
+            margin: EdgeInsets.only(bottom: 300),
+            //padding: EdgeInsets.all(0),
+            width: double.maxFinite,
+            height: double.maxFinite,
+            child: CircleAvatar(
+              child: Text(
+                widget.profile.user.username.substring(0, 2).toUpperCase(),
+                style: TextStyle(fontSize: widget.fontsize),
               ),
-            )
-          : Container(
-              margin: EdgeInsets.only(bottom: 300),
-              //padding: EdgeInsets.all(0),
-              width: double.maxFinite,
-              height: double.maxFinite,
-              child: CircleAvatar(
-                child: Text(
-                  widget.profile.user.username.substring(0, 2).toUpperCase(),
-                  style: TextStyle(fontSize: widget.fontsize),
-                ),
-                backgroundColor: currentTheme.accentColor,
-              ),
+              backgroundColor: currentTheme.accentColor,
             ),
-    );
+          );
   }
 }

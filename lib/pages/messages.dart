@@ -1,3 +1,4 @@
+import 'package:chat/models/notification.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/profiles_response.dart';
 import 'package:chat/pages/chat_page.dart';
@@ -259,6 +260,12 @@ class _MessagesPageState extends State<MessagesPage>
                         final chatService =
                             Provider.of<ChatService>(context, listen: false);
                         chatService.userFor = message;
+
+                        final notifiModel = Provider.of<NotificationModel>(
+                            context,
+                            listen: false);
+
+                        notifiModel.number = 0;
 
                         Navigator.push(context, createRouteChat());
                       },

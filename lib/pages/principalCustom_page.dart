@@ -19,6 +19,7 @@ import 'package:chat/services/visit_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_users.dart';
+import 'package:chat/widgets/header_appbar_pages.dart';
 import 'package:chat/widgets/header_custom_search.dart';
 import 'package:chat/widgets/plant_card_widget.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
@@ -227,7 +228,12 @@ class _CollapsingListState extends State<CollapsingList>
             child: Container(
                 color: Colors.black,
                 child: Container(
-                    color: Colors.black, child: CustomAppBarHeader()))));
+                    color: Colors.black,
+                    child: CustomAppBarHeaderPages(
+                      title: '',
+                      action: Container(),
+                      showContent: true,
+                    )))));
   }
 
   SliverPersistentHeader makeHeaderTabs(context) {

@@ -48,7 +48,7 @@ dependencies:
   intl: ^0.16.1
   flutter_slidable: ^0.5.7
   animations: ^1.1.2
-
+  animate_do: ^1.7.5
 
   
 
@@ -62,8 +62,8 @@ dev_dependencies:
 flutter_icons:
     android: "launcher_icon"
     ios: true
-    image_path: "assets/icon/weedshield.png"
-    adaptive_icon_background: "assets/icon/weedshield.png"
+    image_path: "assets/icon/leafety.png"
+    adaptive_icon_background: "assets/icon/leafety.png"
 
 flutter_launcher_name:
   name: "Leafety"

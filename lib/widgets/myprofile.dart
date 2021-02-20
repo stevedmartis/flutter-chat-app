@@ -15,6 +15,7 @@ import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 import '../utils//extension.dart';
@@ -391,6 +392,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     final username = widget.profile.user.username.toLowerCase();
     final about = widget.profile.about;
     final size = MediaQuery.of(context).size;
+    final isClub = widget.profile.isClub;
 
     final nameFinal = name.isEmpty ? "" : name.capitalize();
 
@@ -407,35 +409,59 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (!this.widget.isUserEdit)
-                  Expanded(
-                    flex: -2,
+                  Container(
                     child: Container(
-                      width: size.width - 15.0,
-                      padding:
-                          EdgeInsets.only(left: size.width / 20.0, top: 5.0),
-                      //margin: EdgeInsets.only(left: size.width / 6, top: 10),
-                      child: (nameFinal == "")
-                          ? Text(
-                              username,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: (name.length >= 15) ? 20 : 22,
-                                  color: Colors.white),
-                            )
-                          : Text(
-                              (nameFinal.length >= 45)
-                                  ? nameFinal.substring(0, 45)
-                                  : nameFinal,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: (nameFinal.length >= 15) ? 20 : 22,
-                                  color: Colors.white),
-                            ),
-                    ),
+                        width: size.width - 15.0,
+                        padding:
+                            EdgeInsets.only(left: size.width / 20.0, top: 5.0),
+                        //margin: EdgeInsets.only(left: size.width / 6, top: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            (nameFinal == "")
+                                ? Text(
+                                    username,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: (name.length >= 15) ? 20 : 22,
+                                        color: Colors.white),
+                                  )
+                                : Text(
+                                    (nameFinal.length >= 45)
+                                        ? nameFinal.substring(0, 45)
+                                        : nameFinal,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize:
+                                            (nameFinal.length >= 15) ? 20 : 22,
+                                        color: Colors.white),
+                                  ),
+                            (isClub)
+                                ? Container(
+                                    margin: EdgeInsets.only(left: 20),
+                                    child: Stack(children: [
+                                      FaIcon(
+                                        FontAwesomeIcons.certificate,
+                                        color: currentTheme.accentColor,
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 5.0, top: 5.0),
+                                        child: FaIcon(
+                                          FontAwesomeIcons.check,
+                                          color: Colors.white,
+                                          size: 12,
+                                        ),
+                                      )
+                                    ]),
+                                  )
+                                : Container(),
+                          ],
+                        )),
                   ),
                 if (!this.widget.isUserEdit)
                   Expanded(

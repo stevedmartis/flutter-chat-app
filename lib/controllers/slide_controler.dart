@@ -60,7 +60,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
                     top: _size.height * 0.8, left: 60, right: 60),
                 child: ButtonAccent(
                     color: currentTheme.accentColor,
-                    text: 'Start now',
+                    text: 'Empezar!',
                     onPressed: () => {Navigator.push(context, _createRute())}),
               ),
         SizedBox(

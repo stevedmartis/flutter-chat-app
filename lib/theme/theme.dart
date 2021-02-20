@@ -32,7 +32,7 @@ class ThemeChanger with ChangeNotifier {
         _darkTheme = false;
         _customTheme = true;
         _currentTheme = ThemeData.dark().copyWith(
-          accentColor: Color(0xff26BAD2),
+          accentColor: Color(0xff34EC9C),
           primaryColor: Color(0xffD9B310),
           scaffoldBackgroundColor: Color(0xff1C3041),
           textTheme: TextTheme(bodyText1: TextStyle(color: Colors.white)),
@@ -69,7 +69,7 @@ class ThemeChanger with ChangeNotifier {
 
     if (value) {
       _currentTheme = ThemeData.dark().copyWith(
-        accentColor: Color(0xff26BAD2), // Sea green Crayon
+        accentColor: Color(0xff34EC9C), // Sea green Crayon
         primaryColor: Color(0xffD9B310),
         primaryColorLight: Colors.white,
         scaffoldBackgroundColor: Color(0xff1C3041), // gummetal

@@ -77,9 +77,9 @@ class ButtonLogout extends StatelessWidget {
 }
 
 const List<Color> gradients = [
-  Color(0xff26BAD2),
+  Color(0xff34EC9C),
   Color(0xff20FFD7),
-  Color(0xff26BAD2),
+  Color(0xff34EC9C),
 ];
 
 class ButtonSubEditProfile extends StatelessWidget {

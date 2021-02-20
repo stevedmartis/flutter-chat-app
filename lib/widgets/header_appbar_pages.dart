@@ -1,6 +1,9 @@
+import 'package:animate_do/animate_do.dart';
+import 'package:chat/models/notification.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:chat/pages/messages.dart';
 import 'package:chat/pages/profile_page.dart';
+import 'package:chat/pages/search_Principal_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
@@ -17,7 +20,7 @@ class CustomAppBarHeaderPages extends StatefulWidget {
 
   @override
   CustomAppBarHeaderPages(
-      {this.showContent = true,
+      {this.showContent = false,
       @required this.title,
       this.action,
       this.isAdd = false});
@@ -36,12 +39,18 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
 
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     final profile = authService.profile;
 
+    final size = MediaQuery.of(context).size;
+    final int number = Provider.of<NotificationModel>(context).number;
+
+    print(number);
     return Container(
       color: Colors.black,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
@@ -76,33 +85,100 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
               : SizedBox(
                   width: 0,
                 ),
-          Expanded(
-            child: Center(
-              child: Container(
-                child: Text(
-                  widget.title,
-                  style: TextStyle(fontSize: 20),
+          (widget.showContent)
+              ? GestureDetector(
+                  onTap: () => showSearch(
+                      context: context,
+                      delegate: DataSearch(userAuth: profile)),
+                  child: Center(
+                      child: Container(
+                          // color: Colors.black,
+                          //  margin: EdgeInsets.only(left: 10, right: 10),
+                          width: size.height / 3.0,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Color(0xff202020),
+                                  Color(0xff1D1D1D),
+                                  Color(0xff161616),
+                                ]),
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black54,
+                                  spreadRadius: -5,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 5))
+                            ],
+                          ),
+                          child: SearchContent())),
+                )
+              : Expanded(
+                  child: Center(
+                    child: Container(
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
           widget.action,
           SizedBox(
             width: 10,
           ),
-          Container(
-            margin: EdgeInsets.only(right: 10),
-            child: GestureDetector(
-              onTap: () => {Navigator.push(context, _createRouteMessages())},
-              child: Container(
-                  margin: EdgeInsets.only(right: 10),
-                  child: FaIcon(
+          IconButton(
+              onPressed: () {
+                Navigator.push(context, _createRouteMessages());
+              },
+              icon: Stack(
+                children: <Widget>[
+                  FaIcon(
                     FontAwesomeIcons.commentDots,
-                    size: 30,
                     color: Colors.white54,
-                  )),
-            ),
-          )
+                    size: 30,
+                  ),
+                  (number > 0)
+                      ? Positioned(
+                          top: 0.0,
+                          right: 4.0,
+                          child: BounceInDown(
+                            from: 10,
+                            animate: (number > 0) ? true : false,
+                            child: Bounce(
+                              delay: Duration(seconds: 2),
+                              from: 15,
+                              controller: (controller) =>
+                                  Provider.of<NotificationModel>(context)
+                                      .bounceController = controller,
+                              child: Container(
+                                child: Text(
+                                  '$number',
+                                  style: TextStyle(
+                                      color: (currentTheme.customTheme)
+                                          ? Colors.black
+                                          : Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                alignment: Alignment.center,
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                    color: (currentTheme.customTheme)
+                                        ? currentTheme.currentTheme.accentColor
+                                        : Colors.black,
+                                    shape: BoxShape.circle),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container()
+                ],
+              )),
         ],
       ),
     );

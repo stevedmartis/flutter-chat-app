@@ -37,8 +37,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 width: 0.60,
                 height: 0.40,
                 title: "Medicinal",
-                message:
-                    "Regista tu receta, valida tu tratamiento obten tu medicina",
+                message: "Regista tu receta y obten tu medicina",
                 image: "assets/onBoard/medicine.svg",
               ),
               OnboardingMessages(
@@ -46,8 +45,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 width: 0.60,
                 height: 0.45,
                 title: "Clubs",
-                message:
-                    "Suscríbete a clubes y recibe toda la información que necesitas.",
+                message: "Suscríbete a clubes certificados.",
                 image: "assets/onBoard/subscriber.svg",
               ),
               OnboardingMessages(
@@ -56,7 +54,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 height: 0.40,
                 title: "Cultivar",
                 message:
-                    "Verifica y registra la evolución y el desarrollo de la medicina.",
+                    "Registra la evolución y el desarrollo de la medicina.",
                 image: "assets/onBoard/gardening.svg",
               ),
               OnboardingMessages(
@@ -64,8 +62,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 width: 0.60,
                 height: 0.40,
                 title: "Seguridad",
-                message:
-                    "Tus datos son confidenciales, tendrás toda la seguridad y soporte en tus manos.",
+                message: "Tus datos son confidenciales para tu seguridad",
                 image: "assets/onBoard/security.svg",
               ),
               OnboardingMessages(

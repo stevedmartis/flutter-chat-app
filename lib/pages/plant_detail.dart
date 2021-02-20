@@ -102,7 +102,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
     final plantService = Provider.of<PlantService>(context, listen: false);
 
-    plant = plantService.plant;
+    plant = (plantService.plant != null) ? plantService.plant : widget.plant;
 
     plantBloc.imageUpdate.add(true);
 

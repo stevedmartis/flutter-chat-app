@@ -557,9 +557,9 @@ class _ProfileCardState extends State<ProfileCard> {
 
   unSubscribe(context, SubscribeBloc bloc, color, bool isUploadRecipe) {
     const List<Color> orangeGradients = [
+      Color(0xff34EC9C),
       Color(0xff1C3041),
-      Color(0xff1C3041),
-      Color(0xff1C3041),
+      Color(0xff34EC9C),
     ];
 
     if (Platform.isAndroid) {

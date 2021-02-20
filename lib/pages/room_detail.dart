@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 
 import 'package:chat/bloc/room_bloc.dart';
@@ -359,6 +360,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
 
   Widget _buildWidgetPlant(plants) {
     final plantService = Provider.of<PlantService>(context, listen: false);
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Container(
       child: SizedBox(
@@ -368,21 +370,26 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             itemCount: plants.length,
             itemBuilder: (BuildContext ctxt, int index) {
               final plant = plants[index];
-              return InkWell(
-                  onTap: () => {
-                        plantService.plant = plant,
-                        Navigator.of(context)
-                            .push(createRoutePlantDetail(plant, true)),
-                      },
-                  child: Stack(
-                    children: [
-                      CardPlant(plant: plant),
-                      Hero(
-                          tag: plant.quantity + plant.id,
-                          child: buildCircleFavoritePlant(
-                              plant.quantity, context)),
-                    ],
-                  ));
+              return OpenContainer(
+                  closedColor: currentTheme.scaffoldBackgroundColor,
+                  openColor: currentTheme.scaffoldBackgroundColor,
+                  transitionType: ContainerTransitionType.fade,
+                  openShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  closedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  openBuilder: (_, closeContainer) {
+                    return PlantDetailPage(plant: plant);
+                  },
+                  closedBuilder: (_, openContainer) {
+                    return Stack(
+                      children: [
+                        CardPlant(plant: plant),
+                        buildCircleFavoritePlant(plant.quantity, context),
+                      ],
+                    );
+                  });
             }),
       ),
     );

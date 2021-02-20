@@ -1,7 +1,10 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
+import 'package:chat/models/notification.dart';
 
 import 'package:chat/routes/routes.dart';
+import 'package:chat/services/socket_service.dart';
 
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/menu_drawer.dart';
@@ -20,11 +23,16 @@ class PrincipalPage extends StatefulWidget {
 class _PrincipalPageState extends State<PrincipalPage> {
   ScrollController _hideBottomNavController;
 
+  SocketService socketService;
+
   var _isVisible;
 
   @override
   initState() {
     super.initState();
+    this.socketService = Provider.of<SocketService>(context, listen: false);
+
+    this.socketService.socket.on('personal-message', _listenMessage);
 
     this.bottomControll();
   }
@@ -33,6 +41,19 @@ class _PrincipalPageState extends State<PrincipalPage> {
   void dispose() {
     super.dispose();
     _hideBottomNavController.dispose();
+  }
+
+  void _listenMessage(dynamic payload) {
+    print(payload);
+    final notifiModel = Provider.of<NotificationModel>(context, listen: false);
+    int number = notifiModel.number;
+    number++;
+    notifiModel.number = number;
+
+    if (number >= 2) {
+      final controller = notifiModel.bounceController;
+      controller.forward(from: 0.0);
+    }
   }
 
   bottomControll() {
@@ -89,7 +110,37 @@ class _PrincipalPageState extends State<PrincipalPage> {
 
       //CollapsingList(_hideBottomNavController),
       bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+      // floatingActionButton: ButtomFloating(),
     ));
+  }
+}
+
+class ButtomFloating extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final appTheme = Provider.of<ThemeChanger>(context);
+
+    return FloatingActionButton(
+      backgroundColor: appTheme.currentTheme.accentColor,
+      onPressed: () {
+        final notifiModel =
+            Provider.of<NotificationModel>(context, listen: false);
+        int number = notifiModel.number;
+        number++;
+        notifiModel.number = number;
+
+        if (number >= 2) {
+          final controller = notifiModel.bounceController;
+          controller.forward(from: 0.0);
+        }
+      },
+      child: FaIcon(
+        FontAwesomeIcons.plus,
+        color: (appTheme.darkTheme)
+            ? Colors.black
+            : appTheme.currentTheme.primaryColorLight,
+      ),
+    );
   }
 }
 
@@ -127,8 +178,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
     final currentPage = Provider.of<MenuModel>(context).currentPage;
+    final int number = Provider.of<NotificationModel>(context).numberNotifiBell;
 
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
@@ -146,7 +198,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 icon: Icon(Icons.home,
                     size: (currentPage == 0) ? 30 : 25,
                     color: (currentPage == 0)
-                        ? currentTheme.accentColor
+                        ? currentTheme.currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
                 label: '',
               ),
@@ -154,7 +206,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 icon: FaIcon(FontAwesomeIcons.users,
                     size: (currentPage == 1) ? 30 : 25,
                     color: (currentPage == 1)
-                        ? currentTheme.accentColor
+                        ? currentTheme.currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
                 label: '',
               ),
@@ -162,7 +214,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 icon: Icon(Icons.meeting_room,
                     size: (currentPage == 2) ? 30 : 28,
                     color: (currentPage == 2)
-                        ? currentTheme.accentColor
+                        ? currentTheme.currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
                 label: '',
               ),
@@ -170,23 +222,197 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 icon: FaIcon(FontAwesomeIcons.handHoldingMedical,
                     size: (currentPage == 3) ? 30 : 25,
                     color: (currentPage == 3)
-                        ? currentTheme.accentColor
+                        ? currentTheme.currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: FaIcon(FontAwesomeIcons.bell,
-                    size: (currentPage == 4) ? 30 : 25,
-                    color: (currentPage == 4)
-                        ? currentTheme.accentColor
-                        : Colors.white.withOpacity(0.60)),
-                label: '',
-              ),
+                  icon: Stack(
+                    children: <Widget>[
+                      FaIcon(
+                        FontAwesomeIcons.bell,
+                        color: Colors.white54,
+                        size: 30,
+                      ),
+                      (number > 0)
+                          ? Positioned(
+                              top: 0.0,
+                              right: 4.0,
+                              child: BounceInDown(
+                                from: 10,
+                                animate: (number > 0) ? true : false,
+                                child: Bounce(
+                                  delay: Duration(seconds: 2),
+                                  from: 15,
+                                  controller: (controller) =>
+                                      Provider.of<NotificationModel>(context)
+                                          .bounceControllerBell = controller,
+                                  child: Container(
+                                    child: Text(
+                                      '$number',
+                                      style: TextStyle(
+                                          color: (currentTheme.customTheme)
+                                              ? Colors.black
+                                              : Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    alignment: Alignment.center,
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                        color: (currentTheme.customTheme)
+                                            ? currentTheme
+                                                .currentTheme.accentColor
+                                            : Colors.black,
+                                        shape: BoxShape.circle),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container()
+                    ],
+                  ),
+                  label: ''),
             ],
           ),
         ],
       ),
     );
+  }
+}
+
+class BottomNavBarV2 extends StatefulWidget {
+  @override
+  _BottomNavBarV2State createState() => _BottomNavBarV2State();
+}
+
+class _BottomNavBarV2State extends State<BottomNavBarV2> {
+  int currentIndex = 0;
+
+  setBottomBarIndex(index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: Colors.white.withAlpha(55),
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: Container(
+              width: size.width,
+              height: 80,
+              child: Stack(
+                overflow: Overflow.visible,
+                children: [
+                  CustomPaint(
+                    size: Size(size.width, 80),
+                    painter: BNBCustomPainter(),
+                  ),
+                  Center(
+                    heightFactor: 0.6,
+                    child: FloatingActionButton(
+                        backgroundColor: Colors.orange,
+                        child: Icon(Icons.shopping_basket),
+                        elevation: 0.1,
+                        onPressed: () {}),
+                  ),
+                  Container(
+                    width: size.width,
+                    height: 80,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.home,
+                            color: currentIndex == 0
+                                ? Colors.orange
+                                : Colors.grey.shade400,
+                          ),
+                          onPressed: () {
+                            setBottomBarIndex(0);
+                          },
+                          splashColor: Colors.white,
+                        ),
+                        IconButton(
+                            icon: Icon(
+                              Icons.restaurant_menu,
+                              color: currentIndex == 1
+                                  ? Colors.orange
+                                  : Colors.grey.shade400,
+                            ),
+                            onPressed: () {
+                              setBottomBarIndex(1);
+                            }),
+                        Container(
+                          width: size.width * 0.20,
+                        ),
+                        IconButton(
+                            icon: Icon(
+                              Icons.bookmark,
+                              color: currentIndex == 2
+                                  ? Colors.orange
+                                  : Colors.grey.shade400,
+                            ),
+                            onPressed: () {
+                              setBottomBarIndex(2);
+                            }),
+                        IconButton(
+                            icon: Icon(
+                              Icons.notifications,
+                              color: currentIndex == 3
+                                  ? Colors.orange
+                                  : Colors.grey.shade400,
+                            ),
+                            onPressed: () {
+                              setBottomBarIndex(3);
+                            }),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class BNBCustomPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = new Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    Path path = Path();
+    path.moveTo(0, 20); // Start
+    path.quadraticBezierTo(size.width * 0.20, 0, size.width * 0.35, 0);
+    path.quadraticBezierTo(size.width * 0.40, 0, size.width * 0.40, 20);
+    path.arcToPoint(Offset(size.width * 0.60, 20),
+        radius: Radius.circular(20.0), clockwise: false);
+    path.quadraticBezierTo(size.width * 0.60, 0, size.width * 0.65, 0);
+    path.quadraticBezierTo(size.width * 0.80, 0, size.width, 20);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.lineTo(0, 20);
+    canvas.drawShadow(path, Colors.black, 5, true);
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }
 

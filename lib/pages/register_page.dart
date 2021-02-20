@@ -194,9 +194,9 @@ class __FormState extends State<_Form> {
   }
 
   final List<Color> orangeGradients = [
-    Color(0xffF96400),
+    Color(0xff34EC9C),
     Color(0xffF9A400),
-    Color(0xffE14D1A),
+    Color(0xff34EC9C),
   ];
 }
 

@@ -1,3 +1,4 @@
+import 'package:chat/models/notification.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
@@ -116,6 +117,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   ChatService chatService;
   SocketService socketService;
   AuthService authService;
+  NotificationModel notificationModel;
 
   List<ChatMessage> _messages = [];
   bool _isWriting = false;
