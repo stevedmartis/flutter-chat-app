@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat/bloc/plant_bloc.dart';
@@ -395,6 +396,7 @@ class LastVisitsByUser extends StatelessWidget {
 
 Widget _buildWidgetPlants(List<Plant> plants, context) {
   final plantService = Provider.of<PlantService>(context, listen: false);
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
   return (plants.length > 0)
       ? CarouselSlider.builder(
@@ -414,21 +416,26 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
           itemCount: plants.length,
           itemBuilder: (BuildContext context, int index) {
             final plant = plants[index];
-            return GestureDetector(
-                onTap: () => {
-                      plantService.plant = plant,
-                      Navigator.of(context)
-                          .push(createRoutePlantDetail(plant, true)),
-                    },
-                child: Stack(
-                  children: [
-                    CardPlant(plant: plant),
-                    Hero(
-                        tag: plant.quantity + plant.id,
-                        child: buildCircleFavoritePlantDash(
-                            plant.quantity, context)),
-                  ],
-                ));
+            return OpenContainer(
+                closedColor: currentTheme.scaffoldBackgroundColor,
+                openColor: currentTheme.scaffoldBackgroundColor,
+                transitionType: ContainerTransitionType.fade,
+                openShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                closedShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0)),
+                openBuilder: (_, closeContainer) {
+                  return PlantDetailPage(plant: plant);
+                },
+                closedBuilder: (_, openContainer) {
+                  return Stack(
+                    children: [
+                      CardPlant(plant: plant),
+                      buildCircleFavoritePlant(plant.quantity, context),
+                    ],
+                  );
+                });
           },
         )
       : Container();

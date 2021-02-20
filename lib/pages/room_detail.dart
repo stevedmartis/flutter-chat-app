@@ -898,7 +898,7 @@ Container buildCircleFavoritePlant(String quantity, context) {
   return Container(
       alignment: Alignment.topRight,
       padding: EdgeInsets.all(0.0),
-      margin: EdgeInsets.only(left: size.width / 1.22, top: 5.0),
+      margin: EdgeInsets.only(left: size.width / 1.25, top: 5.0),
       width: 50,
       height: 50,
       child: ClipRRect(

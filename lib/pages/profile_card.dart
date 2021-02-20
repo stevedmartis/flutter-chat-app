@@ -95,129 +95,153 @@ class _ProfileCardState extends State<ProfileCard> {
               width: double.infinity,
               alignment: Alignment.center,
             )),
-        StreamBuilder<Subscription>(
-            stream: subscriptionBloc.subscription.stream,
-            builder:
-                (BuildContext context, AsyncSnapshot<Subscription> snapshot) {
-              if (snapshot.hasData) {
-                subscription = snapshot.data;
-                final isSuscribeApprove = subscription.subscribeApproved;
-                final isSuscribeActive = subscription.subscribeActive;
-
-                return Positioned(
-                    child: Container(
-                  margin: EdgeInsets.only(left: (widget.isUserEdit) ? 0 : 22),
-                  child: Align(
-                    alignment: (widget.isUserEdit)
-                        ? Alignment.bottomCenter
-                        : Alignment.bottomLeft,
+        Positioned(
+            child: Container(
+                margin: EdgeInsets.only(left: (widget.isUserEdit) ? 0 : 22),
+                child: Align(
+                  alignment: (widget.isUserEdit)
+                      ? Alignment.bottomCenter
+                      : Alignment.bottomLeft,
+                  child: CircleAvatar(
+                    radius: 55,
+                    backgroundColor: currentTheme.scaffoldBackgroundColor,
                     child: CircleAvatar(
-                      radius: 55,
-                      backgroundColor: currentTheme.scaffoldBackgroundColor,
-                      child: CircleAvatar(
                         radius: ProfileCard.avatarRadius + 120,
                         backgroundColor: currentTheme.scaffoldBackgroundColor,
-                        child: GestureDetector(
-                          onTap: () {
-                            this.widget.profile.subscribeActive =
-                                (profileClub.isClub) ? true : isSuscribeActive;
-                            this.widget.profile.subscribeApproved =
-                                (profileClub.isClub) ? true : isSuscribeApprove;
-
-                            final chatService = Provider.of<ChatService>(
-                                context,
-                                listen: false);
-                            chatService.userFor = this.widget.profile;
-                            (!widget.isUserAuth)
-                                ? Navigator.of(context).push(createRouteChat())
-                                : Navigator.of(context).push(
-                                    createRouteAvatarProfile(
-                                        this.widget.profile));
-                          },
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            child: Hero(
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          child: Hero(
                               tag: widget.profile.user.uid,
-                              child: Material(
-                                  type: MaterialType.transparency,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100)),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100.0)),
-                                      child: (widget.profile.imageAvatar != "")
-                                          ? OpenContainer(
-                                              closedColor: Colors.black,
-                                              openColor: Colors.black,
-                                              transitionType:
-                                                  ContainerTransitionType.fade,
-                                              openShape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
+                              child: StreamBuilder<Subscription>(
+                                  stream: subscriptionBloc.subscription.stream,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<Subscription> snapshot) {
+                                    if (snapshot.hasData) {
+                                      subscription = snapshot.data;
+                                      final isSuscribeApprove =
+                                          subscription.subscribeApproved;
+                                      final isSuscribeActive =
+                                          subscription.subscribeActive;
+
+                                      return GestureDetector(
+                                        onTap: () {
+                                          this.widget.profile.subscribeActive =
+                                              (profileClub.isClub)
+                                                  ? true
+                                                  : isSuscribeActive;
+                                          this
+                                                  .widget
+                                                  .profile
+                                                  .subscribeApproved =
+                                              (profileClub.isClub)
+                                                  ? true
+                                                  : isSuscribeApprove;
+
+                                          final chatService =
+                                              Provider.of<ChatService>(context,
+                                                  listen: false);
+                                          chatService.userFor =
+                                              this.widget.profile;
+                                          (!widget.isUserAuth)
+                                              ? Navigator.of(context)
+                                                  .push(createRouteChat())
+                                              : Navigator.of(context).push(
+                                                  createRouteAvatarProfile(
+                                                      this.widget.profile));
+                                        },
+                                        child: Material(
+                                            type: MaterialType.transparency,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(100)),
                                               ),
-                                              closedShape:
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100)),
-                                              openBuilder: (_, closeContainer) {
-                                                return AvatarImagePage(
-                                                    profile:
-                                                        this.widget.profile);
-                                              },
-                                              closedBuilder:
-                                                  (_, openContainer) {
-                                                return CircleAvatar(
-                                                  child: Container(
-                                                    color: Colors.white,
-                                                    width: 100,
-                                                    height: 100,
-                                                    child: FadeInImage(
-                                                        image: NetworkImage(
-                                                            widget.profile
-                                                                .getAvatarImg()),
-                                                        placeholder: AssetImage(
-                                                            'assets/loading2.gif'),
-                                                        fit: BoxFit.cover),
-                                                  ),
-                                                );
-                                              })
-                                          : CircleAvatar(
-                                              child: Container(
-                                                width: 100,
-                                                height: 100,
-                                                child: Center(
-                                                  child: Text(
-                                                    widget.profile.user.username
-                                                        .substring(0, 2)
-                                                        .toUpperCase(),
-                                                    style:
-                                                        TextStyle(fontSize: 15),
-                                                  ),
-                                                ),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(100.0)),
+                                                child: (widget
+                                                            .profile.imageAvatar !=
+                                                        "")
+                                                    ? OpenContainer(
+                                                        closedColor:
+                                                            Colors.black,
+                                                        openColor: Colors.black,
+                                                        transitionType:
+                                                            ContainerTransitionType
+                                                                .fade,
+                                                        openShape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      100),
+                                                        ),
+                                                        closedShape:
+                                                            RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            100)),
+                                                        openBuilder: (_,
+                                                            closeContainer) {
+                                                          return AvatarImagePage(
+                                                              profile: this
+                                                                  .widget
+                                                                  .profile);
+                                                        },
+                                                        closedBuilder:
+                                                            (_, openContainer) {
+                                                          return CircleAvatar(
+                                                            child: Container(
+                                                              color:
+                                                                  Colors.white,
+                                                              width: 100,
+                                                              height: 100,
+                                                              child: FadeInImage(
+                                                                  image: NetworkImage(widget
+                                                                      .profile
+                                                                      .getAvatarImg()),
+                                                                  placeholder:
+                                                                      AssetImage(
+                                                                          'assets/loading2.gif'),
+                                                                  fit: BoxFit
+                                                                      .cover),
+                                                            ),
+                                                          );
+                                                        })
+                                                    : CircleAvatar(
+                                                        child: Container(
+                                                          width: 100,
+                                                          height: 100,
+                                                          child: Center(
+                                                            child: Text(
+                                                              widget.profile
+                                                                  .user.username
+                                                                  .substring(
+                                                                      0, 2)
+                                                                  .toUpperCase(),
+                                                              style: TextStyle(
+                                                                  fontSize: 15),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        backgroundColor:
+                                                            currentTheme
+                                                                .accentColor,
+                                                      ),
                                               ),
-                                              backgroundColor:
-                                                  currentTheme.accentColor,
-                                            ),
-                                    ),
-                                  )),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                                            )),
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return _buildErrorWidget(snapshot.error);
+                                    } else {
+                                      return _buildLoadingWidget();
+                                    }
+                                  })),
+                        )),
                   ),
-                ));
-              } else if (snapshot.hasError) {
-                return _buildErrorWidget(snapshot.error);
-              } else {
-                return _buildLoadingWidget();
-              }
-            }),
+                ))),
         (widget.profile.isClub)
             ? StreamBuilder<Subscription>(
                 stream: subscriptionBloc.subscription.stream,

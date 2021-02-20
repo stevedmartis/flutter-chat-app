@@ -450,7 +450,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(
-                                            left: 5.0, top: 5.0),
+                                            left: 5.5, top: 5.5),
                                         child: FaIcon(
                                           FontAwesomeIcons.check,
                                           color: Colors.white,
