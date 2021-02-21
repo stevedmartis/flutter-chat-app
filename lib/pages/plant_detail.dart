@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/plant.dart';
@@ -9,7 +10,6 @@ import 'package:chat/models/visit.dart';
 import 'package:chat/pages/add_update_plant.dart';
 import 'package:chat/pages/add_update_visit.dart';
 import 'package:chat/pages/chat_page.dart';
-import 'package:chat/pages/plant_page.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/plants_provider.dart';
@@ -209,11 +209,18 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                         StretchMode.fadeTitle,
                         // StretchMode.blurBackground
                       ],
-                      background: SafeArea(
-                        child: PlantPage(
-                          plant: plant,
-                        ),
-                      ),
+                      background: Hero(
+                          tag: widget.plant.id,
+                          child: Material(
+                              type: MaterialType.transparency,
+                              child: FadeInImage(
+                                image: NetworkImage(widget.plant.getCoverImg()),
+                                placeholder: AssetImage('assets/loading2.gif'),
+                                fit: BoxFit.cover,
+                                height: 100,
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                              ))),
                       centerTitle: true,
                       title: StreamBuilder<Plant>(
                         stream: plantBloc.plantSelect.stream,
@@ -277,7 +284,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                       ); // image is ready
               } else {
                 return Container(
-                    height: 400.0,
+                    height: 100.0,
                     child: Center(
                         child: CircularProgressIndicator())); // placeholder
               }
@@ -321,7 +328,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                       ); // image is ready
               } else {
                 return Container(
-                    height: 400.0,
+                    height: 500.0,
                     child: Center(
                         child: CircularProgressIndicator())); // placeholder
               }
@@ -364,45 +371,47 @@ class _PlantDetailPageState extends State<PlantDetailPage>
             itemCount: visits.length,
             itemBuilder: (BuildContext ctxt, int index) {
               final visit = visits[index];
-              return Dismissible(
-                  child: CardVisit(visit: visit),
-                  key: UniqueKey(),
-                  direction: DismissDirection.endToStart,
-                  onDismissed: (direction) => {_deleteVisit(visit.id, index)},
-                  background: Container(
-                    height: 170.0,
-                    child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        margin:
-                            EdgeInsets.only(bottom: 20, left: 10, right: 20),
-                        alignment: Alignment.centerRight,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(right: 10),
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.black,
-                                size: 30,
+              return FadeIn(
+                child: Dismissible(
+                    child: CardVisit(visit: visit),
+                    key: UniqueKey(),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) => {_deleteVisit(visit.id, index)},
+                    background: Container(
+                      height: 170.0,
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          margin:
+                              EdgeInsets.only(bottom: 20, left: 10, right: 20),
+                          alignment: Alignment.centerRight,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.black,
+                                  size: 30,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            /* Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600),
-                                ) */
-                          ],
-                        )),
-                  ));
+                              SizedBox(
+                                width: 12,
+                              ),
+                              /* Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600),
+                                  ) */
+                            ],
+                          )),
+                    )),
+              );
             }),
       ),
     );

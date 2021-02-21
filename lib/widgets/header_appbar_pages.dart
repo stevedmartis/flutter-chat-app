@@ -46,7 +46,6 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
     final size = MediaQuery.of(context).size;
     final int number = Provider.of<NotificationModel>(context).number;
 
-    print(number);
     return Container(
       color: Colors.black,
       child: Row(

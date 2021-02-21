@@ -382,21 +382,6 @@ class _ProfileCardState extends State<ProfileCard> {
     );
   }
 
-  Widget _buildLoadingWidget() {
-    return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
-  }
-
-  Widget _buildErrorWidget(String error) {
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text("Error occured: $error"),
-      ],
-    ));
-  }
-
   updateFieldToSubscribe(
       context, SubscribeBloc bloc, color, Subscription subscription) {
     const List<Color> orangeGradients = [

@@ -395,7 +395,6 @@ class LastVisitsByUser extends StatelessWidget {
 }
 
 Widget _buildWidgetPlants(List<Plant> plants, context) {
-  final plantService = Provider.of<PlantService>(context, listen: false);
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
   return (plants.length > 0)

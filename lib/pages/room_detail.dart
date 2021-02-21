@@ -370,6 +370,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             itemCount: plants.length,
             itemBuilder: (BuildContext ctxt, int index) {
               final plant = plants[index];
+
               return OpenContainer(
                   closedColor: currentTheme.scaffoldBackgroundColor,
                   openColor: currentTheme.scaffoldBackgroundColor,
