@@ -62,8 +62,8 @@ dev_dependencies:
 flutter_icons:
     android: "launcher_icon"
     ios: true
-    image_path: "assets/icon/leafety.png"
-    adaptive_icon_background: "assets/icon/leafety.png"
+    image_path: "assets/icon/leafety3.png"
+    adaptive_icon_background: "assets/icon/leafety3.png"
 
 flutter_launcher_name:
   name: "Leafety"

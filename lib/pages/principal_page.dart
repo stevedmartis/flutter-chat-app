@@ -39,12 +39,12 @@ class _PrincipalPageState extends State<PrincipalPage> {
 
   @override
   void dispose() {
+    this.socketService.socket.off('personal-message');
     super.dispose();
     _hideBottomNavController.dispose();
   }
 
   void _listenMessage(dynamic payload) {
-    print(payload);
     final notifiModel = Provider.of<NotificationModel>(context, listen: false);
     int number = notifiModel.number;
     number++;
@@ -87,7 +87,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
 
     final _onFirstPage = (currentPage == 0) ? true : false;
 
-    print(currentPage);
     changeStatusLight();
     return SafeArea(
         child: Scaffold(
@@ -195,32 +194,39 @@ class _BottomNavigationState extends State<BottomNavigation> {
             unselectedItemColor: Colors.white.withOpacity(0.60),
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home,
-                    size: (currentPage == 0) ? 30 : 25,
-                    color: (currentPage == 0)
-                        ? currentTheme.currentTheme.accentColor
-                        : Colors.white.withOpacity(0.60)),
+                icon: (currentPage == 0)
+                    ? Icon(Icons.home, size: 33)
+                    : Icon(Icons.home_outlined,
+                        size: 30,
+                        color: (currentPage == 0)
+                            ? currentTheme.currentTheme.accentColor
+                            : Colors.white.withOpacity(0.60)),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: FaIcon(FontAwesomeIcons.users,
-                    size: (currentPage == 1) ? 30 : 25,
+                icon: Icon(Icons.group,
+                    size: (currentPage == 1) ? 33 : 30,
                     color: (currentPage == 1)
                         ? currentTheme.currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.meeting_room,
-                    size: (currentPage == 2) ? 30 : 28,
-                    color: (currentPage == 2)
-                        ? currentTheme.currentTheme.accentColor
-                        : Colors.white.withOpacity(0.60)),
+                icon: (currentPage == 2)
+                    ? FaIcon(
+                        FontAwesomeIcons.doorOpen,
+                        size: 33,
+                      )
+                    : FaIcon(FontAwesomeIcons.doorClosed,
+                        size: 30,
+                        color: (currentPage == 2)
+                            ? currentTheme.currentTheme.accentColor
+                            : Colors.white.withOpacity(0.60)),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: FaIcon(FontAwesomeIcons.handHoldingMedical,
-                    size: (currentPage == 3) ? 30 : 25,
+                    size: (currentPage == 3) ? 33 : 30,
                     color: (currentPage == 3)
                         ? currentTheme.currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
@@ -230,9 +236,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
                   icon: Stack(
                     children: <Widget>[
                       FaIcon(
-                        FontAwesomeIcons.bell,
-                        color: Colors.white54,
-                        size: 30,
+                        (currentPage == 4)
+                            ? FontAwesomeIcons.solidBell
+                            : FontAwesomeIcons.bell,
+                        color: (currentPage == 4)
+                            ? currentTheme.currentTheme.accentColor
+                            : Colors.white.withOpacity(0.60),
+                        size: (currentPage == 4) ? 33 : 30,
                       ),
                       (number > 0)
                           ? Positioned(

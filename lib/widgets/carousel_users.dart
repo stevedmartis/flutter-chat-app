@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat/models/profiles.dart';
@@ -48,7 +49,8 @@ class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
                 Navigator.of(context)
                     .push(createRouteProfileSelect(widget.profiles[index]));
               },
-              child: Preview(profile: widget.profiles[index]),
+              child:
+                  FadeInLeft(child: Preview(profile: widget.profiles[index])),
             ),
           )
         : ListView.builder(
@@ -59,7 +61,7 @@ class _CarouselUsersSliderCustomState extends State<CarouselUsersSliderCustom> {
             itemBuilder: (BuildContext context, int index) {
               return Container(
                   padding: EdgeInsets.only(right: 15),
-                  child: _buildBox(index: index));
+                  child: FadeInLeft(child: _buildBox(index: index)));
             },
           );
   }

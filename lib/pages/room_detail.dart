@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 
@@ -382,11 +383,13 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     return PlantDetailPage(plant: plant);
                   },
                   closedBuilder: (_, openContainer) {
-                    return Stack(
-                      children: [
-                        CardPlant(plant: plant),
-                        buildCircleFavoritePlant(plant.quantity, context),
-                      ],
+                    return FadeIn(
+                      child: Stack(
+                        children: [
+                          CardPlant(plant: plant),
+                          buildCircleFavoritePlant(plant.quantity, context),
+                        ],
+                      ),
                     );
                   });
             }),

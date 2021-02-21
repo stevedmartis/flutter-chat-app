@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -105,6 +106,7 @@ class _CollapsingListState extends State<CollapsingList>
   @override
   void dispose() {
     _tabController.dispose();
+
     super.dispose();
   }
 
@@ -167,11 +169,10 @@ class _CollapsingListState extends State<CollapsingList>
                     plants = snapshot.data.plants;
                     return _buildWidgetPlants(
                         plants, context); // image is ready
+                  } else if (snapshot.hasError) {
+                    return _buildErrorWidget(snapshot.error);
                   } else {
-                    return Container(
-                        height: 400.0,
-                        child: Center(
-                            child: CircularProgressIndicator())); // placeholder
+                    return _buildLoadingWidget();
                   }
                 },
               ),
@@ -190,11 +191,10 @@ class _CollapsingListState extends State<CollapsingList>
                     visits = snapshot.data.visits;
                     return _buildWidgetVisits(
                         visits, context); // image is ready
+                  } else if (snapshot.hasError) {
+                    return _buildErrorWidget(snapshot.error);
                   } else {
-                    return Container(
-                        height: 400.0,
-                        child: Center(
-                            child: CircularProgressIndicator())); // placeholder
+                    return _buildLoadingWidget();
                   }
                 },
               )
@@ -429,11 +429,13 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
                   return PlantDetailPage(plant: plant);
                 },
                 closedBuilder: (_, openContainer) {
-                  return Stack(
-                    children: [
-                      CardPlant(plant: plant),
-                      buildCircleFavoritePlant(plant.quantity, context),
-                    ],
+                  return FadeInRight(
+                    child: Stack(
+                      children: [
+                        CardPlant(plant: plant),
+                        buildCircleFavoritePlant(plant.quantity, context),
+                      ],
+                    ),
                   );
                 });
           },
@@ -468,7 +470,9 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
               Navigator.of(context).push(createRouteNewVisit(
                   visits[index], visits[index].plant, true)),
             },
-            child: CardVisit(visit: visits[index]),
+            child: FadeInRight(
+                delay: Duration(milliseconds: 300),
+                child: CardVisit(visit: visits[index])),
           ),
         )
       : Container();

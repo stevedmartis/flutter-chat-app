@@ -165,25 +165,30 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       )),
 
                   actions: [
-                    Container(
-                        width: 40,
-                        height: 40,
-                        margin: EdgeInsets.only(right: 20),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          child: CircleAvatar(
-                              child: Center(
-                                child: IconButton(
-                                  icon: Icon(Icons.add,
-                                      size: size.width / 15,
-                                      color: (_showTitle)
-                                          ? currentTheme.accentColor
-                                          : Colors.white),
-                                  onPressed: () => createSelectionNvigator(),
-                                ),
-                              ),
-                              backgroundColor: Colors.black.withOpacity(0.60)),
-                        )),
+                    (!widget.isUserAuth)
+                        ? Container(
+                            width: 40,
+                            height: 40,
+                            margin: EdgeInsets.only(right: 20),
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              child: CircleAvatar(
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: FaIcon(FontAwesomeIcons.commentDots,
+                                          size: 30,
+                                          color: (_showTitle)
+                                              ? currentTheme.accentColor
+                                              : Colors.white),
+                                      onPressed: () => Navigator.push(
+                                          context, createRouteChat()),
+                                    ),
+                                  ),
+                                  backgroundColor:
+                                      Colors.black.withOpacity(0.60)),
+                            ))
+                        : Container(),
                   ],
 
                   centerTitle: false,

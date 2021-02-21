@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/subscribe_bloc.dart';
@@ -56,6 +57,12 @@ class _ProfileCardState extends State<ProfileCard> {
 
   Subscription subscription;
 
+  Stream streamSubscription;
+  bool loadSub = false;
+
+  bool isSuscriptionApprove = false;
+  bool isSuscriptionActive = false;
+
   @override
   void initState() {
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -67,7 +74,20 @@ class _ProfileCardState extends State<ProfileCard> {
     subscriptionBloc.getSubscription(
         profileClub.user.uid, widget.profile.user.uid);
 
-    setState(() {});
+    subscriptionBloc.subscription.stream.listen((onData) {
+      setState(() {
+        subscription = onData;
+
+        isSuscriptionApprove = subscription.subscribeApproved;
+        isSuscriptionActive = subscription.subscribeActive;
+
+        final chatService = Provider.of<ChatService>(context, listen: false);
+        chatService.userFor.subscribeActive = isSuscriptionActive;
+        chatService.userFor.subscribeApproved = isSuscriptionApprove;
+
+        loadSub = true;
+      });
+    });
   }
 
   File imageCover;
@@ -83,12 +103,16 @@ class _ProfileCardState extends State<ProfileCard> {
     final awsService = Provider.of<AwsService>(context, listen: false);
     final bloc = CustomProvider.subscribeBlocIn(context);
 
+    final chatService = Provider.of<ChatService>(context, listen: false);
+    final profileUser =
+        (widget.isUserAuth) ? widget.profile : chatService.userFor;
+
     return Stack(
       children: [
         Hero(
-            tag: widget.profile.imageHeader,
+            tag: profileUser.imageHeader,
             child: FadeInImage(
-              image: NetworkImage(widget.profile.getHeaderImg()),
+              image: NetworkImage(profileUser.getHeaderImg()),
               placeholder: AssetImage('assets/loading2.gif'),
               fit: BoxFit.cover,
               height: size.height,
@@ -99,265 +123,216 @@ class _ProfileCardState extends State<ProfileCard> {
             child: Container(
                 margin: EdgeInsets.only(left: (widget.isUserEdit) ? 0 : 22),
                 child: Align(
-                  alignment: (widget.isUserEdit)
-                      ? Alignment.bottomCenter
-                      : Alignment.bottomLeft,
-                  child: CircleAvatar(
-                    radius: 55,
-                    backgroundColor: currentTheme.scaffoldBackgroundColor,
+                    alignment: (widget.isUserEdit)
+                        ? Alignment.bottomCenter
+                        : Alignment.bottomLeft,
                     child: CircleAvatar(
-                        radius: ProfileCard.avatarRadius + 120,
+                        radius: 55,
                         backgroundColor: currentTheme.scaffoldBackgroundColor,
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          child: Hero(
-                              tag: widget.profile.user.uid,
-                              child: StreamBuilder<Subscription>(
-                                  stream: subscriptionBloc.subscription.stream,
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<Subscription> snapshot) {
-                                    if (snapshot.hasData) {
-                                      subscription = snapshot.data;
-                                      final isSuscribeApprove =
-                                          subscription.subscribeApproved;
-                                      final isSuscribeActive =
-                                          subscription.subscribeActive;
-
-                                      return GestureDetector(
-                                        onTap: () {
-                                          this.widget.profile.subscribeActive =
-                                              (profileClub.isClub)
-                                                  ? true
-                                                  : isSuscribeActive;
-                                          this
-                                                  .widget
-                                                  .profile
-                                                  .subscribeApproved =
-                                              (profileClub.isClub)
-                                                  ? true
-                                                  : isSuscribeApprove;
-
-                                          final chatService =
-                                              Provider.of<ChatService>(context,
-                                                  listen: false);
-                                          chatService.userFor =
-                                              this.widget.profile;
-                                          (!widget.isUserAuth)
-                                              ? Navigator.of(context)
-                                                  .push(createRouteChat())
-                                              : Navigator.of(context).push(
-                                                  createRouteAvatarProfile(
-                                                      this.widget.profile));
-                                        },
-                                        child: Material(
-                                            type: MaterialType.transparency,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(100)),
-                                              ),
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(100.0)),
-                                                child: (widget
-                                                            .profile.imageAvatar !=
-                                                        "")
-                                                    ? OpenContainer(
-                                                        closedColor:
-                                                            Colors.black,
-                                                        openColor: Colors.black,
-                                                        transitionType:
-                                                            ContainerTransitionType
-                                                                .fade,
-                                                        openShape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      100),
-                                                        ),
-                                                        closedShape:
-                                                            RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            100)),
-                                                        openBuilder: (_,
-                                                            closeContainer) {
-                                                          return AvatarImagePage(
-                                                              profile: this
-                                                                  .widget
-                                                                  .profile);
-                                                        },
-                                                        closedBuilder:
-                                                            (_, openContainer) {
-                                                          return CircleAvatar(
-                                                            child: Container(
-                                                              color:
-                                                                  Colors.white,
-                                                              width: 100,
-                                                              height: 100,
-                                                              child: FadeInImage(
-                                                                  image: NetworkImage(widget
-                                                                      .profile
-                                                                      .getAvatarImg()),
-                                                                  placeholder:
-                                                                      AssetImage(
-                                                                          'assets/loading2.gif'),
-                                                                  fit: BoxFit
-                                                                      .cover),
-                                                            ),
-                                                          );
-                                                        })
-                                                    : CircleAvatar(
-                                                        child: Container(
-                                                          width: 100,
-                                                          height: 100,
-                                                          child: Center(
-                                                            child: Text(
-                                                              widget.profile
-                                                                  .user.username
-                                                                  .substring(
-                                                                      0, 2)
-                                                                  .toUpperCase(),
-                                                              style: TextStyle(
-                                                                  fontSize: 15),
-                                                            ),
+                        child: CircleAvatar(
+                            radius: ProfileCard.avatarRadius + 120,
+                            backgroundColor:
+                                currentTheme.scaffoldBackgroundColor,
+                            child: Container(
+                                width: 100,
+                                height: 100,
+                                child: Hero(
+                                    tag: profileUser.user.uid,
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: Material(
+                                          type: MaterialType.transparency,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(100)),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(100.0)),
+                                              child: (profileUser.imageAvatar !=
+                                                      "")
+                                                  ? OpenContainer(
+                                                      closedColor: Colors.black,
+                                                      openColor: Colors.black,
+                                                      transitionType:
+                                                          ContainerTransitionType
+                                                              .fade,
+                                                      openShape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
+                                                      ),
+                                                      closedShape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          100)),
+                                                      openBuilder:
+                                                          (_, closeContainer) {
+                                                        return AvatarImagePage(
+                                                            profile: this
+                                                                .widget
+                                                                .profile);
+                                                      },
+                                                      closedBuilder:
+                                                          (_, openContainer) {
+                                                        return CircleAvatar(
+                                                          child: Container(
+                                                            color: Colors.white,
+                                                            width: 100,
+                                                            height: 100,
+                                                            child: FadeInImage(
+                                                                image: NetworkImage(
+                                                                    profileUser
+                                                                        .getAvatarImg()),
+                                                                placeholder:
+                                                                    AssetImage(
+                                                                        'assets/loading2.gif'),
+                                                                fit: BoxFit
+                                                                    .cover),
+                                                          ),
+                                                        );
+                                                      })
+                                                  : CircleAvatar(
+                                                      child: Container(
+                                                        width: 100,
+                                                        height: 100,
+                                                        child: Center(
+                                                          child: Text(
+                                                            profileUser
+                                                                .user.username
+                                                                .substring(0, 2)
+                                                                .toUpperCase(),
+                                                            style: TextStyle(
+                                                                fontSize: 15),
                                                           ),
                                                         ),
-                                                        backgroundColor:
-                                                            currentTheme
-                                                                .accentColor,
                                                       ),
-                                              ),
-                                            )),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return _buildErrorWidget(snapshot.error);
-                                    } else {
-                                      return _buildLoadingWidget();
-                                    }
-                                  })),
-                        )),
+                                                      backgroundColor:
+                                                          currentTheme
+                                                              .accentColor,
+                                                    ),
+                                            ),
+                                          )),
+                                    )))))))),
+        (!widget.isUserAuth &&
+                loadSub &&
+                profileUser.isClub &&
+                subscription.subscribeActive &&
+                subscription.isUpload &&
+                !subscription.subscribeApproved)
+            ? Container(
+                //top: size.height / 3.5,
+                padding: EdgeInsets.only(top: 35.0),
+                margin: EdgeInsets.only(
+                    top: size.height / 4.5,
+                    left: size.width / 1.8,
+                    right: size.width / 20),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: ButtonSubEditProfile(
+                      color: currentTheme.scaffoldBackgroundColor
+                          .withOpacity(0.60),
+                      textColor: (widget.isUserAuth)
+                          ? Colors.white.withOpacity(0.50)
+                          : Colors.white,
+                      text: widget.isUserAuth ? 'Editar perfil' : 'Pendiente',
+                      onPressed: () {
+                        (widget.isUserAuth)
+                            ? Navigator.of(context)
+                                .push(createRouteEditProfile())
+                            : unSubscribe(
+                                context,
+                                bloc,
+                                currentTheme.accentColor,
+                                awsService.isUploadRecipe);
+                      }),
+                ),
+              )
+            : Container(),
+        (!widget.isUserAuth &&
+                loadSub &&
+                profileUser.isClub &&
+                subscription.subscribeActive &&
+                subscription.isUpload &&
+                subscription.subscribeApproved)
+            ? FadeIn(
+                duration: Duration(milliseconds: 500),
+                child: Container(
+                  //top: size.height / 3.5,
+                  padding: EdgeInsets.only(top: 35.0),
+                  margin: EdgeInsets.only(
+                      top: size.height / 4.5,
+                      left: size.width / 1.9,
+                      right: size.width / 20),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: ButtonSubEditProfile(
+                        color: currentTheme.scaffoldBackgroundColor
+                            .withOpacity(0.60),
+                        textColor: (widget.isUserAuth)
+                            ? Colors.white.withOpacity(0.50)
+                            : currentTheme.accentColor,
+                        text: widget.isUserAuth ? 'Editar perfil' : 'SUSCRITO',
+                        onPressed: () {
+                          (widget.isUserAuth)
+                              ? Navigator.of(context)
+                                  .push(createRouteEditProfile())
+                              : unSubscribe(
+                                  context,
+                                  bloc,
+                                  currentTheme.accentColor,
+                                  awsService.isUploadRecipe);
+                        }),
                   ),
-                ))),
-        (widget.profile.isClub)
-            ? StreamBuilder<Subscription>(
-                stream: subscriptionBloc.subscription.stream,
-                builder: (BuildContext context,
-                    AsyncSnapshot<Subscription> snapshot) {
-                  isData = snapshot.hasData;
-
-                  final subscription = snapshot.data;
-
-                  if (isData) {
-                    if (subscription.subscribeActive &&
-                        subscription.isUpload &&
-                        !subscription.subscribeApproved) {
-                      return Container(
-                        //top: size.height / 3.5,
-                        padding: EdgeInsets.only(top: 35.0),
-                        margin: EdgeInsets.only(
-                            top: size.height / 4.5,
-                            left: size.width / 1.8,
-                            right: size.width / 20),
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: ButtonSubEditProfile(
-                              color: currentTheme.scaffoldBackgroundColor
-                                  .withOpacity(0.60),
-                              textColor: (widget.isUserAuth)
-                                  ? Colors.white.withOpacity(0.50)
-                                  : Colors.white,
-                              text: widget.isUserAuth
-                                  ? 'Editar perfil'
-                                  : 'Pendiente',
-                              onPressed: () {
-                                (widget.isUserAuth)
-                                    ? Navigator.of(context)
-                                        .push(createRouteEditProfile())
-                                    : unSubscribe(
-                                        context,
-                                        bloc,
-                                        currentTheme.accentColor,
-                                        awsService.isUploadRecipe);
-                              }),
-                        ),
-                      );
-                    } else if (subscription.subscribeActive &&
-                        subscription.isUpload &&
-                        subscription.subscribeApproved) {
-                      return Container(
-                        //top: size.height / 3.5,
-                        padding: EdgeInsets.only(top: 35.0),
-                        margin: EdgeInsets.only(
-                            top: size.height / 4.5,
-                            left: size.width / 1.9,
-                            right: size.width / 20),
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: ButtonSubEditProfile(
-                              color: currentTheme.scaffoldBackgroundColor
-                                  .withOpacity(0.60),
-                              textColor: (widget.isUserAuth)
-                                  ? Colors.white.withOpacity(0.50)
-                                  : currentTheme.accentColor,
-                              text: widget.isUserAuth
-                                  ? 'Editar perfil'
-                                  : 'SUSCRITO',
-                              onPressed: () {
-                                (widget.isUserAuth)
-                                    ? Navigator.of(context)
-                                        .push(createRouteEditProfile())
-                                    : unSubscribe(
-                                        context,
-                                        bloc,
-                                        currentTheme.accentColor,
-                                        awsService.isUploadRecipe);
-                              }),
-                        ),
-                      );
-                    } else {
-                      return Container(
-                        //top: size.height / 3.5,
-                        padding: EdgeInsets.only(top: 35.0),
-                        margin: EdgeInsets.only(
-                            top: size.height / 4.5,
-                            left: size.width / 1.9,
-                            right: size.width / 20),
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: ButtonSubEditProfile(
-                              color: currentTheme.scaffoldBackgroundColor
-                                  .withOpacity(0.60),
-                              textColor: (widget.isUserAuth)
-                                  ? Colors.white.withOpacity(0.50)
-                                  : currentTheme.accentColor,
-                              text: widget.isUserAuth
-                                  ? 'Editar perfil'
-                                  : 'SUSCRIBIRME',
-                              onPressed: () {
-                                (widget.isUserAuth)
-                                    ? Navigator.of(context)
-                                        .push(createRouteEditProfile())
-                                    : updateFieldToSubscribe(
-                                        context,
-                                        bloc,
-                                        currentTheme.accentColor,
-                                        subscription,
-                                      );
-                              }),
-                        ),
-                      );
-                    }
-                  } else if (snapshot.hasError) {
-                    return _buildErrorWidget(snapshot.error);
-                  } else {
-                    return _buildLoadingWidget();
-                  }
-                })
-            : Container(
+                ),
+              )
+            : Container(),
+        (!widget.isUserAuth &&
+                loadSub &&
+                profileUser.isClub &&
+                !subscription.subscribeActive &&
+                subscription.isUpload &&
+                subscription.subscribeApproved)
+            ? FadeIn(
+                duration: Duration(milliseconds: 500),
+                child: Container(
+                  //top: size.height / 3.5,
+                  padding: EdgeInsets.only(top: 35.0),
+                  margin: EdgeInsets.only(
+                      top: size.height / 4.5,
+                      left: size.width / 1.9,
+                      right: size.width / 20),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: ButtonSubEditProfile(
+                        color: currentTheme.scaffoldBackgroundColor
+                            .withOpacity(0.60),
+                        textColor: (widget.isUserAuth)
+                            ? Colors.white.withOpacity(0.50)
+                            : currentTheme.accentColor,
+                        text:
+                            widget.isUserAuth ? 'Editar perfil' : 'SUSCRIBIRME',
+                        onPressed: () {
+                          (widget.isUserAuth)
+                              ? Navigator.of(context)
+                                  .push(createRouteEditProfile())
+                              : updateFieldToSubscribe(
+                                  context,
+                                  bloc,
+                                  currentTheme.accentColor,
+                                  subscription,
+                                );
+                        }),
+                  ),
+                ),
+              )
+            : Container(),
+        (widget.isUserAuth)
+            ? Container(
                 //top: size.height / 3.5,
                 padding: EdgeInsets.only(top: 35.0),
                 margin: EdgeInsets.only(
@@ -381,6 +356,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                 createRouteRecipeViewImage(widget.profile));
                       }),
                 ))
+            : Container()
       ],
     );
   }
@@ -464,8 +440,8 @@ class _ProfileCardState extends State<ProfileCard> {
                                     child: Text('Enviar'),
                                     elevation: 5,
                                     textColor: Colors.blue,
-                                    onPressed: () => addSubscription(
-                                        context, bloc, subscription))),
+                                    onPressed: () =>
+                                        addSubscription(context, bloc))),
                             Expanded(
                               child: MaterialButton(
                                   child: Text(
@@ -493,7 +469,6 @@ class _ProfileCardState extends State<ProfileCard> {
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     isData = snapshot.hasData;
 
-                    print(subscription.isUpload);
                     return (!subscription.isUpload && !isData)
                         ? Column(
                             children: [
@@ -552,14 +527,13 @@ class _ProfileCardState extends State<ProfileCard> {
                                 child: Text(
                                   'ENVIAR',
                                   style: TextStyle(
-                                      color: (subscription.isUpload || isData)
+                                      color: (subscription.isUpload || loadSub)
                                           ? color
                                           : Colors.white54),
                                 ),
                                 onPressed: () =>
-                                    (subscription.isUpload || isData)
-                                        ? addSubscription(
-                                            context, bloc, subscription)
+                                    (subscription.isUpload || loadSub)
+                                        ? addSubscription(context, bloc)
                                         : null),
                           ),
                           Expanded(
@@ -620,8 +594,8 @@ class _ProfileCardState extends State<ProfileCard> {
                                     child: Text('Enviar'),
                                     elevation: 5,
                                     textColor: Colors.blue,
-                                    onPressed: () => addSubscription(
-                                        context, bloc, subscription))),
+                                    onPressed: () =>
+                                        addSubscription(context, bloc))),
                             Expanded(
                               child: MaterialButton(
                                   child: Text(
@@ -656,7 +630,7 @@ class _ProfileCardState extends State<ProfileCard> {
                             'ANULAR SUSCRIPCIÓN',
                             style: TextStyle(color: color, fontSize: 15),
                           ),
-                          onPressed: () => (isData)
+                          onPressed: () => (loadSub)
                               ? unSubscription(
                                   context,
                                   bloc,
@@ -708,10 +682,11 @@ class _ProfileCardState extends State<ProfileCard> {
 }
 
 void addSubscription(
-    context, SubscribeBloc bloc, Subscription subscriptionExist) async {
-  Subscription subscription = (bloc.subscription.value != null)
-      ? bloc.subscription.value
-      : subscriptionExist;
+  context,
+  SubscribeBloc bloc,
+) async {
+  Subscription subscription = subscriptionBloc.subscription.value;
+
   //final socketService = Provider.of<SocketService>(context, listen: false);
   //  socketService.emit('add-band', {'name': name});
   final subscriptionService =
