@@ -195,7 +195,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             items: [
               BottomNavigationBarItem(
                 icon: (currentPage == 0)
-                    ? Icon(Icons.home, size: 33)
+                    ? Icon(Icons.home, size: 30)
                     : Icon(Icons.home_outlined,
                         size: 30,
                         color: (currentPage == 0)
@@ -205,7 +205,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.group,
-                    size: (currentPage == 1) ? 33 : 30,
+                    size: (currentPage == 1) ? 30 : 30,
                     color: (currentPage == 1)
                         ? currentTheme.currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
@@ -215,7 +215,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 icon: (currentPage == 2)
                     ? FaIcon(
                         FontAwesomeIcons.doorOpen,
-                        size: 33,
+                        size: 30,
                       )
                     : FaIcon(FontAwesomeIcons.doorClosed,
                         size: 30,
@@ -226,7 +226,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               ),
               BottomNavigationBarItem(
                 icon: FaIcon(FontAwesomeIcons.handHoldingMedical,
-                    size: (currentPage == 3) ? 33 : 30,
+                    size: (currentPage == 3) ? 30 : 30,
                     color: (currentPage == 3)
                         ? currentTheme.currentTheme.accentColor
                         : Colors.white.withOpacity(0.60)),
@@ -235,14 +235,17 @@ class _BottomNavigationState extends State<BottomNavigation> {
               BottomNavigationBarItem(
                   icon: Stack(
                     children: <Widget>[
-                      FaIcon(
-                        (currentPage == 4)
-                            ? FontAwesomeIcons.solidBell
-                            : FontAwesomeIcons.bell,
-                        color: (currentPage == 4)
-                            ? currentTheme.currentTheme.accentColor
-                            : Colors.white.withOpacity(0.60),
-                        size: (currentPage == 4) ? 33 : 30,
+                      Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: FaIcon(
+                          (currentPage == 4)
+                              ? FontAwesomeIcons.solidBell
+                              : FontAwesomeIcons.bell,
+                          color: (currentPage == 4)
+                              ? currentTheme.currentTheme.accentColor
+                              : Colors.white.withOpacity(0.60),
+                          size: (currentPage == 4) ? 30 : 30,
+                        ),
                       ),
                       (number > 0)
                           ? Positioned(

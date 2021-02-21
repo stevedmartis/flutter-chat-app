@@ -100,23 +100,19 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     _tabController = new TabController(vsync: this, length: 1);
 
-    final plantService = Provider.of<PlantService>(context, listen: false);
-
-    plant = (plantService.plant != null) ? plantService.plant : widget.plant;
-
     plantBloc.imageUpdate.add(true);
 
     super.initState();
     //  name = widget.profile.name;
     plantBloc.getPlant(widget.plant);
 
-    setState(() {});
     //roomBloc.getRooms(widget.profile.user.uid);
   }
 
   @override
   void dispose() {
     super.dispose();
+
     _scrollController?.dispose();
     _tabController.dispose();
   }
@@ -133,6 +129,11 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
     final visitService = Provider.of<VisitService>(context, listen: false);
     final aws = Provider.of<AwsService>(context, listen: false);
+
+    final plantService = Provider.of<PlantService>(context, listen: false);
+    setState(() {
+      plant = (plantService.plant != null) ? plantService.plant : widget.plant;
+    });
 
     return Scaffold(
         // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
@@ -163,10 +164,13 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                       color: (_showTitle)
                                           ? currentTheme.accentColor
                                           : Colors.white),
-                                  onPressed: () => {
-                                        {},
-                                        Navigator.pop(context),
-                                      }),
+                                  onPressed: () {
+                                    final plantService =
+                                        Provider.of<PlantService>(context,
+                                            listen: false);
+                                    plantService.plant = null;
+                                    Navigator.pop(context);
+                                  }),
                               backgroundColor: Colors.black.withOpacity(0.60)),
                         )),
 
@@ -209,9 +213,18 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                         StretchMode.fadeTitle,
                         // StretchMode.blurBackground
                       ],
-                      background: Hero(
-                          tag: widget.plant.id,
-                          child: Material(
+                      background: (plantService.plant != null)
+                          ? Material(
+                              type: MaterialType.transparency,
+                              child: FadeInImage(
+                                image: NetworkImage(plant.getCoverImg()),
+                                placeholder: AssetImage('assets/loading2.gif'),
+                                fit: BoxFit.cover,
+                                height: 100,
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                              ))
+                          : Material(
                               type: MaterialType.transparency,
                               child: FadeInImage(
                                 image: NetworkImage(widget.plant.getCoverImg()),
@@ -220,7 +233,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                 height: 100,
                                 width: double.infinity,
                                 alignment: Alignment.center,
-                              ))),
+                              )),
                       centerTitle: true,
                       title: StreamBuilder<Plant>(
                         stream: plantBloc.plantSelect.stream,
@@ -755,7 +768,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                               aws.isUploadImagePlant = false;
                               plantService.plant = plant;
                               Navigator.of(context)
-                                  .push(createRouteEditPlant(plant));
+                                  .push(createRouteEditPlant(widget.plant));
                             }),
                       ),
                     ),

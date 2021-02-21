@@ -880,13 +880,13 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         if (editPlantRes.ok) {
           // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
 
-          plantService.plant = editPlantRes.plant;
           plantBloc.getPlant(editPlantRes.plant);
           plantBloc.getPlantsByUser(profile.user.uid);
 
           setState(() {
             loading = false;
             awsService.isUploadImagePlant = true;
+            plantService.plant = editPlantRes.plant;
           });
           // room = editRoomRes.room;
 

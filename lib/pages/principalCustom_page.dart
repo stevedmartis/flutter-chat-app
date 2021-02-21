@@ -415,6 +415,7 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
           itemCount: plants.length,
           itemBuilder: (BuildContext context, int index) {
             final plant = plants[index];
+
             return OpenContainer(
                 closedColor: currentTheme.scaffoldBackgroundColor,
                 openColor: currentTheme.scaffoldBackgroundColor,

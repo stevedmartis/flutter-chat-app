@@ -447,7 +447,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                   ),
                             (isClub)
                                 ? Container(
-                                    margin: EdgeInsets.only(left: 20),
+                                    margin: EdgeInsets.only(left: 10),
                                     child: Stack(children: [
                                       FaIcon(
                                         FontAwesomeIcons.certificate,
