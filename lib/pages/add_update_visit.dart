@@ -176,6 +176,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
 
     final size = MediaQuery.of(context).size;
 
+    final visitService = Provider.of<VisitService>(context, listen: false);
+    final awsService = Provider.of<AwsService>(context, listen: false);
+
     final isControllerChange = isAboutChange ||
         isCutChange ||
         isDegreesChange ||
@@ -196,9 +199,12 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
             color: currentTheme.accentColor,
           ),
           iconSize: 30,
-          onPressed: () =>
-              //  Navigator.pushReplacement(context, createRouteProfile()),
-              Navigator.pop(context),
+          onPressed: () {
+            visitService.visit = null;
+            awsService.isUpload = false;
+            //  Navigator.pushReplacement(context, createRouteProfile()),
+            Navigator.pop(context);
+          },
           color: Colors.white,
         ),
         title: (widget.isEdit) ? Text('Editar visita') : Text('Nueva visita'),
@@ -226,30 +232,57 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                         stream: visitBloc.imageUpdate.stream,
                         builder: (context, AsyncSnapshot<bool> snapshot) {
                           if (snapshot.hasData) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(PageRouteBuilder(
-                                    transitionDuration:
-                                        Duration(milliseconds: 200),
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        CoverImageVisitPage(
-                                            visit: this.visit,
-                                            isEdit: widget.isEdit)));
-                              },
-                              child: Hero(
-                                tag: widget.visit.coverImage,
-                                child: Image(
-                                  image: NetworkImage(
-                                    this.visit.getCoverImg(),
-                                  ),
-                                  fit: BoxFit.cover,
-                                  height: double.infinity,
-                                  width: double.infinity,
-                                  alignment: Alignment.center,
-                                ),
-                              ),
-                            );
+                            return (visitService.visit != null)
+                                ? GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          PageRouteBuilder(
+                                              transitionDuration:
+                                                  Duration(milliseconds: 200),
+                                              pageBuilder: (context, animation,
+                                                      secondaryAnimation) =>
+                                                  CoverImageVisitPage(
+                                                      visit: visitService.visit,
+                                                      isEdit: widget.isEdit)));
+                                    },
+                                    child: Hero(
+                                      tag: visitService.visit.coverImage,
+                                      child: Image(
+                                        image: NetworkImage(
+                                          visitService.visit.getCoverImg(),
+                                        ),
+                                        fit: BoxFit.cover,
+                                        height: double.infinity,
+                                        width: double.infinity,
+                                        alignment: Alignment.center,
+                                      ),
+                                    ),
+                                  )
+                                : GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          PageRouteBuilder(
+                                              transitionDuration:
+                                                  Duration(milliseconds: 200),
+                                              pageBuilder: (context, animation,
+                                                      secondaryAnimation) =>
+                                                  CoverImageVisitPage(
+                                                      visit: widget.visit,
+                                                      isEdit: widget.isEdit)));
+                                    },
+                                    child: Hero(
+                                      tag: widget.visit.coverImage,
+                                      child: Image(
+                                        image: NetworkImage(
+                                          widget.visit.getCoverImg(),
+                                        ),
+                                        fit: BoxFit.cover,
+                                        height: double.infinity,
+                                        width: double.infinity,
+                                        alignment: Alignment.center,
+                                      ),
+                                    ),
+                                  );
                           } else if (snapshot.hasError) {
                             return _buildErrorWidget(snapshot.error);
                           } else {

@@ -331,6 +331,46 @@ class _ProfileCardState extends State<ProfileCard> {
                 ),
               )
             : Container(),
+        (!widget.isUserAuth &&
+                loadSub &&
+                profileUser.isClub &&
+                !subscription.subscribeActive &&
+                subscription.isUpload &&
+                !subscription.subscribeApproved)
+            ? FadeIn(
+                duration: Duration(milliseconds: 500),
+                child: Container(
+                  //top: size.height / 3.5,
+                  padding: EdgeInsets.only(top: 35.0),
+                  margin: EdgeInsets.only(
+                      top: size.height / 4.5,
+                      left: size.width / 1.9,
+                      right: size.width / 20),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: ButtonSubEditProfile(
+                        color: currentTheme.scaffoldBackgroundColor
+                            .withOpacity(0.60),
+                        textColor: (widget.isUserAuth)
+                            ? Colors.white.withOpacity(0.50)
+                            : currentTheme.accentColor,
+                        text:
+                            widget.isUserAuth ? 'Editar perfil' : 'SUSCRIBIRME',
+                        onPressed: () {
+                          (widget.isUserAuth)
+                              ? Navigator.of(context)
+                                  .push(createRouteEditProfile())
+                              : updateFieldToSubscribe(
+                                  context,
+                                  bloc,
+                                  currentTheme.accentColor,
+                                  subscription,
+                                );
+                        }),
+                  ),
+                ),
+              )
+            : Container(),
         (widget.isUserAuth)
             ? Container(
                 //top: size.height / 3.5,

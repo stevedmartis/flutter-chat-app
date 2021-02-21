@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:animations/animations.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/plant.dart';
@@ -376,6 +377,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   }
 
   Widget _buildWidgetVisits(visits) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
       child: SizedBox(
         child: ListView.builder(
@@ -384,47 +387,67 @@ class _PlantDetailPageState extends State<PlantDetailPage>
             itemCount: visits.length,
             itemBuilder: (BuildContext ctxt, int index) {
               final visit = visits[index];
-              return FadeIn(
-                child: Dismissible(
-                    child: CardVisit(visit: visit),
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) => {_deleteVisit(visit.id, index)},
-                    background: Container(
-                      height: 170.0,
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          margin:
-                              EdgeInsets.only(bottom: 20, left: 10, right: 20),
-                          alignment: Alignment.centerRight,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(right: 10),
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors.black,
-                                  size: 30,
+
+              return OpenContainer(
+                  closedColor: currentTheme.scaffoldBackgroundColor,
+                  openColor: currentTheme.scaffoldBackgroundColor,
+                  transitionType: ContainerTransitionType.fade,
+                  openShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  closedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  openBuilder: (_, closeContainer) {
+                    return AddUpdateVisitPage(
+                      visit: visit,
+                      plant: visit.plant,
+                      isEdit: true,
+                    );
+                  },
+                  closedBuilder: (_, openContainer) {
+                    return FadeIn(
+                      child: Dismissible(
+                          child: CardVisit(visit: visit),
+                          key: UniqueKey(),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) =>
+                              {_deleteVisit(visit.id, index)},
+                          background: Container(
+                            height: 170.0,
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              /* Text(
+                                margin: EdgeInsets.only(
+                                    bottom: 20, left: 10, right: 20),
+                                alignment: Alignment.centerRight,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(right: 10),
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.black,
+                                        size: 30,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 12,
+                                    ),
+                                    /* Text(
                                     'Delete',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600),
                                   ) */
-                            ],
+                                  ],
+                                )),
                           )),
-                    )),
-              );
+                    );
+                  });
             }),
       ),
     );

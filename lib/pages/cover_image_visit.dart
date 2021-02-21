@@ -106,11 +106,13 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
       setState(() {
         visitBloc.imageUpdate.add(true);
 
-        visitBloc.getVisitsByUser(widget.visit.user);
+        widget.visit.coverImage = resp;
 
-        visitService.visit.coverImage = resp;
+        visitService.visit = widget.visit;
 
         awsService.isUpload = true;
+
+        visitBloc.getVisitsByUser(widget.visit.user);
       });
     } else {
       print('No image selected.');
@@ -135,11 +137,14 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
 
       setState(() {
         visitBloc.imageUpdate.add(true);
-        visitBloc.getVisitsByUser(widget.visit.user);
 
-        visitService.visit.coverImage = resp;
+        widget.visit.coverImage = resp;
+
+        visitService.visit = widget.visit;
 
         awsService.isUpload = true;
+
+        visitBloc.getVisitsByUser(widget.visit.user);
       });
     } else {
       print('No image selected.');

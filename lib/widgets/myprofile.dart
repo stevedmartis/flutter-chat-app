@@ -452,14 +452,15 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                       FaIcon(
                                         FontAwesomeIcons.certificate,
                                         color: currentTheme.accentColor,
+                                        size: 20,
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(
-                                            left: 5.5, top: 5.5),
+                                            left: 4.5, top: 4.5),
                                         child: FaIcon(
                                           FontAwesomeIcons.check,
-                                          color: Colors.white,
-                                          size: 12,
+                                          color: Colors.black,
+                                          size: 11,
                                         ),
                                       )
                                     ]),

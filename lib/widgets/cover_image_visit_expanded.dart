@@ -52,7 +52,7 @@ class _ImageCoverVisitExpandedState extends State<ImageCoverVisitExpanded> {
           minScale: 0.5,
           maxScale: 4,
           child: Image(
-            image: NetworkImage(visit.getCoverImg()),
+            image: NetworkImage(widget.visit.getCoverImg()),
             fit: BoxFit.cover,
             width: double.maxFinite,
           ),

@@ -14,7 +14,6 @@ import 'package:chat/models/visits_response.dart';
 import 'package:chat/pages/plant_detail.dart';
 import 'package:chat/pages/room_detail.dart';
 import 'package:chat/services/auth_service.dart';
-import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/users_service.dart';
 import 'package:chat/services/visit_service.dart';
@@ -28,6 +27,8 @@ import 'package:chat/widgets/visit_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'add_update_visit.dart';
 
 class CollapsingList extends StatefulWidget {
   @override
@@ -444,8 +445,7 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
 }
 
 Widget _buildWidgetVisits(List<Visit> visits, context) {
-  final visitService = Provider.of<VisitService>(context, listen: false);
-  final awsService = Provider.of<AwsService>(context, listen: false);
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
   return (visits.length > 0)
       ? CarouselSlider.builder(
@@ -463,18 +463,35 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
             scrollDirection: Axis.horizontal,
           ),
           itemCount: visits.length,
-          itemBuilder: (BuildContext context, int index) => GestureDetector(
-            onTap: () => {
-              awsService.isUpload = false,
-              visitService.visit = visits[index],
-              Navigator.of(context).push(createRouteNewVisit(
-                  visits[index], visits[index].plant, true)),
-            },
-            child: FadeInRight(
-                delay: Duration(milliseconds: 300),
-                child: CardVisit(visit: visits[index])),
-          ),
-        )
+          itemBuilder: (BuildContext context, int index) {
+            final visit = visits[index];
+
+            return OpenContainer(
+                closedColor: currentTheme.scaffoldBackgroundColor,
+                openColor: currentTheme.scaffoldBackgroundColor,
+                transitionType: ContainerTransitionType.fade,
+                openShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                closedShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0)),
+                openBuilder: (_, closeContainer) {
+                  return AddUpdateVisitPage(
+                    visit: visit,
+                    plant: visit.plant,
+                    isEdit: true,
+                  );
+                },
+                closedBuilder: (_, openContainer) {
+                  return FadeInRight(
+                    child: Stack(
+                      children: [
+                        CardVisit(visit: visits[index]),
+                      ],
+                    ),
+                  );
+                });
+          })
       : Container();
 }
 
