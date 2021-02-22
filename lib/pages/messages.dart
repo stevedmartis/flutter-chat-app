@@ -131,10 +131,10 @@ class _MessagesPageState extends State<MessagesPage>
     this.socketService = Provider.of<SocketService>(context, listen: false);
     this.authService = Provider.of<AuthService>(context, listen: false);
     profile = authService.profile;
-    this.socketService.socket.on('personal-message', _listenMessage);
+    // this.socketService.socket.on('personal-message', _listenMessage);
   }
 
-  void _listenMessage(dynamic payload) {
+/*   void _listenMessage(dynamic payload) {
     ChatMessage message = new ChatMessage(
       text: payload['message'],
       uid: payload['by'],
@@ -147,7 +147,7 @@ class _MessagesPageState extends State<MessagesPage>
     });
 
     message.animationController.forward();
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -312,11 +312,11 @@ class _MessagesPageState extends State<MessagesPage>
 
   @override
   void dispose() {
-    for (ChatMessage message in _messages) {
+    /*   for (ChatMessage message in _messages) {
       message.animationController.dispose();
-    }
+    } */
 
-    this.socketService.socket.off('personal-message');
+    //this.socketService.socket.off('personal-message');
     super.dispose();
   }
 }
