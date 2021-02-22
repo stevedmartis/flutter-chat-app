@@ -371,7 +371,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 ),
               )
             : Container(),
-        (!widget.isUserAuth)
+        (!widget.isUserAuth && !profileUser.isClub)
             ? Container(
                 //top: size.height / 3.5,
                 padding: EdgeInsets.only(top: 35.0),
