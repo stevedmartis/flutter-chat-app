@@ -3,14 +3,11 @@ import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/room_bloc.dart';
 
 import 'package:chat/helpers/mostrar_alerta.dart';
-import 'package:chat/models/air.dart';
 import 'package:chat/models/catalogo.dart';
 
-import 'package:chat/models/plant.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/new_product.dart';
 import 'package:chat/pages/profile_page.dart';
-import 'package:chat/services/air_service.dart';
 
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/catalogo_service.dart';

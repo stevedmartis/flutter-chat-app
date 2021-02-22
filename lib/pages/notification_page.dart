@@ -12,7 +12,6 @@ import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/carousel_users.dart';
-import 'package:chat/widgets/chat_message.dart';
 import 'package:chat/widgets/header_appbar_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -40,7 +39,6 @@ class _NotificationsPageState extends State<NotificationsPage>
   SocketService socketService;
   AuthService authService;
   Profiles profile;
-  List<ChatMessage> _messages = [];
   List<Profiles> profiles = [];
   SlidableController slidableController;
 
@@ -76,21 +74,6 @@ class _NotificationsPageState extends State<NotificationsPage>
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void _listenMessage(dynamic payload) {
-    ChatMessage message = new ChatMessage(
-      text: payload['message'],
-      uid: payload['by'],
-      animationController: AnimationController(
-          vsync: this, duration: Duration(milliseconds: 300)),
-    );
-
-    setState(() {
-      _messages.insert(0, message);
-    });
-
-    message.animationController.forward();
   }
 
   Animation<double> rotationAnimation;

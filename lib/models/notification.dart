@@ -1,4 +1,3 @@
-import 'package:chat/widgets/chat_message.dart';
 import 'package:flutter/material.dart';
 
 class NotificationModel extends ChangeNotifier {

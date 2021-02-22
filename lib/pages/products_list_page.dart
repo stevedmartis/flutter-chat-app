@@ -7,7 +7,6 @@ import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
-import 'package:chat/pages/add_room.dart';
 import 'package:chat/pages/principalCustom_page.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_detail.dart';

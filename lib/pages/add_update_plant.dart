@@ -13,7 +13,6 @@ import 'package:chat/pages/profile_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
-import 'package:chat/services/visit_service.dart';
 
 import 'package:chat/theme/theme.dart';
 

@@ -1,4 +1,3 @@
-import 'package:chat/models/air.dart';
 import 'package:chat/models/air_response.dart';
 import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/message_error.dart';

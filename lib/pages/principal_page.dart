@@ -45,8 +45,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
   }
 
   void _listenMessage(dynamic payload) {
-    print(payload);
-
     final notifiModel = Provider.of<NotificationModel>(context, listen: false);
     int number = notifiModel.number;
     number++;

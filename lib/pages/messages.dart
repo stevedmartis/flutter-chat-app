@@ -19,7 +19,6 @@ import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/socket_service.dart';
 
-import 'package:chat/widgets/chat_message.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
@@ -121,7 +120,6 @@ class _MessagesPageState extends State<MessagesPage>
   SocketService socketService;
   AuthService authService;
   Profiles profile;
-  List<ChatMessage> _messages = [];
 
   @override
   void initState() {
