@@ -13,6 +13,7 @@ import 'package:chat/pages/profile_page.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
+import 'package:chat/services/visit_service.dart';
 
 import 'package:chat/theme/theme.dart';
 
@@ -296,9 +297,15 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
             color: currentTheme.accentColor,
           ),
           iconSize: 30,
-          onPressed: () =>
-              //  Navigator.pushReplacement(context, createRouteProfile()),
-              Navigator.pop(context),
+          onPressed: () {
+            final plantService =
+                Provider.of<PlantService>(context, listen: false);
+
+            plantService.plant = null;
+
+            //  Navigator.pushReplacement(context, createRouteProfile()),
+            Navigator.pop(context);
+          },
           color: Colors.white,
         ),
         title: (widget.isEdit) ? Text('Edit plant') : Text('Create plant'),

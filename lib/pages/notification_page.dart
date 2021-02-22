@@ -64,7 +64,7 @@ class _NotificationsPageState extends State<NotificationsPage>
     this.socketService = Provider.of<SocketService>(context, listen: false);
     this.authService = Provider.of<AuthService>(context, listen: false);
     profile = authService.profile;
-    this.socketService.socket.on('personal-message', _listenMessage);
+    //this.socketService.socket.on('personal-message', _listenMessage);
 
     (profile.isClub)
         ? subscriptionBloc.getSubscriptionsPending(profile.user.uid)
@@ -75,10 +75,6 @@ class _NotificationsPageState extends State<NotificationsPage>
 
   @override
   void dispose() {
-    for (ChatMessage message in _messages) {
-      message.animationController.dispose();
-    }
-
     super.dispose();
   }
 
@@ -260,6 +256,10 @@ class _NotificationsPageState extends State<NotificationsPage>
                                       ),
                                     ),
                                     onTap: () {
+                                      final chatService =
+                                          Provider.of<ChatService>(context,
+                                              listen: false);
+                                      chatService.userFor = item;
                                       Navigator.of(context)
                                           .push(createRouteProfileSelect(item));
                                     },

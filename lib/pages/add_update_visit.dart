@@ -75,6 +75,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
 
   bool isWaterChange = false;
 
+  bool isSwitchedAbono = false;
+  bool isAbonoChange = false;
+
   bool loading = false;
 
   bool isDefault;
@@ -90,6 +93,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     isSwitchedClean = widget.visit.clean;
     isSwitchedTemp = widget.visit.temperature;
     isSwitchedWater = widget.visit.water;
+    isSwitchedAbono = widget.visit.abono;
 
     // nameCtrl.text = widget.visit.name;
 
@@ -187,7 +191,8 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         isMlChange ||
         isCleanChange ||
         isTempChange ||
-        isWaterChange;
+        isWaterChange ||
+        isAbonoChange;
 
     return Scaffold(
       appBar: AppBar(
@@ -319,18 +324,26 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                           SizedBox(
                             height: 10,
                           ),
+                          (isSwitchedWater) ? _createMl(bloc) : Container(),
+                          (isSwitchedWater) ? _createPh(bloc) : Container(),
+                          SizedBox(
+                            height: 10,
+                          ),
                           (isSwitchedWater)
                               ? _createElectro(bloc)
                               : Container(),
                           SizedBox(
                             height: 10,
                           ),
-                          (isSwitchedWater) ? _createPh(bloc) : Container(),
+                          _createAbono(bloc),
                           SizedBox(
                             height: 10,
                           ),
-                          (isSwitchedWater) ? _createMl(bloc) : Container(),
-                          _createDescription(bloc)
+                          _createDescription(bloc),
+                          SizedBox(
+                            height: 10,
+                          ),
+
                           /*   _createDescription(bloc), */
                         ],
                       ),
@@ -415,6 +428,39 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                   this.isCutChange = true;
                 } else {
                   this.isCutChange = false;
+                }
+              });
+            },
+          ),
+        ));
+      },
+    );
+  }
+
+  Widget _createAbono(VisitBloc bloc) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return StreamBuilder(
+      stream: bloc.cutStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+            child: ListTile(
+          //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
+          title: Text(
+            'Fertilizar/Abonar',
+            style: TextStyle(color: Colors.white.withOpacity(0.60)),
+          ),
+          trailing: Switch.adaptive(
+            activeColor: currentTheme.accentColor,
+            value: isSwitchedAbono,
+            onChanged: (value) {
+              setState(() {
+                isSwitchedAbono = value;
+
+                if (isSwitchedAbono != widget.visit.abono) {
+                  this.isAbonoChange = true;
+                } else {
+                  this.isAbonoChange = false;
                 }
               });
             },
@@ -653,7 +699,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                       const BorderSide(color: Color(0xff20FFD7), width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'ML',
+                labelText: 'Litros agua',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeMl,
@@ -712,6 +758,8 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
 
     final water = isSwitchedWater;
 
+    final abono = isSwitchedAbono;
+
     final degrees =
         (degreesCtrl.text == "") ? widget.visit.degrees : bloc.degrees.trim();
 
@@ -738,6 +786,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
       degrees: degrees,
       water: water,
       electro: electro,
+      abono: abono,
       ph: ph,
       ml: ml,
       description: description,
@@ -779,6 +828,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     final cut = isSwitchedCut;
 
     final water = isSwitchedWater;
+    final abono = isSwitchedAbono;
 
     final degrees =
         (bloc.degrees == null) ? widget.visit.degrees : bloc.degrees.trim();
@@ -805,6 +855,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
       degrees: degrees,
       water: water,
       electro: electro,
+      abono: abono,
       ph: ph,
       ml: ml,
       description: description,

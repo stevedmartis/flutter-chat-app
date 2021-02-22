@@ -95,7 +95,7 @@ class _CardPlantState extends State<CardPlant> {
               widget.plant.name.capitalize(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 15,
+                  fontSize: 20,
                   color: currentTheme.accentColor),
             ),
           ),
@@ -114,7 +114,7 @@ class _CardPlantState extends State<CardPlant> {
               maxLines: 3,
               style: TextStyle(
                   fontWeight: FontWeight.normal,
-                  fontSize: 12,
+                  fontSize: 15,
                   color: Colors.grey),
             ),
           ),
@@ -129,7 +129,7 @@ class _CardPlantState extends State<CardPlant> {
                   'Germinación: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                      fontSize: 15,
                       color: Colors.white54),
                 ),
               ),
@@ -139,7 +139,7 @@ class _CardPlantState extends State<CardPlant> {
                   widget.plant.germinated,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 13,
+                    fontSize: 15,
                     color: Colors.white,
                   ),
                 ),
@@ -154,7 +154,7 @@ class _CardPlantState extends State<CardPlant> {
 
 class CbdthcRow extends StatelessWidget {
   const CbdthcRow(
-      {Key key, @required this.thc, @required this.cbd, this.fontSize = 10})
+      {Key key, @required this.thc, @required this.cbd, this.fontSize = 15})
       : super(key: key);
 
   final String thc;

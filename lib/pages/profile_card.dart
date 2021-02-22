@@ -371,7 +371,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 ),
               )
             : Container(),
-        (widget.isUserAuth)
+        (!widget.isUserAuth)
             ? Container(
                 //top: size.height / 3.5,
                 padding: EdgeInsets.only(top: 35.0),
@@ -396,7 +396,26 @@ class _ProfileCardState extends State<ProfileCard> {
                                 createRouteRecipeViewImage(widget.profile));
                       }),
                 ))
-            : Container()
+            : Container(
+                //top: size.height / 3.5,
+                padding: EdgeInsets.only(top: 35.0),
+                margin: EdgeInsets.only(
+                    top: size.height / 4.5,
+                    left: size.width / 1.8,
+                    right: size.width / 20),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: ButtonSubEditProfile(
+                      color: currentTheme.scaffoldBackgroundColor
+                          .withOpacity(0.60),
+                      textColor: (widget.isUserAuth)
+                          ? Colors.white.withOpacity(0.50)
+                          : currentTheme.accentColor,
+                      text: 'Editar perfil',
+                      onPressed: () {
+                        Navigator.of(context).push(createRouteEditProfile());
+                      }),
+                ))
       ],
     );
   }

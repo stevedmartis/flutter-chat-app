@@ -21,6 +21,7 @@ class Visit {
       this.ml,
       this.degrees,
       this.water = false,
+      this.abono = false,
       isRoute,
       init()});
 
@@ -36,6 +37,7 @@ class Visit {
   bool temperature;
   String degrees;
   bool water;
+  bool abono;
 
   String electro;
   String ph;
@@ -58,7 +60,8 @@ class Visit {
       degrees: json["degrees"],
       electro: json["electro"],
       ph: json["ph"],
-      ml: json["ml"]
+      ml: json["ml"],
+      abono: json["abono"]
 
       //images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
       );
@@ -79,6 +82,7 @@ class Visit {
         "ph": ph,
         "ml": ml,
         "description": description,
+        "abobo": abono
 
         // "images": List<Image>.from(images.map((x) => x)),
       };

@@ -172,8 +172,10 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
     final userFor = chatService.userFor;
 
+    final isClub = this.authService.profile.isClub;
+
     final suscriptionEnabled =
-        userFor.subscribeApproved && userFor.subscribeActive;
+        (isClub) ? true : userFor.subscribeApproved && userFor.subscribeActive;
 
     return Scaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
