@@ -387,7 +387,7 @@ class _ProfileCardState extends State<ProfileCard> {
                       textColor: (widget.isUserAuth)
                           ? Colors.white.withOpacity(0.50)
                           : currentTheme.accentColor,
-                      text: widget.isUserAuth ? 'Editar perfil' : 'Ver receta',
+                      text: 'Ver receta',
                       onPressed: () {
                         (widget.isUserAuth)
                             ? Navigator.of(context)
