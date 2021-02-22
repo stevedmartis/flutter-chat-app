@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/room_bloc.dart';
+import 'package:chat/models/catalogo.dart';
 
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
@@ -25,6 +26,8 @@ import 'package:provider/provider.dart';
 
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/socket_service.dart';
+
+import 'add_update_catalogo.dart';
 
 class ProductsListPage extends StatefulWidget {
   @override
@@ -59,7 +62,7 @@ class _ProductsListPageState extends State<ProductsListPage> {
             physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics()),
             slivers: <Widget>[
-              makeHeaderCustom('Tratamientos'),
+              makeHeaderCustom('Catalogos'),
               makeListRooms(context)
             ]),
       ),
@@ -78,7 +81,7 @@ class _ProductsListPageState extends State<ProductsListPage> {
   SliverPersistentHeader makeHeaderCustom(String title) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    final room = new Room();
+    final catalogo = new Catalogo();
 
     return SliverPersistentHeader(
         floating: true,
@@ -101,8 +104,9 @@ class _ProductsListPageState extends State<ProductsListPage> {
                               ),
                               iconSize: 30,
                               onPressed: () => {
-                                    Navigator.of(context)
-                                        .push(createRouteAddRoom(room, false)),
+                                    Navigator.of(context).push(
+                                        createRouteAddCatalogo(
+                                            catalogo, false)),
                                   }),
                     )))));
   }
@@ -515,10 +519,10 @@ Route createRouteRoomDetail(Room room, List<Room> rooms) {
   );
 }
 
-Route createRouteAddRoom(Room room, bool isEdit) {
+Route createRouteAddCatalogo(Catalogo catalogo, bool isEdit) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
-        AddRoomPage(room: room, isEdit: isEdit),
+        AddUpdateCatalogoPage(catalogo: catalogo, isEdit: isEdit),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
