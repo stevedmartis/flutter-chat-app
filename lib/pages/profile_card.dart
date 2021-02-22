@@ -396,7 +396,9 @@ class _ProfileCardState extends State<ProfileCard> {
                                 createRouteRecipeViewImage(widget.profile));
                       }),
                 ))
-            : Container(
+            : Container(),
+        (widget.isUserAuth)
+            ? Container(
                 //top: size.height / 3.5,
                 padding: EdgeInsets.only(top: 35.0),
                 margin: EdgeInsets.only(
@@ -416,6 +418,7 @@ class _ProfileCardState extends State<ProfileCard> {
                         Navigator.of(context).push(createRouteEditProfile());
                       }),
                 ))
+            : Container()
       ],
     );
   }
