@@ -32,25 +32,26 @@ class _PrincipalPageState extends State<PrincipalPage> {
     super.initState();
     this.socketService = Provider.of<SocketService>(context, listen: false);
 
-    this.socketService.socket.on('personal-message', _listenMessage);
+    this.socketService.socket.on('principal-message', _listenMessage);
 
     this.bottomControll();
   }
 
   @override
   void dispose() {
+    this.socketService.socket.off('principal-message');
     super.dispose();
     _hideBottomNavController.dispose();
   }
 
   void _listenMessage(dynamic payload) {
-    print('entro');
+    print(payload);
+
     final notifiModel = Provider.of<NotificationModel>(context, listen: false);
     int number = notifiModel.number;
     number++;
     notifiModel.number = number;
 
-    print('entro');
     if (number >= 2) {
       final controller = notifiModel.bounceController;
       controller.forward(from: 0.0);

@@ -335,7 +335,6 @@ class _ProfileCardState extends State<ProfileCard> {
                 loadSub &&
                 profileUser.isClub &&
                 !subscription.subscribeActive &&
-                subscription.isUpload &&
                 !subscription.subscribeApproved)
             ? FadeIn(
                 duration: Duration(milliseconds: 500),
@@ -354,8 +353,7 @@ class _ProfileCardState extends State<ProfileCard> {
                         textColor: (widget.isUserAuth)
                             ? Colors.white.withOpacity(0.50)
                             : currentTheme.accentColor,
-                        text:
-                            widget.isUserAuth ? 'Editar perfil' : 'SUSCRIBIRME',
+                        text: 'SUSCRIBIRME',
                         onPressed: () {
                           (widget.isUserAuth)
                               ? Navigator.of(context)

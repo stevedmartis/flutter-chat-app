@@ -93,9 +93,14 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
           color: currentTheme.accentColor,
         ),
         iconSize: 35,
-        onPressed: () =>
-            //  Navigator.pushReplacement(context, createRouteProfile()),
-            Navigator.pop(context),
+        onPressed: () {
+          final notifiModel =
+              Provider.of<NotificationModel>(context, listen: false);
+
+          notifiModel.number = 0;
+          //  Navigator.pushReplacement(context, createRouteProfile()),
+          Navigator.pop(context);
+        },
         color: Colors.white,
       ),
       automaticallyImplyLeading: true,
@@ -326,6 +331,12 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     });
 
     this.socketService.emit('personal-message', {
+      'by': this.authService.profile.user.uid,
+      'for': this.chatService.userFor.user.uid,
+      'message': text
+    });
+
+    this.socketService.emit('principal-message', {
       'by': this.authService.profile.user.uid,
       'for': this.chatService.userFor.user.uid,
       'message': text
