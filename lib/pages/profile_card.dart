@@ -53,7 +53,7 @@ class ProfileCard extends StatefulWidget {
 }
 
 class _ProfileCardState extends State<ProfileCard> {
-  Profiles profileClub;
+  Profiles profileMyUser;
 
   Subscription subscription;
 
@@ -67,12 +67,12 @@ class _ProfileCardState extends State<ProfileCard> {
   void initState() {
     final authService = Provider.of<AuthService>(context, listen: false);
 
-    profileClub = authService.profile;
+    profileMyUser = authService.profile;
 
     super.initState();
 
     subscriptionBloc.getSubscription(
-        profileClub.user.uid, widget.profile.user.uid);
+        profileMyUser.user.uid, widget.profile.user.uid);
 
     subscriptionBloc.subscription.stream.listen((onData) {
       setState(() {
@@ -371,7 +371,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 ),
               )
             : Container(),
-        (!widget.isUserAuth && !profileUser.isClub)
+        (!widget.isUserAuth && profileMyUser.isClub)
             ? Container(
                 //top: size.height / 3.5,
                 padding: EdgeInsets.only(top: 35.0),
@@ -712,7 +712,7 @@ class _ProfileCardState extends State<ProfileCard> {
 
       final newSubscription = new Subscription(
         id: subscription.id,
-        subscriptor: profileClub.user.uid,
+        subscriptor: profileMyUser.user.uid,
         club: widget.profile.user.uid,
         imageRecipe: resp,
       );
