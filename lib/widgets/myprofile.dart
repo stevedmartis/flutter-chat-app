@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:chat/bloc/catalogo_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
+import 'package:chat/models/catalogos_response.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
@@ -96,12 +98,9 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
     // profileBloc.imageUpdate.add(true);
 
-    if (widget.profile.user.uid == profile.user.uid) {
-      myProfile = true;
-      roomBloc.getMyRooms(widget.profile.user.uid);
-    } else {
-      roomBloc.getRoomsProfile(widget.profile.user.uid);
-    }
+    // roomBloc.getMyRooms(widget.profile.user.uid);
+
+    catalogoBloc.getMyCatalogos(widget.profile.user.uid);
   }
 
   @override
@@ -233,7 +232,9 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                 (!this.widget.isUserEdit)
                     ? makeHeaderInfo(context)
                     : makeHeaderSpacer(context),
-                if (!widget.isUserEdit) makeHeaderTabs(context),
+                // if (!widget.isUserEdit) makeHeaderTabs(context),
+                if (!widget.isUserEdit) makeHeaderTabsCategories(context),
+
                 /* SliverList(
                   delegate: SliverChildListDelegate(
                       List<Widget>.generate(10, (int i) {
@@ -322,12 +323,10 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
         minHeight: 70.0,
         maxHeight: 70.0,
         child: StreamBuilder<RoomsResponse>(
-          stream: (!myProfile)
-              ? roomBloc.roomsProfile.stream
-              : roomBloc.myRooms.stream,
+          stream: roomBloc.myRooms.stream,
           builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
             if (snapshot.hasData) {
-              return _buildUserWidget(snapshot.data);
+              return _buildRoomsWidget(snapshot.data);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
             } else {
@@ -339,7 +338,31 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     );
   }
 
-  SliverPersistentHeader makeProductsCard(context) {
+  SliverPersistentHeader makeHeaderTabsCategories(context) {
+    //   final roomModel = Provider.of<Room>(context);
+
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+        minHeight: 70.0,
+        maxHeight: 70.0,
+        child: StreamBuilder<CatalogosResponse>(
+          stream: catalogoBloc.myCatalogos.stream,
+          builder: (context, AsyncSnapshot<CatalogosResponse> snapshot) {
+            if (snapshot.hasData) {
+              return _buildCatalogoWidget(snapshot.data);
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
+            } else {
+              return _buildLoadingWidget();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  SliverPersistentHeader makeRoomsCard(context) {
     //   final roomModel = Provider.of<Room>(context);
 
     return SliverPersistentHeader(
@@ -507,11 +530,26 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildUserWidget(RoomsResponse data) {
+  Widget _buildRoomsWidget(RoomsResponse data) {
     return Container(
       child: Stack(fit: StackFit.expand, children: [
         TabsScrollCustom(
           rooms: data.rooms,
+          isAuthUser: widget.isUserAuth,
+        ),
+        /*  AnimatedOpacity(
+            opacity: !_showTitle ? 1.0 : 0.0,
+            duration: Duration(milliseconds: 250),
+            child: _buildEditCircle()) */
+      ]),
+    );
+  }
+
+  Widget _buildCatalogoWidget(CatalogosResponse data) {
+    return Container(
+      child: Stack(fit: StackFit.expand, children: [
+        TabsScrollCatalogoCustom(
+          catalogos: data.catalogos,
           isAuthUser: widget.isUserAuth,
         ),
         /*  AnimatedOpacity(

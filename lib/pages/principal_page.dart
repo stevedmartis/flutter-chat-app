@@ -39,7 +39,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
 
   @override
   void dispose() {
-    this.socketService.socket.off('principal-message');
+    //  this.socketService.socket.off('principal-message');
     super.dispose();
     _hideBottomNavController.dispose();
   }

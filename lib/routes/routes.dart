@@ -3,7 +3,7 @@ import 'package:chat/pages/my_profile.dart';
 import 'package:chat/pages/notification_page.dart';
 import 'package:chat/pages/onBoarding_page.dart';
 import 'package:chat/pages/principalCustom_page.dart';
-import 'package:chat/pages/products_list_page.dart';
+import 'package:chat/pages/catalogs_list_page.dart';
 import 'package:chat/pages/profile_edit.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_list_page.dart';
@@ -38,7 +38,7 @@ final pageRouter = <_Route>[
   _Route(FontAwesomeIcons.home, 'principal', CollapsingList()),
   _Route(FontAwesomeIcons.comments, 'subscriptors', SubscriptorsPage()),
   _Route(FontAwesomeIcons.home, 'rooms', RoomsListPage()),
-  _Route(FontAwesomeIcons.home, 'products', ProductsListPage()),
+  _Route(FontAwesomeIcons.home, 'catalogos', CatalogosListPage()),
   _Route(FontAwesomeIcons.comments, 'notifications', NotificationsPage()),
   _Route(FontAwesomeIcons.comments, 'messages', MessagesPage()),
   _Route(FontAwesomeIcons.user, 'profile', SliverAppBarProfilepPage()),

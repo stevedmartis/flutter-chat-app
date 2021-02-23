@@ -66,7 +66,7 @@ class _ProfileCardState extends State<ProfileCard> {
   @override
   void initState() {
     final authService = Provider.of<AuthService>(context, listen: false);
-
+    final chatService = Provider.of<ChatService>(context, listen: false);
     profileMyUser = authService.profile;
 
     super.initState();
@@ -75,19 +75,23 @@ class _ProfileCardState extends State<ProfileCard> {
         profileMyUser.user.uid, widget.profile.user.uid);
 
     subscriptionBloc.subscription.stream.listen((onData) {
-      setState(() {
-        subscription = onData;
+      subscription = onData;
 
-        isSuscriptionApprove = subscription.subscribeApproved;
-        isSuscriptionActive = subscription.subscribeActive;
+      isSuscriptionApprove = subscription.subscribeApproved;
+      isSuscriptionActive = subscription.subscribeActive;
 
-        final chatService = Provider.of<ChatService>(context, listen: false);
+      if (!widget.isUserAuth) {
         chatService.userFor.subscribeActive = isSuscriptionActive;
         chatService.userFor.subscribeApproved = isSuscriptionApprove;
 
         loadSub = true;
-      });
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   File imageCover;

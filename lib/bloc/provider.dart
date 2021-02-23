@@ -1,4 +1,5 @@
 import 'package:chat/bloc/air_bloc.dart';
+import 'package:chat/bloc/catalogo_bloc.dart';
 import 'package:chat/bloc/light_bloc.dart';
 import 'package:chat/bloc/login_bloc.dart';
 import 'package:chat/bloc/plant_bloc.dart';
@@ -28,6 +29,8 @@ class CustomProvider extends InheritedWidget {
   final lightBloc = LightBloc();
 
   final visitBloc = VisitBloc();
+
+  final catalogoBloc = CatalogoBloc();
 
   final subscribeBloc = SubscribeBloc();
 
@@ -98,5 +101,10 @@ class CustomProvider extends InheritedWidget {
   static ProductBloc productBlocIn(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<CustomProvider>())
         .productBloc;
+  }
+
+  static CatalogoBloc catalogoBlocIn(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<CustomProvider>())
+        .catalogoBloc;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/usuario.dart';
 
@@ -56,6 +57,78 @@ class _TabsScrollCustomState extends State<TabsScrollCustom> {
                 final room = rooms[index];
 
                 final name = room.name;
+                final nameCapitalized = name.capitalize();
+                return new Tab(
+                  child: Text(
+                    (nameCapitalized.length >= 15)
+                        ? nameCapitalized.substring(0, 15) + '...'
+                        : nameCapitalized,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 5,
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
+              }),
+            ),
+          )),
+    );
+  }
+}
+
+class TabsScrollCatalogoCustom extends StatefulWidget {
+  const TabsScrollCatalogoCustom(
+      {Key key, @required this.catalogos, this.isAuthUser})
+      : super(key: key);
+
+  final List<Catalogo> catalogos;
+  final bool isAuthUser;
+
+  @override
+  _TabsScrollCatalogosCustomState createState() =>
+      _TabsScrollCatalogosCustomState();
+}
+
+class _TabsScrollCatalogosCustomState extends State<TabsScrollCatalogoCustom> {
+  int currentIndexTab = 0;
+
+  @override
+  void initState() {
+    setState(() {});
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    final catalogos = widget.catalogos;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: currentTheme.scaffoldBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black54,
+              spreadRadius: 0.5,
+              blurRadius: 0.5,
+              offset: Offset(0.5, 0.5))
+        ],
+      ),
+      child: DefaultTabController(
+          length: catalogos.length,
+          child: PreferredSize(
+            preferredSize: Size.fromHeight(600.0),
+            child: TabBar(
+              isScrollable: true,
+              unselectedLabelColor: Colors.white.withOpacity(0.3),
+              indicatorColor: currentTheme.accentColor,
+              tabs: List<Widget>.generate(catalogos.length, (int index) {
+                final catalogo = catalogos[index];
+
+                final name = catalogo.name;
                 final nameCapitalized = name.capitalize();
                 return new Tab(
                   child: Text(

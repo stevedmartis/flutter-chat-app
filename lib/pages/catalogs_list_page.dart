@@ -1,22 +1,17 @@
-import 'dart:async';
-
-import 'package:chat/bloc/provider.dart';
+import 'package:chat/bloc/catalogo_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/catalogo.dart';
+import 'package:chat/models/catalogos_response.dart';
 
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
-import 'package:chat/models/rooms_response.dart';
 import 'package:chat/pages/principalCustom_page.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_detail.dart';
-
-import 'package:chat/services/room_services.dart';
+import 'package:chat/services/catalogo_service.dart';
 
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/header_appbar_pages.dart';
-import 'package:chat/widgets/room_card.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,12 +23,12 @@ import 'package:chat/services/socket_service.dart';
 
 import 'add_update_catalogo.dart';
 
-class ProductsListPage extends StatefulWidget {
+class CatalogosListPage extends StatefulWidget {
   @override
-  _ProductsListPageState createState() => _ProductsListPageState();
+  _CatalogosListPagePageState createState() => _CatalogosListPagePageState();
 }
 
-class _ProductsListPageState extends State<ProductsListPage> {
+class _CatalogosListPagePageState extends State<CatalogosListPage> {
   SocketService socketService;
 
   RoomBloc roomBlocInstance = RoomBloc();
@@ -73,7 +68,7 @@ class _ProductsListPageState extends State<ProductsListPage> {
   ) {
     return SliverList(
         delegate: SliverChildListDelegate([
-      RoomList(),
+      CatalogsList(),
     ]));
   }
 
@@ -110,75 +105,6 @@ class _ProductsListPageState extends State<ProductsListPage> {
                     )))));
   }
 
-  addNewRoom() {
-    final currentTheme =
-        Provider.of<ThemeChanger>(context, listen: false).currentTheme;
-
-    final bloc = CustomProvider.roomBlocIn(context);
-
-    final size = MediaQuery.of(context).size;
-
-    return showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => Container(
-        decoration: BoxDecoration(
-          color: currentTheme.scaffoldBackgroundColor,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 18),
-        child: Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.70,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(
-                      top: 20, left: size.width / 3.5, right: size.width / 3.5),
-                  padding: EdgeInsets.all(4.0),
-                  decoration: BoxDecoration(
-                    color: Color(0xffEBECF0).withOpacity(0.30),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30.0),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(30),
-                  child: Text(
-                    "New Room",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                _createName(bloc),
-                SizedBox(
-                  height: 30,
-                ),
-                _createDescription(bloc),
-                SizedBox(
-                  height: 40,
-                ),
-                ButtonAccent(
-                  color: currentTheme.accentColor,
-                  text: 'Done',
-                  onPressed: () => {},
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   void addBandToList(String name) {
     if (name.length > 1) {
       final socketService = Provider.of<SocketService>(context, listen: false);
@@ -187,75 +113,21 @@ class _ProductsListPageState extends State<ProductsListPage> {
 
     Navigator.pop(context);
   }
-
-  Widget _createName(RoomBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.nameStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            //  keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-                // icon: Icon(Icons.perm_identity),
-                //  fillColor: currentTheme.accentColor,
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Colors.yellow, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: '',
-                labelText: 'Name',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeName,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _createDescription(RoomBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.descriptionStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            //  keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-                // icon: Icon(Icons.perm_identity),
-                //  fillColor: currentTheme.accentColor,
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Colors.yellow, width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: '',
-                labelText: 'Description',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeDescription,
-          ),
-        );
-      },
-    );
-  }
 }
 
-class RoomList extends StatefulWidget {
-  const RoomList({
+class CatalogsList extends StatefulWidget {
+  const CatalogsList({
     Key key,
   }) : super(key: key);
 
   @override
-  _RoomListState createState() => _RoomListState();
+  _CatalogsListState createState() => _CatalogsListState();
 }
 
-class _RoomListState extends State<RoomList> {
+class _CatalogsListState extends State<CatalogsList> {
   Profiles profile;
-  final roomService = new RoomService();
+  final catalogoService = new CatalogoService();
   var _isVisible;
-
-  Future<List<Room>> getJobFuture;
 
   ScrollController _hideBottomNavController;
 
@@ -263,17 +135,17 @@ class _RoomListState extends State<RoomList> {
   void initState() {
     super.initState();
 
-    _chargeRooms();
+    _chargeCatalogs();
 
     bottomControll();
   }
 
-  _chargeRooms() async {
+  _chargeCatalogs() async {
     final authService = Provider.of<AuthService>(context, listen: false);
 
     profile = authService.profile;
 
-    roomBloc.getMyRooms(profile.user.uid);
+    catalogoBloc.getMyCatalogos(profile.user.uid);
   }
 
   void reorderData(int oldindex, int newindex) {
@@ -281,8 +153,8 @@ class _RoomListState extends State<RoomList> {
       if (newindex > oldindex) {
         newindex -= 1;
       }
-      final items = this.rooms.removeAt(oldindex);
-      this.rooms.insert(newindex, items);
+      final items = this.catalogos.removeAt(oldindex);
+      this.catalogos.insert(newindex, items);
     });
   }
 
@@ -309,20 +181,20 @@ class _RoomListState extends State<RoomList> {
     );
   }
 
-  List<Room> rooms = [];
+  List<Catalogo> catalogos = [];
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: double.maxFinite,
-      child: StreamBuilder<RoomsResponse>(
-        stream: roomBloc.myRooms.stream,
-        builder: (context, AsyncSnapshot<RoomsResponse> snapshot) {
+      child: StreamBuilder<CatalogosResponse>(
+        stream: catalogoBloc.myCatalogos.stream,
+        builder: (context, AsyncSnapshot<CatalogosResponse> snapshot) {
           if (snapshot.hasData) {
-            rooms = snapshot.data.rooms;
+            catalogos = snapshot.data.catalogos;
 
-            return (rooms.length < 0)
-                ? Container(child: _buildRoomWidget(rooms))
+            return (catalogos.length > 0)
+                ? Container(child: _buildCatalogoWidget(catalogos))
                 : _buildEmptyWidget(); // image is ready
 
           } else if (snapshot.hasError) {
@@ -342,7 +214,7 @@ class _RoomListState extends State<RoomList> {
 
   Widget _buildEmptyWidget() {
     return Container(
-        height: 400.0, child: Center(child: Text('Sin Productos, add new')));
+        height: 400.0, child: Center(child: Text('Sin Catalogos, crea nuevo')));
   }
 
   Widget _buildErrorWidget(String error) {
@@ -355,27 +227,28 @@ class _RoomListState extends State<RoomList> {
     ));
   }
 
-  _deleteRoom(String id, int index) async {
-    final res = await this.roomService.deleteRoom(id);
+  _deleteCatalogo(String id, int index) async {
+    final res = await this.catalogoService.deleteCatalogo(id);
     if (res) {
       setState(() {
-        rooms.removeAt(index);
-        roomBloc.getMyRooms(profile.user.uid);
+        catalogos.removeAt(index);
+        catalogoBloc.getMyCatalogos(profile.user.uid);
       });
     }
   }
 
-  Widget _buildRoomWidget(List<Room> rooms) {
+  Widget _buildCatalogoWidget(List<Catalogo> catalogos) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final size = MediaQuery.of(context).size;
 
     return Container(
       child: ReorderableListView(
           padding: EdgeInsets.only(top: 20),
           scrollController: _hideBottomNavController,
           children: List.generate(
-            rooms.length,
+            catalogos.length,
             (index) {
-              final item = rooms[index];
+              final item = catalogos[index];
               return Container(
                 decoration: BoxDecoration(
                     color: Colors.black,
@@ -387,57 +260,89 @@ class _RoomListState extends State<RoomList> {
                     GestureDetector(
                       key: Key(item.id),
                       onTap: () => {
-                        Navigator.of(context)
-                            .push(createRouteRoomDetail(item, rooms)),
+                        /* Navigator.of(context)
+                            .push(createRouteRoomDetail(item, catalogo)), */
                       },
                       child: Dismissible(
-                        key: UniqueKey(),
-                        direction: DismissDirection.endToStart,
-                        onDismissed: (direction) =>
-                            {_deleteRoom(item.id, index)},
-                        background: Container(
-                            alignment: Alignment.centerRight,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.black,
-                                    size: 30,
+                          key: UniqueKey(),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) =>
+                              {_deleteCatalogo(item.id, index)},
+                          background: Container(
+                              alignment: Alignment.centerRight,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(right: 10),
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.black,
+                                      size: 30,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 12,
-                                ),
-                                /* Text(
+                                  SizedBox(
+                                    width: 12,
+                                  ),
+                                  /* Text(
                                   'Delete',
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w600),
                                 ) */
-                              ],
-                            )),
-                        child: CustomListItemTwoRoom(
-                          title: item.name,
-                          subtitle: item.description,
-                          wide: '${item.wide}',
-                          long: '${item.long}',
-                          tall: '${item.tall}',
-                          timeOn: item.timeOn,
-                          timeOff: item.timeOff,
-                          publishDate: 'Dec 28',
-                          readDuration: '5 mins',
-                          totalPlants: item.totalPlants,
-                          totalAirs: item.totalAirs,
-                          totalLigths: item.totalLights,
-                        ),
-                      ),
+                                ],
+                              )),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: SizedBox(
+                              height: size.height / 10,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  /*    AspectRatio(
+              aspectRatio: 1.0,
+              child: thumbnail,
+            ), */
+
+                                  Expanded(
+                                    child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            20.0, 10.0, 2.0, 0.0),
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                item.name,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                            ])),
+                                  ),
+                                  SizedBox(
+                                      width: 50,
+                                      child: Center(
+                                          child: Container(
+                                        margin: EdgeInsets.only(right: 10),
+                                        child: Icon(
+                                          Icons.format_list_bulleted,
+                                          color: currentTheme.accentColor,
+                                          size: 30,
+                                        ),
+                                      ))),
+                                ],
+                              ),
+                            ),
+                          )),
                     ),
                     SizedBox(
                       height: 1.0,
@@ -458,23 +363,25 @@ class _RoomListState extends State<RoomList> {
                   if (newIndex > oldIndex) {
                     newIndex -= 1;
                   }
-                  final Room item = rooms.removeAt(oldIndex);
-                  item.position = newIndex;
-                  rooms.insert(newIndex, item);
+                  final Catalogo catalogo = catalogos.removeAt(oldIndex);
+                  catalogo.position = newIndex;
+                  catalogos.insert(newIndex, catalogo);
                 }),
-                _updateRoom(rooms, newIndex, context, profile.user.uid)
+                _updateCatalogo(catalogos, newIndex, context, profile.user.uid)
               }),
     );
   }
 }
 
-_updateRoom(List<Room> room, int newIndex, context, String userId) async {
-  final roomService = Provider.of<RoomService>(context, listen: false);
+_updateCatalogo(
+    List<Catalogo> catalogos, int newIndex, context, String userId) async {
+  final catalogoService = Provider.of<CatalogoService>(context, listen: false);
 
-  final resp = await roomService.updatePositionRoom(room, newIndex, userId);
+  final resp =
+      await catalogoService.updatePositionCatalogo(catalogos, newIndex, userId);
 
   if (resp) {
-    roomBloc.getMyRooms(userId);
+    catalogoBloc.getMyCatalogos(userId);
   }
 }
 

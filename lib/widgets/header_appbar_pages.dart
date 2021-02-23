@@ -82,7 +82,7 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
                   width: 50,
                 )
               : SizedBox(
-                  width: 0,
+                  width: 10,
                 ),
           (widget.showContent)
               ? GestureDetector(
@@ -93,7 +93,7 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
                       child: Container(
                           // color: Colors.black,
                           //  margin: EdgeInsets.only(left: 10, right: 10),
-                          width: size.height / 3.0,
+                          width: size.height / 3.5,
                           height: 40,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -268,24 +268,22 @@ class CustomSliverAppBarHeader extends StatelessWidget {
                   )),
             ), */
           ), */
-          Center(
-            child: Container(
-                margin: EdgeInsets.only(left: 30),
-                width: size.height / 3,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: currentTheme.scaffoldBackgroundColor.withOpacity(0.30),
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black54,
-                        spreadRadius: -5,
-                        blurRadius: 10,
-                        offset: Offset(0, 5))
-                  ],
-                ),
-                child: SearchContent()),
-          ),
+          Container(
+              margin: EdgeInsets.only(left: 30),
+              width: size.height / 3,
+              height: 40,
+              decoration: BoxDecoration(
+                color: currentTheme.scaffoldBackgroundColor.withOpacity(0.30),
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black54,
+                      spreadRadius: -5,
+                      blurRadius: 10,
+                      offset: Offset(0, 5))
+                ],
+              ),
+              child: SearchContent()),
           Container(
               padding: EdgeInsets.all(0.0),
               child: Icon(

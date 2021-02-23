@@ -1,6 +1,5 @@
-import 'package:chat/bloc/air_bloc.dart';
+import 'package:chat/bloc/catalogo_bloc.dart';
 import 'package:chat/bloc/provider.dart';
-import 'package:chat/bloc/room_bloc.dart';
 
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/catalogo.dart';
@@ -109,7 +108,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    final bloc = CustomProvider.airBlocIn(context);
+    final bloc = CustomProvider.catalogoBlocIn(context);
 
 //    final size = MediaQuery.of(context).size;
 
@@ -164,9 +163,6 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
                         children: <Widget>[
                           _createName(bloc),
                           _createDescription(bloc),
-                          SizedBox(
-                            height: 10,
-                          ),
 
                           /*   _createDescription(bloc), */
                         ],
@@ -178,7 +174,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
     );
   }
 
-  Widget _createName(AirBloc bloc) {
+  Widget _createName(CatalogoBloc bloc) {
     return StreamBuilder(
       stream: bloc.nameStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -207,7 +203,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
     );
   }
 
-  Widget _createDescription(AirBloc bloc) {
+  Widget _createDescription(CatalogoBloc bloc) {
     //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return StreamBuilder(
@@ -243,44 +239,37 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
   }
 
   Widget _createButton(
-    AirBloc bloc,
+    CatalogoBloc bloc,
     bool isControllerChange,
   ) {
-    return StreamBuilder(
-      stream: bloc.formValidStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-        return GestureDetector(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Center(
-                child: Text(
-                  'Next',
-                  style: TextStyle(
-                      color: (isControllerChange && !errorRequired)
-                          ? currentTheme.accentColor
-                          : Colors.white.withOpacity(0.30),
-                      fontSize: 18),
-                ),
-              ),
+    return GestureDetector(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Center(
+            child: Text(
+              'Done',
+              style: TextStyle(
+                  color: (isControllerChange && !errorRequired)
+                      ? currentTheme.accentColor
+                      : Colors.white.withOpacity(0.30),
+                  fontSize: 18),
             ),
-            onTap: isControllerChange && !errorRequired && !loading
-                ? () => {
-                      setState(() {
-                        loading = true;
-                      }),
-                      FocusScope.of(context).unfocus(),
-                      (widget.isEdit)
-                          ? _editCatalogo(bloc)
-                          : _createCatalogo(bloc),
-                    }
-                : null);
-      },
-    );
+          ),
+        ),
+        onTap: isControllerChange && !errorRequired && !loading
+            ? () => {
+                  setState(() {
+                    loading = true;
+                  }),
+                  FocusScope.of(context).unfocus(),
+                  (widget.isEdit) ? _editCatalogo(bloc) : _createCatalogo(bloc),
+                }
+            : null);
   }
 
-  _createCatalogo(AirBloc bloc) async {
+  _createCatalogo(CatalogoBloc bloc) async {
     final catalogoService =
         Provider.of<CatalogoService>(context, listen: false);
 
@@ -303,7 +292,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
       if (createCatalogoResp.ok) {
         loading = false;
 
-        roomBloc.getMyRooms(uid);
+        catalogoBloc.getMyCatalogos(uid);
 
         Navigator.pop(context);
         setState(() {});
@@ -317,11 +306,13 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
     //Navigator.pushReplacementNamed(context, '');
   }
 
-  _editCatalogo(AirBloc bloc) async {
+  _editCatalogo(CatalogoBloc bloc) async {
     final catalogoService =
         Provider.of<CatalogoService>(context, listen: false);
 
-    // final uid = authService.profile.user.uid;
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    final uid = authService.profile.user.uid;
 
     final name = (bloc.name == null) ? widget.catalogo.name : bloc.name.trim();
     final description = (descriptionCtrl.text == "")
@@ -341,7 +332,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
           setState(() {
             loading = false;
           });
-          // room = editRoomRes.room;
+          catalogoBloc.getMyCatalogos(uid);
 
           Navigator.pop(context);
         } else {
