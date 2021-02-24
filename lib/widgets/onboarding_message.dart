@@ -57,8 +57,8 @@ class OnboardingMessages extends StatelessWidget {
             children: [
               Positioned(
                 child: Container(
-                  width: _size.width,
-                  height: _size.width,
+                  width: _size.width - 50,
+                  height: _size.width - 50,
                   child: WebsafeSvg.asset("assets/images/intro-background.svg"),
                 ),
               ),

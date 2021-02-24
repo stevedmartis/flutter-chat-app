@@ -1,3 +1,4 @@
+import 'package:chat/pages/login_page.dart';
 import 'package:chat/pages/register_page.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
@@ -45,37 +46,45 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
             children: widget.pages,
           ),
         ),
-        (!_isLastPage)
-            ? Container(
-                margin: EdgeInsets.only(
-                  left: _size.width / 2.9,
-                  top: _size.height * 0.85,
-                ),
-                child: Row(
-                  children: _buildPageIndicator(),
-                ),
-              )
-            : Container(
-                padding: EdgeInsets.only(
-                    top: _size.height * 0.8, left: 60, right: 60),
-                child: ButtonAccent(
-                    color: currentTheme.accentColor,
-                    text: 'Empezar!',
-                    onPressed: () => {Navigator.push(context, _createRute())}),
-              ),
+        Container(
+          margin: EdgeInsets.only(
+            left: _size.width / 2.9,
+            top: _size.height * 0.75,
+          ),
+          child: Row(
+            children: _buildPageIndicator(),
+          ),
+        ),
         SizedBox(
           height: (_isLastPage) ? 115 : 150,
         ),
-        Center(
+        Container(
+          padding:
+              EdgeInsets.only(top: _size.height * 0.8, left: 60, right: 60),
+          child: ButtonAccent(
+              color: currentTheme.accentColor,
+              text: 'Log In!',
+              onPressed: () => {Navigator.push(context, _createRuteLogIn())}),
+        ),
+        Container(
+          padding:
+              EdgeInsets.only(top: _size.height * 0.9, left: 60, right: 60),
+          child: ButtonLogout(
+              color: currentTheme.scaffoldBackgroundColor,
+              text: 'Sign In!',
+              textColor: Colors.white,
+              onPressed: () => {Navigator.push(context, _createRuteSignUp())}),
+        ),
+        /*  Center(
           child: Container(
               padding: EdgeInsets.only(top: _size.height * 0.9),
               child: StyledLogoCustom()),
-        ),
+        ), */
       ],
     );
   }
 
-  Route _createRute() {
+  Route _createRuteSignUp() {
     return PageRouteBuilder(
         pageBuilder: (BuildContext context, Animation<double> animation,
                 Animation<double> secondaryAnimation) =>
@@ -85,26 +94,22 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
           final curvedAnimation =
               CurvedAnimation(parent: animation, curve: Curves.easeInOut);
 
-          // return SlideTransition(
-          //   position: Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset.zero ).animate(curvedAnimation),
-          //   child: child,
-          // );
+          return FadeTransition(
+              child: child,
+              opacity:
+                  Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation));
+        });
+  }
 
-          // return ScaleTransition(
-          //   child: child,
-          //   scale: Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation)
-          // );
-
-          // RotationTransition
-          // return RotationTransition(
-          //   child: child,
-          //   turns: Tween<double>(begin: 0.0, end: 1.0 ).animate(curvedAnimation)
-          // );
-
-          // return FadeTransition(
-          //   child: child,
-          //   opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation)
-          // );
+  Route _createRuteLogIn() {
+    return PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation<double> animation,
+                Animation<double> secondaryAnimation) =>
+            LoginPage(),
+        transitionDuration: Duration(seconds: 1),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final curvedAnimation =
+              CurvedAnimation(parent: animation, curve: Curves.easeInOut);
 
           return FadeTransition(
               child: child,
