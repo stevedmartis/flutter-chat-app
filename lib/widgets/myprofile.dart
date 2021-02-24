@@ -100,7 +100,10 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
     // roomBloc.getMyRooms(widget.profile.user.uid);
 
-    catalogoBloc.getMyCatalogos(widget.profile.user.uid);
+    (widget.isUserAuth)
+        ? catalogoBloc.getMyCatalogos(widget.profile.user.uid)
+        : catalogoBloc.getCatalogosUser(
+            widget.profile.user.uid, profile.user.uid);
   }
 
   @override
@@ -233,7 +236,9 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                     ? makeHeaderInfo(context)
                     : makeHeaderSpacer(context),
                 // if (!widget.isUserEdit) makeHeaderTabs(context),
-                if (!widget.isUserEdit) makeHeaderTabsCategories(context),
+                (widget.isUserAuth)
+                    ? makeHeaderTabsMyCatalogos(context)
+                    : makeHeaderTabsCatalogs(context),
 
                 /* SliverList(
                   delegate: SliverChildListDelegate(
@@ -338,7 +343,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     );
   }
 
-  SliverPersistentHeader makeHeaderTabsCategories(context) {
+  SliverPersistentHeader makeHeaderTabsMyCatalogos(context) {
     //   final roomModel = Provider.of<Room>(context);
 
     return SliverPersistentHeader(
@@ -348,6 +353,30 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
         maxHeight: 70.0,
         child: StreamBuilder<CatalogosResponse>(
           stream: catalogoBloc.myCatalogos.stream,
+          builder: (context, AsyncSnapshot<CatalogosResponse> snapshot) {
+            if (snapshot.hasData) {
+              return _buildCatalogoWidget(snapshot.data);
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
+            } else {
+              return _buildLoadingWidget();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  SliverPersistentHeader makeHeaderTabsCatalogs(context) {
+    //   final roomModel = Provider.of<Room>(context);
+
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+        minHeight: 70.0,
+        maxHeight: 70.0,
+        child: StreamBuilder<CatalogosResponse>(
+          stream: catalogoBloc.userCatalogos.stream,
           builder: (context, AsyncSnapshot<CatalogosResponse> snapshot) {
             if (snapshot.hasData) {
               return _buildCatalogoWidget(snapshot.data);

@@ -10,7 +10,25 @@ class CatalogosApiProvider {
 
   final _storage = new FlutterSecureStorage();
 
-  Future<CatalogosResponse> getCatalogos(String userId) async {
+  Future<CatalogosResponse> getCatalogos(
+      String userId, String userAuthId) async {
+    final urlFinal = _endpoint + '$userId' + '/userAuth/$userAuthId';
+
+    final token = await this._storage.read(key: 'token');
+
+    try {
+      final resp = await http.get(urlFinal,
+          headers: {'Content-Type': 'application/json', 'x-token': token});
+
+      final catalogosResponse = catalogosResponseFromJson(resp.body);
+      return catalogosResponse;
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return CatalogosResponse.withError("$error");
+    }
+  }
+
+  Future<CatalogosResponse> getMyCatalogos(String userId) async {
     final urlFinal = _endpoint + '$userId';
 
     final token = await this._storage.read(key: 'token');

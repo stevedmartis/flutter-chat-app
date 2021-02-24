@@ -6,8 +6,8 @@ import 'package:chat/providers/subscription_provider.dart';
 class SubscriptionRepository {
   SubscriptionApiProvider _apiProvider = SubscriptionApiProvider();
 
-  Future<Subscription> getSubscription(String subId, String clubId) {
-    return _apiProvider.getSubscription(subId, clubId);
+  Future<Subscription> getSubscription(String userAuth, String userId) {
+    return _apiProvider.getSubscription(userAuth, userId);
   }
 
   Future<ProfilesResponse> getProfilesSubsciptionsPending(String userId) {

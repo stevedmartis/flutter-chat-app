@@ -13,6 +13,7 @@ class Catalogo {
       this.createdAt,
       this.updatedAt,
       this.position,
+      this.privacity,
       isRoute,
       init()});
 
@@ -21,21 +22,22 @@ class Catalogo {
   String description;
   String user;
   int position;
+  String privacity;
 
   DateTime createdAt;
   DateTime updatedAt;
 
   factory Catalogo.fromJson(Map<String, dynamic> json) => new Catalogo(
-        id: json["id"],
-        user: json['user'],
-        position: json['position'],
+      id: json["id"],
+      user: json['user'],
+      position: json['position'],
+      name: json["name"],
+      createdAt: DateTime.parse(json["createdAt"]),
+      updatedAt: DateTime.parse(json["updatedAt"]),
+      description: json["description"],
+      privacity: json["privacity"]
 
-        name: json["name"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-        description: json["description"],
-
-        //images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+      //images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -44,5 +46,6 @@ class Catalogo {
         "user": user,
         "name": name,
         "description": description,
+        "privacity": privacity
       };
 }

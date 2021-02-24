@@ -1,6 +1,5 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
-import 'package:chat/bloc/provider.dart';
 import 'package:chat/bloc/subscribe_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/subscribe.dart';
@@ -62,11 +61,11 @@ class _ProfileCardState extends State<ProfileCard> {
 
   bool isSuscriptionApprove = false;
   bool isSuscriptionActive = false;
+  bool isUploadRecipe = false;
 
   @override
   void initState() {
     final authService = Provider.of<AuthService>(context, listen: false);
-    final chatService = Provider.of<ChatService>(context, listen: false);
     profileMyUser = authService.profile;
 
     super.initState();
@@ -74,19 +73,27 @@ class _ProfileCardState extends State<ProfileCard> {
     subscriptionBloc.getSubscription(
         profileMyUser.user.uid, widget.profile.user.uid);
 
-    subscriptionBloc.subscription.stream.listen((onData) {
+    setState(() {
+      loadSub = true;
+    });
+
+/*     subscriptionBloc.subscription.stream.listen((onData) {
       subscription = onData;
 
       isSuscriptionApprove = subscription.subscribeApproved;
       isSuscriptionActive = subscription.subscribeActive;
 
+      isUploadRecipe = (subscription.imageRecipe == "") ? false : true;
+
       if (!widget.isUserAuth) {
         chatService.userFor.subscribeActive = isSuscriptionActive;
         chatService.userFor.subscribeApproved = isSuscriptionApprove;
 
-        loadSub = true;
+        setState(() {
+          loadSub = true;
+        });
       }
-    });
+    }); */
   }
 
   @override
@@ -105,7 +112,7 @@ class _ProfileCardState extends State<ProfileCard> {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     final awsService = Provider.of<AwsService>(context, listen: false);
-    final bloc = CustomProvider.subscribeBlocIn(context);
+    // final bloc = CustomProvider.subscribeBlocIn(context);
 
     final chatService = Provider.of<ChatService>(context, listen: false);
     final profileUser =
@@ -222,205 +229,216 @@ class _ProfileCardState extends State<ProfileCard> {
                                             ),
                                           )),
                                     )))))))),
-        (!widget.isUserAuth &&
-                loadSub &&
-                profileUser.isClub &&
-                subscription.subscribeActive &&
-                subscription.isUpload &&
-                !subscription.subscribeApproved)
-            ? Container(
-                //top: size.height / 3.5,
-                padding: EdgeInsets.only(top: 35.0),
-                margin: EdgeInsets.only(
-                    top: size.height / 4.5,
-                    left: size.width / 1.8,
-                    right: size.width / 20),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: ButtonSubEditProfile(
-                      color: currentTheme.scaffoldBackgroundColor
-                          .withOpacity(0.60),
-                      textColor: (widget.isUserAuth)
-                          ? Colors.white.withOpacity(0.50)
-                          : Colors.white,
-                      text: widget.isUserAuth ? 'Editar perfil' : 'Pendiente',
-                      onPressed: () {
-                        (widget.isUserAuth)
-                            ? Navigator.of(context)
-                                .push(createRouteEditProfile())
-                            : unSubscribe(
-                                context,
-                                bloc,
-                                currentTheme.accentColor,
-                                awsService.isUploadRecipe);
-                      }),
-                ),
-              )
-            : Container(),
-        (!widget.isUserAuth &&
-                loadSub &&
-                profileUser.isClub &&
-                subscription.subscribeActive &&
-                subscription.isUpload &&
-                subscription.subscribeApproved)
-            ? FadeIn(
-                duration: Duration(milliseconds: 500),
-                child: Container(
-                  //top: size.height / 3.5,
-                  padding: EdgeInsets.only(top: 35.0),
-                  margin: EdgeInsets.only(
-                      top: size.height / 4.5,
-                      left: size.width / 1.9,
-                      right: size.width / 20),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: ButtonSubEditProfile(
-                        color: currentTheme.scaffoldBackgroundColor
-                            .withOpacity(0.60),
-                        textColor: (widget.isUserAuth)
-                            ? Colors.white.withOpacity(0.50)
-                            : currentTheme.accentColor,
-                        text: widget.isUserAuth ? 'Editar perfil' : 'SUSCRITO',
-                        onPressed: () {
-                          (widget.isUserAuth)
-                              ? Navigator.of(context)
-                                  .push(createRouteEditProfile())
-                              : unSubscribe(
-                                  context,
-                                  bloc,
-                                  currentTheme.accentColor,
-                                  awsService.isUploadRecipe);
-                        }),
-                  ),
-                ),
-              )
-            : Container(),
-        (!widget.isUserAuth &&
-                loadSub &&
-                profileUser.isClub &&
-                !subscription.subscribeActive &&
-                subscription.isUpload &&
-                subscription.subscribeApproved)
-            ? FadeIn(
-                duration: Duration(milliseconds: 500),
-                child: Container(
-                  //top: size.height / 3.5,
-                  padding: EdgeInsets.only(top: 35.0),
-                  margin: EdgeInsets.only(
-                      top: size.height / 4.5,
-                      left: size.width / 1.9,
-                      right: size.width / 20),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: ButtonSubEditProfile(
-                        color: currentTheme.scaffoldBackgroundColor
-                            .withOpacity(0.60),
-                        textColor: (widget.isUserAuth)
-                            ? Colors.white.withOpacity(0.50)
-                            : currentTheme.accentColor,
-                        text:
-                            widget.isUserAuth ? 'Editar perfil' : 'SUSCRIBIRME',
-                        onPressed: () {
-                          (widget.isUserAuth)
-                              ? Navigator.of(context)
-                                  .push(createRouteEditProfile())
-                              : updateFieldToSubscribe(
-                                  context,
-                                  bloc,
-                                  currentTheme.accentColor,
-                                  subscription,
-                                );
-                        }),
-                  ),
-                ),
-              )
-            : Container(),
-        (!widget.isUserAuth &&
-                loadSub &&
-                profileUser.isClub &&
-                !subscription.subscribeActive &&
-                !subscription.subscribeApproved)
-            ? FadeIn(
-                duration: Duration(milliseconds: 500),
-                child: Container(
-                  //top: size.height / 3.5,
-                  padding: EdgeInsets.only(top: 35.0),
-                  margin: EdgeInsets.only(
-                      top: size.height / 4.5,
-                      left: size.width / 1.9,
-                      right: size.width / 20),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: ButtonSubEditProfile(
-                        color: currentTheme.scaffoldBackgroundColor
-                            .withOpacity(0.60),
-                        textColor: (widget.isUserAuth)
-                            ? Colors.white.withOpacity(0.50)
-                            : currentTheme.accentColor,
-                        text: 'SUSCRIBIRME',
-                        onPressed: () {
-                          (widget.isUserAuth)
-                              ? Navigator.of(context)
-                                  .push(createRouteEditProfile())
-                              : updateFieldToSubscribe(
-                                  context,
-                                  bloc,
-                                  currentTheme.accentColor,
-                                  subscription,
-                                );
-                        }),
-                  ),
-                ),
-              )
-            : Container(),
         (!widget.isUserAuth && profileMyUser.isClub)
-            ? Container(
-                //top: size.height / 3.5,
-                padding: EdgeInsets.only(top: 35.0),
-                margin: EdgeInsets.only(
-                    top: size.height / 4.5,
-                    left: size.width / 1.8,
-                    right: size.width / 20),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: ButtonSubEditProfile(
-                      color: currentTheme.scaffoldBackgroundColor
-                          .withOpacity(0.60),
-                      textColor: (widget.isUserAuth)
-                          ? Colors.white.withOpacity(0.50)
-                          : currentTheme.accentColor,
-                      text: 'Ver receta',
-                      onPressed: () {
-                        (widget.isUserAuth)
-                            ? Navigator.of(context)
-                                .push(createRouteEditProfile())
-                            : Navigator.push(context,
-                                createRouteRecipeViewImage(widget.profile));
-                      }),
-                ))
+            ? FadeIn(
+                duration: Duration(milliseconds: 500),
+                child: Container(
+                    //top: size.height / 3.5,
+                    padding: EdgeInsets.only(top: 35.0),
+                    margin: EdgeInsets.only(
+                        top: size.height / 4.5,
+                        left: size.width / 1.8,
+                        right: size.width / 20),
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: ButtonSubEditProfile(
+                          color: currentTheme.scaffoldBackgroundColor
+                              .withOpacity(0.60),
+                          textColor: (!widget.isUserAuth)
+                              ? Colors.white
+                              : currentTheme.accentColor,
+                          text: 'Ver receta',
+                          onPressed: () {
+                            (widget.isUserAuth)
+                                ? Navigator.of(context)
+                                    .push(createRouteEditProfile())
+                                : Navigator.push(context,
+                                    createRouteRecipeViewImage(widget.profile));
+                          }),
+                    )),
+              )
             : Container(),
         (widget.isUserAuth)
-            ? Container(
-                //top: size.height / 3.5,
-                padding: EdgeInsets.only(top: 35.0),
-                margin: EdgeInsets.only(
-                    top: size.height / 4.5,
-                    left: size.width / 1.8,
-                    right: size.width / 20),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: ButtonSubEditProfile(
-                      color: currentTheme.scaffoldBackgroundColor
-                          .withOpacity(0.60),
-                      textColor: (widget.isUserAuth)
-                          ? Colors.white.withOpacity(0.50)
-                          : currentTheme.accentColor,
-                      text: 'Editar perfil',
-                      onPressed: () {
-                        Navigator.of(context).push(createRouteEditProfile());
-                      }),
-                ))
-            : Container()
+            ? FadeIn(
+                duration: Duration(milliseconds: 500),
+                child: Container(
+                    //top: size.height / 3.5,
+                    padding: EdgeInsets.only(top: 35.0),
+                    margin: EdgeInsets.only(
+                        top: size.height / 4.5,
+                        left: size.width / 1.8,
+                        right: size.width / 20),
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: ButtonSubEditProfile(
+                          color: currentTheme.scaffoldBackgroundColor
+                              .withOpacity(0.60),
+                          textColor: (widget.isUserAuth)
+                              ? Colors.white.withOpacity(0.50)
+                              : currentTheme.accentColor,
+                          text: 'Editar perfil',
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(createRouteEditProfile());
+                          }),
+                    )),
+              )
+            : Container(),
+        StreamBuilder(
+            stream: subscriptionBloc.subscription.stream,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              isData = snapshot.hasData;
+
+              if (isData) {
+                subscription = snapshot.data;
+
+                final imageRecipe =
+                    (snapshot.data.imageRecipe == "") ? false : true;
+
+                if (loadSub &&
+                    !widget.profile.isClub &&
+                    !widget.isUserAuth &&
+                    !imageRecipe &&
+                    !subscription.subscribeActive &&
+                    !subscription.subscribeApproved) {
+                  return FadeIn(
+                    duration: Duration(milliseconds: 500),
+                    child: Container(
+                      //top: size.height / 3.5,
+                      padding: EdgeInsets.only(top: 35.0),
+                      margin: EdgeInsets.only(
+                          top: size.height / 4.5,
+                          left: size.width / 1.9,
+                          right: size.width / 20),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: ButtonSubEditProfile(
+                            color: currentTheme.scaffoldBackgroundColor
+                                .withOpacity(0.60),
+                            textColor: (widget.isUserAuth)
+                                ? Colors.white.withOpacity(0.50)
+                                : currentTheme.accentColor,
+                            text: 'SUSCRIBIRME',
+                            onPressed: () {
+                              (widget.isUserAuth)
+                                  ? Navigator.of(context)
+                                      .push(createRouteEditProfile())
+                                  : updateFieldToSubscribe(
+                                      context,
+                                      currentTheme.accentColor,
+                                      subscription,
+                                    );
+                            }),
+                      ),
+                    ),
+                  );
+                } else if (loadSub &&
+                    !widget.isUserAuth &&
+                    imageRecipe &&
+                    subscription.subscribeActive &&
+                    !subscription.subscribeApproved) {
+                  return FadeIn(
+                    duration: Duration(milliseconds: 500),
+                    child: Container(
+                      //top: size.height / 3.5,
+                      padding: EdgeInsets.only(top: 35.0),
+                      margin: EdgeInsets.only(
+                          top: size.height / 4.5,
+                          left: size.width / 1.9,
+                          right: size.width / 20),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: ButtonSubEditProfile(
+                            color: currentTheme.scaffoldBackgroundColor
+                                .withOpacity(0.60),
+                            textColor: Colors.white,
+                            text: 'Pendiente',
+                            onPressed: () {
+                              (widget.isUserAuth)
+                                  ? Navigator.of(context)
+                                      .push(createRouteEditProfile())
+                                  : unSubscribe(
+                                      context,
+                                      currentTheme.accentColor,
+                                      awsService.isUploadRecipe,
+                                    );
+                            }),
+                      ),
+                    ),
+                  );
+                } else if (loadSub &&
+                    !widget.isUserAuth &&
+                    imageRecipe &&
+                    !subscription.subscribeActive &&
+                    !subscription.subscribeApproved) {
+                  return FadeIn(
+                    duration: Duration(milliseconds: 500),
+                    child: Container(
+                      //top: size.height / 3.5,
+                      padding: EdgeInsets.only(top: 35.0),
+                      margin: EdgeInsets.only(
+                          top: size.height / 4.5,
+                          left: size.width / 1.9,
+                          right: size.width / 20),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: ButtonSubEditProfile(
+                            color: currentTheme.scaffoldBackgroundColor
+                                .withOpacity(0.60),
+                            textColor: currentTheme.accentColor,
+                            text: 'SUSCRIBIRME',
+                            onPressed: () {
+                              (widget.isUserAuth)
+                                  ? Navigator.of(context)
+                                      .push(createRouteEditProfile())
+                                  : updateFieldToSubscribe(
+                                      context,
+                                      currentTheme.accentColor,
+                                      subscription,
+                                    );
+                            }),
+                      ),
+                    ),
+                  );
+                } else if (loadSub &&
+                    !widget.isUserAuth &&
+                    imageRecipe &&
+                    subscription.subscribeActive &&
+                    subscription.subscribeApproved) {
+                  return FadeIn(
+                    duration: Duration(milliseconds: 500),
+                    child: Container(
+                      //top: size.height / 3.5,
+                      padding: EdgeInsets.only(top: 35.0),
+                      margin: EdgeInsets.only(
+                          top: size.height / 4.5,
+                          left: size.width / 1.9,
+                          right: size.width / 20),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: ButtonSubEditProfile(
+                            color: currentTheme.scaffoldBackgroundColor
+                                .withOpacity(0.60),
+                            textColor: currentTheme.accentColor,
+                            text: 'SUSCRITO',
+                            onPressed: () {
+                              (widget.isUserAuth)
+                                  ? Navigator.of(context)
+                                      .push(createRouteEditProfile())
+                                  : unSubscribe(
+                                      context,
+                                      currentTheme.accentColor,
+                                      awsService.isUploadRecipe,
+                                    );
+                            }),
+                      ),
+                    ),
+                  );
+                }
+              }
+
+              return Container();
+            }),
       ],
     );
   }
@@ -446,8 +464,7 @@ class _ProfileCardState extends State<ProfileCard> {
     );
   }
 
-  updateFieldToSubscribe(
-      context, SubscribeBloc bloc, color, Subscription subscription) {
+  updateFieldToSubscribe(context, color, Subscription subscription) {
     const List<Color> orangeGradients = [
       Color(0xff1C3041),
       Color(0xff1C3041),
@@ -463,7 +480,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 content: Column(
                   children: [
                     StreamBuilder(
-                        stream: bloc.subscription,
+                        stream: subscriptionBloc.subscription,
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
                           return GestureDetector(
@@ -479,7 +496,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 ),
                 actions: <Widget>[
                   StreamBuilder(
-                      stream: bloc.subscription.stream,
+                      stream: subscriptionBloc.subscription.stream,
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         isData = snapshot.hasData;
                         return Row(
@@ -489,8 +506,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                     child: Text('Enviar'),
                                     elevation: 5,
                                     textColor: Colors.blue,
-                                    onPressed: () =>
-                                        addSubscription(context, bloc))),
+                                    onPressed: () => addSubscription(context))),
                             Expanded(
                               child: MaterialButton(
                                   child: Text(
@@ -514,94 +530,113 @@ class _ProfileCardState extends State<ProfileCard> {
                 style: TextStyle(color: Colors.white54, fontSize: 15),
               ),
               content: StreamBuilder(
-                  stream: bloc.subscription.stream,
+                  stream: subscriptionBloc.subscription.stream,
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    isData = snapshot.hasData;
+                    final isHasData = snapshot.hasData;
 
-                    return (!subscription.isUpload && !isData)
-                        ? Column(
-                            children: [
-                              GestureDetector(
-                                  child: roundedRectButtonIcon(
-                                      "Desde mis fotos",
-                                      orangeGradients,
-                                      FontAwesomeIcons.fileUpload),
-                                  onTap: snapshot.hasData
-                                      ? null
-                                      : () => {_selectImage(false, bloc)}),
-                              GestureDetector(
-                                  child: roundedRectButtonIcon(
-                                      "Desde mi camara",
-                                      orangeGradients,
-                                      FontAwesomeIcons.camera),
-                                  onTap: snapshot.hasData
-                                      ? null
-                                      : () => {_selectImage(true, bloc)}),
-                            ],
-                          )
-                        : GestureDetector(
-                            onTap: () => {_selectImage(false, bloc)},
-                            child: Container(
-                              padding: EdgeInsets.only(top: 10.0),
-                              child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0)),
-                                  child: Container(
-                                    child: FadeInImage(
-                                      image: NetworkImage(
-                                          (!subscription.isUpload && !isData)
-                                              ? snapshot.data.imageRecipe
-                                              : subscription.imageRecipe),
-                                      placeholder:
-                                          AssetImage('assets/loading2.gif'),
-                                      fit: BoxFit.cover,
-                                      height: 120,
-                                      width: double.infinity,
-                                      alignment: Alignment.center,
-                                    ),
-                                  )),
-                            ),
-                          );
+                    if (isHasData) {
+                      final imageRecipe =
+                          (snapshot.data.imageRecipe == "") ? false : true;
+
+                      if (!imageRecipe &&
+                          !snapshot.data.isUpload &&
+                          !snapshot.data.subscribeApproved &&
+                          !snapshot.data.subscribeActive) {
+                        return Column(
+                          children: [
+                            GestureDetector(
+                                child: roundedRectButtonIcon(
+                                    "Desde mis fotos",
+                                    orangeGradients,
+                                    FontAwesomeIcons.fileUpload),
+                                onTap: !isHasData
+                                    ? null
+                                    : () => {_selectImage(false)}),
+                            GestureDetector(
+                                child: roundedRectButtonIcon("Desde mi camara",
+                                    orangeGradients, FontAwesomeIcons.camera),
+                                onTap: !isHasData
+                                    ? null
+                                    : () => {_selectImage(true)}),
+                          ],
+                        );
+                      } else if (isHasData &&
+                          imageRecipe &&
+                          !snapshot.data.subscribeApproved &&
+                          !snapshot.data.subscribeActive) {
+                        return GestureDetector(
+                          onTap: () => {_selectImage(false)},
+                          child: Container(
+                            padding: EdgeInsets.only(top: 10.0),
+                            child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                child: Container(
+                                  child: FadeInImage(
+                                    image:
+                                        NetworkImage(snapshot.data.imageRecipe),
+                                    placeholder:
+                                        AssetImage('assets/loading2.gif'),
+                                    fit: BoxFit.cover,
+                                    height: 120,
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                  ),
+                                )),
+                          ),
+                        );
+                      }
+                    } else {
+                      return Container();
+                    }
+
+                    return Container();
                   }),
               actions: <Widget>[
                 StreamBuilder(
-                    stream: bloc.subscription,
+                    stream: subscriptionBloc.subscription.stream,
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       isData = snapshot.hasData;
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: CupertinoDialogAction(
-                                isDefaultAction: true,
-                                child: Text(
-                                  'ENVIAR',
-                                  style: TextStyle(
-                                      color: (subscription.isUpload || loadSub)
-                                          ? color
-                                          : Colors.white54),
-                                ),
-                                onPressed: () =>
-                                    (subscription.isUpload || loadSub)
-                                        ? addSubscription(context, bloc)
-                                        : null),
-                          ),
-                          Expanded(
-                            child: CupertinoDialogAction(
-                                isDestructiveAction: true,
-                                child: Text(
-                                  'Cancelar',
-                                  style: TextStyle(color: Colors.white54),
-                                ),
-                                onPressed: () => Navigator.pop(context)),
-                          ),
-                        ],
-                      );
+
+                      if (isData) {
+                        final imageRecipe =
+                            (snapshot.data.imageRecipe == "") ? false : true;
+                        return Row(
+                          children: [
+                            Expanded(
+                              child: CupertinoDialogAction(
+                                  isDefaultAction: true,
+                                  child: Text(
+                                    'ENVIAR',
+                                    style: TextStyle(
+                                        color: (imageRecipe)
+                                            ? color
+                                            : Colors.white54),
+                                  ),
+                                  onPressed: () => (imageRecipe)
+                                      ? addSubscription(context)
+                                      : null),
+                            ),
+                            Expanded(
+                              child: CupertinoDialogAction(
+                                  isDestructiveAction: true,
+                                  child: Text(
+                                    'Cancelar',
+                                    style: TextStyle(color: Colors.white54),
+                                  ),
+                                  onPressed: () => Navigator.pop(context)),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return Container();
+                      }
                     }),
               ],
             ));
   }
 
-  unSubscribe(context, SubscribeBloc bloc, color, bool isUploadRecipe) {
+  unSubscribe(context, color, bool isUploadRecipe) {
     const List<Color> orangeGradients = [
       Color(0xff34EC9C),
       Color(0xff1C3041),
@@ -617,7 +652,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 content: Column(
                   children: [
                     StreamBuilder(
-                        stream: bloc.subscription,
+                        stream: subscriptionBloc.subscription.stream,
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
                           return GestureDetector(
@@ -633,7 +668,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 ),
                 actions: <Widget>[
                   StreamBuilder(
-                      stream: bloc.subscription.stream,
+                      stream: subscriptionBloc.subscription.stream,
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         isData = snapshot.hasData;
                         return Row(
@@ -643,8 +678,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                     child: Text('Enviar'),
                                     elevation: 5,
                                     textColor: Colors.blue,
-                                    onPressed: () =>
-                                        addSubscription(context, bloc))),
+                                    onPressed: () => addSubscription(context))),
                             Expanded(
                               child: MaterialButton(
                                   child: Text(
@@ -682,7 +716,6 @@ class _ProfileCardState extends State<ProfileCard> {
                           onPressed: () => (loadSub)
                               ? unSubscription(
                                   context,
-                                  bloc,
                                 )
                               : null),
                       CupertinoDialogAction(
@@ -698,7 +731,9 @@ class _ProfileCardState extends State<ProfileCard> {
                 ]));
   }
 
-  _selectImage(bool isCamera, SubscribeBloc bloc) async {
+  _selectImage(
+    bool isCamera,
+  ) async {
     final awsService = Provider.of<AwsService>(context, listen: false);
     final subscription = subscriptionBloc.subscription.value;
 
@@ -722,7 +757,7 @@ class _ProfileCardState extends State<ProfileCard> {
         imageRecipe: resp,
       );
       setState(() {
-        bloc.subscription.add(newSubscription);
+        subscriptionBloc.subscription.sink.add(newSubscription);
       });
     } else {
       print('No image selected.');
@@ -732,7 +767,6 @@ class _ProfileCardState extends State<ProfileCard> {
 
 void addSubscription(
   context,
-  SubscribeBloc bloc,
 ) async {
   Subscription subscription = subscriptionBloc.subscription.value;
 
@@ -750,7 +784,7 @@ void addSubscription(
   Navigator.pop(context);
 }
 
-void unSubscription(context, SubscribeBloc bloc) async {
+void unSubscription(context) async {
   final subscription = subscriptionBloc.subscription.value;
   //final socketService = Provider.of<SocketService>(context, listen: false);
   //  socketService.emit('add-band', {'name': name});

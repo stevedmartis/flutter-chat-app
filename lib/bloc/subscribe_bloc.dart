@@ -18,9 +18,8 @@ class SubscribeBloc with Validators {
       BehaviorSubject<ProfilesResponse>();
   final SubscriptionRepository _repository = SubscriptionRepository();
 
-  getSubscription(subscriptorId, clubid) async {
-    Subscription response =
-        await _repository.getSubscription(subscriptorId, clubid);
+  getSubscription(userAuth, userId) async {
+    Subscription response = await _repository.getSubscription(userAuth, userId);
     _subscriptionCtrl.sink.add(response);
   }
 

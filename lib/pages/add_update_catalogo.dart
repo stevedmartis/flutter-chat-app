@@ -45,18 +45,20 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
   bool isControllerChangeEdit = false;
   bool loading = false;
 
+  String optionItemSelected = "1";
+
   List<DropdownMenuItem> categories = [
     DropdownMenuItem(
-      child: Text('Macho'),
-      value: "Macho",
+      child: Text('Todos'),
+      value: "1",
     ),
     DropdownMenuItem(
-      child: Text('Hembra'),
-      value: "Hembra",
+      child: Text('Mis suscriptores'),
+      value: "2",
     ),
     DropdownMenuItem(
-      child: Text('Automatica'),
-      value: "Automatica",
+      child: Text('Nadie'),
+      value: "3",
     )
   ];
 
@@ -163,6 +165,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
                         children: <Widget>[
                           _createName(bloc),
                           _createDescription(bloc),
+                          _createPrivacity(bloc)
 
                           /*   _createDescription(bloc), */
                         ],
@@ -238,6 +241,41 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
     );
   }
 
+  Widget _createPrivacity(CatalogoBloc bloc) {
+    final size = MediaQuery.of(context).size;
+
+    return StreamBuilder(
+      stream: bloc.privacityStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+
+            //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
+            height: 50,
+            width: size.width,
+            child: DropdownButtonFormField(
+              hint: Text('Mostrar con: '),
+              value: optionItemSelected,
+              items: categories,
+              onChanged: (optionItem) {
+                setState(() {
+                  optionItemSelected = optionItem;
+                });
+              },
+            ));
+        /* SelectDropList(
+              optionItemSelected,
+              dropListModel,
+              (optionItem) {
+                setState(() {
+                  optionItemSelected = optionItem;
+                  sexoModel.sexo = optionItemSelected;
+                });
+              },
+            )); */
+      },
+    );
+  }
+
   Widget _createButton(
     CatalogoBloc bloc,
     bool isControllerChange,
@@ -282,8 +320,10 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
         ? widget.catalogo.description
         : bloc.description.trim();
 
-    final newCatalogo =
-        Catalogo(name: name, description: description, user: uid);
+    final privacity = optionItemSelected;
+
+    final newCatalogo = Catalogo(
+        name: name, description: description, privacity: privacity, user: uid);
 
     final createCatalogoResp =
         await catalogoService.createCatalogo(newCatalogo);
@@ -319,8 +359,13 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
         ? widget.catalogo.description
         : descriptionCtrl.text.trim();
 
-    final editCatalogo =
-        Catalogo(name: name, description: description, id: widget.catalogo.id);
+    final privacity = optionItemSelected;
+
+    final editCatalogo = Catalogo(
+        name: name,
+        description: description,
+        privacity: privacity,
+        id: widget.catalogo.id);
 
     if (widget.isEdit) {
       final editCatalogoRes = await catalogoService.editCatalogo(editCatalogo);

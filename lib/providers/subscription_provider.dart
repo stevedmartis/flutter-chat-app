@@ -17,8 +17,8 @@ class SubscriptionApiProvider {
 
   final _storage = new FlutterSecureStorage();
 
-  Future<Subscription> getSubscription(String subId, String clubId) async {
-    final urlFinal = _endpoint + 'subscription' + '/$subId' + '/$clubId';
+  Future<Subscription> getSubscription(String userAuth, String userId) async {
+    final urlFinal = _endpoint + 'subscription' + '/$userAuth' + '/$userId';
 
     final token = await this._storage.read(key: 'token');
 
