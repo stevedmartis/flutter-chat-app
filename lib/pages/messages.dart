@@ -3,7 +3,6 @@ import 'package:chat/models/profiles.dart';
 import 'package:chat/models/profiles_response.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/principalCustom_page.dart';
-import 'package:chat/pages/profile_page.dart';
 import 'package:chat/providers/messages_providers.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
@@ -21,91 +20,6 @@ import 'package:chat/services/socket_service.dart';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
-
-class CustomAppBar extends StatefulWidget with PreferredSizeWidget {
-  @override
-  final Size preferredSize;
-
-  final String title;
-  final Profiles profile;
-
-  CustomAppBar({
-    this.title,
-    this.profile,
-    Key key,
-  })  : preferredSize = Size.fromHeight(60.0),
-        super(key: key);
-
-  @override
-  _CustomAppBarState createState() => _CustomAppBarState();
-}
-
-class _CustomAppBarState extends State<CustomAppBar> {
-  @override
-  Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    return AppBar(
-      leadingWidth: 65,
-      backgroundColor: Colors.black,
-      actions: [
-        Padding(
-          padding: EdgeInsets.all(20),
-          child: Icon(
-            Icons.more_vert,
-            color: currentTheme.accentColor,
-            size: 30,
-          ),
-        ),
-      ],
-      title: Text('Mensajes'),
-      leading: Container(
-        padding: EdgeInsets.all(8.0),
-        margin: EdgeInsets.only(left: 10.0),
-        child: GestureDetector(
-          onTap: () {
-            {
-              Navigator.push(context, _createRoute());
-            }
-          },
-          child: Container(
-            child: Hero(
-              tag: widget.profile.user.uid,
-              child: Material(
-                type: MaterialType.transparency,
-                child: ImageUserChat(
-                  width: 100,
-                  height: 100,
-                  profile: widget.profile,
-                  fontsize: 12,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      automaticallyImplyLeading: true,
-    );
-  }
-}
-
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>
-        SliverAppBarProfilepPage(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(-0.5, 0.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}
 
 class MessagesPage extends StatefulWidget {
   @override
@@ -173,7 +87,6 @@ class _MessagesPageState extends State<MessagesPage>
             minHeight: 60,
             maxHeight: 60,
             child: Container(
-                color: Colors.black,
                 child: Container(
                     color: Colors.black,
                     child: CustomAppBarSimplePages(
@@ -189,7 +102,7 @@ class _MessagesPageState extends State<MessagesPage>
   }
 
   Widget buildSuggestions(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return FutureBuilder(
       future: messagesProvider.getProfilesChatByUser(profile.user.uid),
@@ -221,14 +134,19 @@ class _MessagesPageState extends State<MessagesPage>
                 children: [
                   Material(
                     child: ListTile(
-                      tileColor: currentTheme.scaffoldBackgroundColor,
+                      tileColor:
+                          currentTheme.currentTheme.scaffoldBackgroundColor,
                       leading: ImageUserChat(
                           width: 100,
                           height: 100,
                           profile: message,
                           fontsize: 20),
                       title: Text(nameSub,
-                          style: TextStyle(color: Colors.white, fontSize: 18)),
+                          style: TextStyle(
+                              color: (currentTheme.customTheme)
+                                  ? Colors.white54
+                                  : Colors.black,
+                              fontSize: 18)),
                       subtitle: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -236,22 +154,30 @@ class _MessagesPageState extends State<MessagesPage>
                           EmojiText(
                               text: message.message,
                               style: TextStyle(
-                                  fontSize: 15, color: Colors.white54),
+                                fontSize: 15,
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white54
+                                    : Colors.grey,
+                              ),
                               emojiFontMultiplier: 1.5),
                           SizedBox(
                             width: 10.0,
                           ),
                           Text(
                             '· $timeFormatted',
-                            style:
-                                TextStyle(color: Colors.white54, fontSize: 15),
+                            style: TextStyle(
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white54
+                                    : currentTheme.currentTheme.primaryColor,
+                                fontSize: 15),
                           ),
                         ],
                       ),
                       trailing: (suscriptionEnabled)
                           ? Text(
                               formatted,
-                              style: TextStyle(color: currentTheme.accentColor),
+                              style: TextStyle(
+                                  color: currentTheme.currentTheme.accentColor),
                             )
                           : Text(''),
                       onTap: () {

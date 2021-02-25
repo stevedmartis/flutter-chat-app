@@ -33,15 +33,15 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
     return AppBar(
-      backgroundColor: Colors.black,
+      backgroundColor: (currentTheme.customTheme) ? Colors.black : Colors.white,
       actions: [
         Padding(
           padding: EdgeInsets.all(20),
           child: Icon(
             Icons.more_vert,
-            color: currentTheme.accentColor,
+            color: currentTheme.currentTheme.accentColor,
             size: 30,
           ),
         ),
@@ -83,14 +83,16 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: (profile.name.length >= 15) ? 15 : 18,
-                    color: Colors.white),
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
               ))
         ],
       ),
       leading: IconButton(
         icon: Icon(
           Icons.chevron_left,
-          color: currentTheme.accentColor,
+          color: currentTheme.currentTheme.accentColor,
         ),
         iconSize: 35,
         onPressed: () {
@@ -173,7 +175,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     final userFor = chatService.userFor;
 
@@ -183,7 +185,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
         (isClub) ? true : userFor.subscribeApproved && userFor.subscribeActive;
 
     return Scaffold(
-      backgroundColor: currentTheme.scaffoldBackgroundColor,
+      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
       appBar: CustomAppBar(
         profile: userFor,
         isFromMessage: widget.isFromMessage,
@@ -201,7 +203,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
             )),
             Divider(height: 1),
             Container(
-              color: Colors.black,
+              color: (currentTheme.customTheme) ? Colors.black : Colors.white,
               child: (suscriptionEnabled) ? _inputChat() : _inputDisabled(),
             )
           ],
@@ -277,6 +279,8 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   }
 
   Widget _inputDisabled() {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return SafeArea(
         child: Container(
       padding: EdgeInsets.all(10),
@@ -286,7 +290,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
           Flexible(
             child: Icon(
               Icons.error_outline,
-              color: Colors.white54,
+              color: (currentTheme.customTheme) ? Colors.white54 : Colors.grey,
             ),
           ),
           SizedBox(
@@ -297,11 +301,19 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
             child: (authService.profile.isClub)
                 ? Text(
                     'Suscripción inactiva.',
-                    style: TextStyle(color: Colors.white54),
+                    style: TextStyle(
+                      color: (currentTheme.customTheme)
+                          ? Colors.white54
+                          : Colors.black,
+                    ),
                   )
                 : Text(
-                    'No estas suscrito, no se pueden enviar ni recibir mensajes.',
-                    style: TextStyle(color: Colors.white54),
+                    'Suscribete para enviar mensajes.',
+                    style: TextStyle(
+                      color: (currentTheme.customTheme)
+                          ? Colors.white54
+                          : Colors.black,
+                    ),
                   ),
           )),
 

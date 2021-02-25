@@ -27,10 +27,10 @@ class _CustomAppBarSimplePagesState extends State<CustomAppBarSimplePages> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Container(
-      color: Colors.black,
+      color: (currentTheme.customTheme) ? Colors.black : Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,7 +38,7 @@ class _CustomAppBarSimplePagesState extends State<CustomAppBarSimplePages> {
           IconButton(
             icon: Icon(
               Icons.chevron_left,
-              color: currentTheme.accentColor,
+              color: currentTheme.currentTheme.accentColor,
             ),
             iconSize: 30,
             onPressed: () =>
@@ -58,7 +58,7 @@ class _CustomAppBarSimplePagesState extends State<CustomAppBarSimplePages> {
               child: Icon(
                 Icons.more_vert,
                 size: 25,
-                color: currentTheme.accentColor,
+                color: currentTheme.currentTheme.accentColor,
               )),
         ],
       ),

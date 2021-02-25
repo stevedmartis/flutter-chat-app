@@ -15,6 +15,7 @@ import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
+import 'package:chat/widgets/menu_drawer.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -118,6 +119,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     return _scrollController.hasClients && _scrollController.offset >= 130;
   }
 
+  GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
@@ -125,6 +128,9 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     //final username = widget.profile.user.username.toLowerCase();
 
     return Scaffold(
+      backgroundColor: currentTheme.scaffoldBackgroundColor,
+      endDrawer: PrincipalMenu(),
+      key: scaffolKey,
       // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
@@ -179,7 +185,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                   child: Center(
                                     child: IconButton(
                                       icon: FaIcon(FontAwesomeIcons.commentDots,
-                                          size: 30,
+                                          size: 25,
                                           color: (_showTitle)
                                               ? currentTheme.accentColor
                                               : Colors.white),
@@ -190,7 +196,29 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                   backgroundColor:
                                       Colors.black.withOpacity(0.60)),
                             ))
-                        : Container(),
+                        : Container(
+                            width: 40,
+                            height: 40,
+                            margin: EdgeInsets.only(right: 20),
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              child: CircleAvatar(
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: FaIcon(FontAwesomeIcons.cog,
+                                          size: 25,
+                                          color: (_showTitle)
+                                              ? currentTheme.accentColor
+                                              : Colors.white),
+                                      onPressed: () => {
+                                        scaffolKey.currentState.openEndDrawer()
+                                      },
+                                    ),
+                                  ),
+                                  backgroundColor:
+                                      Colors.black.withOpacity(0.60)),
+                            )),
                   ],
 
                   centerTitle: false,
@@ -444,7 +472,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   }
 
   SliverPersistentHeader makeHeaderInfo(context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     final username = widget.profile.user.username.toLowerCase();
     final about = widget.profile.about;
@@ -460,7 +488,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
           maxHeight: (about.length > 80) ? 200.0 : 80.0,
           child: Container(
             padding: EdgeInsets.only(top: 10.0),
-            color: currentTheme.scaffoldBackgroundColor,
+            color: currentTheme.currentTheme.scaffoldBackgroundColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -476,15 +504,15 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             (nameFinal == "")
-                                ? Text(
-                                    username,
+                                ? Text(username,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w800,
                                         fontSize: (name.length >= 15) ? 20 : 22,
-                                        color: Colors.white),
-                                  )
+                                        color: (currentTheme.customTheme)
+                                            ? Colors.white
+                                            : Colors.black))
                                 : Text(
                                     (nameFinal.length >= 45)
                                         ? nameFinal.substring(0, 45)
@@ -495,15 +523,17 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                         fontWeight: FontWeight.w800,
                                         fontSize:
                                             (nameFinal.length >= 15) ? 20 : 22,
-                                        color: Colors.white),
-                                  ),
+                                        color: (currentTheme.customTheme)
+                                            ? Colors.white
+                                            : Colors.black)),
                             (isClub)
                                 ? Container(
                                     margin: EdgeInsets.only(left: 10),
                                     child: Stack(children: [
                                       FaIcon(
                                         FontAwesomeIcons.certificate,
-                                        color: currentTheme.accentColor,
+                                        color: currentTheme
+                                            .currentTheme.accentColor,
                                         size: 20,
                                       ),
                                       Container(
@@ -511,7 +541,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                             left: 4.5, top: 4.5),
                                         child: FaIcon(
                                           FontAwesomeIcons.check,
-                                          color: Colors.black,
+                                          color: Colors.white,
                                           size: 11,
                                         ),
                                       )
@@ -530,14 +560,14 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                             left: size.width / 20.0, top: 5.0, bottom: 10),
                         //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
-                        child: Text(
-                          '@' + username,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                              fontSize: (username.length >= 16) ? 16 : 18,
-                              color: Colors.white.withOpacity(0.60)),
-                        )),
+                        child: Text('@' + username,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontSize: (username.length >= 16) ? 16 : 18,
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white.withOpacity(0.60)
+                                    : Colors.grey))),
                   ),
                 Expanded(
                   child: Container(
@@ -547,10 +577,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
                       child: (about.length > 0)
-                          ? convertHashtag(
-                              about,
-                              currentTheme.accentColor,
-                            )
+                          ? convertHashtag(about, context)
                           : Container()),
                 ),
               ],
@@ -788,7 +815,9 @@ class _SABTState extends State<SABT> {
   }
 }
 
-RichText convertHashtag(String text, Color color) {
+RichText convertHashtag(String text, context) {
+  final currentTheme = Provider.of<ThemeChanger>(context);
+
   List<String> split = text.split(RegExp("#"));
 
   List<String> hashtags = split.getRange(1, split.length).fold([], (t, e) {
@@ -806,16 +835,25 @@ RichText convertHashtag(String text, Color color) {
       children: [
         TextSpan(
             text: split.first,
-            style:
-                TextStyle(color: Colors.white.withOpacity(0.60), fontSize: 16))
+            style: TextStyle(
+                color: (currentTheme.customTheme)
+                    ? Colors.white.withOpacity(0.60)
+                    : Colors.grey,
+                fontSize: 16))
       ]..addAll(hashtags
           .map((text) => text.contains("#")
               ? TextSpan(
-                  text: text, style: TextStyle(color: color, fontSize: 16))
+                  text: text,
+                  style: TextStyle(
+                      color: currentTheme.currentTheme.accentColor,
+                      fontSize: 16))
               : TextSpan(
                   text: text,
                   style: TextStyle(
-                      color: Colors.white.withOpacity(0.60), fontSize: 16)))
+                      color: (currentTheme.customTheme)
+                          ? Colors.white.withOpacity(0.60)
+                          : Colors.grey,
+                      fontSize: 16)))
           .toList()),
     ),
   );

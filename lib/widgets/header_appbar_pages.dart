@@ -47,7 +47,7 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
     final int number = Provider.of<NotificationModel>(context).number;
 
     return Container(
-      color: Colors.black,
+      color: (currentTheme.customTheme) ? Colors.black : Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,16 +93,16 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
                       child: Container(
                           // color: Colors.black,
                           //  margin: EdgeInsets.only(left: 10, right: 10),
-                          width: size.height / 3.5,
+                          width: size.height / 3.0,
                           height: 40,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  Color(0xff202020),
-                                  Color(0xff1D1D1D),
-                                  Color(0xff161616),
+                                  currentTheme.currentTheme.primaryColor,
+                                  currentTheme.currentTheme.primaryColor,
+                                  currentTheme.currentTheme.primaryColor
                                 ]),
                             borderRadius: BorderRadius.all(Radius.circular(30)),
                             boxShadow: [
@@ -137,7 +137,7 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
                 children: <Widget>[
                   FaIcon(
                     FontAwesomeIcons.commentDots,
-                    color: Colors.white54,
+                    color: currentTheme.currentTheme.primaryColor,
                     size: 30,
                   ),
                   (number > 0)
@@ -337,6 +337,8 @@ class _ItemCircular extends StatelessWidget {
 class SearchContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     final color = Colors.white.withOpacity(0.60);
     return Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
@@ -345,13 +347,15 @@ class SearchContent extends StatelessWidget {
           children: <Widget>[
             // Icon( FontAwesomeIcons.chevronLeft, color: Colors.black54 ),
 
-            Icon(Icons.search, color: color),
+            Icon(Icons.search,
+                color: (currentTheme.customTheme) ? color : Colors.black),
             SizedBox(width: 20),
             Container(
                 // margin: EdgeInsets.only(top: 0, left: 0),
                 child: Text('Buscar',
                     style: TextStyle(
-                        color: color,
+                        color:
+                            (currentTheme.customTheme) ? color : Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.w500))),
           ],

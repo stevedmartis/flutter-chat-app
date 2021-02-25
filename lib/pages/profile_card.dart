@@ -70,8 +70,10 @@ class _ProfileCardState extends State<ProfileCard> {
 
     super.initState();
 
-    subscriptionBloc.getSubscription(
-        profileMyUser.user.uid, widget.profile.user.uid);
+    if (!widget.isUserAuth) {
+      subscriptionBloc.getSubscription(
+          profileMyUser.user.uid, widget.profile.user.uid);
+    }
 
     setState(() {
       loadSub = true;
@@ -109,7 +111,7 @@ class _ProfileCardState extends State<ProfileCard> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     final awsService = Provider.of<AwsService>(context, listen: false);
     // final bloc = CustomProvider.subscribeBlocIn(context);
@@ -139,11 +141,12 @@ class _ProfileCardState extends State<ProfileCard> {
                         : Alignment.bottomLeft,
                     child: CircleAvatar(
                         radius: 55,
-                        backgroundColor: currentTheme.scaffoldBackgroundColor,
+                        backgroundColor:
+                            currentTheme.currentTheme.scaffoldBackgroundColor,
                         child: CircleAvatar(
                             radius: ProfileCard.avatarRadius + 120,
-                            backgroundColor:
-                                currentTheme.scaffoldBackgroundColor,
+                            backgroundColor: currentTheme
+                                .currentTheme.scaffoldBackgroundColor,
                             child: Container(
                                 width: 100,
                                 height: 100,
@@ -224,6 +227,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                                       ),
                                                       backgroundColor:
                                                           currentTheme
+                                                              .currentTheme
                                                               .accentColor,
                                                     ),
                                             ),
@@ -242,11 +246,12 @@ class _ProfileCardState extends State<ProfileCard> {
                     child: Align(
                       alignment: Alignment.bottomRight,
                       child: ButtonSubEditProfile(
-                          color: currentTheme.scaffoldBackgroundColor
-                              .withOpacity(0.60),
-                          textColor: (!widget.isUserAuth)
-                              ? Colors.white
-                              : currentTheme.accentColor,
+                          color: (currentTheme.customTheme)
+                              ? currentTheme
+                                  .currentTheme.scaffoldBackgroundColor
+                                  .withOpacity(0.60)
+                              : Colors.black.withOpacity(0.60),
+                          textColor: Colors.white,
                           text: 'Ver receta',
                           onPressed: () {
                             (widget.isUserAuth)
@@ -271,11 +276,12 @@ class _ProfileCardState extends State<ProfileCard> {
                     child: Align(
                       alignment: Alignment.bottomRight,
                       child: ButtonSubEditProfile(
-                          color: currentTheme.scaffoldBackgroundColor
-                              .withOpacity(0.60),
-                          textColor: (widget.isUserAuth)
-                              ? Colors.white.withOpacity(0.50)
-                              : currentTheme.accentColor,
+                          color: (currentTheme.customTheme)
+                              ? currentTheme
+                                  .currentTheme.scaffoldBackgroundColor
+                                  .withOpacity(0.60)
+                              : Colors.black.withOpacity(0.60),
+                          textColor: Colors.white.withOpacity(0.60),
                           text: 'Editar perfil',
                           onPressed: () {
                             Navigator.of(context)
@@ -298,7 +304,6 @@ class _ProfileCardState extends State<ProfileCard> {
                 if (loadSub &&
                     widget.profile.isClub &&
                     !widget.isUserAuth &&
-                    !imageRecipe &&
                     !subscription.subscribeActive &&
                     !subscription.subscribeApproved) {
                   return FadeIn(
@@ -313,11 +318,12 @@ class _ProfileCardState extends State<ProfileCard> {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: ButtonSubEditProfile(
-                            color: currentTheme.scaffoldBackgroundColor
-                                .withOpacity(0.60),
-                            textColor: (widget.isUserAuth)
-                                ? Colors.white.withOpacity(0.50)
-                                : currentTheme.accentColor,
+                            color: (currentTheme.customTheme)
+                                ? currentTheme
+                                    .currentTheme.scaffoldBackgroundColor
+                                    .withOpacity(0.60)
+                                : Colors.black.withOpacity(0.60),
+                            textColor: currentTheme.currentTheme.accentColor,
                             text: 'SUSCRIBIRME',
                             onPressed: () {
                               (widget.isUserAuth)
@@ -325,7 +331,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                       .push(createRouteEditProfile())
                                   : updateFieldToSubscribe(
                                       context,
-                                      currentTheme.accentColor,
+                                      currentTheme.currentTheme.accentColor,
                                       subscription,
                                     );
                             }),
@@ -350,8 +356,11 @@ class _ProfileCardState extends State<ProfileCard> {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: ButtonSubEditProfile(
-                            color: currentTheme.scaffoldBackgroundColor
-                                .withOpacity(0.60),
+                            color: (currentTheme.customTheme)
+                                ? currentTheme
+                                    .currentTheme.scaffoldBackgroundColor
+                                    .withOpacity(0.60)
+                                : Colors.black.withOpacity(0.60),
                             textColor: Colors.white,
                             text: 'Pendiente',
                             onPressed: () {
@@ -360,7 +369,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                       .push(createRouteEditProfile())
                                   : unSubscribe(
                                       context,
-                                      currentTheme.accentColor,
+                                      currentTheme.currentTheme.accentColor,
                                       awsService.isUploadRecipe,
                                     );
                             }),
@@ -385,9 +394,12 @@ class _ProfileCardState extends State<ProfileCard> {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: ButtonSubEditProfile(
-                            color: currentTheme.scaffoldBackgroundColor
-                                .withOpacity(0.60),
-                            textColor: currentTheme.accentColor,
+                            color: (currentTheme.customTheme)
+                                ? currentTheme
+                                    .currentTheme.scaffoldBackgroundColor
+                                    .withOpacity(0.60)
+                                : Colors.black.withOpacity(0.60),
+                            textColor: currentTheme.currentTheme.accentColor,
                             text: 'SUSCRIBIRME',
                             onPressed: () {
                               (widget.isUserAuth)
@@ -395,7 +407,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                       .push(createRouteEditProfile())
                                   : updateFieldToSubscribe(
                                       context,
-                                      currentTheme.accentColor,
+                                      currentTheme.currentTheme.accentColor,
                                       subscription,
                                     );
                             }),
@@ -419,9 +431,12 @@ class _ProfileCardState extends State<ProfileCard> {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: ButtonSubEditProfile(
-                            color: currentTheme.scaffoldBackgroundColor
-                                .withOpacity(0.60),
-                            textColor: currentTheme.accentColor,
+                            color: (currentTheme.customTheme)
+                                ? currentTheme
+                                    .currentTheme.scaffoldBackgroundColor
+                                    .withOpacity(0.60)
+                                : Colors.black.withOpacity(0.60),
+                            textColor: currentTheme.currentTheme.accentColor,
                             text: 'SUSCRITO',
                             onPressed: () {
                               (widget.isUserAuth)
@@ -429,7 +444,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                       .push(createRouteEditProfile())
                                   : unSubscribe(
                                       context,
-                                      currentTheme.accentColor,
+                                      currentTheme.currentTheme.accentColor,
                                       awsService.isUploadRecipe,
                                     );
                             }),

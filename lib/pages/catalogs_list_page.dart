@@ -238,7 +238,7 @@ class _CatalogsListState extends State<CatalogsList> {
   }
 
   Widget _buildCatalogoWidget(List<Catalogo> catalogos) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
     final size = MediaQuery.of(context).size;
 
     return Container(
@@ -251,7 +251,9 @@ class _CatalogsListState extends State<CatalogsList> {
               final item = catalogos[index];
               return Container(
                 decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: (currentTheme.customTheme)
+                        ? Colors.black
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(0.0)),
                 key: Key(item.id),
                 padding: EdgeInsets.only(bottom: 1.0),
@@ -322,9 +324,14 @@ class _CatalogsListState extends State<CatalogsList> {
                                                 item.name,
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color:
+                                                      (currentTheme.customTheme)
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                ),
                                               ),
                                             ])),
                                   ),
@@ -335,7 +342,8 @@ class _CatalogsListState extends State<CatalogsList> {
                                         margin: EdgeInsets.only(right: 10),
                                         child: Icon(
                                           Icons.format_list_bulleted,
-                                          color: currentTheme.accentColor,
+                                          color: currentTheme
+                                              .currentTheme.accentColor,
                                           size: 30,
                                         ),
                                       ))),
@@ -349,7 +357,8 @@ class _CatalogsListState extends State<CatalogsList> {
                       child: Center(
                         child: Container(
                           height: 1.0,
-                          color: currentTheme.scaffoldBackgroundColor,
+                          color:
+                              currentTheme.currentTheme.scaffoldBackgroundColor,
                         ),
                       ),
                     ),

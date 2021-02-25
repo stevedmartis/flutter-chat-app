@@ -256,7 +256,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     final bloc = CustomProvider.roomBlocIn(context);
     //final size = MediaQuery.of(context).size;
@@ -279,7 +279,8 @@ class AddRoomPagePageState extends State<AddRoomPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor:
+            (currentTheme.customTheme) ? Colors.black : Colors.white,
         actions: [
           if (!loading)
             (widget.isEdit)
@@ -291,7 +292,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
         leading: IconButton(
           icon: Icon(
             Icons.chevron_left,
-            color: currentTheme.accentColor,
+            color: currentTheme.currentTheme.accentColor,
           ),
           iconSize: 30,
           onPressed: () =>
@@ -299,7 +300,21 @@ class AddRoomPagePageState extends State<AddRoomPage> {
               Navigator.pop(context),
           color: Colors.white,
         ),
-        title: (widget.isEdit) ? Text('Edit room') : Text('Crear room'),
+        title: (widget.isEdit)
+            ? Text(
+                'Edit room',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
+              )
+            : Text(
+                'Crear room',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
+              ),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
@@ -363,7 +378,9 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                                         hintText: 'Time on *',
                                         prefixIcon: Icon(
                                           Icons.wb_incandescent,
-                                          color: Colors.white,
+                                          color: (currentTheme.customTheme)
+                                              ? Colors.white
+                                              : Colors.black,
                                         ),
                                       ),
                                     ),
@@ -379,10 +396,10 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                                       keyboardType: TextInputType.datetime,
                                       decoration: InputDecoration(
                                         hintText: 'Time off *',
-                                        prefixIcon: Icon(
-                                          Icons.bedtime,
-                                          color: Colors.white,
-                                        ),
+                                        prefixIcon: Icon(Icons.bedtime,
+                                            color: (currentTheme.customTheme)
+                                                ? Colors.white
+                                                : Colors.black),
                                       ),
                                     ),
                                   ),

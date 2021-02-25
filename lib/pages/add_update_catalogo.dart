@@ -47,21 +47,6 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
 
   String optionItemSelected = "1";
 
-  List<DropdownMenuItem> categories = [
-    DropdownMenuItem(
-      child: Text('Todos'),
-      value: "1",
-    ),
-    DropdownMenuItem(
-      child: Text('Mis suscriptores'),
-      value: "2",
-    ),
-    DropdownMenuItem(
-      child: Text('Nadie'),
-      value: "3",
-    )
-  ];
-
   bool isDefault;
 
   @override
@@ -108,7 +93,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     final bloc = CustomProvider.catalogoBlocIn(context);
 
@@ -119,8 +104,10 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
     final isControllerChangeEdit = isNameChange || isAboutChange;
 
     return Scaffold(
+      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor:
+            (currentTheme.customTheme) ? Colors.black : Colors.white,
         actions: [
           (widget.isEdit)
               ? _createButton(bloc, isControllerChangeEdit)
@@ -129,7 +116,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
         leading: IconButton(
           icon: Icon(
             Icons.chevron_left,
-            color: currentTheme.accentColor,
+            color: currentTheme.currentTheme.accentColor,
           ),
           iconSize: 30,
           onPressed: () =>
@@ -137,7 +124,21 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
               Navigator.pop(context),
           color: Colors.white,
         ),
-        title: (widget.isEdit) ? Text('Edit catalogo') : Text('Crear catalogo'),
+        title: (widget.isEdit)
+            ? Text(
+                'Edit catalogo',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
+              )
+            : Text(
+                'Crear catalogo',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
+              ),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
@@ -178,6 +179,8 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
   }
 
   Widget _createName(CatalogoBloc bloc) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return StreamBuilder(
       stream: bloc.nameStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -189,11 +192,26 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
             ],
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
                 labelText: 'Name *',
@@ -207,7 +225,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
   }
 
   Widget _createDescription(CatalogoBloc bloc) {
-    //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return StreamBuilder(
       stream: bloc.descriptionStream,
@@ -223,15 +241,29 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
             maxLines: 2,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Description',
+                labelText: 'Descripción *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeDescription,
@@ -243,6 +275,37 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
 
   Widget _createPrivacity(CatalogoBloc bloc) {
     final size = MediaQuery.of(context).size;
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
+    List<DropdownMenuItem> categories = [
+      DropdownMenuItem(
+        child: Text(
+          'Todos',
+          style: TextStyle(
+              color:
+                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
+        ),
+        value: "1",
+      ),
+      DropdownMenuItem(
+        child: Text(
+          'Mis suscriptores',
+          style: TextStyle(
+              color:
+                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
+        ),
+        value: "2",
+      ),
+      DropdownMenuItem(
+        child: Text(
+          'Nadie',
+          style: TextStyle(
+              color:
+                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
+        ),
+        value: "3",
+      )
+    ];
 
     return StreamBuilder(
       stream: bloc.privacityStream,
@@ -253,7 +316,21 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
             height: 50,
             width: size.width,
             child: DropdownButtonFormField(
-              hint: Text('Mostrar con: '),
+              decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: (currentTheme.customTheme)
+                              ? Colors.white54
+                              : Colors.black54))),
+              dropdownColor:
+                  (currentTheme.customTheme) ? Colors.black : Colors.white,
+              hint: Text(
+                'Mostrar con: ',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54),
+              ),
               value: optionItemSelected,
               items: categories,
               onChanged: (optionItem) {

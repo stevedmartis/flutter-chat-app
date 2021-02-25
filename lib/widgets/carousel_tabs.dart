@@ -102,13 +102,13 @@ class _TabsScrollCatalogosCustomState extends State<TabsScrollCatalogoCustom> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     final catalogos = widget.catalogos;
 
     return Container(
       decoration: BoxDecoration(
-        color: currentTheme.scaffoldBackgroundColor,
+        color: currentTheme.currentTheme.scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
               color: Colors.black54,
@@ -122,9 +122,13 @@ class _TabsScrollCatalogosCustomState extends State<TabsScrollCatalogoCustom> {
           child: PreferredSize(
             preferredSize: Size.fromHeight(600.0),
             child: TabBar(
+              indicatorWeight: 3,
               isScrollable: true,
-              unselectedLabelColor: Colors.white.withOpacity(0.3),
-              indicatorColor: currentTheme.accentColor,
+              labelColor: currentTheme.currentTheme.accentColor,
+              unselectedLabelColor: (currentTheme.customTheme)
+                  ? Colors.white54.withOpacity(0.30)
+                  : currentTheme.currentTheme.primaryColor,
+              indicatorColor: currentTheme.currentTheme.accentColor,
               tabs: List<Widget>.generate(catalogos.length, (int index) {
                 final catalogo = catalogos[index];
 

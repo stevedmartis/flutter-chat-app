@@ -190,8 +190,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
             currentIndex: currentPage,
             onTap: _onItemTapped,
             type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.black,
-            unselectedItemColor: Colors.white.withOpacity(0.60),
+            backgroundColor:
+                (currentTheme.customTheme) ? Colors.black : Colors.white,
+            selectedItemColor: currentTheme.currentTheme.accentColor,
+            unselectedItemColor: Colors.grey,
             items: [
               BottomNavigationBarItem(
                 icon: (currentPage == 0)
@@ -200,7 +202,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                         size: 30,
                         color: (currentPage == 0)
                             ? currentTheme.currentTheme.accentColor
-                            : Colors.white.withOpacity(0.60)),
+                            : currentTheme.currentTheme.primaryColor),
                 label: '',
               ),
               BottomNavigationBarItem(
@@ -208,7 +210,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                     size: (currentPage == 1) ? 30 : 30,
                     color: (currentPage == 1)
                         ? currentTheme.currentTheme.accentColor
-                        : Colors.white.withOpacity(0.60)),
+                        : currentTheme.currentTheme.primaryColor),
                 label: '',
               ),
               BottomNavigationBarItem(
@@ -221,7 +223,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                         size: 30,
                         color: (currentPage == 2)
                             ? currentTheme.currentTheme.accentColor
-                            : Colors.white.withOpacity(0.60)),
+                            : currentTheme.currentTheme.primaryColor),
                 label: '',
               ),
               BottomNavigationBarItem(
@@ -229,7 +231,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                     size: (currentPage == 3) ? 30 : 30,
                     color: (currentPage == 3)
                         ? currentTheme.currentTheme.accentColor
-                        : Colors.white.withOpacity(0.60)),
+                        : currentTheme.currentTheme.primaryColor),
                 label: '',
               ),
               BottomNavigationBarItem(
@@ -243,7 +245,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                               : FontAwesomeIcons.bell,
                           color: (currentPage == 4)
                               ? currentTheme.currentTheme.accentColor
-                              : Colors.white.withOpacity(0.60),
+                              : currentTheme.currentTheme.primaryColor,
                           size: (currentPage == 4) ? 30 : 30,
                         ),
                       ),
