@@ -908,10 +908,11 @@ Container buildCircleFavoritePlant(String quantity, context) {
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
         child: CircleAvatar(
-            child: Text(
-              '$quantity',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
+            child: Text('$quantity',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black)),
             backgroundColor: currentTheme.accentColor),
       ));
 }

@@ -47,14 +47,15 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-    changeStatusLight();
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
+    (currentTheme.customTheme) ? changeStatusLight() : changeStatusDark();
 
     return CustomProvider(
       child: MaterialApp(
-        theme: currentTheme,
+        theme: currentTheme.currentTheme,
         debugShowCheckedModeBanner: false,
-        title: 'Chat App',
+        title: 'Leafety',
         initialRoute: 'loading',
         routes: appRoutes,
       ),

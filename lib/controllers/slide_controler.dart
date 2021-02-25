@@ -70,7 +70,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
           padding:
               EdgeInsets.only(top: _size.height * 0.9, left: 60, right: 60),
           child: ButtonLogout(
-              color: currentTheme.scaffoldBackgroundColor,
+              color: Color(0xff1C181D),
               text: 'Sign In!',
               textColor: Colors.white,
               onPressed: () => {Navigator.push(context, _createRuteSignUp())}),
@@ -136,10 +136,10 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
 
     if (_currentPage >= index - 0.5 && _currentPage < index + 0.5) {
       _size = 20;
-      _color = currentTheme.accentColor;
+      _color = Color(0xff34EC9C);
     } else {
       _size = 15;
-      _color = currentTheme.scaffoldBackgroundColor;
+      _color = Color(0xff1C181D);
     }
     return AnimatedContainer(
       duration: Duration(milliseconds: 200),
