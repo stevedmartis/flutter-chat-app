@@ -142,7 +142,7 @@ class _NotificationsPageState extends State<NotificationsPage>
   }
 
   Widget _buildList(BuildContext context, Axis direction) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return (profile.isClub)
         ? StreamBuilder<ProfilesResponse>(
@@ -197,8 +197,8 @@ class _NotificationsPageState extends State<NotificationsPage>
                                 onTap: () {},
                                 child: Material(
                                   child: ListTile(
-                                    tileColor:
-                                        currentTheme.scaffoldBackgroundColor,
+                                    tileColor: currentTheme
+                                        .currentTheme.scaffoldBackgroundColor,
                                     leading: ImageUserChat(
                                         width: 100,
                                         height: 100,
@@ -206,7 +206,11 @@ class _NotificationsPageState extends State<NotificationsPage>
                                         fontsize: 20),
                                     title: Text(nameSub,
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 18)),
+                                            fontWeight: FontWeight.w500,
+                                            color: (currentTheme.customTheme)
+                                                ? Colors.white54
+                                                : Colors.black54,
+                                            fontSize: 18)),
                                     subtitle: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
@@ -217,7 +221,10 @@ class _NotificationsPageState extends State<NotificationsPage>
                                           child: Text(
                                             'Solicitud: $formatted',
                                             style: TextStyle(
-                                                color: Colors.white54,
+                                                color:
+                                                    (currentTheme.customTheme)
+                                                        ? Colors.white54
+                                                        : Colors.black54,
                                                 fontSize: 15),
                                           ),
                                         ),
@@ -225,7 +232,10 @@ class _NotificationsPageState extends State<NotificationsPage>
                                           child: Text(
                                             'Aprobación pendiente.',
                                             style: TextStyle(
-                                                color: Colors.white54,
+                                                color:
+                                                    (currentTheme.customTheme)
+                                                        ? Colors.white54
+                                                        : Colors.black54,
                                                 fontSize: 15),
                                           ),
                                         ),
@@ -235,7 +245,8 @@ class _NotificationsPageState extends State<NotificationsPage>
                                       padding: EdgeInsets.all(10),
                                       child: Icon(
                                         Icons.chevron_right,
-                                        color: currentTheme.accentColor,
+                                        color: currentTheme
+                                            .currentTheme.accentColor,
                                         size: 30,
                                       ),
                                     ),
@@ -263,7 +274,8 @@ class _NotificationsPageState extends State<NotificationsPage>
                                           : (renderingMode ==
                                                   SlidableRenderingMode.dismiss
                                               ? Colors.blue
-                                              : currentTheme.accentColor),
+                                              : currentTheme
+                                                  .currentTheme.accentColor),
                                       icon: Icons.check_circle,
                                       onTap: () async {
                                         var state = Slidable.of(context);
@@ -402,8 +414,8 @@ class _NotificationsPageState extends State<NotificationsPage>
                               onTap: () {},
                               child: Material(
                                 child: ListTile(
-                                  tileColor:
-                                      currentTheme.scaffoldBackgroundColor,
+                                  tileColor: currentTheme
+                                      .currentTheme.scaffoldBackgroundColor,
                                   leading: ImageUserChat(
                                       width: 100,
                                       height: 100,
@@ -411,7 +423,10 @@ class _NotificationsPageState extends State<NotificationsPage>
                                       fontsize: 20),
                                   title: Text(nameSub,
                                       style: TextStyle(
-                                          color: Colors.white, fontSize: 18)),
+                                          color: (currentTheme.customTheme)
+                                              ? Colors.white54
+                                              : Colors.black54,
+                                          fontSize: 18)),
                                   subtitle: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -430,7 +445,8 @@ class _NotificationsPageState extends State<NotificationsPage>
                                         child: Text(
                                           'Solicitud Aprobada!',
                                           style: TextStyle(
-                                              color: currentTheme.accentColor,
+                                              color: currentTheme
+                                                  .currentTheme.accentColor,
                                               fontSize: 15),
                                         ),
                                       ),
@@ -440,7 +456,8 @@ class _NotificationsPageState extends State<NotificationsPage>
                                     padding: EdgeInsets.all(10),
                                     child: Icon(
                                       Icons.chevron_right,
-                                      color: currentTheme.accentColor,
+                                      color:
+                                          currentTheme.currentTheme.accentColor,
                                       size: 30,
                                     ),
                                   ),

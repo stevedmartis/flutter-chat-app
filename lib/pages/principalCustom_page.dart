@@ -127,7 +127,7 @@ class _CollapsingListState extends State<CollapsingList>
         SliverFixedExtentList(
           itemExtent: 150.0,
           delegate: SliverChildListDelegate(
-            [BannerSlide()],
+            [FadeIn(child: BannerSlide())],
           ),
         ),
         makeHeaderSpacer(context),
@@ -169,6 +169,7 @@ class _CollapsingListState extends State<CollapsingList>
                   if (snapshot.hasData) {
                     plants = snapshot.data.plants;
                     return FadeInRight(
+                      delay: Duration(microseconds: 500),
                       child: _buildWidgetPlants(plants, context),
                     ); // image is ready
                   } else if (snapshot.hasError) {
@@ -191,7 +192,8 @@ class _CollapsingListState extends State<CollapsingList>
                 builder: (context, AsyncSnapshot<VisitsResponse> snapshot) {
                   if (snapshot.hasData) {
                     visits = snapshot.data.visits;
-                    return FadeInRight(
+                    return FadeInLeft(
+                      delay: Duration(milliseconds: 600),
                       child: _buildWidgetVisits(visits, context),
                     ); // image is ready
                   } else if (snapshot.hasError) {

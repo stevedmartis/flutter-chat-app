@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:chat/models/notification.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/profiles_response.dart';
@@ -132,67 +133,71 @@ class _MessagesPageState extends State<MessagesPage>
                   (message.name == "") ? message.user.username : message.name;
               return Column(
                 children: [
-                  Material(
-                    child: ListTile(
-                      tileColor:
-                          currentTheme.currentTheme.scaffoldBackgroundColor,
-                      leading: ImageUserChat(
-                          width: 100,
-                          height: 100,
-                          profile: message,
-                          fontsize: 20),
-                      title: Text(nameSub,
-                          style: TextStyle(
-                              color: (currentTheme.customTheme)
-                                  ? Colors.white54
-                                  : Colors.black,
-                              fontSize: 18)),
-                      subtitle: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          EmojiText(
-                              text: message.message,
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: (currentTheme.customTheme)
-                                    ? Colors.white54
-                                    : Colors.grey,
-                              ),
-                              emojiFontMultiplier: 1.5),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            '· $timeFormatted',
+                  FadeInLeft(
+                    delay: Duration(milliseconds: 300 * index),
+                    child: Material(
+                      child: ListTile(
+                        tileColor:
+                            currentTheme.currentTheme.scaffoldBackgroundColor,
+                        leading: ImageUserChat(
+                            width: 100,
+                            height: 100,
+                            profile: message,
+                            fontsize: 20),
+                        title: Text(nameSub,
                             style: TextStyle(
                                 color: (currentTheme.customTheme)
                                     ? Colors.white54
-                                    : currentTheme.currentTheme.primaryColor,
-                                fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      trailing: (suscriptionEnabled)
-                          ? Text(
-                              formatted,
+                                    : Colors.black,
+                                fontSize: 18)),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            EmojiText(
+                                text: message.message,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: (currentTheme.customTheme)
+                                      ? Colors.white54
+                                      : Colors.grey,
+                                ),
+                                emojiFontMultiplier: 1.5),
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            Text(
+                              '· $timeFormatted',
                               style: TextStyle(
-                                  color: currentTheme.currentTheme.accentColor),
-                            )
-                          : Text(''),
-                      onTap: () {
-                        final chatService =
-                            Provider.of<ChatService>(context, listen: false);
-                        chatService.userFor = message;
+                                  color: (currentTheme.customTheme)
+                                      ? Colors.white54
+                                      : currentTheme.currentTheme.primaryColor,
+                                  fontSize: 15),
+                            ),
+                          ],
+                        ),
+                        trailing: (suscriptionEnabled)
+                            ? Text(
+                                formatted,
+                                style: TextStyle(
+                                    color:
+                                        currentTheme.currentTheme.accentColor),
+                              )
+                            : Text(''),
+                        onTap: () {
+                          final chatService =
+                              Provider.of<ChatService>(context, listen: false);
+                          chatService.userFor = message;
 
-                        final notifiModel = Provider.of<NotificationModel>(
-                            context,
-                            listen: false);
+                          final notifiModel = Provider.of<NotificationModel>(
+                              context,
+                              listen: false);
 
-                        notifiModel.number = 0;
+                          notifiModel.number = 0;
 
-                        Navigator.push(context, createRouteChat());
-                      },
+                          Navigator.push(context, createRouteChat());
+                        },
+                      ),
                     ),
                   ),
                   Divider(height: 1),
