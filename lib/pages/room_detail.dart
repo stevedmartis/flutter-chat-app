@@ -570,7 +570,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             topRight: Radius.circular(30.0),
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 18),
+        padding: EdgeInsets.symmetric(horizontal: 18),
         child: Padding(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
