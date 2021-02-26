@@ -170,6 +170,7 @@ class _NotificationsPageState extends State<NotificationsPage>
                         children: [
                           //final int t = index;
                           FadeInLeft(
+                            delay: Duration(milliseconds: 300 * index),
                             child: Slidable.builder(
                               key: Key(item.id),
                               controller: slidableController,

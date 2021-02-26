@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 
@@ -412,10 +411,8 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         }),
                   ),
                   Container(
-                    child: Hero(
-                        tag: plant.quantity + plant.id,
-                        child: buildCircleFavoritePlantDash(
-                            plant.quantity, context)),
+                    child:
+                        buildCircleFavoritePlantDash(plant.quantity, context),
                   ),
                 ],
               );

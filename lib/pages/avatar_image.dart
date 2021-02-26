@@ -34,15 +34,17 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Scaffold(
+      backgroundColor: (currentTheme.customTheme) ? Colors.black : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor:
+            (currentTheme.customTheme) ? Colors.black : Colors.white,
         leading: IconButton(
           icon: Icon(
             Icons.chevron_left,
-            color: currentTheme.accentColor,
+            color: currentTheme.currentTheme.accentColor,
           ),
           iconSize: 40,
           onPressed: () => Navigator.pop(context),
@@ -52,7 +54,7 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
           IconButton(
             icon: Icon(
               Icons.add_photo_alternate,
-              color: currentTheme.accentColor,
+              color: currentTheme.currentTheme.accentColor,
             ),
             iconSize: 40,
             onPressed: () => _selectImage(),
@@ -60,7 +62,6 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
           ),
         ],
       ),
-      backgroundColor: Colors.black,
       body: Hero(
         tag: widget.profile.user.uid,
         child: Material(

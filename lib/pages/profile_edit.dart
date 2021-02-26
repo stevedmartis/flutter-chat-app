@@ -136,7 +136,7 @@ class EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
     final authService = Provider.of<AuthService>(context);
     // final awsService = Provider.of<AwsService>(context);
 
@@ -144,8 +144,10 @@ class EditProfilePageState extends State<EditProfilePage> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: (currentTheme.customTheme) ? Colors.black : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor:
+            (currentTheme.customTheme) ? Colors.black : Colors.white,
         actions: [
           _createButton(bloc, this.isUsernameChange, this.isAboutChange,
               this.isEmailChange, this.isNameChange, this.isPassChange),
@@ -153,7 +155,7 @@ class EditProfilePageState extends State<EditProfilePage> {
         leading: IconButton(
           icon: Icon(
             Icons.chevron_left,
-            color: currentTheme.accentColor,
+            color: currentTheme.currentTheme.accentColor,
           ),
           iconSize: 30,
           onPressed: () =>
@@ -161,7 +163,11 @@ class EditProfilePageState extends State<EditProfilePage> {
               Navigator.pop(context),
           color: Colors.white,
         ),
-        title: Text('Edit profile'),
+        title: Text(
+          'Edit profile',
+          style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black),
+        ),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
@@ -264,12 +270,12 @@ class EditProfilePageState extends State<EditProfilePage> {
                           alignment: Alignment.bottomCenter,
                           child: CircleAvatar(
                             radius: 55,
-                            backgroundColor:
-                                currentTheme.scaffoldBackgroundColor,
+                            backgroundColor: currentTheme
+                                .currentTheme.scaffoldBackgroundColor,
                             child: CircleAvatar(
                               radius: ProfileCard.avatarRadius,
-                              backgroundColor:
-                                  currentTheme.scaffoldBackgroundColor,
+                              backgroundColor: currentTheme
+                                  .currentTheme.scaffoldBackgroundColor,
                               child: GestureDetector(
                                 onTap: () => {
                                   Navigator.of(context).push(PageRouteBuilder(
@@ -342,8 +348,10 @@ class EditProfilePageState extends State<EditProfilePage> {
                             height: 50,
                           ),
                           ButtonLogout(
-                            textColor: currentTheme.secondaryHeaderColor,
-                            color: currentTheme.scaffoldBackgroundColor,
+                            textColor:
+                                currentTheme.currentTheme.secondaryHeaderColor,
+                            color: currentTheme
+                                .currentTheme.scaffoldBackgroundColor,
                             text: 'Log out',
                             onPressed: authService.authenticated
                                 ? null
@@ -410,7 +418,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                   style: TextStyle(
                       color: (isControllerChange && !errorRequired)
                           ? currentTheme.accentColor
-                          : Colors.white.withOpacity(0.30),
+                          : Colors.grey.withOpacity(0.60),
                       fontSize: 18),
                 ),
               ),

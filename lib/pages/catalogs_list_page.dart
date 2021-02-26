@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:chat/bloc/catalogo_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/catalogo.dart';
@@ -16,6 +17,7 @@ import 'package:chat/widgets/header_appbar_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/auth_service.dart';
@@ -249,6 +251,14 @@ class _CatalogsListState extends State<CatalogsList> {
             catalogos.length,
             (index) {
               final item = catalogos[index];
+
+              final privacity = (item.privacity == '1')
+                  ? 'Todos'
+                  : (item.privacity == '2')
+                      ? 'Suscriptiores'
+                      : (item.privacity == '3')
+                          ? 'Nadie'
+                          : '';
               return Container(
                 decoration: BoxDecoration(
                     color: (currentTheme.customTheme)
@@ -257,112 +267,158 @@ class _CatalogsListState extends State<CatalogsList> {
                     borderRadius: BorderRadius.circular(0.0)),
                 key: Key(item.id),
                 padding: EdgeInsets.only(bottom: 1.0),
-                child: Stack(
-                  children: [
-                    GestureDetector(
-                      key: Key(item.id),
-                      onTap: () => {
-                        /* Navigator.of(context)
-                            .push(createRouteRoomDetail(item, catalogo)), */
-                      },
-                      child: Dismissible(
-                          key: UniqueKey(),
-                          direction: DismissDirection.endToStart,
-                          onDismissed: (direction) =>
-                              {_deleteCatalogo(item.id, index)},
-                          background: Container(
-                              alignment: Alignment.centerRight,
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Colors.black,
-                                      size: 30,
+                child: FadeInLeft(
+                  delay: Duration(milliseconds: 300 * index),
+                  child: Stack(
+                    children: [
+                      GestureDetector(
+                        key: Key(item.id),
+                        onTap: () => {
+                          /* Navigator.of(context)
+                              .push(createRouteRoomDetail(item, catalogo)), */
+                        },
+                        child: Dismissible(
+                            key: UniqueKey(),
+                            direction: DismissDirection.endToStart,
+                            onDismissed: (direction) =>
+                                {_deleteCatalogo(item.id, index)},
+                            background: Container(
+                                alignment: Alignment.centerRight,
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(right: 10),
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.black,
+                                        size: 30,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  /* Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600),
-                                ) */
-                                ],
-                              )),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: SizedBox(
-                              height: size.height / 10,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  /*    AspectRatio(
+                                    SizedBox(
+                                      width: 12,
+                                    ),
+                                    /* Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600),
+                                  ) */
+                                  ],
+                                )),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: SizedBox(
+                                height: size.height / 10,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    /*    AspectRatio(
               aspectRatio: 1.0,
               child: thumbnail,
             ), */
 
-                                  Expanded(
-                                    child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            20.0, 10.0, 2.0, 0.0),
-                                        child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                item.name,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                  color:
-                                                      (currentTheme.customTheme)
-                                                          ? Colors.white
-                                                          : Colors.black,
+                                    Expanded(
+                                      child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              20.0, 10.0, 2.0, 0.0),
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  item.name,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                    color: (currentTheme
+                                                            .customTheme)
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
                                                 ),
-                                              ),
-                                            ])),
-                                  ),
-                                  SizedBox(
-                                      width: 50,
-                                      child: Center(
-                                          child: Container(
-                                        margin: EdgeInsets.only(right: 10),
-                                        child: Icon(
-                                          Icons.format_list_bulleted,
-                                          color: currentTheme
-                                              .currentTheme.accentColor,
-                                          size: 30,
-                                        ),
-                                      ))),
-                                ],
+                                                SizedBox(height: 10),
+                                                Row(
+                                                  children: [
+                                                    FaIcon(
+                                                      FontAwesomeIcons.eye,
+                                                      size: 20,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 15,
+                                                    ),
+                                                    /* Text(
+                                                      'Visibile para: ',
+                                                      maxLines: 2,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: (currentTheme
+                                                                .customTheme)
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                      ),
+                                                    ), */
+                                                    Text(
+                                                      privacity,
+                                                      maxLines: 2,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13,
+                                                        color: (currentTheme
+                                                                .customTheme)
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              ])),
+                                    ),
+                                    SizedBox(
+                                        width: 50,
+                                        child: Center(
+                                            child: Container(
+                                          margin: EdgeInsets.only(right: 10),
+                                          child: Icon(
+                                            Icons.format_list_bulleted,
+                                            color: currentTheme
+                                                .currentTheme.accentColor,
+                                            size: 30,
+                                          ),
+                                        ))),
+                                  ],
+                                ),
                               ),
-                            ),
-                          )),
-                    ),
-                    SizedBox(
-                      height: 1.0,
-                      child: Center(
-                        child: Container(
-                          height: 1.0,
-                          color:
-                              currentTheme.currentTheme.scaffoldBackgroundColor,
+                            )),
+                      ),
+                      SizedBox(
+                        height: 1.0,
+                        child: Center(
+                          child: Container(
+                            height: 1.0,
+                            color: currentTheme
+                                .currentTheme.scaffoldBackgroundColor,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },

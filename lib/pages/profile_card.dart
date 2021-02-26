@@ -78,24 +78,6 @@ class _ProfileCardState extends State<ProfileCard> {
     setState(() {
       loadSub = true;
     });
-
-/*     subscriptionBloc.subscription.stream.listen((onData) {
-      subscription = onData;
-
-      isSuscriptionApprove = subscription.subscribeApproved;
-      isSuscriptionActive = subscription.subscribeActive;
-
-      isUploadRecipe = (subscription.imageRecipe == "") ? false : true;
-
-      if (!widget.isUserAuth) {
-        chatService.userFor.subscribeActive = isSuscriptionActive;
-        chatService.userFor.subscribeApproved = isSuscriptionApprove;
-
-        setState(() {
-          loadSub = true;
-        });
-      }
-    }); */
   }
 
   @override
@@ -167,8 +149,14 @@ class _ProfileCardState extends State<ProfileCard> {
                                               child: (profileUser.imageAvatar !=
                                                       "")
                                                   ? OpenContainer(
-                                                      closedColor: Colors.black,
-                                                      openColor: Colors.black,
+                                                      closedColor: (currentTheme
+                                                              .customTheme)
+                                                          ? Colors.black
+                                                          : Colors.white,
+                                                      openColor: (currentTheme
+                                                              .customTheme)
+                                                          ? Colors.black
+                                                          : Colors.white,
                                                       transitionType:
                                                           ContainerTransitionType
                                                               .fade,

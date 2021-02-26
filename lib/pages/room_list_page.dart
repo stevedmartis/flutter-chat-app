@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:chat/bloc/room_bloc.dart';
 
 import 'package:chat/models/profiles.dart';
@@ -260,74 +261,77 @@ class _RoomListState extends State<RoomList> {
                     borderRadius: BorderRadius.circular(0.0)),
                 key: Key(item.id),
                 padding: EdgeInsets.only(bottom: 1.0),
-                child: Stack(
-                  children: [
-                    GestureDetector(
-                      key: Key(item.id),
-                      onTap: () => {
-                        Navigator.of(context)
-                            .push(createRouteRoomDetail(item, rooms)),
-                      },
-                      child: Dismissible(
-                        key: UniqueKey(),
-                        direction: DismissDirection.endToStart,
-                        onDismissed: (direction) =>
-                            {_deleteRoom(item.id, index)},
-                        background: Container(
-                            alignment: Alignment.centerRight,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.black,
-                                    size: 30,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 12,
-                                ),
-                                /* Text(
-                                  'Delete',
-                                  style: TextStyle(
+                child: FadeInLeft(
+                  delay: Duration(milliseconds: 300 * index),
+                  child: Stack(
+                    children: [
+                      GestureDetector(
+                        key: Key(item.id),
+                        onTap: () => {
+                          Navigator.of(context)
+                              .push(createRouteRoomDetail(item, rooms)),
+                        },
+                        child: Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) =>
+                              {_deleteRoom(item.id, index)},
+                          background: Container(
+                              alignment: Alignment.centerRight,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(right: 10),
+                                    child: Icon(
+                                      Icons.delete,
                                       color: Colors.black,
-                                      fontWeight: FontWeight.w600),
-                                ) */
-                              ],
-                            )),
-                        child: CustomListItemTwoRoom(
-                          title: item.name,
-                          subtitle: item.description,
-                          wide: '${item.wide}',
-                          long: '${item.long}',
-                          tall: '${item.tall}',
-                          timeOn: item.timeOn,
-                          timeOff: item.timeOff,
-                          publishDate: 'Dec 28',
-                          readDuration: '5 mins',
-                          totalPlants: item.totalPlants,
-                          totalAirs: item.totalAirs,
-                          totalLigths: item.totalLights,
+                                      size: 30,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 12,
+                                  ),
+                                  /* Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600),
+                                  ) */
+                                ],
+                              )),
+                          child: CustomListItemTwoRoom(
+                            title: item.name,
+                            subtitle: item.description,
+                            wide: '${item.wide}',
+                            long: '${item.long}',
+                            tall: '${item.tall}',
+                            timeOn: item.timeOn,
+                            timeOff: item.timeOff,
+                            publishDate: 'Dec 28',
+                            readDuration: '5 mins',
+                            totalPlants: item.totalPlants,
+                            totalAirs: item.totalAirs,
+                            totalLigths: item.totalLights,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 1.0,
-                      child: Center(
-                        child: Container(
-                          height: 1.0,
-                          color:
-                              currentTheme.currentTheme.scaffoldBackgroundColor,
+                      SizedBox(
+                        height: 1.0,
+                        child: Center(
+                          child: Container(
+                            height: 1.0,
+                            color: currentTheme
+                                .currentTheme.scaffoldBackgroundColor,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },

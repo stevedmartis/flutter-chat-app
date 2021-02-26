@@ -50,7 +50,10 @@ class _CustomAppBarSimplePagesState extends State<CustomAppBarSimplePages> {
             margin: EdgeInsets.only(left: 0),
             child: Text(
               widget.title,
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(
+                  fontSize: 20,
+                  color:
+                      (currentTheme.customTheme) ? Colors.white : Colors.black),
             ),
           ),
           Container(

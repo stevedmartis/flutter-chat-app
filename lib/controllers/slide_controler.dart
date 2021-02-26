@@ -128,8 +128,6 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
   }
 
   Widget _indicator(int numberOfPages, int index) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     double _size;
 
     Color _color;
@@ -173,37 +171,9 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
 class StyledLogoCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        // Stroked text as border.
-
-        /*  Stack(
-          children: [
-            Text(
-              'G',
-              style: TextStyle(
-                  fontSize: 30,
-                  fontFamily: 'GTWalsheimPro',
-                  fontStyle: FontStyle.normal,
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeWidth = 3
-                    ..color = currentTheme.accentColor),
-            ),
-            // Solid text as fill.
-            Text(
-              'G',
-              style: TextStyle(
-                  fontFamily: 'GTWalsheimPro',
-                  fontStyle: FontStyle.normal,
-                  fontSize: 30,
-                  color: currentTheme.scaffoldBackgroundColor),
-            ),
-          ],
-        ), */
         RichText(
           textAlign: TextAlign.center,
           text: new TextSpan(

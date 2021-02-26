@@ -1,5 +1,4 @@
 import 'package:chat/models/plant.dart';
-import 'package:chat/pages/room_detail.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,12 +16,11 @@ class _CardPlantState extends State<CardPlant> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return FittedBox(
       child: Row(
         children: <Widget>[
-          Center(child: plantitem()),
+          Center(child: plantItem()),
           Container(
             width: size.width,
             height: size.height / 1.45,
@@ -46,7 +44,7 @@ class _CardPlantState extends State<CardPlant> {
     );
   }
 
-  Widget plantitem() {
+  Widget plantItem() {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context);
     final thc = (widget.plant.thc.isEmpty) ? '0' : widget.plant.thc;

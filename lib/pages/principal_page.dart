@@ -217,10 +217,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 icon: (currentPage == 2)
                     ? FaIcon(
                         FontAwesomeIcons.doorOpen,
-                        size: 30,
+                        size: 25,
                       )
                     : FaIcon(FontAwesomeIcons.doorClosed,
-                        size: 30,
+                        size: 25,
                         color: (currentPage == 2)
                             ? currentTheme.currentTheme.accentColor
                             : currentTheme.currentTheme.primaryColor),
@@ -228,7 +228,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               ),
               BottomNavigationBarItem(
                 icon: FaIcon(FontAwesomeIcons.handHoldingMedical,
-                    size: (currentPage == 3) ? 30 : 30,
+                    size: (currentPage == 3) ? 25 : 25,
                     color: (currentPage == 3)
                         ? currentTheme.currentTheme.accentColor
                         : currentTheme.currentTheme.primaryColor),
@@ -246,7 +246,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                           color: (currentPage == 4)
                               ? currentTheme.currentTheme.accentColor
                               : currentTheme.currentTheme.primaryColor,
-                          size: (currentPage == 4) ? 30 : 30,
+                          size: (currentPage == 4) ? 25 : 25,
                         ),
                       ),
                       (number > 0)

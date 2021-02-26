@@ -26,7 +26,7 @@ class ImageUserChat extends StatefulWidget {
 class _ImageUserChatState extends State<ImageUserChat> {
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(100)),
@@ -35,6 +35,10 @@ class _ImageUserChatState extends State<ImageUserChat> {
         borderRadius: BorderRadius.all(Radius.circular(100.0)),
         child: (widget.profile.imageAvatar != "")
             ? CircleAvatar(
+                backgroundColor:
+                    (currentTheme.customTheme) ? Colors.black : Colors.white,
+                foregroundColor:
+                    (currentTheme.customTheme) ? Colors.black : Colors.white,
                 child: Container(
                   color: Colors.white,
                   width: widget.width,
@@ -58,7 +62,7 @@ class _ImageUserChatState extends State<ImageUserChat> {
                     ),
                   ),
                 ),
-                backgroundColor: currentTheme.accentColor,
+                backgroundColor: currentTheme.currentTheme.accentColor,
               ),
       ),
     );
