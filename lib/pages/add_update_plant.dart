@@ -479,6 +479,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     return StreamBuilder(
       stream: bloc.nameStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
             controller: nameCtrl,
@@ -487,14 +489,29 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
             ],
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Name *',
+                labelText: 'Nombre *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeName,
@@ -510,6 +527,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     return StreamBuilder(
       stream: bloc.descriptionStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
             inputFormatters: [
@@ -521,15 +540,29 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
             maxLines: 2,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Description',
+                labelText: 'Descripción *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeDescription,
@@ -578,6 +611,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     return StreamBuilder(
       stream: bloc.quantityStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
             controller: quantityCtrl,
@@ -586,14 +621,29 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
             ],
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Quantity *',
+                labelText: 'Cantidad *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeQuantity,
@@ -607,6 +657,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     return StreamBuilder(
       stream: bloc.floweringStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
             controller: _durationFlorationCtrl,
@@ -615,11 +667,26 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
             ],
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: 'Semanas',
                 labelText: 'Duración de floración *',
@@ -636,6 +703,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     return StreamBuilder(
       stream: bloc.tchStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
             controller: tchCtrl,
@@ -653,13 +722,29 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                           fontWeight: FontWeight.bold,
                           color: Colors.white54),
                     )),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+                // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'THC',
+                labelText: 'CBD *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeThc,
@@ -673,6 +758,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     return StreamBuilder(
       stream: bloc.tchStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
             controller: cbdCtrl,
@@ -687,12 +774,29 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                           fontWeight: FontWeight.bold,
                           color: Colors.white54),
                     )),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+                // icon: Icon(Icons.perm_identity),
+                //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'CBD',
+                labelText: 'CBD *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeCbd,
@@ -706,6 +810,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     return StreamBuilder(
       stream: bloc.potStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
             controller: potCtrl,
@@ -714,14 +820,29 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
             ],
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Lt pot',
+                labelText: 'Lt Macetero *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changePot,

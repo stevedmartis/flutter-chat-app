@@ -278,6 +278,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
         isCo2ControlChange;
 
     return Scaffold(
+      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor:
             (currentTheme.customTheme) ? Colors.black : Colors.white,
@@ -372,16 +373,48 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                                   onTap: () => _selectTimeOn(context),
                                   child: AbsorbPointer(
                                     child: TextFormField(
+                                      style: TextStyle(
+                                        color: (currentTheme.customTheme)
+                                            ? Colors.white54
+                                            : Colors.black54,
+                                      ),
                                       controller: _timeOnController,
                                       keyboardType: TextInputType.datetime,
                                       decoration: InputDecoration(
-                                        hintText: 'Time on *',
-                                        prefixIcon: Icon(
-                                          Icons.wb_incandescent,
-                                          color: (currentTheme.customTheme)
-                                              ? Colors.white
-                                              : Colors.black,
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: (currentTheme.customTheme)
+                                                ? Colors.white54
+                                                : Colors.black54,
+                                          ),
                                         ),
+                                        border: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
+                                        ),
+                                        labelStyle: TextStyle(
+                                          color: (currentTheme.customTheme)
+                                              ? Colors.white54
+                                              : Colors.black54,
+                                        ),
+                                        // icon: Icon(Icons.perm_identity),
+                                        //  fillColor: currentTheme.accentColor,
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: currentTheme
+                                                  .currentTheme.accentColor,
+                                              width: 2.0),
+                                        ),
+                                        labelText: 'Time on *',
+
+                                        prefixIcon: Icon(Icons.wb_incandescent,
+                                            color: (currentTheme.customTheme)
+                                                ? Colors.white54
+                                                : Colors.black54),
+
+                                        //labelText: 'Ancho *',
+
+                                        //counterText: snapshot.data,
                                       ),
                                     ),
                                   ),
@@ -392,14 +425,48 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                                   onTap: () => _selectTimeOff(context),
                                   child: AbsorbPointer(
                                     child: TextFormField(
+                                      style: TextStyle(
+                                        color: (currentTheme.customTheme)
+                                            ? Colors.white54
+                                            : Colors.black54,
+                                      ),
                                       controller: _timeOffController,
                                       keyboardType: TextInputType.datetime,
                                       decoration: InputDecoration(
-                                        hintText: 'Time off *',
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: (currentTheme.customTheme)
+                                                ? Colors.white54
+                                                : Colors.black54,
+                                          ),
+                                        ),
+                                        border: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
+                                        ),
+                                        labelStyle: TextStyle(
+                                          color: (currentTheme.customTheme)
+                                              ? Colors.white54
+                                              : Colors.black54,
+                                        ),
+                                        // icon: Icon(Icons.perm_identity),
+                                        //  fillColor: currentTheme.accentColor,
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: currentTheme
+                                                  .currentTheme.accentColor,
+                                              width: 2.0),
+                                        ),
+                                        labelText: 'Time off *',
+
                                         prefixIcon: Icon(Icons.bedtime,
                                             color: (currentTheme.customTheme)
-                                                ? Colors.white
-                                                : Colors.black),
+                                                ? Colors.white54
+                                                : Colors.black54),
+
+                                        //labelText: 'Ancho *',
+
+                                        //counterText: snapshot.data,
                                       ),
                                     ),
                                   ),
@@ -454,22 +521,42 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     return StreamBuilder(
       stream: bloc.nameStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: nameCtrl,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(30),
             ],
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Name *',
+                labelText: 'Nombre *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeName,
@@ -485,8 +572,13 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     return StreamBuilder(
       stream: bloc.descriptionStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             inputFormatters: [
               new LengthLimitingTextInputFormatter(100),
             ],
@@ -496,15 +588,29 @@ class AddRoomPagePageState extends State<AddRoomPage> {
             maxLines: 2,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Description',
+                labelText: 'Descripción *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeDescription,
@@ -514,61 +620,47 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     );
   }
 
-/* 
-
-
-  Widget _createKelvin(RoomBloc bloc) {
-    // final size = MediaQuery.of(context).size;
-
-    return StreamBuilder(
-      stream: bloc.kelvinStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly
-            ],
-            decoration: InputDecoration(
-                // icon: Icon(Icons.perm_identity),
-                //  fillColor: currentTheme.accentColor,
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: '',
-                labelText: 'Kelvin',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeKelvin,
-          ),
-        );
-      },
-    );
-  }
- */
   Widget _createWide(RoomBloc bloc) {
     //final size = MediaQuery.of(context).size;
 
     return StreamBuilder(
       stream: bloc.wideStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             onTap: () =>
                 {if (wideCtrl.text == "0") wideCtrl.text = "", setState(() {})},
             controller: wideCtrl,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Wide *',
+                labelText: 'Ancho *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeWide,
@@ -578,58 +670,47 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     );
   }
 
-/*   Widget _createWhats(RoomBloc bloc) {
-    //final size = MediaQuery.of(context).size;
-
-    return StreamBuilder(
-      stream: bloc.wattsStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(4),
-            ],
-            decoration: InputDecoration(
-                // icon: Icon(Icons.perm_identity),
-                //  fillColor: currentTheme.accentColor,
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                ),
-                hintText: '',
-                labelText: 'Watts total',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeWatts,
-          ),
-        );
-      },
-    );
-  }
- */
   Widget _createLong(RoomBloc bloc) {
     //final size = MediaQuery.of(context).size;
 
     return StreamBuilder(
       stream: bloc.longStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             onTap: () =>
                 {if (longCtrl.text == "0") longCtrl.text = "", setState(() {})},
             controller: longCtrl,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Long *',
+                labelText: 'Largo *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeLong,
@@ -645,21 +726,41 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     return StreamBuilder(
       stream: bloc.tallStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             onTap: () =>
                 {if (tallCtrl.text == "0") tallCtrl.text = "", setState(() {})},
             controller: tallCtrl,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Tall *',
+                labelText: 'Alto *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeTall,
@@ -670,7 +771,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
   }
 
   Widget _createCo2(RoomBloc bloc) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return StreamBuilder(
       stream: bloc.co2Stream,
@@ -679,11 +780,14 @@ class AddRoomPagePageState extends State<AddRoomPage> {
             child: ListTile(
           //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
           title: Text(
-            'Co2',
-            style: TextStyle(color: Colors.white.withOpacity(0.60)),
+            'CO2',
+            style: TextStyle(
+              color:
+                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54,
+            ),
           ),
           trailing: Switch.adaptive(
-            activeColor: currentTheme.accentColor,
+            activeColor: currentTheme.currentTheme.accentColor,
             value: isSwitchedCo2,
             onChanged: (value) {
               setState(() {
@@ -707,7 +811,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
   }
 
   Widget _createCo2Control(RoomBloc bloc) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return StreamBuilder(
       stream: bloc.co2CompleteStream,
@@ -716,13 +820,19 @@ class AddRoomPagePageState extends State<AddRoomPage> {
             child: ListTile(
           //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
           title: Text('Timer',
-              style: TextStyle(
-                color: (isSwitchedCo2)
-                    ? Colors.white.withOpacity(0.60)
-                    : Colors.white.withOpacity(0.30),
-              )),
+              style: (currentTheme.customTheme)
+                  ? TextStyle(
+                      color: (isSwitchedCo2)
+                          ? Colors.white54
+                          : Colors.white54.withOpacity(0.20),
+                    )
+                  : TextStyle(
+                      color: (isSwitchedCo2)
+                          ? Colors.black54
+                          : Colors.black54.withOpacity(0.20),
+                    )),
           trailing: Switch.adaptive(
-            activeColor: currentTheme.accentColor,
+            activeColor: currentTheme.currentTheme.accentColor,
             value: isSwitchedCo2Control,
             inactiveTrackColor: Colors.white.withOpacity(0.30),
             inactiveThumbColor: Colors.white.withOpacity(0.30),
@@ -745,34 +855,6 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     );
   }
 
-/*   Widget _createTypeLight(RoomBloc bloc) {
-    //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-    return StreamBuilder(
-      stream: bloc.typeLightStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          child: TextField(
-            //  keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-                // icon: Icon(Icons.perm_identity),
-                //  fillColor: currentTheme.accentColor,
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: '',
-                labelText: 'Type Light',
-                //counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeTypeLight,
-          ),
-        );
-      },
-    );
-  }
- */
   Widget _createButton(
     RoomBloc bloc,
     bool isControllerChange,

@@ -583,7 +583,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   margin: EdgeInsets.only(top: 20, left: 125, right: 125),
                   padding: EdgeInsets.all(3.0),
                   decoration: BoxDecoration(
-                    color: Color(0xffEBECF0).withOpacity(0.60),
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54.withOpacity(0.20),
                     borderRadius: BorderRadius.all(
                       Radius.circular(30.0),
                     ),
@@ -606,10 +608,12 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   height: 10.0,
                   child: Center(
                     child: Container(
-                      margin: EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
-                      height: 1.0,
-                      color: Colors.white60.withOpacity(0.10),
-                    ),
+                        margin:
+                            EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
+                        height: 1.0,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54.withOpacity(0.20)),
                   ),
                 ),
                 Material(
@@ -654,10 +658,12 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   height: 10.0,
                   child: Center(
                     child: Container(
-                      margin: EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
-                      height: 1.0,
-                      color: Colors.white60.withOpacity(0.10),
-                    ),
+                        margin:
+                            EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
+                        height: 1.0,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54.withOpacity(0.20)),
                   ),
                 ),
                 Material(
@@ -700,10 +706,12 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   height: 10.0,
                   child: Center(
                     child: Container(
-                      margin: EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
-                      height: 1.0,
-                      color: Colors.white60.withOpacity(0.10),
-                    ),
+                        margin:
+                            EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
+                        height: 1.0,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54.withOpacity(0.20)),
                   ),
                 ),
                 Material(
@@ -745,10 +753,12 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   height: 10.0,
                   child: Center(
                     child: Container(
-                      margin: EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
-                      height: 1.0,
-                      color: Colors.white60.withOpacity(0.10),
-                    ),
+                        margin:
+                            EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
+                        height: 1.0,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54.withOpacity(0.20)),
                   ),
                 )
               ],

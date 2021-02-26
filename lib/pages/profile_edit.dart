@@ -347,7 +347,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                           SizedBox(
                             height: 50,
                           ),
-                          ButtonLogout(
+                          /* ButtonLogout(
                             textColor:
                                 currentTheme.currentTheme.secondaryHeaderColor,
                             color: currentTheme
@@ -365,7 +365,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                                         context, 'login');
                                     AuthService.deleteToken();
                                   },
-                          ),
+                          ), */
                         ],
                       ),
                     )),
@@ -437,20 +437,41 @@ class EditProfilePageState extends State<EditProfilePage> {
     return StreamBuilder(
       stream: bloc.emailStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: emailCtl,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-                // icon: Icon(Icons.alternate_email),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+                // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Email',
+                labelText: 'Email *',
+                //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeEmail,
           ),
@@ -463,21 +484,41 @@ class EditProfilePageState extends State<EditProfilePage> {
     return StreamBuilder(
       stream: bloc.usernameSteam,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: usernameCtrl,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Username',
-                // counterText: snapshot.data,
+                labelText: 'Nombre de usuario *',
+                //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeUsername,
           ),
@@ -490,20 +531,40 @@ class EditProfilePageState extends State<EditProfilePage> {
     return StreamBuilder(
       stream: bloc.nameStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: nameCtrl,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Name',
+                labelText: 'Nombre',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeName,
@@ -517,9 +578,14 @@ class EditProfilePageState extends State<EditProfilePage> {
     return StreamBuilder(
       stream: bloc.aboutStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: TextFormField(
+              style: TextStyle(
+                color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+              ),
               inputFormatters: [
                 new LengthLimitingTextInputFormatter(148),
               ],
@@ -530,14 +596,30 @@ class EditProfilePageState extends State<EditProfilePage> {
               // any number you need (It works as the rows for the textarea)
               keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: (currentTheme.customTheme)
+                          ? Colors.white54
+                          : Colors.black54,
+                    ),
+                  ),
+                  border: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  labelStyle: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
                   // icon: Icon(Icons.perm_identity),
                   //  fillColor: currentTheme.accentColor,
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                    borderSide: BorderSide(
+                        color: currentTheme.currentTheme.accentColor,
+                        width: 2.0),
                   ),
                   hintText: '',
-                  labelText: 'About',
+                  labelText: 'Sobre mi *',
                   //counterText: snapshot.data,
                   errorText: snapshot.error),
               onChanged: bloc.changeAbout),
@@ -550,21 +632,41 @@ class EditProfilePageState extends State<EditProfilePage> {
     return StreamBuilder(
       stream: bloc.passwordStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: passCtrl,
             obscureText: true,
             decoration: InputDecoration(
-                //  icon: Icon(Icons.lock_outline),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+                // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Password',
-                counterText: snapshot.data,
+                labelText: 'Contraseña',
+                //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changePassword,
           ),

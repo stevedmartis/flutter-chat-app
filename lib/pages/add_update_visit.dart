@@ -370,11 +370,11 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   }
 
   Widget _createDescription(VisitBloc bloc) {
-    //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     return StreamBuilder(
       stream: bloc.descriptionStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: TextField(
@@ -387,14 +387,29 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
             maxLines: 2,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Observación',
+                labelText: 'Observación *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeDescription,
@@ -575,6 +590,8 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     return StreamBuilder(
       stream: bloc.electroStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: TextField(
@@ -586,17 +603,34 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
 
             maxLines: 1,
             //  keyboardType: TextInputType.emailAddress,
+            //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Electro conductor',
+                labelText: 'Electro conductor *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
+
             onChanged: bloc.changeElectro,
           ),
         );
@@ -605,11 +639,11 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   }
 
   Widget _createDegrees(VisitBloc bloc) {
-    //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     return StreamBuilder(
       stream: bloc.degreesStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: TextField(
@@ -622,14 +656,29 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
             maxLines: 1,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Grados Co2',
+                labelText: 'Grados celsius',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeDegrees,
@@ -645,6 +694,8 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     return StreamBuilder(
       stream: bloc.phStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: TextField(
@@ -657,14 +708,29 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
             maxLines: 1,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'pH',
+                labelText: 'pH *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changePh,
@@ -680,6 +746,8 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     return StreamBuilder(
       stream: bloc.mlStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: TextField(
@@ -692,14 +760,29 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
             maxLines: 1,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Litros agua',
+                labelText: 'Lt agua *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeMl,

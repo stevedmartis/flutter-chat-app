@@ -215,6 +215,8 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     return StreamBuilder(
       stream: bloc.nameStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
             controller: nameCtrl,
@@ -223,14 +225,29 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
             ],
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Name *',
+                labelText: 'Nombre *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeName,
@@ -246,6 +263,8 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     return StreamBuilder(
       stream: bloc.descriptionStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
             inputFormatters: [
@@ -257,15 +276,29 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
             maxLines: 2,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Description',
+                labelText: 'Descripción *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeDescription,
@@ -279,6 +312,8 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
     return StreamBuilder(
       stream: bloc.wattsStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
         return Container(
           child: TextField(
             controller: _wattsCtrl,
@@ -291,11 +326,26 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
             ],
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Color(0xff20FFD7), width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
                 labelText: 'Watts *',
