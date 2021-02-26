@@ -1,4 +1,5 @@
 import 'package:chat/models/plant.dart';
+import 'package:chat/pages/room_detail.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,61 +19,36 @@ class _CardPlantState extends State<CardPlant> {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    return Column(
-      children: <Widget>[
-        Container(
-          color: currentTheme.scaffoldBackgroundColor,
-          padding: EdgeInsets.only(top: 10, left: 0, right: 10, bottom: 5.0),
-          width: size.height / 1.5,
-          child: FittedBox(
-            child: Card(
-              shadowColor: Colors.black,
-              color: currentTheme.scaffoldBackgroundColor,
-              // color: Colors.red,
-              shape: RoundedRectangleBorder(
+    return FittedBox(
+      child: Row(
+        children: <Widget>[
+          Center(child: plantitem()),
+          Container(
+            width: size.width,
+            height: size.height / 1.45,
+            child: ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
-              ),
-              elevation: 5,
-              child: Row(
-                children: <Widget>[
-                  Center(child: juiceitem()),
-                  Hero(
-                    tag: widget.plant.id,
-                    child: Container(
-                      width: 150,
-                      height: 200,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15.0),
-                          child: Material(
-                            type: MaterialType.transparency,
-                            child: (widget.plant.coverImage != "")
-                                ? FadeInImage(
-                                    image: NetworkImage(
-                                        widget.plant.getCoverImg()),
-                                    placeholder:
-                                        AssetImage('assets/loading2.gif'),
-                                    fit: BoxFit.cover)
-                                : FadeInImage(
-                                    image: AssetImage(
-                                        'assets/images/empty_image.png'),
-                                    placeholder:
-                                        AssetImage('assets/loading2.gif'),
-                                    fit: BoxFit.cover),
-                          )),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: (widget.plant.coverImage != "")
+                      ? FadeInImage(
+                          image: NetworkImage(widget.plant.getCoverImg()),
+                          placeholder: AssetImage('assets/loading2.gif'),
+                          fit: BoxFit.cover)
+                      : FadeInImage(
+                          image: AssetImage('assets/images/empty_image.png'),
+                          placeholder: AssetImage('assets/loading2.gif'),
+                          fit: BoxFit.cover),
+                )),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget juiceitem() {
+  Widget plantitem() {
     final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
     final thc = (widget.plant.thc.isEmpty) ? '0' : widget.plant.thc;
     final cbd = (widget.plant.cbd.isEmpty) ? '0' : widget.plant.cbd;
 
@@ -95,42 +71,51 @@ class _CardPlantState extends State<CardPlant> {
               widget.plant.name.capitalize(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: currentTheme.accentColor),
+                  fontSize: 40,
+                  color: currentTheme.currentTheme.accentColor),
             ),
           ),
-          CbdthcRow(thc: thc, cbd: cbd),
           SizedBox(
-            height: 5,
+            height: 20,
+          ),
+          CbdthcRow(
+            thc: thc,
+            cbd: cbd,
+            fontSize: 20,
+          ),
+          SizedBox(
+            height: 25,
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            width: size.width / 1.5,
+            width: size.width / 1.0,
             child: Text(
               (widget.plant.description.length > 0)
                   ? widget.plant.description.capitalize()
-                  : "No description",
+                  : "Sin descripción",
               overflow: TextOverflow.ellipsis,
               maxLines: 3,
               style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
                   color: Colors.grey),
             ),
           ),
           SizedBox(
-            height: 10,
+            height: 100,
           ),
           Row(
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  'Germinación: ',
+                  'Germina: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                      color: Colors.white54),
+                      fontSize: 25,
+                      color: (currentTheme.customTheme)
+                          ? Colors.white54
+                          : Colors.grey),
                 ),
               ),
               Padding(
@@ -138,10 +123,11 @@ class _CardPlantState extends State<CardPlant> {
                 child: Text(
                   widget.plant.germinated,
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: Colors.white,
-                  ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      color: (currentTheme.customTheme)
+                          ? Colors.white54
+                          : Colors.grey),
                 ),
               )
             ],
@@ -163,6 +149,8 @@ class CbdthcRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
@@ -178,7 +166,9 @@ class CbdthcRow extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: fontSize,
-                    color: Colors.white54),
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.grey),
               ),
             ),
           ),
@@ -204,13 +194,13 @@ class CbdthcRow extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
             child: Container(
               padding: EdgeInsets.all(2.5),
-              child: Text(
-                "CBD:",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: Colors.white54),
-              ),
+              child: Text("CBD:",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: fontSize,
+                      color: (currentTheme.customTheme)
+                          ? Colors.white54
+                          : Colors.grey)),
             ),
           ),
           Padding(

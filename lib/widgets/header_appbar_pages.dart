@@ -100,9 +100,12 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  currentTheme.currentTheme.primaryColor,
-                                  currentTheme.currentTheme.primaryColor,
-                                  currentTheme.currentTheme.primaryColor
+                                  currentTheme
+                                      .currentTheme.scaffoldBackgroundColor,
+                                  currentTheme
+                                      .currentTheme.scaffoldBackgroundColor,
+                                  currentTheme
+                                      .currentTheme.scaffoldBackgroundColor
                                 ]),
                             borderRadius: BorderRadius.all(Radius.circular(30)),
                             boxShadow: [
@@ -120,7 +123,11 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
                     child: Container(
                       child: Text(
                         widget.title,
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white
+                                : Colors.black),
                       ),
                     ),
                   ),

@@ -132,7 +132,7 @@ class _ArticleDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,16 +145,22 @@ class _ArticleDescription extends StatelessWidget {
               '$title',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: currentTheme.currentTheme.accentColor),
             ),
-            const Padding(padding: EdgeInsets.only(bottom: 2.0)),
+            SizedBox(
+              height: 10.0,
+            ),
             Text(
               '$subtitle',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
                 fontSize: 15.0,
-                color: Colors.white,
+                color: (currentTheme.customTheme) ? Colors.white : Colors.black,
               ),
             ),
             SizedBox(
@@ -164,18 +170,23 @@ class _ArticleDescription extends StatelessWidget {
               children: [
                 Icon(
                   Icons.local_florist,
-                  color: Colors.white54,
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 10.0,
                 ),
                 Text(
                   '$totalPlants',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                     fontSize: 15.0,
-                    color: Colors.white,
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black,
                   ),
                 ),
                 SizedBox(
@@ -183,7 +194,9 @@ class _ArticleDescription extends StatelessWidget {
                 ),
                 FaIcon(
                   FontAwesomeIcons.wind,
-                  color: Colors.white54,
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
                   size: 20,
                 ),
                 SizedBox(
@@ -193,9 +206,12 @@ class _ArticleDescription extends StatelessWidget {
                   '$totalAirs',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                     fontSize: 15.0,
-                    color: Colors.white,
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black,
                   ),
                 ),
                 SizedBox(
@@ -203,7 +219,9 @@ class _ArticleDescription extends StatelessWidget {
                 ),
                 FaIcon(
                   FontAwesomeIcons.lightbulb,
-                  color: Colors.white54,
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
                   size: 20,
                 ),
                 SizedBox(
@@ -213,9 +231,12 @@ class _ArticleDescription extends StatelessWidget {
                   '$totalLights',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                     fontSize: 15.0,
-                    color: Colors.white,
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black,
                   ),
                 ),
               ],
@@ -262,17 +283,16 @@ class RowTimeOnOffRoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Row(
       mainAxisAlignment:
           (center) ? MainAxisAlignment.center : MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(
-          Icons.wb_incandescent,
-          color: Colors.white54,
-        ),
+        Icon(Icons.wb_incandescent,
+            color:
+                (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
         SizedBox(
           width: 5.0,
         ),
@@ -280,27 +300,24 @@ class RowTimeOnOffRoom extends StatelessWidget {
         Text(
           ' $timeOn',
           style: TextStyle(
-            fontSize: size,
-            color: Colors.white,
-          ),
+              fontSize: size,
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
         SizedBox(
           width: 40.0,
         ),
         // FaIcon(FontAwesomeIcons.rulerHorizontal),
-        Icon(
-          Icons.bedtime,
-          color: Colors.white54,
-        ),
+        Icon(Icons.bedtime,
+            color:
+                (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
         SizedBox(
           width: 5.0,
         ),
         Text(
           ' $timeOff',
           style: TextStyle(
-            fontSize: size,
-            color: Colors.white,
-          ),
+              fontSize: size,
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
       ],
     );
@@ -325,34 +342,32 @@ class RowMeassureRoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Row(
       mainAxisAlignment:
           (center) ? MainAxisAlignment.center : MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        FaIcon(
-          FontAwesomeIcons.rulerHorizontal,
-          color: Colors.white54,
-        ),
+        FaIcon(FontAwesomeIcons.rulerHorizontal,
+            color:
+                (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
         SizedBox(
           width: 10,
         ),
         Text(
           ' $wide',
           style: TextStyle(
-            fontSize: fontSize,
-            color: Colors.white,
-          ),
+              fontSize: fontSize,
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
 
         Text(
           ' W',
           style: TextStyle(
-            fontSize: fontSize,
-            color: Colors.white54,
-          ),
+              fontSize: fontSize,
+              color:
+                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
         ),
         SizedBox(
           width: 5.0,
@@ -361,16 +376,15 @@ class RowMeassureRoom extends StatelessWidget {
         Text(
           ' $long',
           style: TextStyle(
-            fontSize: fontSize,
-            color: Colors.white,
-          ),
+              fontSize: fontSize,
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
         Text(
           ' L',
           style: TextStyle(
-            fontSize: fontSize,
-            color: Colors.white54,
-          ),
+              fontSize: fontSize,
+              color:
+                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
         ),
         SizedBox(
           width: 5.0,
@@ -379,16 +393,15 @@ class RowMeassureRoom extends StatelessWidget {
         Text(
           ' $tall',
           style: TextStyle(
-            fontSize: fontSize,
-            color: Colors.white,
-          ),
+              fontSize: fontSize,
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
         Text(
           ' T',
           style: TextStyle(
-            fontSize: fontSize,
-            color: Colors.white54,
-          ),
+              fontSize: fontSize,
+              color:
+                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
         ),
       ],
     );

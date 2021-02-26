@@ -137,6 +137,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     });
 
     return Scaffold(
+        backgroundColor: currentTheme.scaffoldBackgroundColor,
         // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
         body: GestureDetector(
             onTap: () {
@@ -475,8 +476,10 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
                     return Text(
                       '$quantity',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
                     );
                   } else if (snapshot.hasError) {
                     return _buildErrorWidget(snapshot.error);
@@ -627,7 +630,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   }
 
   SliverList makeHeaderInfo(context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return SliverList(
       delegate: SliverChildListDelegate([
@@ -659,7 +662,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
               return Container(
                 padding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
-                color: currentTheme.scaffoldBackgroundColor,
+                color: currentTheme.currentTheme.scaffoldBackgroundColor,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -674,7 +677,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                               padding: EdgeInsets.all(2.5),
                               child: FaIcon(
                                 FontAwesomeIcons.seedling,
-                                color: Colors.white54,
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white54
+                                    : Colors.black54,
                               )),
                           Container(
                             child: Padding(
@@ -685,9 +690,10 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                 child: Text(
                                   "Germinación :",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
                                       fontSize: 13,
-                                      color: Colors.white54),
+                                      color: (currentTheme.customTheme)
+                                          ? Colors.white54
+                                          : Colors.black54),
                                 ),
                               ),
                             ),
@@ -697,9 +703,12 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                             child: Text(
                               "$germina",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  color: Colors.white),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white54
+                                    : Colors.black54,
+                              ),
                             ),
                           ),
                         ],
@@ -715,7 +724,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                               padding: EdgeInsets.all(2.5),
                               child: FaIcon(
                                 FontAwesomeIcons.cannabis,
-                                color: Colors.white54,
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white54
+                                    : Colors.black54,
                               )),
                           Container(
                             child: Padding(
@@ -726,9 +737,11 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                 child: Text(
                                   "Floración :",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: Colors.white54),
+                                    fontSize: 13,
+                                    color: (currentTheme.customTheme)
+                                        ? Colors.white54
+                                        : Colors.black54,
+                                  ),
                                 ),
                               ),
                             ),
@@ -741,9 +754,12 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                             child: Text(
                               "$flora",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  color: Colors.white),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white54
+                                    : Colors.black54,
+                              ),
                             ),
                           ),
                           Container(
@@ -751,9 +767,12 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                             child: Text(
                               "Semanas",
                               style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 10,
-                                  color: Colors.white54),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 10,
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white54
+                                    : Colors.black54,
+                              ),
                             ),
                           ),
                         ],
@@ -769,10 +788,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                         //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
                         child: (about.length > 0)
-                            ? convertHashtag(
-                                about,
-                                currentTheme.accentColor,
-                              )
+                            ? convertHashtag(about, context)
                             : Container()),
                     SizedBox(
                       height: 10.0,
@@ -784,8 +800,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                       child: Align(
                         alignment: Alignment.center,
                         child: ButtonSubEditProfile(
-                            color: currentTheme.scaffoldBackgroundColor,
-                            textColor: currentTheme.accentColor,
+                            color: currentTheme
+                                .currentTheme.scaffoldBackgroundColor,
+                            textColor: currentTheme.currentTheme.accentColor,
                             text: 'Editar',
                             onPressed: () {
                               aws.isUploadImagePlant = false;
@@ -1028,7 +1045,9 @@ class _SABTState extends State<SABT> {
   }
 }
 
-RichText convertHashtag(String text, Color color) {
+RichText convertHashtag(String text, context) {
+  final currentTheme = Provider.of<ThemeChanger>(context);
+
   List<String> split = text.split(RegExp("#"));
 
   List<String> hashtags = split.getRange(1, split.length).fold([], (t, e) {
@@ -1046,14 +1065,27 @@ RichText convertHashtag(String text, Color color) {
       children: [
         TextSpan(
             text: split.first,
-            style: TextStyle(color: Colors.white, fontSize: 16))
+            style: TextStyle(
+                color: (currentTheme.customTheme)
+                    ? Colors.white54
+                    : Colors.black54,
+                fontWeight: FontWeight.bold,
+                fontSize: 16))
       ]..addAll(hashtags
           .map((text) => text.contains("#")
               ? TextSpan(
-                  text: text, style: TextStyle(color: color, fontSize: 16))
+                  text: text,
+                  style: TextStyle(
+                      color: currentTheme.currentTheme.accentColor,
+                      fontSize: 16))
               : TextSpan(
                   text: text,
-                  style: TextStyle(color: Colors.white, fontSize: 16)))
+                  style: TextStyle(
+                      color: (currentTheme.customTheme)
+                          ? Colors.white54
+                          : Colors.black54,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16)))
           .toList()),
     ),
   );

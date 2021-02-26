@@ -362,7 +362,13 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
   }
 
   Widget _buildEmptyWidget() {
-    return Container(height: 400.0, child: Center(child: Text('Vacio')));
+    return Container(
+        height: 400.0,
+        child: Center(
+            child: Text(
+          'Vacio',
+          style: TextStyle(color: Colors.grey),
+        )));
   }
 
   _deleteSubscription(String id, int index) async {

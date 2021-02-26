@@ -213,7 +213,7 @@ class StyledLogoCustom extends StatelessWidget {
                 style: TextStyle(
                   letterSpacing: -1,
                   fontFamily: 'GTWalsheimPro',
-                  color: currentTheme.accentColor,
+                  color: Colors.white,
                   fontSize: 28,
                   fontWeight: FontWeight.w500,
                   fontStyle: FontStyle.normal,

@@ -168,8 +168,9 @@ class _CollapsingListState extends State<CollapsingList>
                 builder: (context, AsyncSnapshot<PlantsResponse> snapshot) {
                   if (snapshot.hasData) {
                     plants = snapshot.data.plants;
-                    return _buildWidgetPlants(
-                        plants, context); // image is ready
+                    return FadeInRight(
+                      child: _buildWidgetPlants(plants, context),
+                    ); // image is ready
                   } else if (snapshot.hasError) {
                     return _buildErrorWidget(snapshot.error);
                   } else {
@@ -190,8 +191,9 @@ class _CollapsingListState extends State<CollapsingList>
                 builder: (context, AsyncSnapshot<VisitsResponse> snapshot) {
                   if (snapshot.hasData) {
                     visits = snapshot.data.visits;
-                    return _buildWidgetVisits(
-                        visits, context); // image is ready
+                    return FadeInRight(
+                      child: _buildWidgetVisits(visits, context),
+                    ); // image is ready
                   } else if (snapshot.hasError) {
                     return _buildErrorWidget(snapshot.error);
                   } else {
@@ -402,7 +404,7 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
       ? CarouselSlider.builder(
           options: CarouselOptions(
             height: 200,
-            viewportFraction: 0.90,
+            viewportFraction: 0.80,
             initialPage: 0,
             enableInfiniteScroll: false,
             reverse: false,
@@ -417,28 +419,34 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
           itemBuilder: (BuildContext context, int index) {
             final plant = plants[index];
 
-            return OpenContainer(
-                closedColor: currentTheme.scaffoldBackgroundColor,
-                openColor: currentTheme.scaffoldBackgroundColor,
-                transitionType: ContainerTransitionType.fade,
-                openShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+            return Stack(
+              fit: StackFit.loose,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(bottom: 10.0, right: 15),
+                  child: OpenContainer(
+                      closedColor: currentTheme.scaffoldBackgroundColor,
+                      openColor: currentTheme.scaffoldBackgroundColor,
+                      transitionType: ContainerTransitionType.fade,
+                      openShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      closedShape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      openBuilder: (_, closeContainer) {
+                        return PlantDetailPage(plant: plant);
+                      },
+                      closedBuilder: (_, openContainer) {
+                        return CardPlant(plant: plant);
+                      }),
                 ),
-                closedShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0)),
-                openBuilder: (_, closeContainer) {
-                  return PlantDetailPage(plant: plant);
-                },
-                closedBuilder: (_, openContainer) {
-                  return FadeInRight(
-                    child: Stack(
-                      children: [
-                        CardPlant(plant: plant),
-                        buildCircleFavoritePlant(plant.quantity, context),
-                      ],
-                    ),
-                  );
-                });
+                Container(
+                  child: Hero(
+                      tag: plant.quantity + plant.id,
+                      child: buildCircleFavoritePlant(plant.quantity, context)),
+                ),
+              ],
+            );
           },
         )
       : Container();
@@ -483,12 +491,10 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
                   );
                 },
                 closedBuilder: (_, openContainer) {
-                  return FadeInRight(
-                    child: Stack(
-                      children: [
-                        CardVisit(visit: visits[index]),
-                      ],
-                    ),
+                  return Stack(
+                    children: [
+                      CardVisit(visit: visits[index]),
+                    ],
                   );
                 });
           })

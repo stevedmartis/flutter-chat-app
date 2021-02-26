@@ -39,7 +39,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 width: 0.60,
                 height: 0.35,
                 title: "Medicinal",
-                message: "Regista tu receta y obten tu medicina",
+                message: "Registra tu receta, encuentra tu Tratamiento.",
                 image: "assets/onBoard/medicine.svg",
               ),
               OnboardingMessages(

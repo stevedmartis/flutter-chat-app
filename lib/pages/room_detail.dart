@@ -103,10 +103,10 @@ class _RoomDetailPageState extends State<RoomDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Scaffold(
-      backgroundColor: currentTheme.scaffoldBackgroundColor,
+      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
           title: StreamBuilder<Room>(
             stream: roomBloc.roomSelect.stream,
@@ -116,7 +116,13 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                 final nameFinal =
                     room.name.isEmpty ? "" : room.name.capitalize();
 
-                return Text(nameFinal);
+                return Text(
+                  nameFinal,
+                  style: TextStyle(
+                      color: (currentTheme.customTheme)
+                          ? Colors.white
+                          : Colors.black),
+                );
               } else if (snapshot.hasError) {
                 return _buildErrorWidget(snapshot.error);
               } else {
@@ -124,14 +130,15 @@ class _RoomDetailPageState extends State<RoomDetailPage>
               }
             },
           ),
-          backgroundColor: Colors.black,
+          backgroundColor:
+              (currentTheme.customTheme) ? Colors.black : Colors.white,
           actions: [
             Padding(
               padding: EdgeInsets.only(right: 10),
               child: IconButton(
                   icon: Icon(
                     Icons.add,
-                    color: currentTheme.accentColor,
+                    color: currentTheme.currentTheme.accentColor,
                   ),
                   iconSize: 30,
                   onPressed: () => {
@@ -149,7 +156,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
           leading: IconButton(
             icon: Icon(
               Icons.chevron_left,
-              color: currentTheme.accentColor,
+              color: currentTheme.currentTheme.accentColor,
             ),
             iconSize: 30,
             onPressed: () =>
@@ -233,7 +240,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 
   SliverPersistentHeader makeHeaderInfo(context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     final about = room.description;
     final size = MediaQuery.of(context).size;
@@ -251,7 +258,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
           child: Container(
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 10.0, top: 10),
-            color: currentTheme.scaffoldBackgroundColor,
+            color: currentTheme.currentTheme.scaffoldBackgroundColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -265,7 +272,12 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     overflow: TextOverflow.ellipsis,
                     maxLines: 4,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 15.0, color: Colors.white),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.0,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white
+                            : Colors.black),
                   ),
                 ),
                 SizedBox(
@@ -289,18 +301,21 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                       child: Text(
                         'Co2: ',
                         style: TextStyle(
-                          color: Colors.white54,
-                          fontSize: 15.0,
-                        ),
+                            fontSize: 15.0,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white54
+                                : Colors.black54),
                       ),
                     ),
                     Container(
                       child: Text(
                         '$co2',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.0,
-                        ),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.0,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white
+                                : Colors.black),
                       ),
                     ),
                     SizedBox(
@@ -310,18 +325,21 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                       child: Text(
                         'Timer: ',
                         style: TextStyle(
-                          color: Colors.white54,
-                          fontSize: 15.0,
-                        ),
+                            fontSize: 15.0,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white54
+                                : Colors.black54),
                       ),
                     ),
                     Container(
                       child: Text(
                         '$co2Control',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.0,
-                        ),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.0,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white
+                                : Colors.black),
                       ),
                     )
                   ],
@@ -344,8 +362,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   child: Align(
                     alignment: Alignment.center,
                     child: ButtonSubEditProfile(
-                        color: currentTheme.scaffoldBackgroundColor,
-                        textColor: currentTheme.accentColor,
+                        color:
+                            currentTheme.currentTheme.scaffoldBackgroundColor,
+                        textColor: currentTheme.currentTheme.accentColor,
                         text: 'Editar',
                         onPressed: () {
                           Navigator.of(context)
@@ -371,28 +390,35 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             itemBuilder: (BuildContext ctxt, int index) {
               final plant = plants[index];
 
-              return OpenContainer(
-                  closedColor: currentTheme.scaffoldBackgroundColor,
-                  openColor: currentTheme.scaffoldBackgroundColor,
-                  transitionType: ContainerTransitionType.fade,
-                  openShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+              return Stack(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(
+                        top: 20, left: 20, right: 20, bottom: 0.0),
+                    child: OpenContainer(
+                        closedColor: currentTheme.scaffoldBackgroundColor,
+                        openColor: currentTheme.scaffoldBackgroundColor,
+                        transitionType: ContainerTransitionType.fade,
+                        openShape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        closedShape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0)),
+                        openBuilder: (_, closeContainer) {
+                          return PlantDetailPage(plant: plant);
+                        },
+                        closedBuilder: (_, openContainer) {
+                          return CardPlant(plant: plant);
+                        }),
                   ),
-                  closedShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0)),
-                  openBuilder: (_, closeContainer) {
-                    return PlantDetailPage(plant: plant);
-                  },
-                  closedBuilder: (_, openContainer) {
-                    return FadeIn(
-                      child: Stack(
-                        children: [
-                          CardPlant(plant: plant),
-                          buildCircleFavoritePlant(plant.quantity, context),
-                        ],
-                      ),
-                    );
-                  });
+                  Container(
+                    child: Hero(
+                        tag: plant.quantity + plant.id,
+                        child: buildCircleFavoritePlantDash(
+                            plant.quantity, context)),
+                  ),
+                ],
+              );
             }),
       ),
     );
@@ -527,8 +553,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 
   createModalSelection() {
-    final currentTheme =
-        Provider.of<ThemeChanger>(context, listen: false).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context, listen: false);
     final plant = new Plant();
     final air = new Air();
     final light = new Light();
@@ -542,7 +567,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
       isScrollControlled: true,
       builder: (context) => Container(
         decoration: BoxDecoration(
-          color: currentTheme.scaffoldBackgroundColor,
+          color: currentTheme.currentTheme.scaffoldBackgroundColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(30.0),
             topRight: Radius.circular(30.0),
@@ -570,9 +595,14 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                 Container(
                   padding: EdgeInsets.all(20),
                   child: Text(
-                    "Create",
+                    "Crear",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54),
                   ),
                 ),
                 SizedBox(
@@ -586,7 +616,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   ),
                 ),
                 Material(
-                  color: currentTheme.scaffoldBackgroundColor,
+                  color: currentTheme.currentTheme.scaffoldBackgroundColor,
                   child: InkWell(
                     onTap: () => {
                       aws.isUploadImagePlant = false,
@@ -597,15 +627,20 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     },
                     child: ListTile(
                       leading: Icon(Icons.local_florist,
-                          size: 25, color: currentTheme.accentColor),
+                          size: 25,
+                          color: currentTheme.currentTheme.accentColor),
                       title: Text(
                         'Planta',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white54
+                                : Colors.black54),
                       ),
                       trailing: IconButton(
                         icon: Icon(
                           Icons.chevron_right,
-                          color: currentTheme.accentColor,
+                          color: currentTheme.currentTheme.accentColor,
                         ),
                         iconSize: 30.0,
                         onPressed: () => {
@@ -629,7 +664,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   ),
                 ),
                 Material(
-                  color: currentTheme.scaffoldBackgroundColor,
+                  color: currentTheme.currentTheme.scaffoldBackgroundColor,
                   child: InkWell(
                     onTap: () => {
                       Navigator.of(context).pop(),
@@ -638,15 +673,20 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     },
                     child: ListTile(
                       leading: FaIcon(FontAwesomeIcons.wind,
-                          size: 25, color: currentTheme.accentColor),
+                          size: 25,
+                          color: currentTheme.currentTheme.accentColor),
                       title: Text(
                         'Aire',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white54
+                                : Colors.black54),
                       ),
                       trailing: IconButton(
                         icon: Icon(
                           Icons.chevron_right,
-                          color: currentTheme.accentColor,
+                          color: currentTheme.currentTheme.accentColor,
                         ),
                         iconSize: 30.0,
                         onPressed: () => {
@@ -670,7 +710,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   ),
                 ),
                 Material(
-                  color: currentTheme.scaffoldBackgroundColor,
+                  color: currentTheme.currentTheme.scaffoldBackgroundColor,
                   child: InkWell(
                     onTap: () => {
                       Navigator.of(context).pop(),
@@ -679,15 +719,20 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     },
                     child: ListTile(
                       leading: FaIcon(FontAwesomeIcons.lightbulb,
-                          size: 25, color: currentTheme.accentColor),
+                          size: 25,
+                          color: currentTheme.currentTheme.accentColor),
                       title: Text(
                         'Luz',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white54
+                                : Colors.black54),
                       ),
                       trailing: IconButton(
                         icon: Icon(
                           Icons.chevron_right,
-                          color: currentTheme.accentColor,
+                          color: currentTheme.currentTheme.accentColor,
                         ),
                         iconSize: 30.0,
                         onPressed: () => {
@@ -737,9 +782,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
               if (snapshot.hasData) {
                 plants = snapshot.data;
                 return (plants.length > 0)
-                    ? Container(
-                        margin: EdgeInsets.only(left: 10, top: 10),
-                        child: _buildWidgetPlant(plants))
+                    ? Container(child: _buildWidgetPlant(plants))
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
@@ -847,17 +890,17 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         icon: Icon(Icons.local_florist,
                             color: (_tabController.index == 0)
                                 ? currentTheme.accentColor
-                                : Colors.white54)),
+                                : Colors.grey)),
                     Tab(
                         icon: FaIcon(FontAwesomeIcons.wind,
                             color: (_tabController.index == 1)
                                 ? currentTheme.accentColor
-                                : Colors.white54)),
+                                : Colors.grey)),
                     Tab(
                         icon: FaIcon(FontAwesomeIcons.lightbulb,
                             color: (_tabController.index == 2)
                                 ? currentTheme.accentColor
-                                : Colors.white54)),
+                                : Colors.grey)),
                   ],
                   onTap: (value) => {
                         _tabController
@@ -880,16 +923,18 @@ Container buildCircleFavoritePlantDash(String quantity, context) {
 
   return Container(
       alignment: Alignment.topRight,
-      padding: EdgeInsets.all(0.0),
-      margin: EdgeInsets.only(left: size.width / 1.3, top: 0),
-      width: 40,
-      height: 40,
+      margin: EdgeInsets.only(left: size.width / 1.45, top: 10.0),
+      width: 100,
+      height: 100,
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
         child: CircleAvatar(
             child: Text(
               '$quantity',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
             backgroundColor: currentTheme.accentColor),
       ));
@@ -901,10 +946,9 @@ Container buildCircleFavoritePlant(String quantity, context) {
 
   return Container(
       alignment: Alignment.topRight,
-      padding: EdgeInsets.all(0.0),
-      margin: EdgeInsets.only(left: size.width / 1.25, top: 5.0),
-      width: 50,
-      height: 50,
+      margin: EdgeInsets.only(left: size.width / 1.90, top: 0.0),
+      width: 100,
+      height: 100,
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
         child: CircleAvatar(

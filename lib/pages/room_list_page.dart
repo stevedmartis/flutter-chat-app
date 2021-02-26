@@ -242,7 +242,7 @@ class _RoomListState extends State<RoomList> {
   }
 
   Widget _buildRoomWidget(List<Room> rooms) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Container(
       child: ReorderableListView(
@@ -254,7 +254,9 @@ class _RoomListState extends State<RoomList> {
               final item = rooms[index];
               return Container(
                 decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: (currentTheme.customTheme)
+                        ? Colors.black
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(0.0)),
                 key: Key(item.id),
                 padding: EdgeInsets.only(bottom: 1.0),
@@ -320,7 +322,8 @@ class _RoomListState extends State<RoomList> {
                       child: Center(
                         child: Container(
                           height: 1.0,
-                          color: currentTheme.scaffoldBackgroundColor,
+                          color:
+                              currentTheme.currentTheme.scaffoldBackgroundColor,
                         ),
                       ),
                     ),

@@ -39,21 +39,13 @@ class _CardVisitState extends State<CardVisit> {
           Container(
               width: size.width,
               height: 170.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                margin: EdgeInsets.only(bottom: 20, left: 10, right: 20),
-                clipBehavior: Clip.hardEdge,
-                child: ColorFiltered(
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.50), BlendMode.dstATop),
-                  child: FadeInImage(
-                      image: NetworkImage(widget.visit.getCoverImg()),
-                      placeholder: AssetImage('assets/loading2.gif'),
-                      fit: BoxFit.cover),
-                ),
+              child: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.50), BlendMode.dstATop),
+                child: FadeInImage(
+                    image: NetworkImage(widget.visit.getCoverImg()),
+                    placeholder: AssetImage('assets/loading2.gif'),
+                    fit: BoxFit.cover),
               )),
           Positioned(
               width: size.width,
@@ -97,9 +89,9 @@ class _CardVisitState extends State<CardVisit> {
                 ),
               )),
           Positioned(
-            bottom: 20.0,
-            left: 10.0,
-            right: 20.0,
+            bottom: 0.0,
+            left: 0.0,
+            right: 0.0,
             child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
