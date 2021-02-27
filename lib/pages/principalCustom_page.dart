@@ -142,9 +142,6 @@ class _CollapsingListState extends State<CollapsingList>
                   if (snapshot.hasData) {
                     profiles = snapshot.data;
                     return Container(
-                        margin: EdgeInsets.only(
-                          left: 10,
-                        ),
                         child: CarouselUsersSliderCustom(
                             profiles: snapshot.data)); // image is ready
                   } else {
@@ -182,7 +179,7 @@ class _CollapsingListState extends State<CollapsingList>
             ],
           ),
         ),
-        // makeHeaderSpacer(context),
+        makeHeaderSpacer(context),
         SliverFixedExtentList(
           itemExtent: 150.0,
           delegate: SliverChildListDelegate(
@@ -406,12 +403,12 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
       ? CarouselSlider.builder(
           options: CarouselOptions(
             height: 200,
-            viewportFraction: 0.80,
+            viewportFraction: 0.60,
             initialPage: 0,
             enableInfiniteScroll: false,
             reverse: false,
             autoPlay: true,
-            autoPlayInterval: Duration(seconds: 4),
+            autoPlayInterval: Duration(seconds: 2),
             autoPlayAnimationDuration: Duration(milliseconds: 800),
             autoPlayCurve: Curves.fastOutSlowIn,
             enlargeCenterPage: false,
@@ -425,7 +422,7 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
               fit: StackFit.loose,
               children: [
                 Container(
-                  padding: EdgeInsets.only(bottom: 10.0, right: 15),
+                  padding: EdgeInsets.only(right: 10),
                   child: OpenContainer(
                       closedColor: currentTheme.scaffoldBackgroundColor,
                       openColor: currentTheme.scaffoldBackgroundColor,
@@ -442,11 +439,11 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
                         return CardPlant(plant: plant);
                       }),
                 ),
-                Container(
+                /* Container(
                   child: Hero(
                       tag: plant.quantity + plant.id,
                       child: buildCircleFavoritePlant(plant.quantity, context)),
-                ),
+                ), */
               ],
             );
           },
@@ -461,7 +458,7 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
       ? CarouselSlider.builder(
           options: CarouselOptions(
             height: 200,
-            viewportFraction: 0.90,
+            viewportFraction: 0.70,
             initialPage: 0,
             enableInfiniteScroll: false,
             reverse: false,
@@ -476,29 +473,28 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
           itemBuilder: (BuildContext context, int index) {
             final visit = visits[index];
 
-            return OpenContainer(
-                closedColor: currentTheme.scaffoldBackgroundColor,
-                openColor: currentTheme.scaffoldBackgroundColor,
-                transitionType: ContainerTransitionType.fade,
-                openShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                closedShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0)),
-                openBuilder: (_, closeContainer) {
-                  return AddUpdateVisitPage(
-                    visit: visit,
-                    plant: visit.plant,
-                    isEdit: true,
-                  );
-                },
-                closedBuilder: (_, openContainer) {
-                  return Stack(
-                    children: [
-                      CardVisit(visit: visits[index]),
-                    ],
-                  );
-                });
+            return Container(
+              padding: EdgeInsets.only(right: 10),
+              child: OpenContainer(
+                  closedColor: currentTheme.scaffoldBackgroundColor,
+                  openColor: currentTheme.scaffoldBackgroundColor,
+                  transitionType: ContainerTransitionType.fade,
+                  openShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  closedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  openBuilder: (_, closeContainer) {
+                    return AddUpdateVisitPage(
+                      visit: visit,
+                      plant: visit.plant,
+                      isEdit: true,
+                    );
+                  },
+                  closedBuilder: (_, openContainer) {
+                    return Container(child: CardVisit(visit: visits[index]));
+                  }),
+            );
           })
       : Container();
 }

@@ -254,7 +254,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
     final isImageUpdate = Provider.of<AwsService>(context).isUploadImagePlant;
 
     final bloc = CustomProvider.plantBlocIn(context);
@@ -284,7 +284,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
         actions: [
           (widget.isEdit)
               ? _createButton(bloc, isControllerChangeEdit)
@@ -293,7 +293,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         leading: IconButton(
           icon: Icon(
             Icons.chevron_left,
-            color: currentTheme.accentColor,
+            color: currentTheme.currentTheme.accentColor,
           ),
           iconSize: 30,
           onPressed: () {
@@ -307,7 +307,15 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
           },
           color: Colors.white,
         ),
-        title: (widget.isEdit) ? Text('Edit plant') : Text('Create plant'),
+        title: (widget.isEdit)
+            ? Text(
+                'Edit plant',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
+              )
+            : Text('Create plant'),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {

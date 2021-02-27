@@ -11,7 +11,6 @@ import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
-import 'package:chat/widgets/button_gold.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -137,7 +136,6 @@ class EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
-    final authService = Provider.of<AuthService>(context);
     // final awsService = Provider.of<AwsService>(context);
 
     final bloc = CustomProvider.profileBlocIn(context);

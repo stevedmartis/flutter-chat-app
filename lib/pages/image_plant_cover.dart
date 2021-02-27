@@ -29,6 +29,8 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
   Profiles profile;
   // AwsService authService;
 
+  final bool loadingImage = false;
+
   @override
   void dispose() {
     super.dispose();
@@ -45,7 +47,7 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
+    final awsService = Provider.of<AwsService>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -65,16 +67,18 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
           color: Colors.white,
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.add_photo_alternate,
-              color: currentTheme.accentColor,
-            ),
-            iconSize: 40,
-            onPressed: () async =>
-                (!widget.isEdit) ? _selectImage() : _editImage(),
-            color: Colors.white,
-          ),
+          (!awsService.isUploadImagePlant)
+              ? IconButton(
+                  icon: Icon(
+                    Icons.add_photo_alternate,
+                    color: currentTheme.accentColor,
+                  ),
+                  iconSize: 40,
+                  onPressed: () async =>
+                      (!widget.isEdit) ? _selectImage() : _editImage(),
+                  color: Colors.white,
+                )
+              : Container(),
         ],
       ),
       backgroundColor: Colors.black,

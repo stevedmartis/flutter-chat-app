@@ -5,6 +5,7 @@ import 'package:chat/models/profiles_response.dart';
 import 'package:chat/pages/profile_edit.dart';
 import 'package:chat/providers/users_provider.dart';
 import 'package:chat/services/chat_service.dart';
+import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
@@ -19,14 +20,20 @@ class DataSearch extends SearchDelegate {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    assert(context != null);
-    final ThemeData theme = Theme.of(context);
-    assert(theme != null);
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
+    final ThemeData theme =
+        (currentTheme.customTheme) ? ThemeData.dark() : ThemeData.light();
     return theme.copyWith(
-      primaryColor: Colors.black,
-      primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
-      primaryColorBrightness: Brightness.light,
-      primaryTextTheme: theme.textTheme,
+      inputDecorationTheme: InputDecorationTheme(
+          hintStyle: TextStyle(
+              color: (currentTheme.customTheme)
+                  ? Colors.white54
+                  : Colors.black54)),
+      primaryColor: (currentTheme.customTheme) ? Colors.black : Colors.white,
+      primaryIconTheme: theme.primaryIconTheme,
+      primaryColorBrightness: theme.primaryColorBrightness,
+      primaryTextTheme: theme.primaryTextTheme,
     );
   }
 
@@ -37,7 +44,7 @@ class DataSearch extends SearchDelegate {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: Icon(Icons.clear, color: Colors.grey),
         onPressed: () {
           query = '';
         },
@@ -50,6 +57,7 @@ class DataSearch extends SearchDelegate {
     return IconButton(
       icon: AnimatedIcon(
         icon: AnimatedIcons.menu_arrow,
+        color: Colors.grey,
         progress: transitionAnimation,
       ),
       onPressed: () {
@@ -60,14 +68,18 @@ class DataSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Center(
-      child: Container(
-        height: 100.0,
-        width: 100.0,
-        color: Colors.blueAccent,
-        child: Text(
-          selection,
-          style: TextStyle(color: Colors.black),
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Container(
+            height: 100.0,
+            width: 100.0,
+            child: Text(
+              selection,
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
         ),
       ),
     );
@@ -75,50 +87,72 @@ class DataSearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     if (query.isEmpty && query.length < 3) {
-      return Container();
+      return Scaffold(
+          backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
+          body: Container());
     }
 
-    return FutureBuilder(
-      future: usersProvider.getSearchPrincipalByQuery(query),
-      builder:
-          (BuildContext context, AsyncSnapshot<ProfilesResponse> snapshot) {
-        if (snapshot.hasData) {
-          final profiles = snapshot.data.profiles;
+    return Scaffold(
+      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
+      body: FutureBuilder(
+        future: usersProvider.getSearchPrincipalByQuery(query),
+        builder:
+            (BuildContext context, AsyncSnapshot<ProfilesResponse> snapshot) {
+          if (snapshot.hasData) {
+            final profiles = snapshot.data.profiles;
 
-          return ListView(
-            children: profiles.map((profile) {
-              return Hero(
-                tag: profile.user.uid,
-                child: ListTile(
-                  leading: ImageUserChat(
-                      width: 100, height: 100, profile: profile, fontsize: 20),
-                  title: Text(profile.name),
-                  subtitle: Text(profile.user.username),
-                  onTap: () {
-                    close(context, null);
-                    //profile.user.uid = '';
-                    //Navigator.pushNamed(context, 'detail', arguments: profile);
+            return ListView(
+              children: profiles.map((profile) {
+                return Hero(
+                  tag: profile.user.uid,
+                  child: ListTile(
+                    leading: ImageUserChat(
+                        width: 100,
+                        height: 100,
+                        profile: profile,
+                        fontsize: 20),
+                    title: Text(
+                      profile.name,
+                      style: TextStyle(
+                          color: (currentTheme.customTheme)
+                              ? Colors.white
+                              : Colors.black),
+                    ),
+                    subtitle: Text(
+                      '@' + profile.user.username,
+                      style: TextStyle(
+                          color: (currentTheme.customTheme)
+                              ? Colors.white54
+                              : Colors.black54),
+                    ),
+                    onTap: () {
+                      close(context, null);
+                      //profile.user.uid = '';
+                      //Navigator.pushNamed(context, 'detail', arguments: profile);
 
-                    if (profile.user.uid != this.userAuth.user.uid) {
-                      final chatService =
-                          Provider.of<ChatService>(context, listen: false);
-                      chatService.userFor = profile;
-                      Navigator.push(context, createRouteProfile(profile));
-                    } else {
-                      Navigator.push(context, createRoute());
-                    }
-                  },
-                ),
-              );
-            }).toList(),
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
+                      if (profile.user.uid != this.userAuth.user.uid) {
+                        final chatService =
+                            Provider.of<ChatService>(context, listen: false);
+                        chatService.userFor = profile;
+                        Navigator.push(context, createRouteProfile(profile));
+                      } else {
+                        Navigator.push(context, createRoute());
+                      }
+                    },
+                  ),
+                );
+              }).toList(),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
     );
   }
 

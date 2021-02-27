@@ -93,7 +93,7 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
                       child: Container(
                           // color: Colors.black,
                           //  margin: EdgeInsets.only(left: 10, right: 10),
-                          width: size.height / 3.0,
+                          width: size.height / 3.2,
                           height: 40,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
