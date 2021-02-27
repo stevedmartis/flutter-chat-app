@@ -17,31 +17,36 @@ class _CardPlantState extends State<CardPlant> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return FittedBox(
-      child: Row(
-        children: <Widget>[
-          Center(child: plantItem()),
-          Container(
-            width: size.width,
-            height: size.height / 1.45,
-            child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(20.0),
-                    bottomRight: Radius.circular(15.0)),
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: (widget.plant.coverImage != "")
-                      ? FadeInImage(
-                          image: NetworkImage(widget.plant.getCoverImg()),
-                          placeholder: AssetImage('assets/loading2.gif'),
-                          fit: BoxFit.cover)
-                      : FadeInImage(
-                          image: AssetImage('assets/images/empty_image.png'),
-                          placeholder: AssetImage('assets/loading2.gif'),
-                          fit: BoxFit.cover),
-                )),
-          ),
-        ],
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
+    return Container(
+      color: (currentTheme.customTheme) ? Color(0xff151518) : Colors.white,
+      child: FittedBox(
+        child: Row(
+          children: <Widget>[
+            Center(child: plantItem()),
+            Container(
+              width: size.width,
+              height: size.height / 1.45,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20.0),
+                      bottomRight: Radius.circular(15.0)),
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: (widget.plant.coverImage != "")
+                        ? FadeInImage(
+                            image: NetworkImage(widget.plant.getCoverImg()),
+                            placeholder: AssetImage('assets/loading2.gif'),
+                            fit: BoxFit.cover)
+                        : FadeInImage(
+                            image: AssetImage('assets/images/empty_image.png'),
+                            placeholder: AssetImage('assets/loading2.gif'),
+                            fit: BoxFit.cover),
+                  )),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -30,7 +30,9 @@ class _CustomAppBarSimplePagesState extends State<CustomAppBarSimplePages> {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Container(
-      color: (currentTheme.customTheme) ? Colors.black : Colors.white,
+      color: (currentTheme.customTheme)
+          ? currentTheme.currentTheme.cardColor
+          : Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,

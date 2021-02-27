@@ -433,12 +433,14 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
                       openShape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20.0),
+                            topLeft: Radius.circular(10.0),
                             bottomRight: Radius.circular(10.0),
                             bottomLeft: Radius.circular(10.0)),
                       ),
                       closedShape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20.0),
+                            topLeft: Radius.circular(10.0),
                             bottomRight: Radius.circular(10.0),
                             bottomLeft: Radius.circular(10.0)),
                       ),

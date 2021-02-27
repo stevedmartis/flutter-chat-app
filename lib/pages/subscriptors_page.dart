@@ -136,6 +136,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
     return SliverList(
         delegate: SliverChildListDelegate([
       Container(
+        padding: EdgeInsets.only(top: 20),
         child: _buildList(
           context,
           Axis.vertical,
@@ -159,7 +160,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
   }
 
   Widget _buildList(BuildContext context, Axis direction) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return StreamBuilder<ProfilesResponse>(
       stream: subscriptionBloc.subscriptionsApprove.stream,
@@ -211,7 +212,9 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                           onTap: () {},
                           child: Material(
                             child: ListTile(
-                              tileColor: currentTheme.scaffoldBackgroundColor,
+                              tileColor: (currentTheme.customTheme)
+                                  ? currentTheme.currentTheme.cardColor
+                                  : Colors.white,
                               leading: ImageUserChat(
                                   width: 100,
                                   height: 100,
@@ -236,7 +239,8 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                     child: Text(
                                       'SUSCRITO',
                                       style: TextStyle(
-                                          color: currentTheme.accentColor,
+                                          color: currentTheme
+                                              .currentTheme.accentColor,
                                           fontSize: 15),
                                     ),
                                   ),
@@ -246,7 +250,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                 padding: EdgeInsets.all(10),
                                 child: Icon(
                                   Icons.chevron_right,
-                                  color: currentTheme.accentColor,
+                                  color: currentTheme.currentTheme.accentColor,
                                   size: 30,
                                 ),
                               ),

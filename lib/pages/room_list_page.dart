@@ -256,7 +256,7 @@ class _RoomListState extends State<RoomList> {
               return Container(
                 decoration: BoxDecoration(
                     color: (currentTheme.customTheme)
-                        ? Colors.black
+                        ? currentTheme.currentTheme.cardColor
                         : Colors.white,
                     borderRadius: BorderRadius.circular(0.0)),
                 key: Key(item.id),

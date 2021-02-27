@@ -190,8 +190,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
             currentIndex: currentPage,
             onTap: _onItemTapped,
             type: BottomNavigationBarType.fixed,
-            backgroundColor:
-                (currentTheme.customTheme) ? Colors.black : Colors.white,
+            backgroundColor: (currentTheme.customTheme)
+                ? currentTheme.currentTheme.cardColor
+                : Colors.white,
             selectedItemColor: currentTheme.currentTheme.accentColor,
             unselectedItemColor: Colors.grey,
             items: [

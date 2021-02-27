@@ -98,7 +98,8 @@ class _MessagesPageState extends State<MessagesPage>
   SliverList makeListChats(context) {
     return SliverList(
         delegate: SliverChildListDelegate([
-      buildSuggestions(context),
+      Container(
+          padding: EdgeInsets.only(top: 20), child: buildSuggestions(context)),
     ]));
   }
 
@@ -137,8 +138,9 @@ class _MessagesPageState extends State<MessagesPage>
                     delay: Duration(milliseconds: 300 * index),
                     child: Material(
                       child: ListTile(
-                        tileColor:
-                            currentTheme.currentTheme.scaffoldBackgroundColor,
+                        tileColor: (currentTheme.customTheme)
+                            ? currentTheme.currentTheme.cardColor
+                            : Colors.white,
                         leading: ImageUserChat(
                             width: 100,
                             height: 100,

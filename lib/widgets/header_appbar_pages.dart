@@ -47,7 +47,11 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
     final int number = Provider.of<NotificationModel>(context).number;
 
     return Container(
-      color: (currentTheme.customTheme) ? Colors.black : Colors.white,
+      color: (currentTheme.customTheme)
+          ? (!widget.showContent)
+              ? currentTheme.currentTheme.cardColor
+              : Colors.black
+          : Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,12 +104,9 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  currentTheme
-                                      .currentTheme.scaffoldBackgroundColor,
-                                  currentTheme
-                                      .currentTheme.scaffoldBackgroundColor,
-                                  currentTheme
-                                      .currentTheme.scaffoldBackgroundColor
+                                  currentTheme.currentTheme.cardColor,
+                                  currentTheme.currentTheme.cardColor,
+                                  currentTheme.currentTheme.cardColor
                                 ]),
                             borderRadius: BorderRadius.all(Radius.circular(30)),
                             boxShadow: [

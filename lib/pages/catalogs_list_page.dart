@@ -59,13 +59,13 @@ class _CatalogosListPagePageState extends State<CatalogosListPage> {
                 parent: AlwaysScrollableScrollPhysics()),
             slivers: <Widget>[
               makeHeaderCustom('Catalogos'),
-              makeListRooms(context)
+              makeListCatalogos(context)
             ]),
       ),
     );
   }
 
-  SliverList makeListRooms(
+  SliverList makeListCatalogos(
     context,
   ) {
     return SliverList(
@@ -262,7 +262,7 @@ class _CatalogsListState extends State<CatalogsList> {
               return Container(
                 decoration: BoxDecoration(
                     color: (currentTheme.customTheme)
-                        ? Colors.black
+                        ? currentTheme.currentTheme.cardColor
                         : Colors.white,
                     borderRadius: BorderRadius.circular(0.0)),
                 key: Key(item.id),
