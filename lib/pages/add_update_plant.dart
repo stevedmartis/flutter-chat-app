@@ -878,7 +878,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                   style: TextStyle(
                       color: (isControllerChange && !errorRequired)
                           ? currentTheme.accentColor
-                          : Colors.white.withOpacity(0.30),
+                          : Colors.grey.withOpacity(0.60),
                       fontSize: 18),
                 ),
               ),

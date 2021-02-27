@@ -174,7 +174,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     final bloc = CustomProvider.visitBlocIn(context);
 
@@ -195,13 +195,15 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         isAbonoChange;
 
     return Scaffold(
+      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor:
+            (currentTheme.customTheme) ? Colors.black : Colors.white,
         actions: [_createButton(bloc, isControllerChange)],
         leading: IconButton(
           icon: Icon(
             Icons.chevron_left,
-            color: currentTheme.accentColor,
+            color: currentTheme.currentTheme.accentColor,
           ),
           iconSize: 30,
           onPressed: () {
@@ -212,7 +214,21 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
           },
           color: Colors.white,
         ),
-        title: (widget.isEdit) ? Text('Editar visita') : Text('Nueva visita'),
+        title: (widget.isEdit)
+            ? Text(
+                'Editar visita',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
+              )
+            : Text(
+                'Nueva visita',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
+              ),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
@@ -420,7 +436,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   }
 
   Widget _createCut(VisitBloc bloc) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return StreamBuilder(
       stream: bloc.cutStream,
@@ -430,10 +446,13 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
           //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
           title: Text(
             'Cortar',
-            style: TextStyle(color: Colors.white.withOpacity(0.60)),
+            style: TextStyle(
+                color: (currentTheme.customTheme)
+                    ? Colors.white54
+                    : Colors.black54),
           ),
           trailing: Switch.adaptive(
-            activeColor: currentTheme.accentColor,
+            activeColor: currentTheme.currentTheme.accentColor,
             value: isSwitchedCut,
             onChanged: (value) {
               setState(() {
@@ -453,7 +472,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   }
 
   Widget _createAbono(VisitBloc bloc) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return StreamBuilder(
       stream: bloc.cutStream,
@@ -463,10 +482,13 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
           //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
           title: Text(
             'Fertilizar/Abonar',
-            style: TextStyle(color: Colors.white.withOpacity(0.60)),
+            style: TextStyle(
+                color: (currentTheme.customTheme)
+                    ? Colors.white54
+                    : Colors.black54),
           ),
           trailing: Switch.adaptive(
-            activeColor: currentTheme.accentColor,
+            activeColor: currentTheme.currentTheme.accentColor,
             value: isSwitchedAbono,
             onChanged: (value) {
               setState(() {
@@ -486,7 +508,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   }
 
   Widget _createClean(VisitBloc bloc) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return StreamBuilder(
       stream: bloc.cutStream,
@@ -496,10 +518,13 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
           //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
           title: Text(
             'Limpieza',
-            style: TextStyle(color: Colors.white.withOpacity(0.60)),
+            style: TextStyle(
+                color: (currentTheme.customTheme)
+                    ? Colors.white54
+                    : Colors.black54),
           ),
           trailing: Switch.adaptive(
-            activeColor: currentTheme.accentColor,
+            activeColor: currentTheme.currentTheme.accentColor,
             value: isSwitchedClean,
             onChanged: (value) {
               setState(() {
@@ -519,7 +544,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   }
 
   Widget _createTemperature(VisitBloc bloc) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return StreamBuilder(
       stream: bloc.cutStream,
@@ -529,10 +554,13 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
           //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
           title: Text(
             'Temperatura',
-            style: TextStyle(color: Colors.white.withOpacity(0.60)),
+            style: TextStyle(
+                color: (currentTheme.customTheme)
+                    ? Colors.white54
+                    : Colors.black54),
           ),
           trailing: Switch.adaptive(
-            activeColor: currentTheme.accentColor,
+            activeColor: currentTheme.currentTheme.accentColor,
             value: isSwitchedTemp,
             onChanged: (value) {
               setState(() {
@@ -552,7 +580,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   }
 
   Widget _createWater(VisitBloc bloc) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return StreamBuilder(
       stream: bloc.cutStream,
@@ -562,10 +590,13 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
           //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
           title: Text(
             'Regado',
-            style: TextStyle(color: Colors.white.withOpacity(0.60)),
+            style: TextStyle(
+                color: (currentTheme.customTheme)
+                    ? Colors.white54
+                    : Colors.black54),
           ),
           trailing: Switch.adaptive(
-            activeColor: currentTheme.accentColor,
+            activeColor: currentTheme.currentTheme.accentColor,
             value: isSwitchedWater,
             onChanged: (value) {
               setState(() {
@@ -809,7 +840,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
               style: TextStyle(
                   color: (isControllerChange) || isUpload
                       ? currentTheme.accentColor
-                      : Colors.white.withOpacity(0.30),
+                      : Colors.grey.withOpacity(0.60),
                   fontSize: 18),
             ),
           ),

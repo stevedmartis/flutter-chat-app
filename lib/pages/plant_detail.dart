@@ -199,9 +199,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                 backgroundColor:
                                     Colors.black.withOpacity(0.60)),
                           )),
-                      Hero(
-                          tag: widget.plant.quantity + widget.plant.id,
-                          child: _buildCircleQuantityPlant()),
+                      _buildCircleQuantityPlant(),
                     ],
 
                     centerTitle: true,

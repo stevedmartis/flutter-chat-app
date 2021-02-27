@@ -399,20 +399,26 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         openColor: currentTheme.scaffoldBackgroundColor,
                         transitionType: ContainerTransitionType.fade,
                         openShape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20.0),
+                              bottomRight: Radius.circular(15.0)),
                         ),
                         closedShape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0)),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20.0),
+                                bottomRight: Radius.circular(15.0))),
                         openBuilder: (_, closeContainer) {
                           return PlantDetailPage(plant: plant);
                         },
                         closedBuilder: (_, openContainer) {
-                          return CardPlant(plant: plant);
+                          return Stack(children: [
+                            CardPlant(plant: plant),
+                            Container(
+                              child: buildCircleFavoritePlantDash(
+                                  plant.quantity, context),
+                            ),
+                          ]);
                         }),
-                  ),
-                  Container(
-                    child:
-                        buildCircleFavoritePlantDash(plant.quantity, context),
                   ),
                 ],
               );
@@ -930,7 +936,7 @@ Container buildCircleFavoritePlantDash(String quantity, context) {
 
   return Container(
       alignment: Alignment.topRight,
-      margin: EdgeInsets.only(left: size.width / 1.45, top: 10.0),
+      margin: EdgeInsets.only(left: size.width / 1.45, top: 0.0),
       width: 100,
       height: 100,
       child: ClipRRect(
@@ -953,7 +959,7 @@ Container buildCircleFavoritePlant(String quantity, context) {
 
   return Container(
       alignment: Alignment.topRight,
-      margin: EdgeInsets.only(left: size.width / 1.90, top: 0.0),
+      margin: EdgeInsets.only(left: size.width / 2.1, top: 0.0),
       width: 100,
       height: 100,
       child: ClipRRect(

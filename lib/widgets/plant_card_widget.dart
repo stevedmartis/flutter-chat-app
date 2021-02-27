@@ -25,7 +25,9 @@ class _CardPlantState extends State<CardPlant> {
             width: size.width,
             height: size.height / 1.45,
             child: ClipRRect(
-                borderRadius: BorderRadius.circular(15.0),
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20.0),
+                    bottomRight: Radius.circular(15.0)),
                 child: Material(
                   type: MaterialType.transparency,
                   child: (widget.plant.coverImage != "")
@@ -69,7 +71,7 @@ class _CardPlantState extends State<CardPlant> {
               widget.plant.name.capitalize(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 40,
+                  fontSize: 50,
                   color: currentTheme.currentTheme.accentColor),
             ),
           ),
@@ -79,7 +81,7 @@ class _CardPlantState extends State<CardPlant> {
           CbdthcRow(
             thc: thc,
             cbd: cbd,
-            fontSize: 20,
+            fontSize: 30,
           ),
           SizedBox(
             height: 25,
@@ -95,7 +97,7 @@ class _CardPlantState extends State<CardPlant> {
               maxLines: 3,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 30,
+                  fontSize: 40,
                   color: Colors.grey),
             ),
           ),
@@ -110,7 +112,7 @@ class _CardPlantState extends State<CardPlant> {
                   'Germina: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 25,
+                      fontSize: 30,
                       color: (currentTheme.customTheme)
                           ? Colors.white54
                           : Colors.grey),
@@ -122,7 +124,7 @@ class _CardPlantState extends State<CardPlant> {
                   widget.plant.germinated,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 25,
+                      fontSize: 35,
                       color: (currentTheme.customTheme)
                           ? Colors.white54
                           : Colors.grey),

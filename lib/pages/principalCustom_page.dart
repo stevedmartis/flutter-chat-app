@@ -179,7 +179,7 @@ class _CollapsingListState extends State<CollapsingList>
             ],
           ),
         ),
-        makeHeaderSpacer(context),
+        // makeHeaderSpacer(context),
         SliverFixedExtentList(
           itemExtent: 150.0,
           delegate: SliverChildListDelegate(
@@ -428,22 +428,30 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
                       openColor: currentTheme.scaffoldBackgroundColor,
                       transitionType: ContainerTransitionType.fade,
                       openShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20.0),
+                            bottomRight: Radius.circular(15.0)),
                       ),
                       closedShape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20.0),
+                            bottomRight: Radius.circular(15.0)),
+                      ),
                       openBuilder: (_, closeContainer) {
                         return PlantDetailPage(plant: plant);
                       },
                       closedBuilder: (_, openContainer) {
-                        return CardPlant(plant: plant);
+                        return Stack(
+                          children: [
+                            CardPlant(plant: plant),
+                            Container(
+                              child: buildCircleFavoritePlant(
+                                  plant.quantity, context),
+                            ),
+                          ],
+                        );
                       }),
                 ),
-                /* Container(
-                  child: Hero(
-                      tag: plant.quantity + plant.id,
-                      child: buildCircleFavoritePlant(plant.quantity, context)),
-                ), */
               ],
             );
           },
