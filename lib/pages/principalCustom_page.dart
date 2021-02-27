@@ -179,7 +179,7 @@ class _CollapsingListState extends State<CollapsingList>
             ],
           ),
         ),
-        // makeHeaderSpacer(context),
+        makeHeaderSpacer(context),
         SliverFixedExtentList(
           itemExtent: 150.0,
           delegate: SliverChildListDelegate(
@@ -399,10 +399,11 @@ class LastVisitsByUser extends StatelessWidget {
 Widget _buildWidgetPlants(List<Plant> plants, context) {
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
+  final size = MediaQuery.of(context).size;
   return (plants.length > 0)
       ? CarouselSlider.builder(
           options: CarouselOptions(
-            height: 200,
+            height: size.height,
             viewportFraction: 0.60,
             initialPage: 0,
             enableInfiniteScroll: false,
@@ -422,35 +423,34 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
               fit: StackFit.loose,
               children: [
                 Container(
-                  padding: EdgeInsets.only(right: 10),
+                  padding: EdgeInsets.only(right: 0, bottom: 20),
                   child: OpenContainer(
+                      closedElevation: 5,
+                      openElevation: 5,
                       closedColor: currentTheme.scaffoldBackgroundColor,
                       openColor: currentTheme.scaffoldBackgroundColor,
                       transitionType: ContainerTransitionType.fade,
                       openShape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20.0),
-                            bottomRight: Radius.circular(15.0)),
+                            bottomRight: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0)),
                       ),
                       closedShape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20.0),
-                            bottomRight: Radius.circular(15.0)),
+                            bottomRight: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0)),
                       ),
                       openBuilder: (_, closeContainer) {
                         return PlantDetailPage(plant: plant);
                       },
                       closedBuilder: (_, openContainer) {
-                        return Stack(
-                          children: [
-                            CardPlant(plant: plant),
-                            Container(
-                              child: buildCircleFavoritePlant(
-                                  plant.quantity, context),
-                            ),
-                          ],
-                        );
+                        return CardPlant(plant: plant);
                       }),
+                ),
+                Container(
+                  child: buildCircleFavoritePlant(plant.quantity, context),
                 ),
               ],
             );
@@ -461,11 +461,12 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
 
 Widget _buildWidgetVisits(List<Visit> visits, context) {
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+  final size = MediaQuery.of(context).size;
 
   return (visits.length > 0)
       ? CarouselSlider.builder(
           options: CarouselOptions(
-            height: 200,
+            height: size.height / 2,
             viewportFraction: 0.70,
             initialPage: 0,
             enableInfiniteScroll: false,

@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:chat/models/notification.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/theme/theme.dart';
@@ -184,35 +185,41 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     final suscriptionEnabled =
         (isClub) ? true : userFor.subscribeApproved && userFor.subscribeActive;
 
-    return Scaffold(
-      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
-      appBar: CustomAppBar(
-        profile: userFor,
-        isFromMessage: widget.isFromMessage,
-      ),
-      body: Container(
-        padding: EdgeInsets.all(0),
-        child: Column(
-          children: <Widget>[
-            Flexible(
-                child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: _messages.length,
-              itemBuilder: (_, i) => _messages[i],
-              reverse: true,
-            )),
-            Divider(height: 1),
-            Container(
-              color: (currentTheme.customTheme) ? Colors.black : Colors.white,
-              child: (suscriptionEnabled) ? _inputChat() : _inputDisabled(),
-            )
-          ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
+        appBar: CustomAppBar(
+          profile: userFor,
+          isFromMessage: widget.isFromMessage,
+        ),
+        body: Container(
+          padding: EdgeInsets.all(0),
+          child: Column(
+            children: <Widget>[
+              Flexible(
+                  child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                itemCount: _messages.length,
+                itemBuilder: (_, i) => (userFor.user.uid == _messages[i].uid)
+                    ? FadeInLeft(child: _messages[i])
+                    : FadeInRight(child: _messages[i]),
+                reverse: true,
+              )),
+              Divider(height: 1),
+              Container(
+                color: (currentTheme.customTheme) ? Colors.black : Colors.white,
+                child: (suscriptionEnabled) ? _inputChat() : _inputDisabled(),
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _inputChat() {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return SafeArea(
         child: Container(
       padding: EdgeInsets.all(10),
@@ -244,7 +251,8 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 4.0),
                     child: IconTheme(
-                      data: IconThemeData(color: Color(0xffE8C213)),
+                      data: IconThemeData(
+                          color: currentTheme.currentTheme.accentColor),
                       child: IconButton(
                         highlightColor: Colors.transparent,
                         splashColor: Colors.transparent,
@@ -261,11 +269,12 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 4.0),
                     child: IconTheme(
-                      data: IconThemeData(color: Color(0xffE87213)),
+                      data: IconThemeData(
+                          color: currentTheme.currentTheme.accentColor),
                       child: IconButton(
                         highlightColor: Colors.transparent,
                         splashColor: Colors.transparent,
-                        icon: Icon(Icons.camera_alt),
+                        icon: Container(),
                         onPressed: _isWriting
                             ? () => _handleSubmit(_textController.text.trim())
                             : null,

@@ -395,20 +395,33 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     padding: EdgeInsets.only(
                         top: 20, left: 20, right: 20, bottom: 0.0),
                     child: OpenContainer(
+                        closedElevation: 5,
+                        openElevation: 5,
                         closedColor: currentTheme.scaffoldBackgroundColor,
                         openColor: currentTheme.scaffoldBackgroundColor,
                         transitionType: ContainerTransitionType.fade,
                         openShape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                               topRight: Radius.circular(20.0),
-                              bottomRight: Radius.circular(15.0)),
+                              bottomRight: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0)),
                         ),
                         closedShape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(20.0),
-                                bottomRight: Radius.circular(15.0))),
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20.0),
+                              bottomRight: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0)),
+                        ),
                         openBuilder: (_, closeContainer) {
-                          return PlantDetailPage(plant: plant);
+                          return Stack(
+                            children: [
+                              PlantDetailPage(plant: plant),
+                              Container(
+                                child: buildCircleFavoritePlantDash(
+                                    plant.quantity, context),
+                              ),
+                            ],
+                          );
                         },
                         closedBuilder: (_, openContainer) {
                           return Stack(children: [

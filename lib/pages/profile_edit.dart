@@ -141,100 +141,112 @@ class EditProfilePageState extends State<EditProfilePage> {
     final bloc = CustomProvider.profileBlocIn(context);
     final size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      backgroundColor: (currentTheme.customTheme) ? Colors.black : Colors.white,
-      appBar: AppBar(
+    return SafeArea(
+      child: Scaffold(
         backgroundColor:
             (currentTheme.customTheme) ? Colors.black : Colors.white,
-        actions: [
-          _createButton(bloc, this.isUsernameChange, this.isAboutChange,
-              this.isEmailChange, this.isNameChange, this.isPassChange),
-        ],
-        leading: IconButton(
-          icon: Icon(
-            Icons.chevron_left,
-            color: currentTheme.currentTheme.accentColor,
+        appBar: AppBar(
+          backgroundColor:
+              (currentTheme.customTheme) ? Colors.black : Colors.white,
+          actions: [
+            _createButton(bloc, this.isUsernameChange, this.isAboutChange,
+                this.isEmailChange, this.isNameChange, this.isPassChange),
+          ],
+          leading: IconButton(
+            icon: Icon(
+              Icons.chevron_left,
+              color: currentTheme.currentTheme.accentColor,
+            ),
+            iconSize: 30,
+            onPressed: () =>
+                //  Navigator.pushReplacement(context, createRouteProfile()),
+                Navigator.pop(context),
+            color: Colors.white,
           ),
-          iconSize: 30,
-          onPressed: () =>
-              //  Navigator.pushReplacement(context, createRouteProfile()),
-              Navigator.pop(context),
-          color: Colors.white,
+          title: Text(
+            'Edit profile',
+            style: TextStyle(
+                color:
+                    (currentTheme.customTheme) ? Colors.white : Colors.black),
+          ),
         ),
-        title: Text(
-          'Edit profile',
-          style: TextStyle(
-              color: (currentTheme.customTheme) ? Colors.white : Colors.black),
-        ),
-      ),
-      body: NotificationListener<ScrollEndNotification>(
-        onNotification: (_) {
-          //  _snapAppbar();
-          // if (_scrollController.offset >= 250) {}
-          return false;
-        },
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
+        body: NotificationListener<ScrollEndNotification>(
+          onNotification: (_) {
+            //  _snapAppbar();
+            // if (_scrollController.offset >= 250) {}
+            return false;
           },
-          child: CustomScrollView(
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              // controller: _scrollController,
-              slivers: <Widget>[
-                SliverFixedExtentList(
-                  itemExtent: size.height / 3.7,
-                  delegate: SliverChildListDelegate(
-                    [
-                      StreamBuilder<bool>(
-                        stream: profileBloc.imageUpdate.stream,
-                        builder: (context, AsyncSnapshot<bool> snapshot) {
-                          if (snapshot.hasData) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(PageRouteBuilder(
-                                    transitionDuration:
-                                        Duration(milliseconds: 200),
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        HeaderImagePage(
-                                          profile: this.profile,
-                                        )));
-                              },
-                              child: Hero(
-                                tag: profile.imageHeader,
-                                child: Image(
-                                  image: NetworkImage(
-                                    profile.getHeaderImg(),
-                                  ),
-                                  fit: BoxFit.cover,
-                                  height: double.infinity,
-                                  width: double.infinity,
-                                  alignment: Alignment.center,
-                                ),
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return _buildErrorWidget(snapshot.error);
-                          } else {
-                            return _buildLoadingWidget();
-                          }
-                        },
-                      ),
-
-                      /*  FutureBuilder<ui.Image>(
-                          future: _image(profile.getHeaderImg()),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<ui.Image> snapshot) {
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: CustomScrollView(
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                // controller: _scrollController,
+                slivers: <Widget>[
+                  SliverFixedExtentList(
+                    itemExtent: size.height / 3.7,
+                    delegate: SliverChildListDelegate(
+                      [
+                        StreamBuilder<bool>(
+                          stream: profileBloc.imageUpdate.stream,
+                          builder: (context, AsyncSnapshot<bool> snapshot) {
                             if (snapshot.hasData) {
-                              if (profile.imageHeader == "") {
-                                return ProfilePage(
-                                  isEmpty: true,
-                                  image: snapshot.data,
-                                  isUserAuth: true,
-                                  isUserEdit: true,
-                                  profile: profile,
-                                );
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(PageRouteBuilder(
+                                      transitionDuration:
+                                          Duration(milliseconds: 200),
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          HeaderImagePage(
+                                            profile: this.profile,
+                                          )));
+                                },
+                                child: Hero(
+                                  tag: profile.imageHeader,
+                                  child: Image(
+                                    image: NetworkImage(
+                                      profile.getHeaderImg(),
+                                    ),
+                                    fit: BoxFit.cover,
+                                    height: double.infinity,
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                  ),
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return _buildErrorWidget(snapshot.error);
+                            } else {
+                              return _buildLoadingWidget();
+                            }
+                          },
+                        ),
+
+                        /*  FutureBuilder<ui.Image>(
+                            future: _image(profile.getHeaderImg()),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<ui.Image> snapshot) {
+                              if (snapshot.hasData) {
+                                if (profile.imageHeader == "") {
+                                  return ProfilePage(
+                                    isEmpty: true,
+                                    image: snapshot.data,
+                                    isUserAuth: true,
+                                    isUserEdit: true,
+                                    profile: profile,
+                                  );
+                                } else {
+                                  return ProfilePage(
+                                    isEmpty: false,
+                                    image: snapshot.data,
+                                    isUserAuth: true,
+                                    isUserEdit: true,
+                                    profile: profile,
+                                  );
+                                }
                               } else {
                                 return ProfilePage(
                                   isEmpty: false,
@@ -244,64 +256,56 @@ class EditProfilePageState extends State<EditProfilePage> {
                                   profile: profile,
                                 );
                               }
-                            } else {
-                              return ProfilePage(
-                                isEmpty: false,
-                                image: snapshot.data,
-                                isUserAuth: true,
-                                isUserEdit: true,
-                                profile: profile,
-                              );
-                            }
-                          }), */
-                    ],
+                            }), */
+                      ],
+                    ),
                   ),
-                ),
-                SliverFixedExtentList(
-                    itemExtent: 20,
-                    delegate: SliverChildListDelegate([Container()])),
-                SliverFixedExtentList(
-                    itemExtent: 100,
-                    delegate: SliverChildListDelegate([
-                      Container(
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: CircleAvatar(
-                            radius: 55,
-                            backgroundColor: currentTheme
-                                .currentTheme.scaffoldBackgroundColor,
+                  SliverFixedExtentList(
+                      itemExtent: 20,
+                      delegate: SliverChildListDelegate([Container()])),
+                  SliverFixedExtentList(
+                      itemExtent: 100,
+                      delegate: SliverChildListDelegate([
+                        Container(
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
                             child: CircleAvatar(
-                              radius: ProfileCard.avatarRadius,
+                              radius: 55,
                               backgroundColor: currentTheme
                                   .currentTheme.scaffoldBackgroundColor,
-                              child: GestureDetector(
-                                onTap: () => {
-                                  Navigator.of(context).push(PageRouteBuilder(
-                                      transitionDuration:
-                                          Duration(milliseconds: 200),
-                                      pageBuilder: (context, animation,
-                                              secondaryAnimation) =>
-                                          AvatarImagePage(
-                                            profile: this.profile,
-                                          ))),
+                              child: CircleAvatar(
+                                radius: ProfileCard.avatarRadius,
+                                backgroundColor: currentTheme
+                                    .currentTheme.scaffoldBackgroundColor,
+                                child: GestureDetector(
+                                  onTap: () => {
+                                    Navigator.of(context).push(PageRouteBuilder(
+                                        transitionDuration:
+                                            Duration(milliseconds: 200),
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            AvatarImagePage(
+                                              profile: this.profile,
+                                            ))),
 
-                                  // make changes here
+                                    // make changes here
 
-                                  //Navigator.of(context).push(createRouteAvatarProfile(this.user));
-                                },
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  child: Hero(
-                                    tag: profile.user.uid,
-                                    child: Material(
-                                      type: MaterialType.transparency,
-                                      child: ImageUserChat(
-                                        width: 100,
-                                        // showBorderAvatar: _showBorderAvatar,
-                                        height: 100,
-                                        profile: profile,
-                                        fontsize: 30,
+                                    //Navigator.of(context).push(createRouteAvatarProfile(this.user));
+                                  },
+                                  child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    child: Hero(
+                                      tag: profile.user.uid,
+                                      child: Material(
+                                        type: MaterialType.transparency,
+                                        child: ImageUserChat(
+                                          width: 100,
+                                          // showBorderAvatar: _showBorderAvatar,
+                                          height: 100,
+                                          profile: profile,
+                                          fontsize: 30,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -310,64 +314,64 @@ class EditProfilePageState extends State<EditProfilePage> {
                             ),
                           ),
                         ),
-                      ),
-                    ])),
-                SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 50, vertical: 30),
-                      child: Column(
-                        children: <Widget>[
-                          _createName(bloc, nameCtrl),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _createUsername(bloc, usernameCtrl),
-                          SizedBox(
-                            height: 10,
-                          ),
+                      ])),
+                  SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 50, vertical: 30),
+                        child: Column(
+                          children: <Widget>[
+                            _createName(bloc, nameCtrl),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _createUsername(bloc, usernameCtrl),
+                            SizedBox(
+                              height: 10,
+                            ),
 
-                          _createAbout(bloc, aboutCtrl),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          // _createLastName(bloc),
-                          _createEmail(bloc, emailCtrl),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _createPassword(bloc, passCtrl),
-                          SizedBox(
-                            height: 30,
-                          ),
+                            _createAbout(bloc, aboutCtrl),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            // _createLastName(bloc),
+                            _createEmail(bloc, emailCtrl),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _createPassword(bloc, passCtrl),
+                            SizedBox(
+                              height: 30,
+                            ),
 
-                          SizedBox(
-                            height: 50,
-                          ),
-                          /* ButtonLogout(
-                            textColor:
-                                currentTheme.currentTheme.secondaryHeaderColor,
-                            color: currentTheme
-                                .currentTheme.scaffoldBackgroundColor,
-                            text: 'Log out',
-                            onPressed: authService.authenticated
-                                ? null
-                                : () async {
-                                    final socketService =
-                                        Provider.of<SocketService>(context,
-                                            listen: false);
+                            SizedBox(
+                              height: 50,
+                            ),
+                            /* ButtonLogout(
+                              textColor:
+                                  currentTheme.currentTheme.secondaryHeaderColor,
+                              color: currentTheme
+                                  .currentTheme.scaffoldBackgroundColor,
+                              text: 'Log out',
+                              onPressed: authService.authenticated
+                                  ? null
+                                  : () async {
+                                      final socketService =
+                                          Provider.of<SocketService>(context,
+                                              listen: false);
 
-                                    socketService.disconnect();
-                                    Navigator.pushReplacementNamed(
-                                        context, 'login');
-                                    AuthService.deleteToken();
-                                  },
-                          ), */
-                        ],
-                      ),
-                    )),
-              ]),
+                                      socketService.disconnect();
+                                      Navigator.pushReplacementNamed(
+                                          context, 'login');
+                                      AuthService.deleteToken();
+                                    },
+                            ), */
+                          ],
+                        ),
+                      )),
+                ]),
+          ),
         ),
       ),
     );

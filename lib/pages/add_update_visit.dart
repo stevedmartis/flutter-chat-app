@@ -194,177 +194,186 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         isWaterChange ||
         isAbonoChange;
 
-    return Scaffold(
-      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor:
-            (currentTheme.customTheme) ? Colors.black : Colors.white,
-        actions: [_createButton(bloc, isControllerChange)],
-        leading: IconButton(
-          icon: Icon(
-            Icons.chevron_left,
-            color: currentTheme.currentTheme.accentColor,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
+        appBar: AppBar(
+          backgroundColor:
+              (currentTheme.customTheme) ? Colors.black : Colors.white,
+          actions: [_createButton(bloc, isControllerChange)],
+          leading: IconButton(
+            icon: Icon(
+              Icons.chevron_left,
+              color: currentTheme.currentTheme.accentColor,
+            ),
+            iconSize: 30,
+            onPressed: () {
+              visitService.visit = null;
+              awsService.isUpload = false;
+              //  Navigator.pushReplacement(context, createRouteProfile()),
+              Navigator.pop(context);
+            },
+            color: Colors.white,
           ),
-          iconSize: 30,
-          onPressed: () {
-            visitService.visit = null;
-            awsService.isUpload = false;
-            //  Navigator.pushReplacement(context, createRouteProfile()),
-            Navigator.pop(context);
-          },
-          color: Colors.white,
-        ),
-        title: (widget.isEdit)
-            ? Text(
-                'Editar visita',
-                style: TextStyle(
-                    color: (currentTheme.customTheme)
-                        ? Colors.white
-                        : Colors.black),
-              )
-            : Text(
-                'Nueva visita',
-                style: TextStyle(
-                    color: (currentTheme.customTheme)
-                        ? Colors.white
-                        : Colors.black),
-              ),
-      ),
-      body: NotificationListener<ScrollEndNotification>(
-        onNotification: (_) {
-          //  _snapAppbar();
-          // if (_scrollController.offset >= 250) {}
-          return false;
-        },
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: CustomScrollView(
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              // controller: _scrollController,
-              slivers: <Widget>[
-                SliverFixedExtentList(
-                  itemExtent: size.height / 3.7,
-                  delegate: SliverChildListDelegate(
-                    [
-                      StreamBuilder<bool>(
-                        stream: visitBloc.imageUpdate.stream,
-                        builder: (context, AsyncSnapshot<bool> snapshot) {
-                          if (snapshot.hasData) {
-                            return (visitService.visit != null)
-                                ? GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          PageRouteBuilder(
-                                              transitionDuration:
-                                                  Duration(milliseconds: 200),
-                                              pageBuilder: (context, animation,
-                                                      secondaryAnimation) =>
-                                                  CoverImageVisitPage(
-                                                      visit: visitService.visit,
-                                                      isEdit: widget.isEdit)));
-                                    },
-                                    child: Hero(
-                                      tag: visitService.visit.coverImage,
-                                      child: Image(
-                                        image: NetworkImage(
-                                          visitService.visit.getCoverImg(),
-                                        ),
-                                        fit: BoxFit.cover,
-                                        height: double.infinity,
-                                        width: double.infinity,
-                                        alignment: Alignment.center,
-                                      ),
-                                    ),
-                                  )
-                                : GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          PageRouteBuilder(
-                                              transitionDuration:
-                                                  Duration(milliseconds: 200),
-                                              pageBuilder: (context, animation,
-                                                      secondaryAnimation) =>
-                                                  CoverImageVisitPage(
-                                                      visit: widget.visit,
-                                                      isEdit: widget.isEdit)));
-                                    },
-                                    child: Hero(
-                                      tag: widget.visit.coverImage,
-                                      child: Image(
-                                        image: NetworkImage(
-                                          widget.visit.getCoverImg(),
-                                        ),
-                                        fit: BoxFit.cover,
-                                        height: double.infinity,
-                                        width: double.infinity,
-                                        alignment: Alignment.center,
-                                      ),
-                                    ),
-                                  );
-                          } else if (snapshot.hasError) {
-                            return _buildErrorWidget(snapshot.error);
-                          } else {
-                            return _buildLoadingWidget();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+          title: (widget.isEdit)
+              ? Text(
+                  'Editar visita',
+                  style: TextStyle(
+                      color: (currentTheme.customTheme)
+                          ? Colors.white
+                          : Colors.black),
+                )
+              : Text(
+                  'Nueva visita',
+                  style: TextStyle(
+                      color: (currentTheme.customTheme)
+                          ? Colors.white
+                          : Colors.black),
                 ),
-                SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          _createClean(bloc),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _createCut(bloc),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _createTemperature(bloc),
-                          (isSwitchedTemp) ? _createDegrees(bloc) : Container(),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _createWater(bloc),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          (isSwitchedWater) ? _createMl(bloc) : Container(),
-                          (isSwitchedWater) ? _createPh(bloc) : Container(),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          (isSwitchedWater)
-                              ? _createElectro(bloc)
-                              : Container(),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _createAbono(bloc),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _createDescription(bloc),
-                          SizedBox(
-                            height: 10,
-                          ),
+        ),
+        body: NotificationListener<ScrollEndNotification>(
+          onNotification: (_) {
+            //  _snapAppbar();
+            // if (_scrollController.offset >= 250) {}
+            return false;
+          },
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: CustomScrollView(
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                // controller: _scrollController,
+                slivers: <Widget>[
+                  SliverFixedExtentList(
+                    itemExtent: size.height / 3.7,
+                    delegate: SliverChildListDelegate(
+                      [
+                        StreamBuilder<bool>(
+                          stream: visitBloc.imageUpdate.stream,
+                          builder: (context, AsyncSnapshot<bool> snapshot) {
+                            if (snapshot.hasData) {
+                              return (visitService.visit != null)
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            PageRouteBuilder(
+                                                transitionDuration:
+                                                    Duration(milliseconds: 200),
+                                                pageBuilder: (context,
+                                                        animation,
+                                                        secondaryAnimation) =>
+                                                    CoverImageVisitPage(
+                                                        visit:
+                                                            visitService.visit,
+                                                        isEdit:
+                                                            widget.isEdit)));
+                                      },
+                                      child: Hero(
+                                        tag: visitService.visit.coverImage,
+                                        child: Image(
+                                          image: NetworkImage(
+                                            visitService.visit.getCoverImg(),
+                                          ),
+                                          fit: BoxFit.cover,
+                                          height: double.infinity,
+                                          width: double.infinity,
+                                          alignment: Alignment.center,
+                                        ),
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            PageRouteBuilder(
+                                                transitionDuration:
+                                                    Duration(milliseconds: 200),
+                                                pageBuilder: (context,
+                                                        animation,
+                                                        secondaryAnimation) =>
+                                                    CoverImageVisitPage(
+                                                        visit: widget.visit,
+                                                        isEdit:
+                                                            widget.isEdit)));
+                                      },
+                                      child: Hero(
+                                        tag: widget.visit.coverImage,
+                                        child: Image(
+                                          image: NetworkImage(
+                                            widget.visit.getCoverImg(),
+                                          ),
+                                          fit: BoxFit.cover,
+                                          height: double.infinity,
+                                          width: double.infinity,
+                                          alignment: Alignment.center,
+                                        ),
+                                      ),
+                                    );
+                            } else if (snapshot.hasError) {
+                              return _buildErrorWidget(snapshot.error);
+                            } else {
+                              return _buildLoadingWidget();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            _createClean(bloc),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _createCut(bloc),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _createTemperature(bloc),
+                            (isSwitchedTemp)
+                                ? _createDegrees(bloc)
+                                : Container(),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _createWater(bloc),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            (isSwitchedWater) ? _createMl(bloc) : Container(),
+                            (isSwitchedWater) ? _createPh(bloc) : Container(),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            (isSwitchedWater)
+                                ? _createElectro(bloc)
+                                : Container(),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _createAbono(bloc),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _createDescription(bloc),
+                            SizedBox(
+                              height: 10,
+                            ),
 
-                          /*   _createDescription(bloc), */
-                        ],
-                      ),
-                    )),
-              ]),
+                            /*   _createDescription(bloc), */
+                          ],
+                        ),
+                      )),
+                ]),
+          ),
         ),
       ),
     );
