@@ -41,7 +41,7 @@ class PrincipalMenu extends StatelessWidget {
 /*               Expanded(
                   child: _OptionsList(),
                 ), */
-              ListTile(
+              /*  ListTile(
                 leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
                 title: Text(
                   'Dark mode',
@@ -57,7 +57,7 @@ class PrincipalMenu extends StatelessWidget {
                     appTheme.customTheme = value;
                   },
                 ),
-              ),
+              ), */
               /*  SafeArea(
                 bottom: true,
                 top: false,

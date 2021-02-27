@@ -109,6 +109,9 @@ class DataSearch extends SearchDelegate {
                 return Hero(
                   tag: profile.user.uid,
                   child: ListTile(
+                    tileColor: (currentTheme.customTheme)
+                        ? currentTheme.currentTheme.cardColor
+                        : Colors.white,
                     leading: ImageUserChat(
                         width: 100,
                         height: 100,

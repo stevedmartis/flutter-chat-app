@@ -21,6 +21,7 @@ class ThemeChanger with ChangeNotifier {
             accentColor: Color(0xff34EC9C),
             scaffoldBackgroundColor: Color(0xffEDE9EC),
             primaryColor: Color(0xffCBC3C5),
+            brightness: Brightness.light,
             cardColor: Color(0xffEDE9EC));
 
         break;
@@ -37,6 +38,7 @@ class ThemeChanger with ChangeNotifier {
         _currentTheme = ThemeData.dark().copyWith(
           accentColor: Color(0xff34EC9C),
           primaryColor: Color(0xffA39FA2),
+          brightness: Brightness.dark,
           scaffoldBackgroundColor: Colors.black,
           cardColor: Color(0xff151518),
           textTheme: TextTheme(bodyText1: TextStyle(color: Colors.white)),
@@ -74,7 +76,7 @@ class ThemeChanger with ChangeNotifier {
         accentColor: Color(0xff34EC9C), // Sea green Crayon
         primaryColor: Color(0xffA39FA2).withOpacity(0.50),
         cardColor: Color(0xff151518),
-
+        brightness: Brightness.dark,
         primaryColorLight: Colors.white,
         scaffoldBackgroundColor: Colors.black, // gummetal
         textTheme: TextTheme(bodyText1: TextStyle(color: Colors.white)),
@@ -82,11 +84,12 @@ class ThemeChanger with ChangeNotifier {
     } else {
       _currentTheme = ThemeData.light().copyWith(
           accentColor: Color(0xff34EC9C),
+          brightness: Brightness.light,
           scaffoldBackgroundColor: Color(0xffEDE9EC),
           primaryColor: Color(0xffCBC3C5),
           cardColor: Color(0xffEDE9EC));
     }
 
-    notifyListeners();
+    //notifyListeners();
   }
 }

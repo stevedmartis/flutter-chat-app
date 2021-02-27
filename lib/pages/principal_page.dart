@@ -83,7 +83,14 @@ class _PrincipalPageState extends State<PrincipalPage> {
   Widget build(BuildContext context) {
     final currentPage = Provider.of<MenuModel>(context).currentPage;
 
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
+    final appTheme = Provider.of<ThemeChanger>(context);
+
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
+    print(darkModeOn);
+
+    appTheme.customTheme = darkModeOn;
 
     final _onFirstPage = (currentPage == 0) ? true : false;
 
@@ -97,7 +104,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
         transitionBuilder: (Widget child, Animation<double> animation,
             Animation<double> secondaryAnimation) {
           return SharedAxisTransition(
-            fillColor: currentTheme.scaffoldBackgroundColor,
+            fillColor: currentTheme.currentTheme.scaffoldBackgroundColor,
             transitionType: SharedAxisTransitionType.horizontal,
             animation: animation,
             secondaryAnimation: secondaryAnimation,

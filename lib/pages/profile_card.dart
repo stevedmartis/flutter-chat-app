@@ -405,6 +405,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 } else if (loadSub &&
                     !widget.isUserAuth &&
                     imageRecipe &&
+                    widget.profile.isClub &&
                     subscription.subscribeActive &&
                     subscription.subscribeApproved) {
                   return FadeIn(

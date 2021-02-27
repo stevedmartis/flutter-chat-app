@@ -95,6 +95,7 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
                       delegate: DataSearch(userAuth: profile)),
                   child: Center(
                       child: Container(
+
                           // color: Colors.black,
                           //  margin: EdgeInsets.only(left: 10, right: 10),
                           width: size.height / 3.2,
