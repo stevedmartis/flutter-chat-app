@@ -124,7 +124,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
     final size = MediaQuery.of(context).size;
     final visit = new Visit();
 
@@ -137,7 +137,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     });
 
     return Scaffold(
-        backgroundColor: currentTheme.scaffoldBackgroundColor,
+        backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
         // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
         body: GestureDetector(
             onTap: () {
@@ -153,8 +153,10 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                     stretchTriggerOffset: 250.0,
 
                     backgroundColor: _showTitle
-                        ? Colors.black
-                        : currentTheme.scaffoldBackgroundColor,
+                        ? (currentTheme.customTheme)
+                            ? Colors.black
+                            : Colors.white
+                        : currentTheme.currentTheme.scaffoldBackgroundColor,
                     leading: Container(
                         margin: EdgeInsets.only(left: 15),
                         child: ClipRRect(
@@ -164,7 +166,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                   icon: Icon(Icons.arrow_back_ios,
                                       size: size.width / 20,
                                       color: (_showTitle)
-                                          ? currentTheme.accentColor
+                                          ? currentTheme
+                                              .currentTheme.accentColor
                                           : Colors.white),
                                   onPressed: () {
                                     final plantService =
@@ -173,7 +176,11 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                     plantService.plant = null;
                                     Navigator.pop(context);
                                   }),
-                              backgroundColor: Colors.black.withOpacity(0.60)),
+                              backgroundColor: _showTitle
+                                  ? (currentTheme.customTheme)
+                                      ? Colors.black54
+                                      : Colors.white54
+                                  : Colors.black54),
                         )),
 
                     actions: [
@@ -187,7 +194,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                     icon: Icon(Icons.add,
                                         size: size.width / 15,
                                         color: (_showTitle)
-                                            ? currentTheme.accentColor
+                                            ? currentTheme
+                                                .currentTheme.accentColor
                                             : Colors.white),
                                     onPressed: () => {
                                           aws.isUploadImagePlant = false,
@@ -196,8 +204,11 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                               createRouteNewVisit(visit,
                                                   widget.plant.id, false)),
                                         }),
-                                backgroundColor:
-                                    Colors.black.withOpacity(0.60)),
+                                backgroundColor: _showTitle
+                                    ? (currentTheme.customTheme)
+                                        ? Colors.black54
+                                        : Colors.white54
+                                    : Colors.black54),
                           )),
                       _buildCircleQuantityPlant(),
                     ],
@@ -250,7 +261,12 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                     child: Text(
                                       plant.name.capitalize(),
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                          color: _showTitle
+                                              ? (currentTheme.customTheme)
+                                                  ? Colors.white
+                                                  : Colors.black
+                                              : Colors.white),
                                     ),
                                   ),
                                 ));

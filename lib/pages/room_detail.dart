@@ -413,15 +413,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                               bottomLeft: Radius.circular(10.0)),
                         ),
                         openBuilder: (_, closeContainer) {
-                          return Stack(
-                            children: [
-                              PlantDetailPage(plant: plant),
-                              Container(
-                                child: buildCircleFavoritePlantDash(
-                                    plant.quantity, context),
-                              ),
-                            ],
-                          );
+                          return PlantDetailPage(plant: plant);
                         },
                         closedBuilder: (_, openContainer) {
                           return Stack(children: [

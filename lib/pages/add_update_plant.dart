@@ -99,21 +99,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
   String optionItemSelected;
 
-  List<DropdownMenuItem> categories = [
-    DropdownMenuItem(
-      child: Text('Macho'),
-      value: "Macho",
-    ),
-    DropdownMenuItem(
-      child: Text('Hembra'),
-      value: "Hembra",
-    ),
-    DropdownMenuItem(
-      child: Text('Automatica'),
-      value: "Automatica",
-    )
-  ];
-
   bool isDefault;
   Profiles profile;
 
@@ -282,187 +267,207 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         isPotChange ||
         isImageUpdate;
 
-    return Scaffold(
-      appBar: AppBar(
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
-        actions: [
-          (widget.isEdit)
-              ? _createButton(bloc, isControllerChangeEdit)
-              : _createButton(bloc, isControllerChange),
-        ],
-        leading: IconButton(
-          icon: Icon(
-            Icons.chevron_left,
-            color: currentTheme.currentTheme.accentColor,
+        appBar: AppBar(
+          backgroundColor:
+              (currentTheme.customTheme) ? Colors.black : Colors.white,
+          actions: [
+            (widget.isEdit)
+                ? _createButton(bloc, isControllerChangeEdit)
+                : _createButton(bloc, isControllerChange),
+          ],
+          leading: IconButton(
+            icon: Icon(
+              Icons.chevron_left,
+              color: currentTheme.currentTheme.accentColor,
+            ),
+            iconSize: 30,
+            onPressed: () {
+              final plantService =
+                  Provider.of<PlantService>(context, listen: false);
+
+              plantService.plant = null;
+
+              //  Navigator.pushReplacement(context, createRouteProfile()),
+              Navigator.pop(context);
+            },
+            color: Colors.white,
           ),
-          iconSize: 30,
-          onPressed: () {
-            final plantService =
-                Provider.of<PlantService>(context, listen: false);
-
-            plantService.plant = null;
-
-            //  Navigator.pushReplacement(context, createRouteProfile()),
-            Navigator.pop(context);
-          },
-          color: Colors.white,
-        ),
-        title: (widget.isEdit)
-            ? Text(
-                'Edit plant',
-                style: TextStyle(
-                    color: (currentTheme.customTheme)
-                        ? Colors.white
-                        : Colors.black),
-              )
-            : Text('Create plant'),
-      ),
-      body: NotificationListener<ScrollEndNotification>(
-        onNotification: (_) {
-          //  _snapAppbar();
-          // if (_scrollController.offset >= 250) {}
-          return false;
-        },
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: CustomScrollView(
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              // controller: _scrollController,
-              slivers: <Widget>[
-                SliverFixedExtentList(
-                  itemExtent: size.height / 3.7,
-                  delegate: SliverChildListDelegate(
-                    [
-                      StreamBuilder<bool>(
-                        stream: plantBloc.imageUpdate.stream,
-                        builder: (context, AsyncSnapshot<bool> snapshot) {
-                          if (snapshot.hasData) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(PageRouteBuilder(
-                                    transitionDuration:
-                                        Duration(milliseconds: 200),
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        CoverImagePlantPage(
-                                            plant: this.plant,
-                                            isEdit: widget.isEdit)));
-                              },
-                              child: Hero(
-                                tag: widget.plant.coverImage,
-                                child: Image(
-                                  image: NetworkImage(
-                                    this.plant.getCoverImg(),
-                                  ),
-                                  fit: BoxFit.cover,
-                                  height: double.infinity,
-                                  width: double.infinity,
-                                  alignment: Alignment.center,
-                                ),
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return _buildErrorWidget(snapshot.error);
-                          } else {
-                            return _buildLoadingWidget();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+          title: (widget.isEdit)
+              ? Text(
+                  'Edit plant',
+                  style: TextStyle(
+                      color: (currentTheme.customTheme)
+                          ? Colors.white
+                          : Colors.black),
+                )
+              : Text(
+                  'Create plant',
+                  style: TextStyle(
+                      color: (currentTheme.customTheme)
+                          ? Colors.white
+                          : Colors.black),
                 ),
-                SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          _createName(bloc),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          GestureDetector(
-                              onTap: () {
-                                FocusScope.of(context)
-                                    .requestFocus(new FocusNode());
-                              },
-                              child: _createSexo(bloc)),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _createQuantity(bloc),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () => {
-                                FocusScope.of(context)
-                                    .requestFocus(new FocusNode()),
-                                _selectDateGermina(context),
-                              },
-                              child: AbsorbPointer(
-                                child: TextFormField(
-                                  controller: _dateGController,
-                                  keyboardType: TextInputType.datetime,
-                                  onSaved: (String val) {
-                                    setState(() {
-                                      setDateG = val;
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: 'Germination *',
-                                    suffixIcon: Icon(
-                                      Icons.insert_invitation,
-                                      color: Colors.white54,
+        ),
+        body: NotificationListener<ScrollEndNotification>(
+          onNotification: (_) {
+            //  _snapAppbar();
+            // if (_scrollController.offset >= 250) {}
+            return false;
+          },
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: CustomScrollView(
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                // controller: _scrollController,
+                slivers: <Widget>[
+                  SliverFixedExtentList(
+                    itemExtent: size.height / 3.7,
+                    delegate: SliverChildListDelegate(
+                      [
+                        StreamBuilder<bool>(
+                          stream: plantBloc.imageUpdate.stream,
+                          builder: (context, AsyncSnapshot<bool> snapshot) {
+                            if (snapshot.hasData) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(PageRouteBuilder(
+                                      transitionDuration:
+                                          Duration(milliseconds: 200),
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          CoverImagePlantPage(
+                                              plant: this.plant,
+                                              isEdit: widget.isEdit)));
+                                },
+                                child: Hero(
+                                  tag: widget.plant.coverImage,
+                                  child: Image(
+                                    image: NetworkImage(
+                                      this.plant.getCoverImg(),
+                                    ),
+                                    fit: BoxFit.cover,
+                                    height: double.infinity,
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                  ),
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return _buildErrorWidget(snapshot.error);
+                            } else {
+                              return _buildLoadingWidget();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            _createName(bloc),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            GestureDetector(
+                                onTap: () {
+                                  FocusScope.of(context)
+                                      .requestFocus(new FocusNode());
+                                },
+                                child: _createSexo(bloc)),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _createQuantity(bloc),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => {
+                                  FocusScope.of(context)
+                                      .requestFocus(new FocusNode()),
+                                  _selectDateGermina(context),
+                                },
+                                child: AbsorbPointer(
+                                  child: TextFormField(
+                                    style: TextStyle(
+                                      color: (currentTheme.customTheme)
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                    controller: _dateGController,
+                                    keyboardType: TextInputType.datetime,
+                                    onSaved: (String val) {
+                                      setState(() {
+                                        setDateG = val;
+                                      });
+                                    },
+                                    decoration: InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: (currentTheme.customTheme)
+                                                  ? Colors.white54
+                                                  : Colors.black54)),
+                                      hintText: 'Germination *',
+                                      suffixIcon: Icon(
+                                        Icons.insert_invitation,
+                                        color: Colors.white54,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          _createDurationFlora(bloc),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(child: _createThc(bloc)),
-                              SizedBox(
-                                width: 50,
-                              ),
-                              Expanded(child: _createCbd(bloc)),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _createPot(bloc),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _createDescription(bloc),
-                          SizedBox(
-                            height: 10,
-                          ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            _createDurationFlora(bloc),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(child: _createThc(bloc)),
+                                SizedBox(
+                                  width: 50,
+                                ),
+                                Expanded(child: _createCbd(bloc)),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _createPot(bloc),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _createDescription(bloc),
+                            SizedBox(
+                              height: 10,
+                            ),
 
-                          /*   _createDescription(bloc), */
-                        ],
-                      ),
-                    )),
-              ]),
+                            /*   _createDescription(bloc), */
+                          ],
+                        ),
+                      )),
+                ]),
+          ),
         ),
       ),
     );
@@ -491,12 +496,20 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: nameCtrl,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(30),
             ],
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: (currentTheme.customTheme)
@@ -507,11 +520,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                 border: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                 ),
-                labelStyle: TextStyle(
-                  color: (currentTheme.customTheme)
-                      ? Colors.white54
-                      : Colors.black54,
-                ),
+
                 // icon: Icon(Icons.perm_identity),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
@@ -519,7 +528,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                       color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Nombre *',
+                labelText: 'Nombre  *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeName,
@@ -539,6 +548,9 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             inputFormatters: [
               new LengthLimitingTextInputFormatter(100),
             ],
@@ -582,6 +594,37 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
   Widget _createSexo(PlantBloc bloc) {
     final size = MediaQuery.of(context).size;
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
+    List<DropdownMenuItem> categories = [
+      DropdownMenuItem(
+        child: Text(
+          'Macho',
+          style: TextStyle(
+              color:
+                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
+        ),
+        value: "Macho",
+      ),
+      DropdownMenuItem(
+        child: Text(
+          'Hembra',
+          style: TextStyle(
+              color:
+                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
+        ),
+        value: "Hembra",
+      ),
+      DropdownMenuItem(
+        child: Text(
+          'Automatica',
+          style: TextStyle(
+              color:
+                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
+        ),
+        value: "Automatica",
+      )
+    ];
 
     return StreamBuilder(
       stream: bloc.sexoStream,
@@ -592,7 +635,21 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
             height: 50,
             width: size.width,
             child: DropdownButtonFormField(
-              hint: Text('Sexo'),
+              decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: (currentTheme.customTheme)
+                              ? Colors.white54
+                              : Colors.black54))),
+              dropdownColor:
+                  (currentTheme.customTheme) ? Colors.black : Colors.white,
+              hint: Text(
+                'Sexo',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54),
+              ),
               value: optionItemSelected,
               items: categories,
               onChanged: (optionItem) {
@@ -623,6 +680,9 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: quantityCtrl,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(3),
@@ -669,6 +729,9 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: _durationFlorationCtrl,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(3),
@@ -715,6 +778,9 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: tchCtrl,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(3),
@@ -770,6 +836,9 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: cbdCtrl,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
@@ -822,6 +891,9 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: potCtrl,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(3),

@@ -71,7 +71,7 @@ class _CardPlantState extends State<CardPlant> {
               widget.plant.name.capitalize(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 50,
+                  fontSize: 40,
                   color: currentTheme.currentTheme.accentColor),
             ),
           ),
@@ -97,12 +97,12 @@ class _CardPlantState extends State<CardPlant> {
               maxLines: 3,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 40,
+                  fontSize: 30,
                   color: Colors.grey),
             ),
           ),
           SizedBox(
-            height: 100,
+            height: 70,
           ),
           Row(
             children: [
@@ -112,7 +112,7 @@ class _CardPlantState extends State<CardPlant> {
                   'Germina: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 30,
+                      fontSize: 25,
                       color: (currentTheme.customTheme)
                           ? Colors.white54
                           : Colors.grey),
@@ -124,7 +124,7 @@ class _CardPlantState extends State<CardPlant> {
                   widget.plant.germinated,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 35,
+                      fontSize: 30,
                       color: (currentTheme.customTheme)
                           ? Colors.white54
                           : Colors.grey),
