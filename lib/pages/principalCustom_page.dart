@@ -189,7 +189,7 @@ class _CollapsingListState extends State<CollapsingList>
                 builder: (context, AsyncSnapshot<VisitsResponse> snapshot) {
                   if (snapshot.hasData) {
                     visits = snapshot.data.visits;
-                    return FadeInLeft(
+                    return FadeInRight(
                       delay: Duration(milliseconds: 600),
                       child: _buildWidgetVisits(visits, context),
                     ); // image is ready
