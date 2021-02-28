@@ -6,6 +6,7 @@ import 'package:chat/models/catalogos_response.dart';
 
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/pages/catalogo_detail.dart';
 import 'package:chat/pages/principalCustom_page.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/pages/room_detail.dart';
@@ -255,7 +256,7 @@ class _CatalogsListState extends State<CatalogsList> {
               final privacity = (item.privacity == '1')
                   ? 'Todos'
                   : (item.privacity == '2')
-                      ? 'Suscriptiores'
+                      ? 'Suscriptores'
                       : (item.privacity == '3')
                           ? 'Nadie'
                           : '';
@@ -274,8 +275,8 @@ class _CatalogsListState extends State<CatalogsList> {
                       GestureDetector(
                         key: Key(item.id),
                         onTap: () => {
-                          /* Navigator.of(context)
-                              .push(createRouteRoomDetail(item, catalogo)), */
+                          Navigator.of(context)
+                              .push(createRouteCatalogoDetail(item, catalogos)),
                         },
                         child: Dismissible(
                             key: UniqueKey(),
@@ -351,7 +352,7 @@ class _CatalogsListState extends State<CatalogsList> {
                                                 Row(
                                                   children: [
                                                     FaIcon(
-                                                      FontAwesomeIcons.eye,
+                                                      FontAwesomeIcons.users,
                                                       size: 20,
                                                       color: Colors.grey,
                                                     ),
@@ -470,10 +471,10 @@ Route createRouteProfile() {
   );
 }
 
-Route createRouteRoomDetail(Room room, List<Room> rooms) {
+Route createRouteCatalogoDetail(Catalogo catalogo, List<Catalogo> catalogos) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
-        RoomDetailPage(room: room, rooms: rooms),
+        CatalogoDetailPage(catalogo: catalogo, catalogos: catalogos),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

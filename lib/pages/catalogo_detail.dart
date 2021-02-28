@@ -1,8 +1,10 @@
 import 'package:animations/animations.dart';
+import 'package:chat/bloc/catalogo_bloc.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/air.dart';
+import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/light.dart';
 
 import 'package:chat/models/plant.dart';
@@ -10,6 +12,7 @@ import 'package:chat/models/profiles.dart';
 
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/add_update_air.dart';
+import 'package:chat/pages/add_update_catalogo.dart';
 import 'package:chat/pages/add_update_light.dart';
 import 'package:chat/pages/add_update_plant.dart';
 import 'package:chat/pages/plant_detail.dart';
@@ -38,17 +41,17 @@ import 'package:provider/provider.dart';
 
 import 'package:chat/services/socket_service.dart';
 
-class RoomDetailPage extends StatefulWidget {
-  final Room room;
-  final List<Room> rooms;
+class CatalogoDetailPage extends StatefulWidget {
+  final Catalogo catalogo;
+  final List<Catalogo> catalogos;
 
-  RoomDetailPage({@required this.room, this.rooms});
+  CatalogoDetailPage({@required this.catalogo, this.catalogos});
 
   @override
-  _RoomDetailPageState createState() => _RoomDetailPageState();
+  _CatalogoDetailPagePageState createState() => _CatalogoDetailPagePageState();
 }
 
-class _RoomDetailPageState extends State<RoomDetailPage>
+class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
     with SingleTickerProviderStateMixin {
   ScrollController _scrollController;
 
@@ -61,19 +64,13 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   final roomsApiProvider = new RoomsApiProvider();
 
   final List<Tab> myTabs = <Tab>[
-    new Tab(text: 'Plants'),
-    new Tab(text: 'Air'),
-    new Tab(text: 'Light'),
+    new Tab(text: 'Tratamientos'),
   ];
   TabController _tabController;
 
-  Room room;
+  Catalogo catalogo;
 
   List<Plant> plants = [];
-
-  List<Air> airs = [];
-
-  List<Light> lights = [];
 
   Profiles profile;
 
@@ -87,7 +84,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
 
     _tabController = new TabController(vsync: this, length: myTabs.length);
 
-    roomBloc.getRoom(widget.room);
+    catalogoBloc.getCatalogo(widget.catalogo);
   }
 
   @override
@@ -107,13 +104,13 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     return Scaffold(
       backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
-          title: StreamBuilder<Room>(
-            stream: roomBloc.roomSelect.stream,
-            builder: (context, AsyncSnapshot<Room> snapshot) {
+          title: StreamBuilder<Catalogo>(
+            stream: catalogoBloc.catalogoSelect.stream,
+            builder: (context, AsyncSnapshot<Catalogo> snapshot) {
               if (snapshot.hasData) {
-                final room = snapshot.data;
+                final catalogo = snapshot.data;
                 final nameFinal =
-                    room.name.isEmpty ? "" : room.name.capitalize();
+                    catalogo.name.isEmpty ? "" : catalogo.name.capitalize();
 
                 return Text(
                   nameFinal,
@@ -167,11 +164,11 @@ class _RoomDetailPageState extends State<RoomDetailPage>
         onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
-        child: StreamBuilder<Room>(
-          stream: roomBloc.roomSelect.stream,
-          builder: (context, AsyncSnapshot<Room> snapshot) {
+        child: StreamBuilder<Catalogo>(
+          stream: catalogoBloc.catalogoSelect.stream,
+          builder: (context, AsyncSnapshot<Catalogo> snapshot) {
             if (snapshot.hasData) {
-              room = snapshot.data;
+              catalogo = snapshot.data;
 
               return CustomScrollView(
                   physics: const BouncingScrollPhysics(
@@ -180,13 +177,8 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   slivers: <Widget>[
                     makeHeaderInfo(context),
                     makeHeaderTabs(context),
-                    (_tabController.index == 0)
-                        ? makeListPlants(context)
-                        : (_tabController.index == 1)
-                            ? makeListAires(context)
-                            : (_tabController.index == 2)
-                                ? makeListLight(context)
-                                : makeHeaderSpacer(context)
+                    // (_tabController.index == 0)
+                    // makeListPlants(context)
                   ]);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
@@ -241,22 +233,25 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   SliverPersistentHeader makeHeaderInfo(context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
-    final about = room.description;
+    final about = catalogo.description;
     final size = MediaQuery.of(context).size;
 
-    final co2 = room.co2 ? 'Yes' : 'No';
-    final co2Control = room.co2Control ? 'Yes' : 'No';
-    final timeOn = room.timeOn;
-    final timeOff = room.timeOff;
+    final privacity = (catalogo.privacity == '1')
+        ? 'Todos'
+        : (catalogo.privacity == '2')
+            ? 'Suscriptores'
+            : (catalogo.privacity == '3')
+                ? 'Nadie'
+                : '';
 
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: (about.length > 10) ? 230 : 200,
-          maxHeight: (about.length > 10) ? 230 : 200,
+          minHeight: (about.length > 10) ? 230 : 150,
+          maxHeight: (about.length > 10) ? 230 : 150,
           child: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.only(bottom: 10.0, top: 10),
+            padding: EdgeInsets.only(bottom: 10.0, top: 0),
             color: currentTheme.currentTheme.scaffoldBackgroundColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -280,16 +275,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   ),
                 ),
                 SizedBox(
-                  height: 5.0,
-                ),
-                RowMeassureRoom(
-                  wide: room.wide,
-                  long: room.long,
-                  tall: room.tall,
-                  center: true,
-                  fontSize: 15.0,
-                ),
-                SizedBox(
                   height: 10.0,
                 ),
                 Row(
@@ -297,42 +282,18 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      child: Text(
-                        'Co2: ',
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            color: (currentTheme.customTheme)
-                                ? Colors.white54
-                                : Colors.black54),
-                      ),
-                    ),
-                    Container(
-                      child: Text(
-                        '$co2',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15.0,
-                            color: (currentTheme.customTheme)
-                                ? Colors.white
-                                : Colors.black),
+                      child: FaIcon(
+                        FontAwesomeIcons.users,
+                        size: 20,
+                        color: Colors.grey,
                       ),
                     ),
                     SizedBox(
-                      width: 50,
+                      width: 10,
                     ),
                     Container(
                       child: Text(
-                        'Timer: ',
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            color: (currentTheme.customTheme)
-                                ? Colors.white54
-                                : Colors.black54),
-                      ),
-                    ),
-                    Container(
-                      child: Text(
-                        '$co2Control',
+                        '$privacity',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15.0,
@@ -340,17 +301,11 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                                 ? Colors.white
                                 : Colors.black),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 SizedBox(
                   height: 10.0,
-                ),
-                RowTimeOnOffRoom(
-                  timeOn: timeOn,
-                  timeOff: timeOff,
-                  size: 15.0,
-                  center: true,
                 ),
                 SizedBox(
                   height: 10.0,
@@ -367,7 +322,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         text: 'Editar',
                         onPressed: () {
                           Navigator.of(context)
-                              .push(createRouteAddRoom(room, true));
+                              .push(createRouteAdd(catalogo, true));
                         }),
                   ),
                 )
@@ -434,134 +389,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     );
   }
 
-  Widget _buildWidgetAir(airs) {
-    return Container(
-      child: SizedBox(
-        child: ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: airs.length,
-            itemBuilder: (BuildContext ctxt, int index) {
-              final air = airs[index];
-              return InkWell(
-                  onTap: () => {
-                        Navigator.of(context)
-                            .push(createRouteNewAir(air, widget.room, true)),
-                      },
-                  child: Dismissible(
-                    child: CardAir(air: air),
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) => {_deleteAir(air.id, index)},
-                    background: Container(
-                        alignment: Alignment.centerRight,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          color: Colors.red,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(right: 10),
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.black,
-                                size: 30,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            /* Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600),
-                                ) */
-                          ],
-                        )),
-                  ));
-            }),
-      ),
-    );
-  }
-
-  _deleteAir(String id, int index) async {
-    final res = await this.airService.deleteAir(id);
-    if (res) {
-      setState(() {
-        airs.removeAt(index);
-        roomBloc.getMyRooms(profile.user.uid);
-      });
-    }
-  }
-
-  Widget _buildWidgetLight(lights) {
-    return Container(
-      child: SizedBox(
-        child: ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: lights.length,
-            itemBuilder: (BuildContext ctxt, int index) {
-              final light = lights[index];
-              return InkWell(
-                  onTap: () => {
-                        Navigator.of(context).push(
-                            createRouteNewLight(light, widget.room, true)),
-                      },
-                  child: Dismissible(
-                    child: CardLight(light: light),
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) => {_deleteLight(light.id, index)},
-                    background: Container(
-                        alignment: Alignment.centerRight,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          color: Colors.red,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(right: 10),
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.black,
-                                size: 30,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            /* Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600),
-                                ) */
-                          ],
-                        )),
-                  ));
-            }),
-      ),
-    );
-  }
-
-  _deleteLight(String id, int index) async {
-    final res = await this.lightService.deleteLight(id);
-    if (res) {
-      setState(() {
-        lights.removeAt(index);
-        roomBloc.getMyRooms(profile.user.uid);
-      });
-    }
-  }
-
   createModalSelection() {
     final currentTheme = Provider.of<ThemeChanger>(context, listen: false);
     final plant = new Plant();
@@ -623,8 +450,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   height: 10.0,
                   child: Center(
                     child: Container(
-                        margin:
-                            EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
                         height: 1.0,
                         color: (currentTheme.customTheme)
                             ? Colors.white54.withOpacity(0.20)
@@ -638,18 +463,18 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                       aws.isUploadImagePlant = false,
                       plantService.plant = plant,
                       Navigator.of(context).pop(),
-                      Navigator.of(context)
-                          .push(createRouteNewPlant(plant, widget.room, false)),
+                      /*  Navigator.of(context)
+                          .push(createRouteNewPlant(plant, widget.room, false)), */
                     },
                     child: ListTile(
                       tileColor: (currentTheme.customTheme)
                           ? currentTheme.currentTheme.cardColor
                           : Colors.white,
-                      leading: Icon(Icons.local_florist,
+                      leading: FaIcon(FontAwesomeIcons.notesMedical,
                           size: 25,
                           color: currentTheme.currentTheme.accentColor),
                       title: Text(
-                        'Planta',
+                        'Tratamiento',
                         style: TextStyle(
                             fontSize: 18,
                             color: (currentTheme.customTheme)
@@ -664,110 +489,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         iconSize: 30.0,
                         onPressed: () => {
                           Navigator.of(context).pop(),
-                          Navigator.of(context).push(
-                              createRouteNewPlant(plant, widget.room, false)),
+                          /*  Navigator.of(context).push(
+                              createRouteNewPlant(plant, widget.room, false)), */
                         },
-                      ),
-                      //trailing:
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                  child: Center(
-                    child: Container(
-                        margin:
-                            EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
-                        height: 1.0,
-                        color: (currentTheme.customTheme)
-                            ? Colors.white54.withOpacity(0.20)
-                            : Colors.black54.withOpacity(0.20)),
-                  ),
-                ),
-                Material(
-                  color: currentTheme.currentTheme.scaffoldBackgroundColor,
-                  child: InkWell(
-                    onTap: () => {
-                      Navigator.of(context).pop(),
-                      Navigator.of(context)
-                          .push(createRouteNewAir(air, widget.room, false)),
-                    },
-                    child: ListTile(
-                      tileColor: (currentTheme.customTheme)
-                          ? currentTheme.currentTheme.cardColor
-                          : Colors.white,
-                      leading: FaIcon(FontAwesomeIcons.wind,
-                          size: 25,
-                          color: currentTheme.currentTheme.accentColor),
-                      title: Text(
-                        'Aire',
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: (currentTheme.customTheme)
-                                ? Colors.white54
-                                : Colors.black54),
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(
-                          Icons.chevron_right,
-                          color: currentTheme.currentTheme.accentColor,
-                        ),
-                        iconSize: 30.0,
-                        onPressed: () => {
-                          Navigator.of(context).pop(),
-                          Navigator.of(context)
-                              .push(createRouteNewAir(air, widget.room, false)),
-                        },
-                      ),
-                      //trailing:
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                  child: Center(
-                    child: Container(
-                        margin:
-                            EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
-                        height: 1.0,
-                        color: (currentTheme.customTheme)
-                            ? Colors.white54.withOpacity(0.20)
-                            : Colors.black54.withOpacity(0.20)),
-                  ),
-                ),
-                Material(
-                  color: currentTheme.currentTheme.scaffoldBackgroundColor,
-                  child: InkWell(
-                    onTap: () => {
-                      Navigator.of(context).pop(),
-                      Navigator.of(context)
-                          .push(createRouteNewLight(light, widget.room, false)),
-                    },
-                    child: ListTile(
-                      tileColor: (currentTheme.customTheme)
-                          ? currentTheme.currentTheme.cardColor
-                          : Colors.white,
-                      leading: FaIcon(FontAwesomeIcons.lightbulb,
-                          size: 25,
-                          color: currentTheme.currentTheme.accentColor),
-                      title: Text(
-                        'Luz',
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: (currentTheme.customTheme)
-                                ? Colors.white54
-                                : Colors.black54),
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(
-                          Icons.chevron_right,
-                          color: currentTheme.currentTheme.accentColor,
-                        ),
-                        iconSize: 30.0,
-                        onPressed: () => {
-                          //Navigator.pop(context),
-                        },
-                        color: Colors.white60.withOpacity(0.30),
                       ),
                       //trailing:
                     ),
@@ -802,7 +526,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     Navigator.pop(context);
   }
 
-  SliverList makeListPlants(context) {
+/*   SliverList makeListPlants(context) {
     return SliverList(
       delegate: SliverChildListDelegate([
         Container(
@@ -830,75 +554,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
         ),
       ]),
     );
-  }
-
-  SliverList makeListAires(context) {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        Container(
-          child: FutureBuilder(
-            future: this.airService.getAiresRoom(widget.room.id),
-            initialData: null,
-            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-              if (snapshot.hasData) {
-                airs = snapshot.data;
-                return (airs.length > 0)
-                    ? Container(
-                        margin: EdgeInsets.only(
-                          left: 10,
-                        ),
-                        child: _buildWidgetAir(airs))
-                    : Center(
-                        child: Container(
-                            padding: EdgeInsets.all(50),
-                            child: Text('Sin Aire, add new')),
-                      ); // image is ready
-              } else {
-                return Container(
-                    height: 400.0,
-                    child: Center(
-                        child: CircularProgressIndicator())); // placeholder
-              }
-            },
-          ),
-        ),
-      ]),
-    );
-  }
-
-  SliverList makeListLight(context) {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        Container(
-          child: FutureBuilder(
-            future: this.lightService.getLightsRoom(widget.room.id),
-            initialData: null,
-            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-              if (snapshot.hasData) {
-                lights = snapshot.data;
-                return (lights.length > 0)
-                    ? Container(
-                        margin: EdgeInsets.only(
-                          left: 10,
-                        ),
-                        child: _buildWidgetLight(lights))
-                    : Center(
-                        child: Container(
-                            padding: EdgeInsets.all(50),
-                            child: Text('Sin Luces, add new')),
-                      ); // image is ready
-              } else {
-                return Container(
-                    height: 400.0,
-                    child: Center(
-                        child: CircularProgressIndicator())); // placeholder
-              }
-            },
-          ),
-        ),
-      ]),
-    );
-  }
+  } */
 
   SliverPersistentHeader makeHeaderTabs(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
@@ -906,18 +562,19 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     return SliverPersistentHeader(
       pinned: true,
       delegate: SliverAppBarDelegate(
-        minHeight: 50.0,
-        maxHeight: 50.0,
+        minHeight: 80.0,
+        maxHeight: 80.0,
         child: DefaultTabController(
-          length: 3,
+          length: 1,
           child: Scaffold(
             appBar: AppBar(
+              leading: null,
               backgroundColor: currentTheme.scaffoldBackgroundColor,
               bottom: TabBar(
                   indicatorWeight: 3.0,
                   indicatorColor: currentTheme.accentColor,
                   tabs: [
-                    Tab(
+                    /*   Tab(
                         icon: Icon(Icons.local_florist,
                             color: (_tabController.index == 0)
                                 ? currentTheme.accentColor
@@ -926,19 +583,20 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         icon: FaIcon(FontAwesomeIcons.wind,
                             color: (_tabController.index == 1)
                                 ? currentTheme.accentColor
-                                : Colors.grey)),
+                                : Colors.grey)), */
                     Tab(
-                        icon: FaIcon(FontAwesomeIcons.lightbulb,
-                            color: (_tabController.index == 2)
+                        text: 'Tratamientos',
+                        icon: FaIcon(FontAwesomeIcons.notesMedical,
+                            color: (_tabController.index == 0)
                                 ? currentTheme.accentColor
                                 : Colors.grey)),
                   ],
                   onTap: (value) => {
-                        _tabController
+                        /* _tabController
                             .animateTo((_tabController.index + 1) % 2),
                         setState(() {
                           _tabController.index = value;
-                        })
+                        }) */
                       }),
             ),
           ),
@@ -1087,6 +745,26 @@ Route createRoutePlantDetail(Plant plant, bool isEdit) {
         PlantDetailPage(plant: plant),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
+}
+
+Route createRouteAdd(Catalogo catalogo, bool isEdit) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        AddUpdateCatalogoPage(catalogo: catalogo, isEdit: isEdit),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.ease;
 

@@ -186,6 +186,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                   children: [
                     //final int t = index;
                     FadeInLeft(
+                      delay: Duration(milliseconds: 100 * index),
                       child: Slidable.builder(
                         key: Key(item.id),
                         controller: slidableController,

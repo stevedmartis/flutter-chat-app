@@ -1,4 +1,6 @@
 import 'package:chat/global/environment.dart';
+import 'package:chat/models/catalogo.dart';
+import 'package:chat/models/catalogo_response.dart';
 import 'package:chat/models/catalogos_response.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/room_response.dart';
@@ -45,10 +47,10 @@ class CatalogosApiProvider {
     }
   }
 
-  final String _endpointRoom = '${Environment.apiUrl}/room/room/';
+  final String _endpointRoom = '${Environment.apiUrl}/catalogo/catalogo/';
 
-  Future<Room> getRoom(String roomId) async {
-    final urlFinal = _endpointRoom + '$roomId';
+  Future<Catalogo> getCatalogo(String catalogoId) async {
+    final urlFinal = _endpointRoom + '$catalogoId';
 
     final token = await this._storage.read(key: 'token');
 
@@ -56,11 +58,11 @@ class CatalogosApiProvider {
       final resp = await http.get(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
-      final roomsResponse = roomResponseFromJson(resp.body);
-      return roomsResponse.room;
+      final catalogoResponse = catalogoResponseFromJson(resp.body);
+      return catalogoResponse.catalogo;
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
-      return new Room(id: '0');
+      return new Catalogo(id: '0');
     }
   }
 }

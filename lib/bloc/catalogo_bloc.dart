@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:chat/bloc/validators.dart';
+import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/catalogos_response.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
@@ -25,7 +26,7 @@ class CatalogoBloc with Validators {
   final BehaviorSubject<RoomsResponse> _roomsProfile =
       BehaviorSubject<RoomsResponse>();
 
-  final BehaviorSubject<Room> _roomSelect = BehaviorSubject<Room>();
+  final BehaviorSubject<Catalogo> _catalogoSelect = BehaviorSubject<Catalogo>();
 
   getCatalogosUser(String userId, String userAuthId) async {
     CatalogosResponse response =
@@ -46,12 +47,12 @@ class CatalogoBloc with Validators {
     _roomsProfile.sink.add(response);
   } */
 
-  getRoom(Room room) async {
-    Room response = await _repository.getRoom(room.id);
-    _roomSelect.sink.add(response);
+  getCatalogo(Catalogo catalogo) async {
+    Catalogo response = await _repository.getCatalogo(catalogo.id);
+    _catalogoSelect.sink.add(response);
   }
 
-  BehaviorSubject<Room> get roomSelect => _roomSelect;
+  BehaviorSubject<Catalogo> get catalogoSelect => _catalogoSelect;
 
   BehaviorSubject<CatalogosResponse> get myCatalogos => _myCatalogos;
 
@@ -81,7 +82,7 @@ class CatalogoBloc with Validators {
     _roomsProfile.close();
     _myCatalogos.close();
     _userCatalogos.close();
-    _roomSelect.close();
+    _catalogoSelect.close();
     _privacityController?.close();
 
     _nameController?.close();

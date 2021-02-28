@@ -290,6 +290,55 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                 ])));
   }
 
+  SliverPersistentHeader makeHeaderTabs(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+        minHeight: 100.0,
+        maxHeight: 100.0,
+        child: DefaultTabController(
+          length: 1,
+          child: Scaffold(
+            appBar: AppBar(
+              leading: null,
+              backgroundColor: currentTheme.scaffoldBackgroundColor,
+              bottom: TabBar(
+                  indicatorWeight: 3.0,
+                  indicatorColor: currentTheme.accentColor,
+                  tabs: [
+                    /*   Tab(
+                        icon: Icon(Icons.local_florist,
+                            color: (_tabController.index == 0)
+                                ? currentTheme.accentColor
+                                : Colors.grey)),
+                    Tab(
+                        icon: FaIcon(FontAwesomeIcons.wind,
+                            color: (_tabController.index == 1)
+                                ? currentTheme.accentColor
+                                : Colors.grey)), */
+                    Tab(
+                        text: 'Vistas',
+                        icon: FaIcon(FontAwesomeIcons.eye,
+                            color: (_tabController.index == 0)
+                                ? currentTheme.accentColor
+                                : Colors.grey)),
+                  ],
+                  onTap: (value) => {
+                        /* _tabController
+                            .animateTo((_tabController.index + 1) % 2),
+                        setState(() {
+                          _tabController.index = value;
+                        }) */
+                      }),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   SliverList makeListVisits(context) {
     return SliverList(
       delegate: SliverChildListDelegate([
@@ -365,29 +414,6 @@ class _PlantDetailPageState extends State<PlantDetailPage>
           ),
         ),
       ]),
-    );
-  }
-
-  SliverAppBar makeHeaderTabs(context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-    return SliverAppBar(
-      backgroundColor: currentTheme.scaffoldBackgroundColor,
-
-      title: Container(
-        padding: EdgeInsets.only(bottom: 10),
-        child: Text(
-          'Visitas',
-          style: TextStyle(color: currentTheme.accentColor),
-        ),
-      ),
-      automaticallyImplyLeading: false,
-      toolbarHeight: 40,
-
-      centerTitle: true,
-      pinned: true,
-
-      // collapsedHeight: 56.0001,
     );
   }
 

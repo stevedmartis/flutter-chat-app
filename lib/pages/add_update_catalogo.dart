@@ -49,11 +49,14 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
 
   bool isDefault;
 
+  FocusNode _focusNode;
+
   @override
   void initState() {
     errorRequired = (widget.isEdit) ? false : true;
     nameCtrl.text = widget.catalogo.name;
     descriptionCtrl.text = widget.catalogo.description;
+    optionItemSelected = widget.catalogo.privacity;
 
     //  plantBloc.imageUpdate.add(true);
     nameCtrl.addListener(() {
@@ -99,9 +102,12 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
 
 //    final size = MediaQuery.of(context).size;
 
+    final isPrivacityChange = optionItemSelected != widget.catalogo.privacity;
+
     final isControllerChange = isNameChange;
 
-    final isControllerChangeEdit = isNameChange || isAboutChange;
+    final isControllerChangeEdit =
+        isNameChange || isAboutChange || isPrivacityChange;
 
     return Scaffold(
       backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
@@ -186,6 +192,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
           child: TextField(
+            focusNode: _focusNode,
             controller: nameCtrl,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(30),
@@ -336,6 +343,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
               onChanged: (optionItem) {
                 setState(() {
                   optionItemSelected = optionItem;
+                  _focusNode.unfocus();
                 });
               },
             ));
@@ -444,26 +452,26 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
         privacity: privacity,
         id: widget.catalogo.id);
 
-    if (widget.isEdit) {
-      final editCatalogoRes = await catalogoService.editCatalogo(editCatalogo);
+    final editCatalogoRes = await catalogoService.editCatalogo(editCatalogo);
 
-      if (editCatalogoRes != null) {
-        if (editCatalogoRes.ok) {
-          // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
-          //  plantBloc.getPlant(widget.plant);
-          setState(() {
-            loading = false;
-          });
-          catalogoBloc.getMyCatalogos(uid);
+    if (editCatalogoRes != null) {
+      if (editCatalogoRes.ok) {
+        // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
+        //  plantBloc.getPlant(widget.plant);
+        setState(() {
+          loading = false;
+        });
+        catalogoBloc.getMyCatalogos(uid);
 
-          Navigator.pop(context);
-        } else {
-          mostrarAlerta(context, 'Error', editCatalogoRes.msg);
-        }
+        catalogoBloc.getCatalogo(widget.catalogo);
+
+        Navigator.pop(context);
       } else {
-        mostrarAlerta(
-            context, 'Error del servidor', 'lo sentimos, Intentelo mas tarde');
+        mostrarAlerta(context, 'Error', editCatalogoRes.msg);
       }
+    } else {
+      mostrarAlerta(
+          context, 'Error del servidor', 'lo sentimos, Intentelo mas tarde');
     }
 
     //Navigator.pushReplacementNamed(context, '');

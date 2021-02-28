@@ -201,8 +201,8 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                 physics: BouncingScrollPhysics(),
                 itemCount: _messages.length,
                 itemBuilder: (_, i) => (userFor.user.uid == _messages[i].uid)
-                    ? FadeInLeft(child: _messages[i])
-                    : FadeInRight(child: _messages[i]),
+                    ? _messages[i]
+                    : _messages[i],
                 reverse: true,
               )),
               Divider(height: 1),

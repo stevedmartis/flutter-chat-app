@@ -1,3 +1,4 @@
+import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/catalogos_response.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/providers/catalogos_provider.dart';
@@ -13,7 +14,7 @@ class CatalogosRepository {
     return _apiProvider.getMyCatalogos(userId);
   }
 
-  Future<Room> getRoom(String roomId) {
-    return _apiProvider.getRoom(roomId);
+  Future<Catalogo> getCatalogo(String catalogoId) {
+    return _apiProvider.getCatalogo(catalogoId);
   }
 }
