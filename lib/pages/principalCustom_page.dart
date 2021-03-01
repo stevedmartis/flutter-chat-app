@@ -21,6 +21,7 @@ import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/header_appbar_pages.dart';
+import 'package:chat/widgets/plant_card.dart';
 import 'package:chat/widgets/plant_card_widget.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:chat/widgets/visit_card.dart';
@@ -403,7 +404,7 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
   return (plants.length > 0)
       ? CarouselSlider.builder(
           options: CarouselOptions(
-            height: size.height,
+            height: size.height / 2,
             viewportFraction: 0.70,
             initialPage: 0,
             enableInfiniteScroll: false,
@@ -420,7 +421,6 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
             final plant = plants[index];
 
             return Stack(
-              fit: StackFit.loose,
               children: [
                 Container(
                   padding: EdgeInsets.only(right: 20, bottom: 10),
@@ -448,12 +448,12 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
                         return PlantDetailPage(plant: plant);
                       },
                       closedBuilder: (_, openContainer) {
-                        return CardPlant(plant: plant);
+                        return CardPlantPrincipal(
+                          plant: plant,
+                        );
                       }),
                 ),
-                Container(
-                  child: buildCircleFavoritePlant(plant.quantity, context),
-                ),
+                buildCircleFavoritePlant(plant.quantity, context),
               ],
             );
           },

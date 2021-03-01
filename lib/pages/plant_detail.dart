@@ -292,12 +292,13 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
   SliverPersistentHeader makeHeaderTabs(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final size = MediaQuery.of(context).size;
 
     return SliverPersistentHeader(
       pinned: true,
       delegate: SliverAppBarDelegate(
-        minHeight: 100.0,
-        maxHeight: 100.0,
+        minHeight: size.height / 7,
+        maxHeight: size.height / 7,
         child: DefaultTabController(
           length: 1,
           child: Scaffold(
