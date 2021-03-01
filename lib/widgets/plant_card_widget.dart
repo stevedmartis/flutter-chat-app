@@ -85,7 +85,7 @@ class _CardPlantState extends State<CardPlant> {
           CbdthcRow(
             thc: thc,
             cbd: cbd,
-            fontSize: 40,
+            fontSize: 25,
           ),
           SizedBox(height: 10.0),
           Container(

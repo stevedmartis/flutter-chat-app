@@ -21,87 +21,94 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context);
     return Container(
+      width: size.width,
+      height: size.height,
       color: (currentTheme.customTheme) ? Color(0xff151518) : Colors.white,
-      child: Row(
-        children: [
-          plantItem(),
-          Container(
-            width: size.width / 2.8,
-            height: size.height,
-            child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(20.0),
-                    bottomRight: Radius.circular(15.0)),
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: (widget.plant.coverImage != "")
-                      ? FadeInImage(
-                          image: NetworkImage(widget.plant.getCoverImg()),
-                          placeholder: AssetImage('assets/loading2.gif'),
-                          fit: BoxFit.cover)
-                      : FadeInImage(
-                          image: AssetImage('assets/images/empty_image.png'),
-                          placeholder: AssetImage('assets/loading2.gif'),
-                          fit: BoxFit.cover),
-                )),
-          ),
-          /* Positioned(
-            bottom: 0.0,
-            left: 0.0,
-            right: 0.0,
-            child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromARGB(200, 0, 0, 0),
-                      Color.fromARGB(0, 0, 0, 0)
-                    ],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
+      child: FittedBox(
+        fit: BoxFit.fill,
+        child: Row(
+          children: [
+            plantItem(),
+            Container(
+              width: size.width / 3.5,
+              height: size.height / 3.5,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20.0),
+                      topLeft: Radius.circular(10.0),
+                      bottomRight: Radius.circular(10.0),
+                      bottomLeft: Radius.circular(10.0)),
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: (widget.plant.coverImage != "")
+                        ? FadeInImage(
+                            image: NetworkImage(widget.plant.getCoverImg()),
+                            placeholder: AssetImage('assets/loading2.gif'),
+                            fit: BoxFit.cover)
+                        : FadeInImage(
+                            image: AssetImage('assets/images/empty_image.png'),
+                            placeholder: AssetImage('assets/loading2.gif'),
+                            fit: BoxFit.cover),
+                  )),
+            ),
+            /* Positioned(
+              bottom: 0.0,
+              left: 0.0,
+              right: 0.0,
+              child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(200, 0, 0, 0),
+                        Color.fromARGB(0, 0, 0, 0)
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                    ),
                   ),
-                ),
-                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: FaIcon(
-                        FontAwesomeIcons.broom,
-                        color: (clean)
-                            ? currentTheme.accentColor
-                            : Colors.white38.withOpacity(0.20),
+                  padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: FaIcon(
+                          FontAwesomeIcons.broom,
+                          color: (clean)
+                              ? currentTheme.accentColor
+                              : Colors.white38.withOpacity(0.20),
+                        ),
                       ),
-                    ),
-                    Container(
-                      child: FaIcon(
-                        FontAwesomeIcons.cut,
-                        color: (cut)
-                            ? currentTheme.accentColor
-                            : Colors.white38.withOpacity(0.20),
+                      Container(
+                        child: FaIcon(
+                          FontAwesomeIcons.cut,
+                          color: (cut)
+                              ? currentTheme.accentColor
+                              : Colors.white38.withOpacity(0.20),
+                        ),
                       ),
-                    ),
-                    Container(
-                      child: FaIcon(
-                        FontAwesomeIcons.thermometerEmpty,
-                        color: (temp)
-                            ? currentTheme.accentColor
-                            : Colors.white38.withOpacity(0.20),
+                      Container(
+                        child: FaIcon(
+                          FontAwesomeIcons.thermometerEmpty,
+                          color: (temp)
+                              ? currentTheme.accentColor
+                              : Colors.white38.withOpacity(0.20),
+                        ),
                       ),
-                    ),
-                    Container(
-                      child: FaIcon(
-                        FontAwesomeIcons.handHoldingWater,
-                        color: (water)
-                            ? currentTheme.accentColor
-                            : Colors.white38.withOpacity(0.20),
+                      Container(
+                        child: FaIcon(
+                          FontAwesomeIcons.handHoldingWater,
+                          color: (water)
+                              ? currentTheme.accentColor
+                              : Colors.white38.withOpacity(0.20),
+                        ),
                       ),
-                    ),
-                  ],
-                )),
-          ), */
-        ],
+                    ],
+                  )),
+            ), */
+          ],
+        ),
       ),
     );
   }
@@ -113,6 +120,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
     final cbd = (widget.plant.cbd.isEmpty) ? '0' : widget.plant.cbd;
 
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,8 +132,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
             
             ],
           ), */
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 0),
+          Container(
             child: Text(
               widget.plant.name.capitalize(),
               style: TextStyle(
@@ -137,10 +144,10 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
           CbdthcRow(
             thc: thc,
             cbd: cbd,
-            fontSize: 10,
+            fontSize: 12,
           ),
           Container(
-            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            margin: EdgeInsets.only(top: 5.0),
             width: size.width / 3.5,
             child: Text(
               (widget.plant.description.length > 0)
@@ -150,28 +157,31 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
               maxLines: 3,
               style: TextStyle(
                   fontWeight: FontWeight.normal,
-                  fontSize: 12,
+                  fontSize: 15,
                   color: Colors.grey),
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 0.0),
+            margin: EdgeInsets.only(top: 10.0),
             child: Row(
               children: [
-                Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5.0),
+                Container(
                     child: FaIcon(
-                      FontAwesomeIcons.seedling,
-                      color: Colors.white54,
-                      size: 15,
-                    )),
+                  FontAwesomeIcons.seedling,
+                  color:
+                      (currentTheme.customTheme) ? Colors.white54 : Colors.grey,
+                  size: 15,
+                )),
+                SizedBox(
+                  width: 5.0,
+                ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                  padding: EdgeInsets.symmetric(vertical: 5.0),
                   child: Text(
                     widget.plant.germinated,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: 15,
                         color: (currentTheme.customTheme)
                             ? Colors.white54
                             : Colors.grey),
@@ -197,7 +207,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
             height: 5,
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 10),
             width: size.width / 1.5,
             child: Text(
               (widget.plant.description.length > 0)
@@ -257,7 +267,7 @@ class CbdthcRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 0),
+      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
       child: Row(
         children: <Widget>[
           /* Padding(
