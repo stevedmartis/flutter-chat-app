@@ -15,15 +15,15 @@ class ProductBloc with Validators {
 
   final ProductsRepository _repository = ProductsRepository();
 
-  final BehaviorSubject<ProductsResponse> _subject =
+  final BehaviorSubject<ProductsResponse> myProduts =
       BehaviorSubject<ProductsResponse>();
 
-  getProducts(String userId) async {
-    ProductsResponse response = await _repository.getProducts(userId);
-    _subject.sink.add(response);
+  getProducts() async {
+    ProductsResponse response = await _repository.getProducts();
+    myProduts.sink.add(response);
   }
 
-  BehaviorSubject<ProductsResponse> get subject => _subject;
+  BehaviorSubject<ProductsResponse> get myProducts => myProduts;
   // Recuperar los datos del Stream
   Stream<String> get nameStream =>
       _nameController.stream.transform(validationNameRequired);
@@ -49,7 +49,7 @@ class ProductBloc with Validators {
   String get description => _descriptionController.value;
 
   dispose() {
-    _subject.close();
+    myProduts.close();
     _imageUpdateCtrl.close();
 
     _nameController?.close();

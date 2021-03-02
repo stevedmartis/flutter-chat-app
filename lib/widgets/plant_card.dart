@@ -1,9 +1,7 @@
 import 'package:chat/models/plant.dart';
-import 'package:chat/models/visit.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../utils/extension.dart';
 
@@ -51,62 +49,6 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
                             fit: BoxFit.cover),
                   )),
             ),
-            /* Positioned(
-              bottom: 0.0,
-              left: 0.0,
-              right: 0.0,
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(200, 0, 0, 0),
-                        Color.fromARGB(0, 0, 0, 0)
-                      ],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: FaIcon(
-                          FontAwesomeIcons.broom,
-                          color: (clean)
-                              ? currentTheme.accentColor
-                              : Colors.white38.withOpacity(0.20),
-                        ),
-                      ),
-                      Container(
-                        child: FaIcon(
-                          FontAwesomeIcons.cut,
-                          color: (cut)
-                              ? currentTheme.accentColor
-                              : Colors.white38.withOpacity(0.20),
-                        ),
-                      ),
-                      Container(
-                        child: FaIcon(
-                          FontAwesomeIcons.thermometerEmpty,
-                          color: (temp)
-                              ? currentTheme.accentColor
-                              : Colors.white38.withOpacity(0.20),
-                        ),
-                      ),
-                      Container(
-                        child: FaIcon(
-                          FontAwesomeIcons.handHoldingWater,
-                          color: (water)
-                              ? currentTheme.accentColor
-                              : Colors.white38.withOpacity(0.20),
-                        ),
-                      ),
-                    ],
-                  )),
-            ), */
           ],
         ),
       ),

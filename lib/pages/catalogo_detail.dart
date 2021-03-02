@@ -2,7 +2,6 @@ import 'package:animations/animations.dart';
 import 'package:chat/bloc/catalogo_bloc.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 
-import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/air.dart';
 import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/light.dart';
@@ -15,26 +14,21 @@ import 'package:chat/models/room.dart';
 import 'package:chat/pages/add_update_air.dart';
 import 'package:chat/pages/add_update_catalogo.dart';
 import 'package:chat/pages/add_update_light.dart';
-import 'package:chat/pages/add_update_plant.dart';
 import 'package:chat/pages/plant_detail.dart';
 import 'package:chat/pages/profile_page.dart';
-import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/air_provider.dart';
 import 'package:chat/providers/light_provider.dart';
-import 'package:chat/providers/plants_provider.dart';
+import 'package:chat/providers/products_provider.dart';
 import 'package:chat/providers/rooms_provider.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/product_services.dart';
-import 'package:chat/widgets/air_card.dart';
-import 'package:chat/widgets/light_card.dart';
-import 'package:chat/widgets/plant_card_widget.dart';
+import 'package:chat/widgets/product_card.dart';
 
 import '../utils//extension.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
-import 'package:chat/widgets/room_card.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +53,7 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
     with SingleTickerProviderStateMixin {
   ScrollController _scrollController;
 
-  final plantService = new PlantsApiProvider();
+  final productService = new ProductsApiProvider();
 
   final airService = new AiresApiProvider();
 
@@ -74,7 +68,7 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
 
   Catalogo catalogo;
 
-  List<Plant> plants = [];
+  List<Product> products = [];
 
   Profiles profile;
 
@@ -180,7 +174,7 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                     makeHeaderInfo(context),
                     makeHeaderTabs(context),
                     // (_tabController.index == 0)
-                    // makeListPlants(context)
+                    makeListProducts(context)
                   ]);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
@@ -334,7 +328,37 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
     );
   }
 
-  Widget _buildWidgetPlant(plants) {
+  SliverList makeListProducts(context) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Container(
+          child: FutureBuilder(
+            future: this.productService.getProductCatalogo(widget.catalogo.id),
+            initialData: null,
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              if (snapshot.hasData) {
+                products = snapshot.data;
+                return (products.length > 0)
+                    ? Container(child: _buildWidgetProducts(products))
+                    : Center(
+                        child: Container(
+                            padding: EdgeInsets.all(50),
+                            child: Text('Sin Plantas, crea una +')),
+                      ); // image is ready
+              } else {
+                return Container(
+                    height: 400.0,
+                    child: Center(
+                        child: CircularProgressIndicator())); // placeholder
+              }
+            },
+          ),
+        ),
+      ]),
+    );
+  }
+
+  Widget _buildWidgetProducts(products) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Container(
@@ -342,9 +366,9 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
         child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: plants.length,
+            itemCount: products.length,
             itemBuilder: (BuildContext ctxt, int index) {
-              final plant = plants[index];
+              final product = products[index];
 
               return Stack(
                 children: [
@@ -372,15 +396,11 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                               bottomLeft: Radius.circular(10.0)),
                         ),
                         openBuilder: (_, closeContainer) {
-                          return PlantDetailPage(plant: plant);
+                          return Container();
                         },
                         closedBuilder: (_, openContainer) {
                           return Stack(children: [
-                            CardPlant(plant: plant),
-                            Container(
-                              child: buildCircleFavoritePlantDash(
-                                  plant.quantity, context),
-                            ),
+                            CardProduct(product: product),
                           ]);
                         }),
                   ),
@@ -394,8 +414,6 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
   createModalSelection() {
     final currentTheme = Provider.of<ThemeChanger>(context, listen: false);
     final plant = new Plant();
-    final air = new Air();
-    final light = new Light();
 
     final plantService = Provider.of<PlantService>(context, listen: false);
     final aws = Provider.of<AwsService>(context, listen: false);

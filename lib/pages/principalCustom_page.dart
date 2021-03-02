@@ -3,10 +3,13 @@ import 'package:animations/animations.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat/bloc/plant_bloc.dart';
+import 'package:chat/bloc/product_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/bloc/visit_bloc.dart';
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/plants_response.dart';
+import 'package:chat/models/products.dart';
+import 'package:chat/models/products_response.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/rooms_response.dart';
 import 'package:chat/models/visit.dart';
@@ -22,7 +25,7 @@ import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/header_appbar_pages.dart';
 import 'package:chat/widgets/plant_card.dart';
-import 'package:chat/widgets/plant_card_widget.dart';
+import 'package:chat/widgets/product_card.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:chat/widgets/visit_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,6 +61,7 @@ class _CollapsingListState extends State<CollapsingList>
   List<Visit> visits = [];
 
   List<Plant> plants = [];
+  List<Product> products = [];
 
   Profiles profile;
 
@@ -73,36 +77,41 @@ class _CollapsingListState extends State<CollapsingList>
 
     profile = authService.profile;
 
-    this._chargeProfileUsers();
+    this._chargeClubesProfileUsers();
 
-    this._chargeLastPlantsByUser();
+    this._chargeMyLastPlantsByUser();
 
-    this._chargeLastVisitByUser();
+    this._chargeMyLastVisitByUser();
 
     super.initState();
   }
 
-  _chargeProfileUsers() async {
+  _chargeClubesProfileUsers() async {
     this.profiles = await usuarioService.getProfilesLastUsers();
   }
 
-  _chargeLastPlantsByUser() async {
+  _chargeMyLastPlantsByUser() async {
     // this.plants = await plantService.getLastPlantsByUser(profile.user.uid);
     plantBloc.getPlantsByUser(profile.user.uid);
   }
 
-  _chargeLastVisitByUser() async {
+  _chargeMyLastVisitByUser() async {
     // this.visits = await visitService.getLastVisitsByUser(profile.user.uid);
 
     visitBloc.getVisitsByUser(profile.user.uid);
   }
 
+  _chargeLastProducts() async {
+    // this.visits = await visitService.getLastVisitsByUser(profile.user.uid);
+
+    productBloc.getProducts();
+  }
+
   pullToRefreshData() async {
-    this._chargeProfileUsers();
-
-    this._chargeLastPlantsByUser();
-
-    this._chargeLastVisitByUser();
+    this._chargeClubesProfileUsers();
+    this._chargeMyLastPlantsByUser();
+    this._chargeMyLastVisitByUser();
+    this._chargeLastProducts();
   }
 
   @override
@@ -131,80 +140,114 @@ class _CollapsingListState extends State<CollapsingList>
             [FadeIn(child: BannerSlide())],
           ),
         ),
+        makeListClubes(context),
         makeHeaderSpacer(context),
-        SliverFixedExtentList(
-          itemExtent: 100.0,
-          delegate: SliverChildListDelegate(
-            [
-              FutureBuilder(
-                future: this.usuarioService.getProfilesLastUsers(),
-                initialData: null,
-                builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-                  if (snapshot.hasData) {
-                    profiles = snapshot.data;
-                    return Container(
-                        child: CarouselUsersSliderCustom(
-                            profiles: snapshot.data)); // image is ready
-                  } else {
-                    return Container(
-                        height: 400.0,
-                        child: Center(
-                            child: CircularProgressIndicator())); // placeholder
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
         makeHeaderSpacer(context),
-        SliverFixedExtentList(
-          itemExtent: 150.0,
-          delegate: SliverChildListDelegate(
-            [
-              StreamBuilder<PlantsResponse>(
-                stream: plantBloc.plantsUser.stream,
-                builder: (context, AsyncSnapshot<PlantsResponse> snapshot) {
-                  if (snapshot.hasData) {
-                    plants = snapshot.data.plants;
-                    return FadeInRight(
-                      delay: Duration(microseconds: 500),
-                      child: _buildWidgetPlants(plants, context),
-                    ); // image is ready
-                  } else if (snapshot.hasError) {
-                    return _buildErrorWidget(snapshot.error);
-                  } else {
-                    return _buildLoadingWidget();
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
+        makeHlistCarouselMyProducts(context),
+        makeListCarouselMyVisits(context),
         makeHeaderSpacer(context),
-        SliverFixedExtentList(
-          itemExtent: 150.0,
-          delegate: SliverChildListDelegate(
-            [
-              StreamBuilder<VisitsResponse>(
-                stream: visitBloc.visitsUser.stream,
-                builder: (context, AsyncSnapshot<VisitsResponse> snapshot) {
-                  if (snapshot.hasData) {
-                    visits = snapshot.data.visits;
-                    return FadeInRight(
-                      delay: Duration(milliseconds: 600),
-                      child: _buildWidgetVisits(visits, context),
-                    ); // image is ready
-                  } else if (snapshot.hasError) {
-                    return _buildErrorWidget(snapshot.error);
-                  } else {
-                    return _buildLoadingWidget();
-                  }
-                },
-              )
-            ],
-          ),
-        ),
+        makeListProducts(context)
       ],
+    );
+  }
+
+  SliverFixedExtentList makeListClubes(context) {
+    return SliverFixedExtentList(
+      itemExtent: 100.0,
+      delegate: SliverChildListDelegate(
+        [
+          FutureBuilder(
+            future: this.usuarioService.getProfilesLastUsers(),
+            initialData: null,
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              if (snapshot.hasData) {
+                profiles = snapshot.data;
+                return Container(
+                    child: CarouselUsersSliderCustom(
+                        profiles: snapshot.data)); // image is ready
+              } else {
+                return Container(
+                    height: 400.0,
+                    child: Center(
+                        child: CircularProgressIndicator())); // placeholder
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  SliverFixedExtentList makeHlistCarouselMyProducts(context) {
+    return SliverFixedExtentList(
+      itemExtent: 190.0,
+      delegate: SliverChildListDelegate(
+        [
+          StreamBuilder<PlantsResponse>(
+            stream: plantBloc.plantsUser.stream,
+            builder: (context, AsyncSnapshot<PlantsResponse> snapshot) {
+              if (snapshot.hasData) {
+                plants = snapshot.data.plants;
+                return FadeInRight(
+                  delay: Duration(microseconds: 500),
+                  child: _buildWidgetPlants(plants, context),
+                ); // image is ready
+              } else if (snapshot.hasError) {
+                return _buildErrorWidget(snapshot.error);
+              } else {
+                return _buildLoadingWidget();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  SliverFixedExtentList makeListCarouselMyVisits(context) {
+    return SliverFixedExtentList(
+      itemExtent: 150.0,
+      delegate: SliverChildListDelegate(
+        [
+          StreamBuilder<VisitsResponse>(
+            stream: visitBloc.visitsUser.stream,
+            builder: (context, AsyncSnapshot<VisitsResponse> snapshot) {
+              if (snapshot.hasData) {
+                visits = snapshot.data.visits;
+                return FadeInRight(
+                  delay: Duration(milliseconds: 600),
+                  child: _buildWidgetVisits(visits, context),
+                ); // image is ready
+              } else if (snapshot.hasError) {
+                return _buildErrorWidget(snapshot.error);
+              } else {
+                return _buildLoadingWidget();
+              }
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  SliverList makeListProducts(context) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Container(
+            child: StreamBuilder<ProductsResponse>(
+          stream: productBloc.myProducts.stream,
+          builder: (context, AsyncSnapshot<ProductsResponse> snapshot) {
+            if (snapshot.hasData) {
+              products = snapshot.data.products;
+              return _buildWidgetProducts(products, context); // image is ready
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
+            } else {
+              return _buildLoadingWidget();
+            }
+          },
+        )),
+      ]),
     );
   }
 
@@ -508,6 +551,61 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
             );
           })
       : Container();
+}
+
+Widget _buildWidgetProducts(products, context) {
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+  return Container(
+    child: SizedBox(
+      child: ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: products.length,
+          itemBuilder: (BuildContext ctxt, int index) {
+            final product = products[index];
+
+            return Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(
+                      top: 20, left: 20, right: 20, bottom: 0.0),
+                  child: OpenContainer(
+                      closedElevation: 5,
+                      openElevation: 5,
+                      closedColor: currentTheme.scaffoldBackgroundColor,
+                      openColor: currentTheme.scaffoldBackgroundColor,
+                      transitionType: ContainerTransitionType.fade,
+                      openShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20.0),
+                            topLeft: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0)),
+                      ),
+                      closedShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20.0),
+                            topLeft: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0)),
+                      ),
+                      openBuilder: (_, closeContainer) {
+                        return Container();
+                      },
+                      closedBuilder: (_, openContainer) {
+                        return Stack(children: [
+                          FadeInLeft(
+                              delay: Duration(milliseconds: 300 * index),
+                              child: CardProduct(product: product)),
+                        ]);
+                      }),
+                ),
+              ],
+            );
+          }),
+    ),
+  );
 }
 
 final List<String> imgList = [

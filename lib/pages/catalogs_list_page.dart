@@ -5,11 +5,9 @@ import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/catalogos_response.dart';
 
 import 'package:chat/models/profiles.dart';
-import 'package:chat/models/room.dart';
 import 'package:chat/pages/catalogo_detail.dart';
 import 'package:chat/pages/principalCustom_page.dart';
 import 'package:chat/pages/profile_page.dart';
-import 'package:chat/pages/room_detail.dart';
 import 'package:chat/services/catalogo_service.dart';
 
 import 'package:chat/theme/theme.dart';

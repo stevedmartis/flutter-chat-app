@@ -1,14 +1,10 @@
-import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/product_bloc.dart';
-import 'package:chat/models/plant.dart';
 import 'package:chat/models/products.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
-import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/product_services.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/image_cover_expanded.dart';
 import 'package:chat/widgets/image_product_expanded.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -4,8 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:chat/models/usuario.dart';
-
 Product productFromJson(String str) => Product.fromJson(json.decode(str));
 
 String productToJson(Product data) => json.encode(data.toJson());
@@ -22,6 +20,7 @@ class Product {
     this.totalProducts,
     this.coverImage = "",
     this.catalogo,
+    this.ratingInit,
     //this.products
   });
   String id;
@@ -33,6 +32,7 @@ class Product {
   String dateUpdate;
   int totalProducts;
   String catalogo;
+  String ratingInit;
 
   String coverImage;
 
@@ -46,7 +46,8 @@ class Product {
       dateUpdate: json["dateUpdate"],
       totalProducts: json["totalProducts"],
       coverImage: json["coverImage"],
-      catalogo: json["catalogo"]);
+      catalogo: json["catalogo"],
+      ratingInit: json["ratingInit"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -57,7 +58,8 @@ class Product {
         "dateUpdate": dateUpdate,
         "totalProducts": totalProducts,
         "coverImage": coverImage,
-        "catalogo": catalogo
+        "catalogo": catalogo,
+        "ratingInit": ratingInit
         // "products": List<dynamic>.from(products.map((x) => x)),
       };
 

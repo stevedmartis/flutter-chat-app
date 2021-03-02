@@ -1,6 +1,7 @@
 import 'package:chat/models/plant.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../utils/extension.dart';
 
@@ -109,15 +110,17 @@ class _CardPlantState extends State<CardPlant> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    'Germina: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: (widget.isPrincipal) ? 40 : 25,
-                        color: (currentTheme.customTheme)
-                            ? Colors.white54
-                            : Colors.grey),
-                  ),
+                  child: Container(
+                      child: FaIcon(
+                    FontAwesomeIcons.seedling,
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.grey,
+                    size: 40,
+                  )),
+                ),
+                SizedBox(
+                  width: 20,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 20),

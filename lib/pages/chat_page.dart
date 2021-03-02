@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:chat/models/notification.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/theme/theme.dart';

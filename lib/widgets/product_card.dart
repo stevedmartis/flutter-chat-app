@@ -1,7 +1,9 @@
 import 'package:chat/models/products.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import '../utils/extension.dart';
 
 class CardProduct extends StatefulWidget {
   final Product product;
@@ -15,41 +17,227 @@ class _CardProductState extends State<CardProduct> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Column(
       children: <Widget>[
         Container(
-          color: currentTheme.scaffoldBackgroundColor,
-          padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 5.0),
+          color: (currentTheme.customTheme)
+              ? currentTheme.currentTheme.cardColor
+              : Colors.white,
+          // padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 5.0),
           width: size.height / 1.5,
           child: FittedBox(
-            child: Card(
-              shadowColor: Colors.black,
-              color: currentTheme.scaffoldBackgroundColor,
-              // color: Colors.red,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              elevation: 5,
-              child: Row(
-                children: <Widget>[
-                  juiceitem(),
-                  Container(
-                    width: 150,
-                    height: 150,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15.0),
-                      child: Image(
-                        fit: BoxFit.cover,
-                        alignment: Alignment.topRight,
-                        image: AssetImage('assets/weed1.jpg'),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            child: Row(
+              children: <Widget>[
+                producttem(),
+                Container(
+                  width: 100,
+                  height: 120,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10.0),
+                          topLeft: Radius.circular(10.0),
+                          bottomRight: Radius.circular(10.0),
+                          bottomLeft: Radius.circular(10.0)),
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: (widget.product.coverImage != "")
+                            ? FadeInImage(
+                                image:
+                                    NetworkImage(widget.product.getCoverImg()),
+                                placeholder: AssetImage('assets/loading2.gif'),
+                                fit: BoxFit.cover)
+                            : FadeInImage(
+                                image:
+                                    AssetImage('assets/images/empty_image.png'),
+                                placeholder: AssetImage('assets/loading2.gif'),
+                                fit: BoxFit.cover),
+                      )),
+                ),
+              ],
             ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget producttem() {
+    final size = MediaQuery.of(context).size;
+    final currentTheme = Provider.of<ThemeChanger>(context);
+    //  final thc = (widget.product.thc.isEmpty) ? '0' : widget.product.thc;
+    // final cbd = (widget.product.cbd.isEmpty) ? '0' : widget.product.cbd;
+    final rating = widget.product.ratingInit;
+
+    var ratingDouble = double.parse('$rating');
+
+    return Column(
+      //mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            /* Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
+              child: Container(
+                padding: EdgeInsets.all(2.5),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  //color: Theme.of(context).accentColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  "-32%",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                      color: Colors.white),
+                ),
+              ),
+            ), */
+            Text(
+              "",
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 7,
+                  color: Colors.grey),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            (ratingDouble > 1)
+                ? Icon(
+                    Icons.star,
+                    size: 15,
+                    color: Colors.orangeAccent,
+                  )
+                : Icon(
+                    Icons.star,
+                    size: 15,
+                    color: Colors.grey,
+                  ),
+            (ratingDouble > 2)
+                ? Icon(
+                    Icons.star,
+                    size: 15,
+                    color: Colors.orangeAccent,
+                  )
+                : Icon(
+                    Icons.star,
+                    size: 15,
+                    color: Colors.grey,
+                  ),
+            (ratingDouble > 3)
+                ? Icon(
+                    Icons.star,
+                    size: 15,
+                    color: Colors.orangeAccent,
+                  )
+                : Icon(
+                    Icons.star,
+                    size: 15,
+                    color: Colors.grey,
+                  ),
+            (ratingDouble > 4)
+                ? Icon(
+                    Icons.star,
+                    size: 15,
+                    color: Colors.orangeAccent,
+                  )
+                : Icon(
+                    Icons.star,
+                    size: 15,
+                    color: Colors.grey,
+                  ),
+            (ratingDouble > 5)
+                ? Icon(
+                    Icons.star,
+                    size: 15,
+                    color: Colors.orangeAccent,
+                  )
+                : Icon(
+                    Icons.star,
+                    size: 15,
+                    color: Colors.grey,
+                  ),
+          ],
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              /*  Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                
+              
+              ],
+            ), */
+              Container(
+                child: Text(
+                  widget.product.name.capitalize(),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: currentTheme.currentTheme.accentColor),
+                ),
+              ),
+              /*   CbdthcRow(
+              thc: thc,
+              cbd: cbd,
+              fontSize: 12,
+            ), */
+              Container(
+                margin: EdgeInsets.only(top: 5.0),
+                width: size.width / 3.5,
+                child: Text(
+                  (widget.product.description.length > 0)
+                      ? widget.product.description.capitalize()
+                      : "Sin descripción",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 10,
+                      color: Colors.grey),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 10.0),
+                child: Row(
+                  children: [
+                    Container(
+                        child: FaIcon(
+                      FontAwesomeIcons.seedling,
+                      color: (currentTheme.customTheme)
+                          ? Colors.white54
+                          : Colors.grey,
+                      size: 15,
+                    )),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    /* Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5.0),
+                    child: Text(
+                      widget.product.germinated,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: (currentTheme.customTheme)
+                              ? Colors.white54
+                              : Colors.grey),
+                    ),
+                  ) */
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],

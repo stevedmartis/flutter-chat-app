@@ -1,17 +1,14 @@
 import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:animations/animations.dart';
 import 'package:chat/bloc/catalogo_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/catalogos_response.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
-import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/principal_page.dart';
-import 'package:chat/pages/profile_card.dart';
 import 'package:chat/pages/profile_page2.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/services/auth_service.dart';

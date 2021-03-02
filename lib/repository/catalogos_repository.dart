@@ -1,6 +1,5 @@
 import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/catalogos_response.dart';
-import 'package:chat/models/room.dart';
 import 'package:chat/providers/catalogos_provider.dart';
 
 class CatalogosRepository {

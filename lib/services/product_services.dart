@@ -81,7 +81,7 @@ class ProductService with ChangeNotifier {
 
       // this.rooms = roomResponse.rooms;
 
-      return true;
+      return productResponse;
     } else {
       final respBody = jsonDecode(resp.body);
       return respBody['msg'];

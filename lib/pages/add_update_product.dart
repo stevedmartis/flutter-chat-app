@@ -1,4 +1,3 @@
-import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/product_bloc.dart';
 import 'package:chat/bloc/provider.dart';
 
@@ -22,6 +21,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:provider/provider.dart';
 
@@ -48,8 +49,6 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
 
   final quantityCtrl = TextEditingController();
 
-  final _durationFlorationCtrl = TextEditingController();
-
   bool isNameChange = false;
   bool isAboutChange = false;
 
@@ -63,6 +62,8 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
 
   bool isDefault;
   Profiles profile;
+
+  double ratingActual = 0;
 
   @override
   void initState() {
@@ -247,6 +248,53 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                             SizedBox(
                               height: 10,
                             ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    'Valoración inicial: ',
+                                    style: TextStyle(color: Colors.white54),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 25,
+                                ),
+                                Container(
+                                  child: Text(
+                                    '$ratingActual',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            RatingBar.builder(
+                              initialRating: 0,
+                              minRating: 0,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 5.0),
+                              itemBuilder: (context, i) => (ratingActual == 5.0)
+                                  ? FaIcon(
+                                      FontAwesomeIcons.solidStar,
+                                      color: Colors.amber,
+                                    )
+                                  : FaIcon(
+                                      FontAwesomeIcons.star,
+                                      color: Colors.amber,
+                                    ),
+                              onRatingUpdate: (rating) {
+                                print(rating);
+
+                                setState(() {
+                                  ratingActual = rating;
+                                });
+                              },
+                            ),
 
                             /*   _createDescription(bloc), */
                           ],
@@ -430,11 +478,14 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
         ? widget.catalogo.description
         : bloc.description.trim();
 
+    final ratingActualString = ratingActual.toString();
+
     final newProduct = Product(
         name: name,
         description: description,
         coverImage: widget.product.coverImage,
         catalogo: catalogo,
+        ratingInit: ratingActualString,
         user: uid);
 
     final createPlantResp = await productService.createProduct(newProduct);
@@ -449,6 +500,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
           loading = false;
 
           // plantBloc.getPlantsByUser(profile.user.uid);
+          productBloc.getProducts();
 
           awsService.isUploadImagePlant = true;
         });
@@ -491,8 +543,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
         if (editPlantRes.ok) {
           // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
 
-          plantBloc.getPlant(editPlantRes.plant);
-          plantBloc.getPlantsByUser(profile.user.uid);
+          productBloc.getProducts();
 
           setState(() {
             loading = false;
