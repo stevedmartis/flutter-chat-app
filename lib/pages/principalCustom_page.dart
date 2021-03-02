@@ -83,6 +83,8 @@ class _CollapsingListState extends State<CollapsingList>
 
     this._chargeMyLastVisitByUser();
 
+    this._chargeLastProducts();
+
     super.initState();
   }
 
