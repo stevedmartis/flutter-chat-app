@@ -386,12 +386,12 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
               color: (currentTheme.customTheme) ? Colors.white : Colors.black,
             ),
             inputFormatters: [
-              new LengthLimitingTextInputFormatter(100),
+              new LengthLimitingTextInputFormatter(300),
             ],
             controller: descriptionCtrl,
             //  keyboardType: TextInputType.emailAddress,
 
-            maxLines: 2,
+            maxLines: 4,
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
