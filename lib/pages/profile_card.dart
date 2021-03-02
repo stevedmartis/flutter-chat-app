@@ -123,12 +123,10 @@ class _ProfileCardState extends State<ProfileCard> {
                         : Alignment.bottomLeft,
                     child: CircleAvatar(
                         radius: 55,
-                        backgroundColor:
-                            currentTheme.currentTheme.scaffoldBackgroundColor,
+                        backgroundColor: Colors.transparent,
                         child: CircleAvatar(
                             radius: ProfileCard.avatarRadius + 120,
-                            backgroundColor: currentTheme
-                                .currentTheme.scaffoldBackgroundColor,
+                            backgroundColor: Colors.transparent,
                             child: Container(
                                 width: 100,
                                 height: 100,

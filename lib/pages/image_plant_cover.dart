@@ -29,7 +29,7 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
   Profiles profile;
   // AwsService authService;
 
-  final bool loadingImage = false;
+  bool loadingImage = false;
 
   @override
   void dispose() {
@@ -41,13 +41,17 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
     final authService = Provider.of<AuthService>(context, listen: false);
 
     profile = authService.profile;
+
+    if (!widget.isEdit) {
+      _selectImage();
+    }
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    final awsService = Provider.of<AwsService>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -67,7 +71,7 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
           color: Colors.white,
         ),
         actions: [
-          (!awsService.isUploadImagePlant)
+          (!loadingImage)
               ? IconButton(
                   icon: Icon(
                     Icons.add_photo_alternate,
@@ -78,7 +82,7 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
                       (!widget.isEdit) ? _selectImage() : _editImage(),
                   color: Colors.white,
                 )
-              : Container(),
+              : _buildLoadingWidget(),
         ],
       ),
       backgroundColor: Colors.black,
@@ -97,6 +101,13 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
     );
   }
 
+  Widget _buildLoadingWidget() {
+    return Container(
+        padding: EdgeInsets.only(right: 10),
+        height: 400.0,
+        child: Center(child: CircularProgressIndicator()));
+  }
+
   _selectImage() async {
     final awsService = Provider.of<AwsService>(context, listen: false);
     final plantService = Provider.of<PlantService>(context, listen: false);
@@ -107,6 +118,13 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
       imageCover = File(pickedFile.path);
 
       final fileType = pickedFile.path.split('.');
+
+      setState(() {
+        //  plantBlo
+        loadingImage = true;
+
+        print(loadingImage);
+      });
 
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
@@ -121,7 +139,7 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
         plantService.plant.coverImage = resp;
         plantBloc.getPlantsByUser(profile.user.uid);
 
-        awsService.isUploadImagePlant = true;
+        loadingImage = false;
         // plantService.plant.coverImage = resp;
 
         // awsService.isUpload = true;
@@ -142,6 +160,13 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
 
       final fileType = pickedFile.path.split('.');
 
+      setState(() {
+        //  plantBlo
+        loadingImage = true;
+
+        print(loadingImage);
+      });
+
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.updateImageCoverPlant(
@@ -152,6 +177,8 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
         plantBloc.getPlantsByUser(profile.user.uid);
 
         plantService.plant.coverImage = resp;
+
+        loadingImage = false;
       });
     } else {
       print('No image selected.');

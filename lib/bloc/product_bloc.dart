@@ -11,6 +11,7 @@ class ProductBloc with Validators {
   final _descriptionController = BehaviorSubject<String>();
 
   final _productsController = BehaviorSubject<List<Product>>();
+  final _imageUpdateCtrl = BehaviorSubject<bool>();
 
   final ProductsRepository _repository = ProductsRepository();
 
@@ -40,6 +41,8 @@ class ProductBloc with Validators {
   Function(String) get changeName => _nameController.sink.add;
   Function(String) get changeDescription => _descriptionController.sink.add;
 
+  BehaviorSubject<bool> get imageUpdate => _imageUpdateCtrl;
+
   // Obtener el último valor ingresado a los streams
 
   String get name => _nameController.value;
@@ -47,6 +50,7 @@ class ProductBloc with Validators {
 
   dispose() {
     _subject.close();
+    _imageUpdateCtrl.close();
 
     _nameController?.close();
     _descriptionController?.close();

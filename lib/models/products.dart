@@ -14,22 +14,27 @@ class Product {
   Product({
     this.id,
     this.user,
-    this.name,
-    this.description,
+    this.name = "",
+    this.description = "",
     this.dateCreate,
     //this.products,
     this.dateUpdate,
     this.totalProducts,
+    this.coverImage = "",
+    this.catalogo,
     //this.products
   });
   String id;
-  User user;
+  String user;
   String name;
   String description;
   // List<Product> products;
   String dateCreate;
   String dateUpdate;
   int totalProducts;
+  String catalogo;
+
+  String coverImage;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
       id: json["id"],
@@ -39,7 +44,9 @@ class Product {
       //products: List<Room>.from(json["products"].map((x) => x)),
       dateCreate: json["dateCreate"],
       dateUpdate: json["dateUpdate"],
-      totalProducts: json["totalProducts"]);
+      totalProducts: json["totalProducts"],
+      coverImage: json["coverImage"],
+      catalogo: json["catalogo"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -49,14 +56,18 @@ class Product {
         "dateCreate": dateCreate,
         "dateUpdate": dateUpdate,
         "totalProducts": totalProducts,
+        "coverImage": coverImage,
+        "catalogo": catalogo
         // "products": List<dynamic>.from(products.map((x) => x)),
       };
 
-/*   getPosterImg() {
-    if (avatar == "") {
-      return "";
+  getCoverImg() {
+    if (coverImage == "") {
+      var imageDefault =
+          "http://images-cdn-br.s3-sa-east-1.amazonaws.com/default_banner.jpeg";
+      return imageDefault;
     } else {
-      return avatar;
+      return coverImage;
     }
-  } */
+  }
 }

@@ -21,6 +21,7 @@ class HeaderImagePage extends StatefulWidget {
 class _HeaderImagePageState extends State<HeaderImagePage> {
   File imageHeader;
   final picker = ImagePicker();
+  bool loadImage = false;
   // AwsService authService;
 
   @override
@@ -30,6 +31,10 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
 
   @override
   void initState() {
+    if (widget.profile.imageHeader == "") {
+      _selectImage();
+    }
+
     super.initState();
   }
 
@@ -56,15 +61,17 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
           color: Colors.white,
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.add_photo_alternate,
-              color: currentTheme.accentColor,
-            ),
-            iconSize: 40,
-            onPressed: () async => _selectImage(),
-            color: Colors.white,
-          ),
+          (!loadImage)
+              ? IconButton(
+                  icon: Icon(
+                    Icons.add_photo_alternate,
+                    color: currentTheme.accentColor,
+                  ),
+                  iconSize: 40,
+                  onPressed: () async => _selectImage(),
+                  color: Colors.white,
+                )
+              : _buildLoadingWidget(),
         ],
       ),
       backgroundColor: Colors.black,
@@ -83,6 +90,13 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
     );
   }
 
+  Widget _buildLoadingWidget() {
+    return Container(
+        padding: EdgeInsets.only(right: 10),
+        height: 400.0,
+        child: Center(child: CircularProgressIndicator()));
+  }
+
   _selectImage() async {
     final awsService = Provider.of<AwsService>(context, listen: false);
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -94,6 +108,10 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
 
       final fileType = pickedFile.path.split('.');
 
+      setState(() {
+        loadImage = true;
+      });
+
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.uploadImageHeader(
@@ -102,6 +120,8 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
       setState(() {
         profileBloc.imageUpdate.add(true);
         authService.profile.imageHeader = resp;
+
+        loadImage = false;
       });
 
 /*       Navigator.pushAndRemoveUntil(

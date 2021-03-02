@@ -27,7 +27,7 @@ class PlantService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/plant/new',
+    final resp = await http.post('${Environment.apiUrl}/product/new',
         body: jsonEncode(plant),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 

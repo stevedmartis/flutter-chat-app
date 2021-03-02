@@ -7,6 +7,7 @@ import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/catalogo_service.dart';
 import 'package:chat/services/light_service.dart';
 import 'package:chat/services/plant_services.dart';
+import 'package:chat/services/product_services.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/services/subscription_service.dart';
 import 'package:chat/services/visit_service.dart';
@@ -39,6 +40,7 @@ void main() => runApp(MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => SubscriptionService()),
       ChangeNotifierProvider(create: (_) => NotificationModel()),
       ChangeNotifierProvider(create: (_) => CatalogoService()),
+      ChangeNotifierProvider(create: (_) => ProductService()),
     ], child: MyApp()));
 
 class MyApp extends StatelessWidget {

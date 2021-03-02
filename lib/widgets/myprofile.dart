@@ -1,13 +1,17 @@
 import 'dart:async';
 
+import 'package:animate_do/animate_do.dart';
+import 'package:animations/animations.dart';
 import 'package:chat/bloc/catalogo_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/catalogos_response.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
+import 'package:chat/pages/avatar_image.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/principal_page.dart';
+import 'package:chat/pages/profile_card.dart';
 import 'package:chat/pages/profile_page2.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/services/auth_service.dart';
@@ -119,16 +123,20 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     return _scrollController.hasClients && _scrollController.offset >= 130;
   }
 
+  bool get _showName {
+    return _scrollController.hasClients && _scrollController.offset >= 200;
+  }
+
   GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
     final size = MediaQuery.of(context).size;
     //final username = widget.profile.user.username.toLowerCase();
 
     return Scaffold(
-      backgroundColor: currentTheme.scaffoldBackgroundColor,
+      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
       endDrawer: PrincipalMenu(),
       key: scaffolKey,
       // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
@@ -153,7 +161,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
                   backgroundColor: _showTitle
                       ? Colors.black
-                      : currentTheme.scaffoldBackgroundColor,
+                      : currentTheme.currentTheme.scaffoldBackgroundColor,
                   leading: Container(
                       margin: EdgeInsets.only(left: 15),
                       child: ClipRRect(
@@ -163,7 +171,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                 icon: Icon(Icons.arrow_back_ios,
                                     size: size.width / 20,
                                     color: (_showTitle)
-                                        ? currentTheme.accentColor
+                                        ? currentTheme.currentTheme.accentColor
                                         : Colors.white),
                                 onPressed: () => {
                                       {},
@@ -187,7 +195,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                       icon: FaIcon(FontAwesomeIcons.commentDots,
                                           size: 25,
                                           color: (_showTitle)
-                                              ? currentTheme.accentColor
+                                              ? currentTheme
+                                                  .currentTheme.accentColor
                                               : Colors.white),
                                       onPressed: () => Navigator.push(
                                           context, createRouteChat()),
@@ -209,7 +218,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                       icon: FaIcon(FontAwesomeIcons.cog,
                                           size: 25,
                                           color: (_showTitle)
-                                              ? currentTheme.accentColor
+                                              ? currentTheme
+                                                  .currentTheme.accentColor
                                               : Colors.white),
                                       onPressed: () => {
                                         scaffolKey.currentState.openEndDrawer()
@@ -240,10 +250,45 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                   ),
  */
                   expandedHeight: maxHeight,
-                  shadowColor: currentTheme.scaffoldBackgroundColor,
+                  shadowColor:
+                      currentTheme.currentTheme.scaffoldBackgroundColor,
 
                   // collapsedHeight: 56.0001,
                   flexibleSpace: FlexibleSpaceBar(
+                    title: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          (_showName)
+                              ? FadeIn(child: Text(widget.profile.name))
+                              : Container(),
+                          (_showName && widget.profile.isClub)
+                              ? FadeIn(
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Stack(children: [
+                                      FaIcon(
+                                        FontAwesomeIcons.certificate,
+                                        color: currentTheme
+                                            .currentTheme.accentColor,
+                                        size: 20,
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 4.5, top: 4.5),
+                                        child: FaIcon(
+                                          FontAwesomeIcons.check,
+                                          color: (currentTheme.customTheme)
+                                              ? Colors.black
+                                              : Colors.white,
+                                          size: 11,
+                                        ),
+                                      )
+                                    ]),
+                                  ),
+                                )
+                              : Container(),
+                        ]),
                     stretchModes: [
                       StretchMode.zoomBackground,
                       StretchMode.fadeTitle,
@@ -257,7 +302,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       isUserEdit: widget.isUserEdit,
                       profile: widget.profile,
                     ),
-                    centerTitle: false,
+                    centerTitle: true,
                   ),
                 ),
                 (!this.widget.isUserEdit)
@@ -541,7 +586,9 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                             left: 4.5, top: 4.5),
                                         child: FaIcon(
                                           FontAwesomeIcons.check,
-                                          color: Colors.white,
+                                          color: (currentTheme.customTheme)
+                                              ? Colors.black
+                                              : Colors.white,
                                           size: 11,
                                         ),
                                       )

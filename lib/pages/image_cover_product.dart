@@ -1,31 +1,39 @@
-import 'package:chat/bloc/visit_bloc.dart';
-import 'package:chat/models/visit.dart';
+import 'package:chat/bloc/plant_bloc.dart';
+import 'package:chat/bloc/product_bloc.dart';
+import 'package:chat/models/plant.dart';
+import 'package:chat/models/products.dart';
+import 'package:chat/models/profiles.dart';
+import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
-import 'package:chat/services/visit_service.dart';
+import 'package:chat/services/plant_services.dart';
+import 'package:chat/services/product_services.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/cover_image_visit_expanded.dart';
+import 'package:chat/widgets/image_cover_expanded.dart';
+import 'package:chat/widgets/image_product_expanded.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-class CoverImageVisitPage extends StatefulWidget {
-  CoverImageVisitPage(
-      {this.visit, this.isUserAuth = true, this.isEdit = false});
-  final Visit visit;
+class CoverImageProductPage extends StatefulWidget {
+  CoverImageProductPage(
+      {this.product, this.isUserAuth = true, this.isEdit = false});
+  final Product product;
   final bool isUserAuth;
 
   final bool isEdit;
 
   @override
-  CoverImageVisitPageState createState() => CoverImageVisitPageState();
+  CoverImageProductPageState createState() => CoverImageProductPageState();
 }
 
-class CoverImageVisitPageState extends State<CoverImageVisitPage> {
+class CoverImageProductPageState extends State<CoverImageProductPage> {
   File imageCover;
   final picker = ImagePicker();
-  bool loadImage = false;
+  Profiles profile;
   // AwsService authService;
+
+  bool loadingImage = false;
 
   @override
   void dispose() {
@@ -34,16 +42,19 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
 
   @override
   void initState() {
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    profile = authService.profile;
+    super.initState();
+
     if (!widget.isEdit) {
       _selectImage();
     }
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -63,7 +74,7 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
           color: Colors.white,
         ),
         actions: [
-          (!loadImage)
+          (!loadingImage)
               ? IconButton(
                   icon: Icon(
                     Icons.add_photo_alternate,
@@ -79,13 +90,13 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
       ),
       backgroundColor: Colors.black,
       body: Hero(
-        tag: widget.visit.coverImage,
+        tag: widget.product.coverImage,
         child: Material(
           type: MaterialType.transparency,
-          child: ImageCoverVisitExpanded(
+          child: ImageCoverProductExpanded(
             width: 100,
             height: 100,
-            visit: widget.visit,
+            product: widget.product,
             fontsize: 100,
           ),
         ),
@@ -102,7 +113,7 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
 
   _selectImage() async {
     final awsService = Provider.of<AwsService>(context, listen: false);
-    final visitService = Provider.of<VisitService>(context, listen: false);
+    final productService = Provider.of<ProductService>(context, listen: false);
 
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
@@ -112,25 +123,29 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
       final fileType = pickedFile.path.split('.');
 
       setState(() {
-        loadImage = true;
+        //  plantBlo
+        loadingImage = true;
+
+        print(loadingImage);
       });
+
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.uploadImageCoverVisit(
           fileType[0], fileType[1], imageCover);
 
       setState(() {
-        visitBloc.imageUpdate.add(true);
+        //  plantBloc.imageUpdate.add(true);
 
-        widget.visit.coverImage = resp;
+        productBloc.imageUpdate.add(true);
 
-        visitService.visit = widget.visit;
+        productService.product.coverImage = resp;
+        // plantBloc.getPlantsByUser(profile.user.uid);
 
-        awsService.isUpload = true;
+        loadingImage = false;
+        // plantService.plant.coverImage = resp;
 
-        loadImage = false;
-
-        visitBloc.getVisitsByUser(widget.visit.user);
+        // awsService.isUpload = true;
       });
     } else {
       print('No image selected.');
@@ -139,7 +154,7 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
 
   _editImage() async {
     final awsService = Provider.of<AwsService>(context, listen: false);
-    final visitService = Provider.of<VisitService>(context, listen: false);
+    final productService = Provider.of<ProductService>(context, listen: false);
 
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
@@ -149,26 +164,24 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
       final fileType = pickedFile.path.split('.');
 
       setState(() {
-        loadImage = true;
+        //  plantBlo
+        loadingImage = true;
+
+        print(loadingImage);
       });
 
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.updateImageCoverPlant(
-          fileType[0], fileType[1], imageCover, widget.visit.id);
+          fileType[0], fileType[1], imageCover, widget.product.id);
 
       setState(() {
-        visitBloc.imageUpdate.add(true);
+        productBloc.imageUpdate.add(true);
+        // plantBloc.getPlantsByUser(profile.user.uid);
 
-        widget.visit.coverImage = resp;
+        productService.product.coverImage = resp;
 
-        visitService.visit = widget.visit;
-
-        awsService.isUpload = true;
-
-        loadImage = false;
-
-        visitBloc.getVisitsByUser(widget.visit.user);
+        loadingImage = false;
       });
     } else {
       print('No image selected.');

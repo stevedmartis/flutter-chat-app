@@ -20,6 +20,8 @@ class AwsService with ChangeNotifier {
 
   bool _isUploadImagePlant = false;
 
+  bool _isUploadImageProduct = false;
+
   bool _isUploadRecipe = false;
 
   String imageUpdateVisit;
@@ -44,6 +46,12 @@ class AwsService with ChangeNotifier {
   bool get isUploadRecipe => this._isUploadRecipe;
   set isUploadRecipe(bool valor) {
     this._isUploadRecipe = valor;
+    notifyListeners();
+  }
+
+  bool get isUploadImageProduct => this._isUploadImageProduct;
+  set isUploadImageProduct(bool valor) {
+    this._isUploadImageProduct = valor;
     notifyListeners();
   }
 

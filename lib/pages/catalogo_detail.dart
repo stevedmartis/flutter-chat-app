@@ -8,6 +8,7 @@ import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/light.dart';
 
 import 'package:chat/models/plant.dart';
+import 'package:chat/models/products.dart';
 import 'package:chat/models/profiles.dart';
 
 import 'package:chat/models/room.dart';
@@ -25,6 +26,7 @@ import 'package:chat/providers/rooms_provider.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
+import 'package:chat/services/product_services.dart';
 import 'package:chat/widgets/air_card.dart';
 import 'package:chat/widgets/light_card.dart';
 import 'package:chat/widgets/plant_card_widget.dart';
@@ -40,6 +42,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/socket_service.dart';
+
+import 'add_update_product.dart';
 
 class CatalogoDetailPage extends StatefulWidget {
   final Catalogo catalogo;
@@ -92,8 +96,6 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
     super.dispose();
     _tabController?.dispose();
 
-    // roomBloc.disposeRoom();
-
     plantBloc?.disposePlants();
   }
 
@@ -101,6 +103,10 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
+    final productService = Provider.of<ProductService>(context, listen: false);
+    final aws = Provider.of<AwsService>(context, listen: false);
+
+    final product = new Product();
     return Scaffold(
       backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -138,14 +144,10 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                   ),
                   iconSize: 30,
                   onPressed: () => {
-                        createModalSelection()
-                        /*  setState(() {
-                          //createRouteNewProduct(widget.room);
-
-                          Navigator.pushReplacement(
-                              context, createRouteNewProduct(widget.room));
-                          //addNewProduct();
-                        }) */
+                        aws.isUploadImagePlant = false,
+                        productService.product = product,
+                        Navigator.of(context).push(
+                            createRouteNewProduct(product, catalogo, false))
                       }),
             )
           ],
@@ -670,11 +672,12 @@ Route createRouteProfile() {
   );
 }
 
-Route createRouteNewPlant(Plant plant, Room room, bool isEdit) {
+Route createRouteNewProduct(Product product, Catalogo catalogo, bool isEdit) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => AddUpdatePlantPage(
-      plant: plant,
-      room: room,
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        AddUpdateProductPage(
+      product: product,
+      catalogo: catalogo,
       isEdit: isEdit,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
