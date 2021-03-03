@@ -143,6 +143,7 @@ class _CollapsingListState extends State<CollapsingList>
         ),
         makeHeaderSpacer(context),
         makeListClubes(context),
+        makeHeaderSpacer(context),
         makelistCarouselMyPlants(context),
         makeListCarouselMyVisits(context),
         makeListProducts(context)
@@ -178,6 +179,8 @@ class _CollapsingListState extends State<CollapsingList>
   }
 
   SliverList makelistCarouselMyPlants(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return SliverList(
       delegate: SliverChildListDelegate([
         Container(
@@ -190,16 +193,21 @@ class _CollapsingListState extends State<CollapsingList>
 
                 return Stack(
                   children: [
-                    Container(
-                      padding: EdgeInsets.only(left: 40, top: 30, bottom: 0),
-                      child: Text(
-                        'Mis Cultivos',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15),
-                      ),
-                    ),
+                    (plants.length > 0)
+                        ? Container(
+                            padding:
+                                EdgeInsets.only(left: 40, top: 0, bottom: 0),
+                            child: Text(
+                              'Mis Cultivos',
+                              style: TextStyle(
+                                  color: (currentTheme.customTheme)
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15),
+                            ),
+                          )
+                        : Container(),
                     FadeInRight(
                       delay: Duration(microseconds: 500),
                       child: _buildWidgetPlants(plants, context),
@@ -219,6 +227,10 @@ class _CollapsingListState extends State<CollapsingList>
   }
 
   SliverList makeListCarouselMyVisits(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
+    final size = MediaQuery.of(context).size;
+
     return SliverList(
       delegate: SliverChildListDelegate([
         Container(
@@ -229,16 +241,21 @@ class _CollapsingListState extends State<CollapsingList>
               visits = snapshot.data.visits;
               return Stack(
                 children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 40, top: 30, bottom: 0),
-                    child: Text(
-                      'Ultimas Visitas',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
-                    ),
-                  ),
+                  (visits.length > 0)
+                      ? Container(
+                          padding: EdgeInsets.only(
+                              left: 40, top: size.height / 20, bottom: 0),
+                          child: Text(
+                            'Ultimas Visitas',
+                            style: TextStyle(
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15),
+                          ),
+                        )
+                      : Container(),
                   FadeInRight(
                     delay: Duration(milliseconds: 600),
                     child: _buildWidgetVisits(visits, context),
@@ -257,34 +274,44 @@ class _CollapsingListState extends State<CollapsingList>
   }
 
   SliverList makeListProducts(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return SliverList(
       delegate: SliverChildListDelegate([
-        Container(
-            child: StreamBuilder<ProductsResponse>(
-          stream: productBloc.myProducts.stream,
-          builder: (context, AsyncSnapshot<ProductsResponse> snapshot) {
-            if (snapshot.hasData) {
-              products = snapshot.data.products;
-              return Stack(children: [
-                Container(
-                  padding: EdgeInsets.only(top: 0, left: 15),
-                  child: Text(
-                    'Tratamientos',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  ),
-                ),
-                _buildWidgetProducts(products, context) // image is ready
-              ]);
-            } else if (snapshot.hasError) {
-              return _buildErrorWidget(snapshot.error);
-            } else {
-              return _buildLoadingWidget();
-            }
-          },
-        )),
+        Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.only(
+                top: 30,
+                left: 15,
+              ),
+              child: Text(
+                'Tratamientos',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+              ),
+            ),
+            Container(
+                padding: EdgeInsets.only(top: 40),
+                child: StreamBuilder<ProductsResponse>(
+                  stream: productBloc.myProducts.stream,
+                  builder: (context, AsyncSnapshot<ProductsResponse> snapshot) {
+                    if (snapshot.hasData) {
+                      products = snapshot.data.products;
+                      return _buildWidgetProducts(products, context);
+                    } else if (snapshot.hasError) {
+                      return _buildErrorWidget(snapshot.error);
+                    } else {
+                      return _buildLoadingWidget();
+                    }
+                  },
+                )),
+          ],
+        ),
       ]),
     );
   }
@@ -295,8 +322,8 @@ class _CollapsingListState extends State<CollapsingList>
     return SliverPersistentHeader(
       pinned: true,
       delegate: SliverAppBarDelegate(
-          minHeight: 20,
-          maxHeight: 20,
+          minHeight: 40,
+          maxHeight: 40,
           child: Row(
             children: [Container()],
           )),
@@ -485,7 +512,7 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
   return (plants.length > 0)
       ? CarouselSlider.builder(
           options: CarouselOptions(
-            height: size.height / 3.5,
+            height: size.height / 3.0,
             viewportFraction: 0.80,
             initialPage: 0,
             enableInfiniteScroll: false,
@@ -503,7 +530,7 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
 
             return Container(
               padding:
-                  EdgeInsets.only(right: 20, bottom: 10, top: size.height / 14),
+                  EdgeInsets.only(right: 20, bottom: 10, top: size.height / 20),
               child: OpenContainer(
                   closedElevation: 5,
                   openElevation: 5,
@@ -528,8 +555,10 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
                     return PlantDetailPage(plant: plant);
                   },
                   closedBuilder: (_, openContainer) {
-                    return CardPlantPrincipal(
-                      plant: plant,
+                    return Container(
+                      child: CardPlantPrincipal(
+                        plant: plant,
+                      ),
                     );
                   }),
             );
@@ -564,7 +593,7 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
             return Stack(
               children: [
                 Container(
-                  padding: EdgeInsets.only(right: 10, top: 70),
+                  padding: EdgeInsets.only(right: 10, top: size.height / 10),
                   child: OpenContainer(
                       closedElevation: 5,
                       openElevation: 5,
@@ -596,6 +625,7 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
 
 Widget _buildWidgetProducts(products, context) {
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+  final size = MediaQuery.of(context).size;
 
   return Container(
     child: SizedBox(
@@ -610,7 +640,10 @@ Widget _buildWidgetProducts(products, context) {
               children: [
                 Container(
                   padding: EdgeInsets.only(
-                      top: 40, left: 20, right: 20, bottom: 0.0),
+                    left: 20,
+                    right: 20,
+                    top: size.height / 30,
+                  ),
                   child: OpenContainer(
                       closedElevation: 5,
                       openElevation: 5,
@@ -635,11 +668,9 @@ Widget _buildWidgetProducts(products, context) {
                         return Container();
                       },
                       closedBuilder: (_, openContainer) {
-                        return Stack(children: [
-                          FadeInLeft(
-                              delay: Duration(milliseconds: 300 * index),
-                              child: CardProduct(product: product)),
-                        ]);
+                        return FadeInLeft(
+                            delay: Duration(milliseconds: 300 * index),
+                            child: CardProduct(product: product));
                       }),
                 ),
               ],

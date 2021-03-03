@@ -32,7 +32,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
               height: size.height / 3.5,
               child: ClipRRect(
                   borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(20.0),
+                      topRight: Radius.circular(10.0),
                       topLeft: Radius.circular(10.0),
                       bottomRight: Radius.circular(10.0),
                       bottomLeft: Radius.circular(10.0)),
