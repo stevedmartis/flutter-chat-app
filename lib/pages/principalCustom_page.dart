@@ -188,9 +188,23 @@ class _CollapsingListState extends State<CollapsingList>
               if (snapshot.hasData) {
                 plants = snapshot.data.plants;
 
-                return FadeInRight(
-                  delay: Duration(microseconds: 500),
-                  child: _buildWidgetPlants(plants, context),
+                return Stack(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(left: 40, top: 30, bottom: 0),
+                      child: Text(
+                        'Mis Cultivos',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
+                      ),
+                    ),
+                    FadeInRight(
+                      delay: Duration(microseconds: 500),
+                      child: _buildWidgetPlants(plants, context),
+                    ),
+                  ],
                 ); // image is ready
               } else if (snapshot.hasError) {
                 return _buildErrorWidget(snapshot.error);
@@ -213,9 +227,23 @@ class _CollapsingListState extends State<CollapsingList>
           builder: (context, AsyncSnapshot<VisitsResponse> snapshot) {
             if (snapshot.hasData) {
               visits = snapshot.data.visits;
-              return FadeInRight(
-                delay: Duration(milliseconds: 600),
-                child: _buildWidgetVisits(visits, context),
+              return Stack(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 40, top: 30, bottom: 0),
+                    child: Text(
+                      'Ultimas Visitas',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
+                    ),
+                  ),
+                  FadeInRight(
+                    delay: Duration(milliseconds: 600),
+                    child: _buildWidgetVisits(visits, context),
+                  ),
+                ],
               ); // image is ready
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
@@ -237,7 +265,19 @@ class _CollapsingListState extends State<CollapsingList>
           builder: (context, AsyncSnapshot<ProductsResponse> snapshot) {
             if (snapshot.hasData) {
               products = snapshot.data.products;
-              return _buildWidgetProducts(products, context); // image is ready
+              return Stack(children: [
+                Container(
+                  padding: EdgeInsets.only(top: 0, left: 15),
+                  child: Text(
+                    'Tratamientos',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                ),
+                _buildWidgetProducts(products, context) // image is ready
+              ]);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
             } else {
@@ -446,7 +486,7 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
       ? CarouselSlider.builder(
           options: CarouselOptions(
             height: size.height / 3.5,
-            viewportFraction: 0.90,
+            viewportFraction: 0.80,
             initialPage: 0,
             enableInfiniteScroll: false,
             reverse: false,
@@ -462,7 +502,8 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
             final plant = plants[index];
 
             return Container(
-              padding: EdgeInsets.only(right: 20, bottom: 10),
+              padding:
+                  EdgeInsets.only(right: 20, bottom: 10, top: size.height / 14),
               child: OpenContainer(
                   closedElevation: 5,
                   openElevation: 5,
@@ -504,8 +545,8 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
   return (visits.length > 0)
       ? CarouselSlider.builder(
           options: CarouselOptions(
-            height: size.height / 5,
-            viewportFraction: 0.70,
+            height: size.height / 3,
+            viewportFraction: 0.80,
             initialPage: 0,
             enableInfiniteScroll: false,
             reverse: false,
@@ -520,29 +561,34 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
           itemBuilder: (BuildContext context, int index) {
             final visit = visits[index];
 
-            return Container(
-              padding: EdgeInsets.only(right: 10),
-              child: OpenContainer(
-                  closedElevation: 5,
-                  openElevation: 5,
-                  closedColor: currentTheme.scaffoldBackgroundColor,
-                  openColor: currentTheme.scaffoldBackgroundColor,
-                  transitionType: ContainerTransitionType.fade,
-                  openShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  closedShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0)),
-                  openBuilder: (_, closeContainer) {
-                    return AddUpdateVisitPage(
-                      visit: visit,
-                      plant: visit.plant,
-                      isEdit: true,
-                    );
-                  },
-                  closedBuilder: (_, openContainer) {
-                    return Container(child: CardVisit(visit: visits[index]));
-                  }),
+            return Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(right: 10, top: 70),
+                  child: OpenContainer(
+                      closedElevation: 5,
+                      openElevation: 5,
+                      closedColor: currentTheme.scaffoldBackgroundColor,
+                      openColor: currentTheme.scaffoldBackgroundColor,
+                      transitionType: ContainerTransitionType.fade,
+                      openShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      closedShape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0)),
+                      openBuilder: (_, closeContainer) {
+                        return AddUpdateVisitPage(
+                          visit: visit,
+                          plant: visit.plant,
+                          isEdit: true,
+                        );
+                      },
+                      closedBuilder: (_, openContainer) {
+                        return Container(
+                            child: CardVisit(visit: visits[index]));
+                      }),
+                ),
+              ],
             );
           })
       : Container();
@@ -564,7 +610,7 @@ Widget _buildWidgetProducts(products, context) {
               children: [
                 Container(
                   padding: EdgeInsets.only(
-                      top: 20, left: 20, right: 20, bottom: 0.0),
+                      top: 40, left: 20, right: 20, bottom: 0.0),
                   child: OpenContainer(
                       closedElevation: 5,
                       openElevation: 5,

@@ -132,6 +132,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     final aws = Provider.of<AwsService>(context, listen: false);
 
     final plantService = Provider.of<PlantService>(context, listen: false);
+
     setState(() {
       plant = (plantService.plant != null) ? plantService.plant : widget.plant;
     });

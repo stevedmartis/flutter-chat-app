@@ -29,7 +29,7 @@ class _CardProductState extends State<CardProduct> {
           child: FittedBox(
             child: Row(
               children: <Widget>[
-                producttem(),
+                productItem(),
                 Container(
                   width: 100,
                   height: 130,
@@ -37,7 +37,7 @@ class _CardProductState extends State<CardProduct> {
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(10.0),
                           topLeft: Radius.circular(10.0),
-                          bottomRight: Radius.circular(10.0),
+                          bottomRight: Radius.circular(0.0),
                           bottomLeft: Radius.circular(10.0)),
                       child: Material(
                         type: MaterialType.transparency,
@@ -62,7 +62,7 @@ class _CardProductState extends State<CardProduct> {
     );
   }
 
-  Widget producttem() {
+  Widget productItem() {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context);
     //  final thc = (widget.product.thc.isEmpty) ? '0' : widget.product.thc;
@@ -77,7 +77,7 @@ class _CardProductState extends State<CardProduct> {
 
       children: [
         Container(
-          padding: EdgeInsets.only(left: 10, top: 10),
+          padding: EdgeInsets.only(left: 10, top: 0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -159,6 +159,7 @@ class _CardProductState extends State<CardProduct> {
             ],
           ),
         ),
+        SizedBox(height: 5.0),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
           child: Column(

@@ -82,7 +82,7 @@ class Visit {
         "ph": ph,
         "ml": ml,
         "description": description,
-        "abobo": abono
+        "abono": abono
 
         // "images": List<Image>.from(images.map((x) => x)),
       };

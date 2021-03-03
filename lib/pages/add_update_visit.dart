@@ -345,14 +345,8 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                               height: 10,
                             ),
                             _createWater(bloc),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            (isSwitchedWater) ? _createMl(bloc) : Container(),
+                            (isSwitchedWater) ? _createLt(bloc) : Container(),
                             (isSwitchedWater) ? _createPh(bloc) : Container(),
-                            SizedBox(
-                              height: 10,
-                            ),
                             (isSwitchedWater)
                                 ? _createElectro(bloc)
                                 : Container(),
@@ -360,9 +354,6 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                               height: 10,
                             ),
                             _createAbono(bloc),
-                            SizedBox(
-                              height: 10,
-                            ),
                             _createDescription(bloc),
                             SizedBox(
                               height: 10,
@@ -667,7 +658,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                       color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Electro conductor *',
+                labelText: 'Electro conductor',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
 
@@ -770,7 +761,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                       color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'pH *',
+                labelText: 'pH',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changePh,
@@ -780,7 +771,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     );
   }
 
-  Widget _createMl(VisitBloc bloc) {
+  Widget _createLt(VisitBloc bloc) {
     //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return StreamBuilder(
@@ -822,7 +813,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                       color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Lt agua *',
+                labelText: 'Lt agua',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeMl,

@@ -285,11 +285,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
             ),
             iconSize: 30,
             onPressed: () {
-              final plantService =
-                  Provider.of<PlantService>(context, listen: false);
-
-              plantService.plant = null;
-
               //  Navigator.pushReplacement(context, createRouteProfile()),
               Navigator.pop(context);
             },
