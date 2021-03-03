@@ -1,7 +1,6 @@
 import 'package:chat/models/products.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../utils/extension.dart';
 
@@ -379,8 +378,6 @@ class CbdthcRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context);
-
     return Container(
       padding: EdgeInsets.only(top: 5.0),
       child: Row(

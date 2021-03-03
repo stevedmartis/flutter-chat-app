@@ -15,7 +15,6 @@ import 'package:chat/models/rooms_response.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/models/visits_response.dart';
 import 'package:chat/pages/plant_detail.dart';
-import 'package:chat/pages/room_detail.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/users_service.dart';
@@ -142,12 +141,10 @@ class _CollapsingListState extends State<CollapsingList>
             [FadeIn(child: BannerSlide())],
           ),
         ),
+        makeHeaderSpacer(context),
         makeListClubes(context),
-        makeHeaderSpacer(context),
-        makeHeaderSpacer(context),
-        makeHlistCarouselMyProducts(context),
+        makelistCarouselMyPlants(context),
         makeListCarouselMyVisits(context),
-        makeHeaderSpacer(context),
         makeListProducts(context)
       ],
     );
@@ -180,16 +177,17 @@ class _CollapsingListState extends State<CollapsingList>
     );
   }
 
-  SliverFixedExtentList makeHlistCarouselMyProducts(context) {
-    return SliverFixedExtentList(
-      itemExtent: 190.0,
-      delegate: SliverChildListDelegate(
-        [
-          StreamBuilder<PlantsResponse>(
+  SliverList makelistCarouselMyPlants(context) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Container(
+          padding: EdgeInsets.only(bottom: 10),
+          child: StreamBuilder<PlantsResponse>(
             stream: plantBloc.plantsUser.stream,
             builder: (context, AsyncSnapshot<PlantsResponse> snapshot) {
               if (snapshot.hasData) {
                 plants = snapshot.data.plants;
+
                 return FadeInRight(
                   delay: Duration(microseconds: 500),
                   child: _buildWidgetPlants(plants, context),
@@ -201,34 +199,32 @@ class _CollapsingListState extends State<CollapsingList>
               }
             },
           ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 
-  SliverFixedExtentList makeListCarouselMyVisits(context) {
-    return SliverFixedExtentList(
-      itemExtent: 150.0,
-      delegate: SliverChildListDelegate(
-        [
-          StreamBuilder<VisitsResponse>(
-            stream: visitBloc.visitsUser.stream,
-            builder: (context, AsyncSnapshot<VisitsResponse> snapshot) {
-              if (snapshot.hasData) {
-                visits = snapshot.data.visits;
-                return FadeInRight(
-                  delay: Duration(milliseconds: 600),
-                  child: _buildWidgetVisits(visits, context),
-                ); // image is ready
-              } else if (snapshot.hasError) {
-                return _buildErrorWidget(snapshot.error);
-              } else {
-                return _buildLoadingWidget();
-              }
-            },
-          )
-        ],
-      ),
+  SliverList makeListCarouselMyVisits(context) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Container(
+            child: StreamBuilder<VisitsResponse>(
+          stream: visitBloc.visitsUser.stream,
+          builder: (context, AsyncSnapshot<VisitsResponse> snapshot) {
+            if (snapshot.hasData) {
+              visits = snapshot.data.visits;
+              return FadeInRight(
+                delay: Duration(milliseconds: 600),
+                child: _buildWidgetVisits(visits, context),
+              ); // image is ready
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
+            } else {
+              return _buildLoadingWidget();
+            }
+          },
+        )),
+      ]),
     );
   }
 
@@ -449,8 +445,8 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
   return (plants.length > 0)
       ? CarouselSlider.builder(
           options: CarouselOptions(
-            height: size.height / 2,
-            viewportFraction: 0.70,
+            height: size.height / 3.5,
+            viewportFraction: 0.90,
             initialPage: 0,
             enableInfiniteScroll: false,
             reverse: false,
@@ -465,41 +461,36 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
           itemBuilder: (BuildContext context, int index) {
             final plant = plants[index];
 
-            return Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(right: 20, bottom: 10),
-                  child: OpenContainer(
-                      closedElevation: 5,
-                      openElevation: 5,
-                      closedColor: currentTheme.scaffoldBackgroundColor,
-                      openColor: currentTheme.scaffoldBackgroundColor,
-                      transitionType: ContainerTransitionType.fade,
-                      openShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20.0),
-                            topLeft: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0),
-                            bottomLeft: Radius.circular(10.0)),
-                      ),
-                      closedShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20.0),
-                            topLeft: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0),
-                            bottomLeft: Radius.circular(10.0)),
-                      ),
-                      openBuilder: (_, closeContainer) {
-                        return PlantDetailPage(plant: plant);
-                      },
-                      closedBuilder: (_, openContainer) {
-                        return CardPlantPrincipal(
-                          plant: plant,
-                        );
-                      }),
-                ),
-                buildCircleFavoritePlant(plant.quantity, context),
-              ],
+            return Container(
+              padding: EdgeInsets.only(right: 20, bottom: 10),
+              child: OpenContainer(
+                  closedElevation: 5,
+                  openElevation: 5,
+                  closedColor: currentTheme.scaffoldBackgroundColor,
+                  openColor: currentTheme.scaffoldBackgroundColor,
+                  transitionType: ContainerTransitionType.fade,
+                  openShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20.0),
+                        topLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                        bottomLeft: Radius.circular(10.0)),
+                  ),
+                  closedShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20.0),
+                        topLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                        bottomLeft: Radius.circular(10.0)),
+                  ),
+                  openBuilder: (_, closeContainer) {
+                    return PlantDetailPage(plant: plant);
+                  },
+                  closedBuilder: (_, openContainer) {
+                    return CardPlantPrincipal(
+                      plant: plant,
+                    );
+                  }),
             );
           },
         )
@@ -513,7 +504,7 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
   return (visits.length > 0)
       ? CarouselSlider.builder(
           options: CarouselOptions(
-            height: size.height / 2,
+            height: size.height / 5,
             viewportFraction: 0.70,
             initialPage: 0,
             enableInfiniteScroll: false,
@@ -532,6 +523,8 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
             return Container(
               padding: EdgeInsets.only(right: 10),
               child: OpenContainer(
+                  closedElevation: 5,
+                  openElevation: 5,
                   closedColor: currentTheme.scaffoldBackgroundColor,
                   openColor: currentTheme.scaffoldBackgroundColor,
                   transitionType: ContainerTransitionType.fade,

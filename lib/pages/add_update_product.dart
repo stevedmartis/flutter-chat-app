@@ -186,7 +186,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
             },
             child: CustomScrollView(
                 physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
+                    parent: ClampingScrollPhysics()),
                 // controller: _scrollController,
                 slivers: <Widget>[
                   SliverFixedExtentList(
@@ -249,8 +249,8 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                               height: 10,
                             ),
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Container(
                                   child: Text(
@@ -416,7 +416,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                       color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Descripción *',
+                labelText: 'Descripción ',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeDescription,

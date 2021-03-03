@@ -99,7 +99,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
               maxLines: 3,
               style: TextStyle(
                   fontWeight: FontWeight.normal,
-                  fontSize: 15,
+                  fontSize: 12,
                   color: Colors.grey),
             ),
           ),
@@ -123,7 +123,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
                     widget.plant.germinated,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                        fontSize: 10,
                         color: (currentTheme.customTheme)
                             ? Colors.white54
                             : Colors.grey),
