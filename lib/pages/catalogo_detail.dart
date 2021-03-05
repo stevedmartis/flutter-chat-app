@@ -329,6 +329,8 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
   }
 
   SliverList makeListProducts(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return SliverList(
       delegate: SliverChildListDelegate([
         Container(
@@ -343,7 +345,14 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
-                            child: Text('Sin Plantas, crea una +')),
+                            child: Text(
+                              'Sin Plantas, crea una nueva!',
+                              style: TextStyle(
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white54
+                                    : Colors.black54,
+                              ),
+                            )),
                       ); // image is ready
               } else {
                 return Container(
@@ -545,36 +554,6 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
 
     Navigator.pop(context);
   }
-
-/*   SliverList makeListPlants(context) {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        Container(
-          child: FutureBuilder(
-            future: this.plantService.getPlantsRoom(widget.room.id),
-            initialData: null,
-            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-              if (snapshot.hasData) {
-                plants = snapshot.data;
-                return (plants.length > 0)
-                    ? Container(child: _buildWidgetPlant(plants))
-                    : Center(
-                        child: Container(
-                            padding: EdgeInsets.all(50),
-                            child: Text('Sin Plantas, crea una +')),
-                      ); // image is ready
-              } else {
-                return Container(
-                    height: 400.0,
-                    child: Center(
-                        child: CircularProgressIndicator())); // placeholder
-              }
-            },
-          ),
-        ),
-      ]),
-    );
-  } */
 
   SliverPersistentHeader makeHeaderTabs(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;

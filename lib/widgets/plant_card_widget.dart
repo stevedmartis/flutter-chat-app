@@ -1,5 +1,6 @@
 import 'package:chat/models/plant.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/plant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -86,7 +87,7 @@ class _CardPlantState extends State<CardPlant> {
           CbdthcRow(
             thc: thc,
             cbd: cbd,
-            fontSize: 25,
+            fontSize: 30,
           ),
           SizedBox(height: 10.0),
           Container(
@@ -137,111 +138,6 @@ class _CardPlantState extends State<CardPlant> {
               ],
             ),
           )
-        ],
-      ),
-    );
-  }
-}
-
-class CbdthcRow extends StatelessWidget {
-  const CbdthcRow(
-      {Key key, @required this.thc, @required this.cbd, this.fontSize = 15})
-      : super(key: key);
-
-  final String thc;
-  final String cbd;
-  final double fontSize;
-
-  @override
-  Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context);
-
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-            child: Container(
-              child: Text(
-                "THC:",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: (currentTheme.customTheme)
-                        ? Colors.white54
-                        : Colors.grey),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(5.0),
-              decoration: BoxDecoration(
-                color: Color(0xffF12937E),
-                //color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                "$thc %",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: Colors.white),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(2.5),
-              child: Text("CBD:",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: fontSize,
-                      color: (currentTheme.customTheme)
-                          ? Colors.white54
-                          : Colors.grey)),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(5.0),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                //color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                "$cbd %",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: Colors.white),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-
-          /* Container(
-            width: 35,
-            decoration: BoxDecoration(
-              color: Colors.yellow[400],
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "New",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-            ),
-          ), */
         ],
       ),
     );

@@ -272,6 +272,32 @@ class _RoomListState extends State<RoomList> {
                               .push(createRouteRoomDetail(item, rooms)),
                         },
                         child: Dismissible(
+                          confirmDismiss: (DismissDirection direction) async {
+                            return await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text("Confirmar"),
+                                  content: const Text(
+                                      "Eliminaran todos los registros?"),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(true),
+                                        child: const Text(
+                                          "Eliminar",
+                                          style: TextStyle(color: Colors.red),
+                                        )),
+                                    FlatButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text("Cancelar"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
                           key: UniqueKey(),
                           direction: DismissDirection.endToStart,
                           onDismissed: (direction) =>

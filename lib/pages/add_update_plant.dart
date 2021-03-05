@@ -1,5 +1,6 @@
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/provider.dart';
+import 'package:chat/bloc/room_bloc.dart';
 
 import 'package:chat/helpers/mostrar_alerta.dart';
 
@@ -116,7 +117,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     descriptionCtrl.text = widget.plant.description;
     quantityCtrl.text = widget.plant.quantity;
 
-    optionItemSelected = (widget.isEdit) ? widget.plant.sexo : null;
+    //  optionItemSelected = (widget.isEdit) ? widget.plant.sexo : null;
     _dateGController.text = widget.plant.germinated;
     _durationFlorationCtrl.text = widget.plant.flowering;
 
@@ -246,10 +247,10 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
     final size = MediaQuery.of(context).size;
 
-    final isSexoChange =
+    /* final isSexoChange =
         (widget.plant.sexo != optionItemSelected && optionItemSelected != null)
             ? true
-            : false;
+            : false; */
 
     final isControllerChange = isNameChange &&
         isQuantityChange &&
@@ -259,7 +260,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     final isControllerChangeEdit = isNameChange ||
         isAboutChange ||
         isQuantityChange ||
-        isSexoChange ||
+        // isSexoChange ||
         isGerminatedChange ||
         isFlorationChange ||
         isThcChange ||
@@ -379,12 +380,12 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                             SizedBox(
                               height: 10,
                             ),
-                            GestureDetector(
+                            /* GestureDetector(
                                 onTap: () {
                                   FocusScope.of(context)
                                       .requestFocus(new FocusNode());
                                 },
-                                child: _createSexo(bloc)),
+                                child: _createSexo(bloc)), */
                             SizedBox(
                               height: 10,
                             ),
@@ -403,8 +404,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                                   child: TextFormField(
                                     style: TextStyle(
                                       color: (currentTheme.customTheme)
-                                          ? Colors.white
-                                          : Colors.black,
+                                          ? Colors.white54
+                                          : Colors.black54,
                                     ),
                                     controller: _dateGController,
                                     keyboardType: TextInputType.datetime,
@@ -419,10 +420,17 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                                               color: (currentTheme.customTheme)
                                                   ? Colors.white54
                                                   : Colors.black54)),
-                                      hintText: 'Germination *',
+                                      hintText: 'Germinación *',
+                                      hintStyle: TextStyle(
+                                        color: (currentTheme.customTheme)
+                                            ? Colors.white54
+                                            : Colors.black54,
+                                      ),
                                       suffixIcon: Icon(
                                         Icons.insert_invitation,
-                                        color: Colors.white54,
+                                        color: (currentTheme.customTheme)
+                                            ? Colors.white54
+                                            : Colors.black54,
                                       ),
                                     ),
                                   ),
@@ -577,7 +585,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                       color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Descripción *',
+                labelText: 'Descripción',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeDescription,
@@ -587,6 +595,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     );
   }
 
+/* 
   Widget _createSexo(PlantBloc bloc) {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context);
@@ -666,7 +675,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
       },
     );
   }
-
+ */
   Widget _createQuantity(PlantBloc bloc) {
     return StreamBuilder(
       stream: bloc.quantityStream,
@@ -787,9 +796,12 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                     child: Text(
                       '%',
                       style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white54),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54,
+                      ),
                     )),
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
@@ -813,7 +825,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                       color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'CBD *',
+                labelText: 'THC *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeThc,
@@ -842,9 +854,12 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                     child: Text(
                       '%',
                       style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white54),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54,
+                      ),
                     )),
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
@@ -977,7 +992,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         ? widget.plant.description
         : bloc.description.trim();
 
-    final sexo = optionItemSelected;
+    // final sexo = optionItemSelected;
 
     final quantity =
         (bloc.quantity == null) ? widget.plant.quantity : bloc.quantity.trim();
@@ -995,7 +1010,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     final newPlant = Plant(
         name: name,
         description: description,
-        sexo: sexo,
+        // sexo: sexo,
         coverImage: widget.plant.coverImage,
         quantity: quantity,
         germinated: germinated,
@@ -1013,6 +1028,8 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         // widget.plants.add(createPlantResp.plant);
         plantService.plant = createPlantResp.plant;
         plantBloc.getPlant(createPlantResp.plant);
+
+        roomBloc.getMyRooms(profile.user.uid);
 
         setState(() {
           loading = false;
@@ -1047,7 +1064,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         ? widget.plant.description
         : descriptionCtrl.text.trim();
 
-    final sexo = optionItemSelected;
+    // final sexo = optionItemSelected;
 
     final quantity =
         (bloc.quantity == null) ? widget.plant.quantity : bloc.quantity.trim();
@@ -1065,7 +1082,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     final editPlant = Plant(
         name: name,
         description: description,
-        sexo: sexo,
+        //   sexo: sexo,
         coverImage: plantService.plant.coverImage,
         quantity: quantity,
         germinated: germinated,

@@ -90,7 +90,7 @@ class Validators {
     if (text.length >= 1) {
       sink.add(text);
     } else {
-      sink.addError('Time On is required');
+      sink.addError('Hora de encendido is required');
     }
   });
 
@@ -99,7 +99,7 @@ class Validators {
     if (text.length >= 1) {
       sink.add(text);
     } else {
-      sink.addError('Time Off is required');
+      sink.addError('Hora de apagado is required');
     }
   });
 

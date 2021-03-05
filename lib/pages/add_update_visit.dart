@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 import 'package:provider/provider.dart';
 
@@ -37,17 +38,18 @@ class AddUpdateVisitPage extends StatefulWidget {
 
 class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   Visit visit;
-  final degreesCtrl = TextEditingController();
 
   final electroCtrl = TextEditingController();
-
-  final phCtrl = TextEditingController();
-
-  final mlCtrl = TextEditingController();
 
   final descriptionCtrl = TextEditingController();
 
   // final potCtrl = TextEditingController();
+
+  var phCtrl = new MaskedTextController(mask: '0.0');
+
+  var degreesCtrl = new MaskedTextController(mask: '0.0');
+
+  var mlCtrl = new MaskedTextController(mask: '0.0');
 
   bool isAboutChange = false;
 
@@ -394,6 +396,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         return Container(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             inputFormatters: [
               new LengthLimitingTextInputFormatter(100),
             ],
@@ -626,6 +631,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         return Container(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             inputFormatters: [
               new LengthLimitingTextInputFormatter(4),
             ],
@@ -678,6 +686,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         return Container(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             inputFormatters: [
               new LengthLimitingTextInputFormatter(3),
             ],
@@ -730,6 +741,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         return Container(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             inputFormatters: [
               new LengthLimitingTextInputFormatter(4),
             ],
@@ -782,6 +796,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         return Container(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             inputFormatters: [
               new LengthLimitingTextInputFormatter(4),
             ],

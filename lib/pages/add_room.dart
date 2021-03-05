@@ -405,7 +405,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                                                   .currentTheme.accentColor,
                                               width: 2.0),
                                         ),
-                                        labelText: 'Time on *',
+                                        labelText: 'Hora apagada *',
 
                                         prefixIcon: Icon(Icons.wb_incandescent,
                                             color: (currentTheme.customTheme)
@@ -457,7 +457,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                                                   .currentTheme.accentColor,
                                               width: 2.0),
                                         ),
-                                        labelText: 'Time off *',
+                                        labelText: 'Hora encendida *',
 
                                         prefixIcon: Icon(Icons.bedtime,
                                             color: (currentTheme.customTheme)

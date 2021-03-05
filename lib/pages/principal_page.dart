@@ -32,14 +32,14 @@ class _PrincipalPageState extends State<PrincipalPage> {
     super.initState();
     this.socketService = Provider.of<SocketService>(context, listen: false);
 
-    this.socketService.socket.on('principal-message', _listenMessage);
+    this.socketService.socket?.on('principal-message', _listenMessage);
 
     this.bottomControll();
   }
 
   @override
   void dispose() {
-    this.socketService.socket.off('principal-message');
+    // this.socketService.socket.off('principal-message');
     super.dispose();
     _hideBottomNavController.dispose();
   }

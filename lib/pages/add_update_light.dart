@@ -150,7 +150,7 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     final bloc = CustomProvider.lightBlocIn(context);
 
@@ -162,8 +162,10 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
         isNameChange || isWattsChange || isAboutChange;
 
     return Scaffold(
+      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor:
+            (currentTheme.customTheme) ? Colors.black : Colors.white,
         actions: [
           (widget.isEdit)
               ? _createButton(bloc, isControllerChangeEdit)
@@ -172,7 +174,7 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
         leading: IconButton(
           icon: Icon(
             Icons.chevron_left,
-            color: currentTheme.accentColor,
+            color: currentTheme.currentTheme.accentColor,
           ),
           iconSize: 30,
           onPressed: () =>
@@ -180,7 +182,21 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
               Navigator.pop(context),
           color: Colors.white,
         ),
-        title: (widget.isEdit) ? Text('Edit plant') : Text('Crear Luz'),
+        title: (widget.isEdit)
+            ? Text(
+                'Editar Luz',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
+              )
+            : Text(
+                'Nueva Luz',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
+              ),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
@@ -208,8 +224,8 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
                         children: <Widget>[
                           _createName(bloc),
                           _createWatts(bloc),
-                          _createDescription(bloc),
                           _createKelvin(bloc),
+                          _createDescription(bloc),
                           SizedBox(
                             height: 10,
                           ),
@@ -232,6 +248,9 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: nameCtrl,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(30),
@@ -260,7 +279,7 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
                       color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Nombre *',
+                labelText: 'Tipo/Nombre *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeName,
@@ -280,6 +299,9 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             inputFormatters: [
               new LengthLimitingTextInputFormatter(100),
             ],
@@ -329,6 +351,9 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: _wattsCtrl,
             onTap: () => {
               if (_wattsCtrl.text == "0") _wattsCtrl.text = "",
@@ -379,6 +404,9 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: _kelvinCtrl,
             onTap: () => {
               if (_kelvinCtrl.text == "0") _kelvinCtrl.text = "",

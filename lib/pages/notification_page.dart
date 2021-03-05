@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:chat/bloc/subscribe_bloc.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/profiles_response.dart';
@@ -171,195 +170,183 @@ class _NotificationsPageState extends State<NotificationsPage>
                         child: Column(
                           children: [
                             //final int t = index;
-                            FadeInLeft(
-                              delay: Duration(milliseconds: 300 * index),
-                              child: Slidable.builder(
-                                key: Key(item.id),
-                                controller: slidableController,
-                                direction: Axis.horizontal,
-                                dismissal: SlidableDismissal(
-                                  child: SlidableDrawerDismissal(),
-                                  onDismissed: (actionType) => {
-                                    _showSnackBar(
-                                        context,
-                                        actionType == SlideActionType.primary
-                                            ? 'Aprobado!, se agrego en "Mis pacientes"'
-                                            : 'Suscripción cancelada.'),
-                                    setState(() {
-                                      profiles.removeAt(index);
-                                    }),
-                                    actionType == SlideActionType.primary
-                                        ? _approveSubscription(
-                                            item.subId, index)
-                                        : _deleteSubscription(
-                                            item.subId, index),
-                                  },
-                                ),
-                                actionPane: _getActionPane(index),
-                                actionExtentRatio: 0.25,
-                                child: InkWell(
-                                  onTap: () {},
-                                  child: Material(
-                                    child: ListTile(
-                                      tileColor: (currentTheme.customTheme)
-                                          ? currentTheme.currentTheme.cardColor
-                                          : Colors.white,
-                                      leading: ImageUserChat(
-                                          width: 100,
-                                          height: 100,
-                                          profile: item,
-                                          fontsize: 20),
-                                      title: Text(nameSub,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: (currentTheme.customTheme)
-                                                  ? Colors.white54
-                                                  : Colors.black54,
-                                              fontSize: 18)),
-                                      subtitle: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            child: Text(
-                                              'Solicitud: $formatted',
-                                              style: TextStyle(
-                                                  color:
-                                                      (currentTheme.customTheme)
-                                                          ? Colors.white54
-                                                          : Colors.black54,
-                                                  fontSize: 15),
-                                            ),
+                            Slidable.builder(
+                              key: Key(item.id),
+                              controller: slidableController,
+                              direction: Axis.horizontal,
+                              dismissal: SlidableDismissal(
+                                child: SlidableDrawerDismissal(),
+                                onDismissed: (actionType) => {
+                                  _showSnackBar(
+                                      context,
+                                      actionType == SlideActionType.primary
+                                          ? 'Aprobado!, se agrego en "Mis pacientes"'
+                                          : 'Suscripción cancelada.'),
+                                  setState(() {
+                                    profiles.removeAt(index);
+                                  }),
+                                  actionType == SlideActionType.primary
+                                      ? _approveSubscription(item.subId, index)
+                                      : _deleteSubscription(item.subId, index),
+                                },
+                              ),
+                              actionPane: _getActionPane(index),
+                              actionExtentRatio: 0.25,
+                              child: InkWell(
+                                onTap: () {},
+                                child: Material(
+                                  child: ListTile(
+                                    tileColor: (currentTheme.customTheme)
+                                        ? currentTheme.currentTheme.cardColor
+                                        : Colors.white,
+                                    leading: ImageUserChat(
+                                        width: 100,
+                                        height: 100,
+                                        profile: item,
+                                        fontsize: 20),
+                                    title: Text(nameSub,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: (currentTheme.customTheme)
+                                                ? Colors.white54
+                                                : Colors.black54,
+                                            fontSize: 18)),
+                                    subtitle: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                            'Solicitud: $formatted',
+                                            style: TextStyle(
+                                                color:
+                                                    (currentTheme.customTheme)
+                                                        ? Colors.white54
+                                                        : Colors.black54,
+                                                fontSize: 15),
                                           ),
-                                          Container(
-                                            child: Text(
-                                              'Aprobación pendiente.',
-                                              style: TextStyle(
-                                                  color:
-                                                      (currentTheme.customTheme)
-                                                          ? Colors.white54
-                                                          : Colors.black54,
-                                                  fontSize: 15),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      trailing: Container(
-                                        padding: EdgeInsets.all(10),
-                                        child: Icon(
-                                          Icons.chevron_right,
-                                          color: currentTheme
-                                              .currentTheme.accentColor,
-                                          size: 30,
                                         ),
-                                      ),
-                                      onTap: () {
-                                        final chatService =
-                                            Provider.of<ChatService>(context,
-                                                listen: false);
-                                        chatService.userFor = item;
-                                        Navigator.of(context).push(
-                                            createRouteProfileSelect(item));
-                                      },
+                                        Container(
+                                          child: Text(
+                                            'Aprobación pendiente.',
+                                            style: TextStyle(
+                                                color:
+                                                    (currentTheme.customTheme)
+                                                        ? Colors.white54
+                                                        : Colors.black54,
+                                                fontSize: 15),
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    trailing: Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: Icon(
+                                        Icons.chevron_right,
+                                        color: currentTheme
+                                            .currentTheme.accentColor,
+                                        size: 30,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      final chatService =
+                                          Provider.of<ChatService>(context,
+                                              listen: false);
+                                      chatService.userFor = item;
+                                      Navigator.of(context)
+                                          .push(createRouteProfileSelect(item));
+                                    },
                                   ),
                                 ),
-                                actionDelegate: SlideActionBuilderDelegate(
-                                    actionCount: 1,
-                                    builder: (context, index, animation,
-                                        renderingMode) {
-                                      return IconSlideAction(
-                                        caption: 'Aprobar',
-                                        color: renderingMode ==
-                                                SlidableRenderingMode.slide
-                                            ? Colors.blue
-                                                .withOpacity(animation.value)
-                                            : (renderingMode ==
-                                                    SlidableRenderingMode
-                                                        .dismiss
-                                                ? Colors.blue
-                                                : currentTheme
-                                                    .currentTheme.accentColor),
-                                        icon: Icons.check_circle,
-                                        onTap: () async {
-                                          var state = Slidable.of(context);
-                                          state.dismiss();
-                                        },
-                                      );
-                                    }),
-                                secondaryActionDelegate:
-                                    SlideActionBuilderDelegate(
-                                        actionCount: 1,
-                                        builder: (context, index, animation,
-                                            renderingMode) {
-                                          return IconSlideAction(
-                                            caption: 'Eliminar',
-                                            color: renderingMode ==
-                                                    SlidableRenderingMode.slide
-                                                ? Colors.red.withOpacity(
-                                                    animation.value)
-                                                : Colors.red,
-                                            icon: Icons.delete,
-                                            onTap: () async {
-                                              var state = Slidable.of(context);
-                                              var dismiss =
-                                                  await showDialog<bool>(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    backgroundColor:
-                                                        Colors.black,
-                                                    title: Text(
-                                                      'Eliminar Solicitud',
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white54),
-                                                    ),
-                                                    content: Text(
-                                                      'Se desaprobara la solicitud',
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white54),
-                                                    ),
-                                                    actions: <Widget>[
-                                                      FlatButton(
-                                                        child: Text(
-                                                          'Cancelar',
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white54),
-                                                        ),
-                                                        onPressed: () =>
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop(false),
-                                                      ),
-                                                      FlatButton(
-                                                        child: Text(
-                                                          'Ok',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.red),
-                                                        ),
-                                                        onPressed: () =>
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop(true),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-
-                                              if (dismiss) {
-                                                state.dismiss();
-                                              }
-                                            },
-                                          );
-                                        }),
                               ),
+                              actionDelegate: SlideActionBuilderDelegate(
+                                  actionCount: 1,
+                                  builder: (context, index, animation,
+                                      renderingMode) {
+                                    return IconSlideAction(
+                                      caption: 'Aprobar',
+                                      color: renderingMode ==
+                                              SlidableRenderingMode.slide
+                                          ? Colors.blue
+                                              .withOpacity(animation.value)
+                                          : (renderingMode ==
+                                                  SlidableRenderingMode.dismiss
+                                              ? Colors.blue
+                                              : currentTheme
+                                                  .currentTheme.accentColor),
+                                      icon: Icons.check_circle,
+                                      onTap: () async {
+                                        var state = Slidable.of(context);
+                                        state.dismiss();
+                                      },
+                                    );
+                                  }),
+                              secondaryActionDelegate:
+                                  SlideActionBuilderDelegate(
+                                      actionCount: 1,
+                                      builder: (context, index, animation,
+                                          renderingMode) {
+                                        return IconSlideAction(
+                                          caption: 'Eliminar',
+                                          color: renderingMode ==
+                                                  SlidableRenderingMode.slide
+                                              ? Colors.red
+                                                  .withOpacity(animation.value)
+                                              : Colors.red,
+                                          icon: Icons.delete,
+                                          onTap: () async {
+                                            var state = Slidable.of(context);
+                                            var dismiss =
+                                                await showDialog<bool>(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  backgroundColor: Colors.black,
+                                                  title: Text(
+                                                    'Eliminar Solicitud',
+                                                    style: TextStyle(
+                                                        color: Colors.white54),
+                                                  ),
+                                                  content: Text(
+                                                    'Se desaprobara la solicitud',
+                                                    style: TextStyle(
+                                                        color: Colors.white54),
+                                                  ),
+                                                  actions: <Widget>[
+                                                    FlatButton(
+                                                      child: Text(
+                                                        'Cancelar',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white54),
+                                                      ),
+                                                      onPressed: () =>
+                                                          Navigator.of(context)
+                                                              .pop(false),
+                                                    ),
+                                                    FlatButton(
+                                                      child: Text(
+                                                        'Ok',
+                                                        style: TextStyle(
+                                                            color: Colors.red),
+                                                      ),
+                                                      onPressed: () =>
+                                                          Navigator.of(context)
+                                                              .pop(true),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+
+                                            if (dismiss) {
+                                              state.dismiss();
+                                            }
+                                          },
+                                        );
+                                      }),
                             ),
                             Divider(height: 1),
                           ],
@@ -427,8 +414,9 @@ class _NotificationsPageState extends State<NotificationsPage>
                               onTap: () {},
                               child: Material(
                                 child: ListTile(
-                                  tileColor: currentTheme
-                                      .currentTheme.scaffoldBackgroundColor,
+                                  tileColor: (currentTheme.customTheme)
+                                      ? currentTheme.currentTheme.cardColor
+                                      : Colors.white,
                                   leading: ImageUserChat(
                                       width: 100,
                                       height: 100,
@@ -450,7 +438,9 @@ class _NotificationsPageState extends State<NotificationsPage>
                                         child: Text(
                                           'Solicitud: $formatted',
                                           style: TextStyle(
-                                              color: Colors.white54,
+                                              color: (currentTheme.customTheme)
+                                                  ? Colors.white54
+                                                  : Colors.black54,
                                               fontSize: 15),
                                         ),
                                       ),

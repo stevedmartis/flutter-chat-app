@@ -94,7 +94,7 @@ class _CardVisitState extends State<CardVisit> {
             right: 0.0,
             child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(5.0),
                   gradient: LinearGradient(
                     colors: [
                       Color.fromARGB(200, 0, 0, 0),
@@ -205,109 +205,6 @@ class _CardVisitState extends State<CardVisit> {
               )
             ],
           )
-        ],
-      ),
-    );
-  }
-}
-
-class CbdthcRow extends StatelessWidget {
-  const CbdthcRow(
-      {Key key, @required this.thc, @required this.cbd, this.fontSize = 10})
-      : super(key: key);
-
-  final String thc;
-  final String cbd;
-  final double fontSize;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(2.5),
-              child: Text(
-                "THC:",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: Colors.white54),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(5.0),
-              decoration: BoxDecoration(
-                color: Color(0xffF12937E),
-                //color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                "$thc %",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: Colors.white),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(2.5),
-              child: Text(
-                "CBD:",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: Colors.white54),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(5.0),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                //color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                "$cbd %",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: Colors.white),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-
-          /* Container(
-            width: 35,
-            decoration: BoxDecoration(
-              color: Colors.yellow[400],
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "New",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-            ),
-          ), */
         ],
       ),
     );

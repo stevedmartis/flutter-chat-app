@@ -223,7 +223,10 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                   fontsize: 20),
                               title: Text(nameSub,
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 18)),
+                                      color: (currentTheme.customTheme)
+                                          ? Colors.white54
+                                          : Colors.black54,
+                                      fontSize: 18)),
                               subtitle: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -233,7 +236,10 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                     child: Text(
                                       'Aprobado: $formatted',
                                       style: TextStyle(
-                                          color: Colors.white54, fontSize: 15),
+                                          color: (currentTheme.customTheme)
+                                              ? Colors.white54
+                                              : Colors.black54,
+                                          fontSize: 15),
                                     ),
                                   ),
                                   Container(

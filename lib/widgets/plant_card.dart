@@ -28,7 +28,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
           children: [
             plantItem(),
             Container(
-              width: size.width / 3.5,
+              width: size.width / 2.5,
               height: size.height / 3.5,
               child: ClipRRect(
                   borderRadius: BorderRadius.only(
@@ -86,11 +86,11 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
           CbdthcRow(
             thc: thc,
             cbd: cbd,
-            fontSize: 12,
+            fontSize: 11,
           ),
           Container(
             margin: EdgeInsets.only(top: 5.0),
-            width: size.width / 3.5,
+            width: size.width / 2.5,
             child: Text(
               (widget.plant.description.length > 0)
                   ? widget.plant.description.capitalize()
@@ -99,7 +99,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
               maxLines: 3,
               style: TextStyle(
                   fontWeight: FontWeight.normal,
-                  fontSize: 12,
+                  fontSize: 15,
                   color: Colors.grey),
             ),
           ),
@@ -136,65 +136,6 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
       ),
     );
   }
-
-  Widget juiceitem() {
-    final size = MediaQuery.of(context).size;
-    return Container(
-      //width: 150,
-      child: Column(
-        //mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            height: 5,
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            width: size.width / 1.5,
-            child: Text(
-              (widget.plant.description.length > 0)
-                  ? widget.plant.description.capitalize()
-                  : "No description",
-              overflow: TextOverflow.ellipsis,
-              maxLines: 3,
-              style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 12,
-                  color: Colors.grey),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'Germinación: ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                      color: Colors.white54),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'sss',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                    color: Colors.white,
-                  ),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
 }
 
 class CbdthcRow extends StatelessWidget {
@@ -221,12 +162,14 @@ class CbdthcRow extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: fontSize,
-                    color: Colors.white54),
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54),
               ),
             ),
           ), */
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
+            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
             child: Container(
               padding: EdgeInsets.all(5.0),
               decoration: BoxDecoration(
@@ -235,7 +178,7 @@ class CbdthcRow extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
-                "$thc %",
+                "THC: $thc %",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: fontSize,
@@ -243,6 +186,24 @@ class CbdthcRow extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(
+            width: 10,
+          ),
+          /* Padding(
+            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
+            child: Container(
+              padding: EdgeInsets.all(0.5),
+              child: Text(
+                "CBD:",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSize,
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54),
+              ),
+            ),
+          ), */
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
             child: Container(
@@ -253,7 +214,7 @@ class CbdthcRow extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
-                "$cbd %",
+                "CBD: $cbd %",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: fontSize,

@@ -803,6 +803,8 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 
   SliverList makeListPlants(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return SliverList(
       delegate: SliverChildListDelegate([
         Container(
@@ -817,7 +819,14 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
-                            child: Text('Sin Plantas, crea una +')),
+                            child: Text(
+                              'Sin Plantas, crea una nueva',
+                              style: TextStyle(
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white54
+                                    : Colors.black54,
+                              ),
+                            )),
                       ); // image is ready
               } else {
                 return Container(

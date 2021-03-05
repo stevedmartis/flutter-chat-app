@@ -5,6 +5,7 @@ import 'package:chat/services/visit_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/cover_image_visit_expanded.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -35,7 +36,7 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
   @override
   void initState() {
     if (!widget.isEdit) {
-      _selectImage();
+      _selectImage(false);
     }
     super.initState();
   }
@@ -65,13 +66,26 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
         actions: [
           (!loadImage)
               ? IconButton(
+                  icon: FaIcon(
+                    FontAwesomeIcons.camera,
+                    color: currentTheme.accentColor,
+                  ),
+                  iconSize: 30,
+                  onPressed: () async =>
+                      (!widget.isEdit) ? _selectImage(true) : _editImage(true),
+                  color: Colors.white,
+                )
+              : _buildLoadingWidget(),
+          (!loadImage)
+              ? IconButton(
                   icon: Icon(
                     Icons.add_photo_alternate,
                     color: currentTheme.accentColor,
                   ),
                   iconSize: 40,
-                  onPressed: () async =>
-                      (!widget.isEdit) ? _selectImage() : _editImage(),
+                  onPressed: () async => (!widget.isEdit)
+                      ? _selectImage(false)
+                      : _editImage(false),
                   color: Colors.white,
                 )
               : _buildLoadingWidget(),
@@ -100,11 +114,12 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
         child: Center(child: CircularProgressIndicator()));
   }
 
-  _selectImage() async {
+  _selectImage(bool isCamera) async {
     final awsService = Provider.of<AwsService>(context, listen: false);
     final visitService = Provider.of<VisitService>(context, listen: false);
 
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(
+        source: (isCamera) ? ImageSource.camera : ImageSource.gallery);
 
     if (pickedFile != null) {
       imageCover = File(pickedFile.path);
@@ -137,11 +152,12 @@ class CoverImageVisitPageState extends State<CoverImageVisitPage> {
     }
   }
 
-  _editImage() async {
+  _editImage(bool isCamera) async {
     final awsService = Provider.of<AwsService>(context, listen: false);
     final visitService = Provider.of<VisitService>(context, listen: false);
 
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(
+        source: (isCamera) ? ImageSource.camera : ImageSource.gallery);
 
     if (pickedFile != null) {
       imageCover = File(pickedFile.path);

@@ -138,7 +138,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     final bloc = CustomProvider.airBlocIn(context);
 
@@ -150,8 +150,10 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
         isNameChange || isWattsChange || isAboutChange;
 
     return Scaffold(
+      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor:
+            (currentTheme.customTheme) ? Colors.black : Colors.white,
         actions: [
           (widget.isEdit)
               ? _createButton(bloc, isControllerChangeEdit)
@@ -160,7 +162,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
         leading: IconButton(
           icon: Icon(
             Icons.chevron_left,
-            color: currentTheme.accentColor,
+            color: currentTheme.currentTheme.accentColor,
           ),
           iconSize: 30,
           onPressed: () =>
@@ -168,7 +170,21 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
               Navigator.pop(context),
           color: Colors.white,
         ),
-        title: (widget.isEdit) ? Text('Edit plant') : Text('Crear aire'),
+        title: (widget.isEdit)
+            ? Text(
+                'Editar Aire',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
+              )
+            : Text(
+                'Nuevo Aire',
+                style: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white
+                        : Colors.black),
+              ),
       ),
       body: NotificationListener<ScrollEndNotification>(
         onNotification: (_) {
@@ -219,6 +235,10 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
+
             controller: nameCtrl,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(30),
@@ -247,7 +267,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
                       color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Nombre *',
+                labelText: 'Tipo/Nombre *',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeName,
@@ -267,6 +287,9 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             inputFormatters: [
               new LengthLimitingTextInputFormatter(100),
             ],
@@ -316,6 +339,9 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
 
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: _wattsCtrl,
             onTap: () => {
               if (_wattsCtrl.text == "0") _wattsCtrl.text = "",

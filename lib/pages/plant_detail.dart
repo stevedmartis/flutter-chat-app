@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/plant.dart';
+import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
 import 'package:chat/models/visit.dart';
@@ -26,6 +28,7 @@ import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:chat/widgets/visit_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -90,6 +93,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   AuthService authService;
   Plant plant;
 
+  Profiles profile;
+
   final roomService = new RoomService();
   double get maxHeight => 200 + MediaQuery.of(context).padding.top;
   double get minHeight => MediaQuery.of(context).padding.bottom;
@@ -107,6 +112,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     //  name = widget.profile.name;
     plantBloc.getPlant(widget.plant);
 
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    profile = authService.profile;
     //roomBloc.getRooms(widget.profile.user.uid);
   }
 
@@ -342,6 +350,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   }
 
   SliverList makeListVisits(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return SliverList(
       delegate: SliverChildListDelegate([
         Container(
@@ -360,7 +370,12 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
-                            child: Text('No hay visitas, Agrega una nueva!')),
+                            child: Text('No hay visitas, Agrega una nueva!',
+                                style: TextStyle(
+                                  color: (currentTheme.customTheme)
+                                      ? Colors.white54
+                                      : Colors.black54,
+                                ))),
                       ); // image is ready
               } else {
                 return Container(
@@ -380,6 +395,22 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     if (res) {
       setState(() {
         visits.removeAt(index);
+      });
+    }
+  }
+
+  _deletePlant(
+    String id,
+  ) async {
+    final res = await this.plantsApiProvider.deletePlant(id);
+    if (res) {
+      setState(() {
+        //    widget.plants.removeAt(index);
+        roomBloc.getMyRooms(profile.user.uid);
+        plantBloc.getPlantsByUser(profile.user.uid);
+
+        Navigator.pop(context);
+        Navigator.pop(context);
       });
     }
   }
@@ -674,6 +705,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   SliverList makeHeaderInfo(context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
+    final thc = (widget.plant.thc.isEmpty) ? '0' : widget.plant.thc;
+    final cbd = (widget.plant.cbd.isEmpty) ? '0' : widget.plant.cbd;
+
     return SliverList(
       delegate: SliverChildListDelegate([
         StreamBuilder<Plant>(
@@ -703,20 +737,28 @@ class _PlantDetailPageState extends State<PlantDetailPage>
               final aws = Provider.of<AwsService>(context, listen: false);
 
               return Container(
-                padding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
                 color: currentTheme.currentTheme.scaffoldBackgroundColor,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.width / 15),
+                      padding: EdgeInsets.only(
+                          top: 10, left: size.width / 10, bottom: 5.0),
+                      child: CbdthcRow(
+                        thc: thc,
+                        cbd: cbd,
+                        fontSize: 15,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: size.width / 15),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Container(
-                              padding: EdgeInsets.all(2.5),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 5.0),
                               child: FaIcon(
                                 FontAwesomeIcons.seedling,
                                 color: (currentTheme.customTheme)
@@ -726,7 +768,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                           Container(
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 40, vertical: 5.0),
+                                  horizontal: 0, vertical: 5.0),
                               child: Container(
                                 padding: EdgeInsets.all(2.5),
                                 child: Text(
@@ -741,7 +783,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.all(5.0),
+                            padding: EdgeInsets.only(
+                              left: 70,
+                            ),
                             child: Text(
                               "$germina",
                               style: TextStyle(
@@ -763,7 +807,8 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Container(
-                              padding: EdgeInsets.all(2.5),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 5.0),
                               child: FaIcon(
                                 FontAwesomeIcons.cannabis,
                                 color: (currentTheme.customTheme)
@@ -773,7 +818,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                           Container(
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 40, vertical: 5.0),
+                                  horizontal: 0, vertical: 5.0),
                               child: Container(
                                 padding: EdgeInsets.all(2.5),
                                 child: Text(
@@ -792,7 +837,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                             width: 25,
                           ),
                           Container(
-                            padding: EdgeInsets.all(5.0),
+                            padding: EdgeInsets.only(
+                              left: 70,
+                            ),
                             child: Text(
                               "$flora",
                               style: TextStyle(
@@ -826,7 +873,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                     Container(
                         width: size.width - 5,
                         padding:
-                            EdgeInsets.only(left: size.width / 10.0, right: 10),
+                            EdgeInsets.only(left: size.width / 10.0, right: 30),
                         //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
                         child: (about.length > 0)
@@ -835,29 +882,59 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                     SizedBox(
                       height: 10.0,
                     ),
-                    Container(
-                      //top: size.height / 3.5,
-                      margin: EdgeInsets.only(left: 40, right: 40),
-                      // width: size.width / 1.5,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: ButtonSubEditProfile(
-                            color: currentTheme
-                                .currentTheme.scaffoldBackgroundColor,
-                            textColor: currentTheme.currentTheme.accentColor,
-                            text: 'Editar',
-                            onPressed: () {
-                              aws.isUploadImagePlant = false;
-                              plantService.plant = plant;
-                              Navigator.of(context)
-                                  .push(createRouteEditPlant(widget.plant));
-                            }),
-                      ),
+                    Row(
+                      children: [
+                        Container(
+                          width: 130,
+
+                          //top: size.height / 3.5,
+                          margin:
+                              EdgeInsets.only(left: size.width / 8, right: 30),
+                          // width: size.width / 1.5,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: ButtonSubEditProfile(
+                                color: currentTheme
+                                    .currentTheme.scaffoldBackgroundColor,
+                                textColor:
+                                    currentTheme.currentTheme.accentColor,
+                                text: 'Editar',
+                                onPressed: () {
+                                  aws.isUploadImagePlant = false;
+                                  plantService.plant = plant;
+                                  Navigator.of(context)
+                                      .push(createRouteEditPlant(widget.plant));
+                                }),
+                          ),
+                        ),
+                        Container(
+                          width: 130,
+                          //top: size.height / 3.5,
+                          margin: EdgeInsets.only(left: 20, right: 10),
+                          // width: size.width / 1.5,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: ButtonSubEditProfile(
+                                color: currentTheme
+                                    .currentTheme.scaffoldBackgroundColor,
+                                textColor: Colors.grey,
+                                text: 'Eliminar',
+                                onPressed: () {
+                                  confirmDelete(
+                                      context,
+                                      'Confirmar',
+                                      'Eliminaran Planta con sus registros y visitas?',
+                                      plant.id);
+                                }),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 20.0,
                     ),
                     Divider(
+                      thickness: 2.0,
                       height: 1.0,
                     )
                   ],
@@ -872,6 +949,59 @@ class _PlantDetailPageState extends State<PlantDetailPage>
         ),
       ]),
     );
+  }
+
+  confirmDelete(
+    BuildContext context,
+    String titulo,
+    String subtitulo,
+    String id,
+  ) {
+    if (Platform.isAndroid) {
+      return showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+                title: Text(titulo),
+                content: Text(subtitulo),
+                actions: <Widget>[
+                  MaterialButton(
+                      child: Text('Confirmar'),
+                      elevation: 5,
+                      textColor: Color(0xff34EC9C),
+                      onPressed: () => Navigator.pop(context)),
+                  MaterialButton(
+                      child: Text(
+                        'Cancelar',
+                      ),
+                      elevation: 5,
+                      textColor: Colors.white54,
+                      onPressed: () => Navigator.pop(context))
+                ],
+              ));
+    }
+
+    showCupertinoDialog(
+        context: context,
+        builder: (_) => CupertinoAlertDialog(
+              title: Text(
+                titulo,
+              ),
+              content: Text(subtitulo),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  child: Text('Confirmar',
+                      style: TextStyle(color: Color(0xff34EC9C))),
+                  onPressed: () => _deletePlant(id),
+                ),
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  child:
+                      Text('Cancelar', style: TextStyle(color: Colors.white54)),
+                  onPressed: () => Navigator.pop(context),
+                )
+              ],
+            ));
   }
 
   Widget _buildUserWidget(RoomsResponse data) {
@@ -1111,7 +1241,7 @@ RichText convertHashtag(String text, context) {
                 color: (currentTheme.customTheme)
                     ? Colors.white54
                     : Colors.black54,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w400,
                 fontSize: 16))
       ]..addAll(hashtags
           .map((text) => text.contains("#")
@@ -1126,7 +1256,7 @@ RichText convertHashtag(String text, context) {
                       color: (currentTheme.customTheme)
                           ? Colors.white54
                           : Colors.black54,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w400,
                       fontSize: 16)))
           .toList()),
     ),
@@ -1261,4 +1391,112 @@ Route createRouteNewVisit(Visit visit, String plant, bool isEdit) {
     },
     transitionDuration: Duration(milliseconds: 400),
   );
+}
+
+class CbdthcRow extends StatelessWidget {
+  const CbdthcRow(
+      {Key key, @required this.thc, @required this.cbd, this.fontSize = 10})
+      : super(key: key);
+
+  final String thc;
+  final String cbd;
+  final double fontSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
+      child: Row(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              decoration: BoxDecoration(
+                color: Color(0xffF12937E),
+                //color: Theme.of(context).accentColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                "THC: $thc %",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSize,
+                    color: Colors.white),
+              ),
+            ),
+          ),
+          /* Padding(
+            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
+            child: Container(
+              padding: EdgeInsets.all(0.5),
+              child: Text(
+                "THC",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSize,
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54),
+              ),
+            ),
+          ), */
+          SizedBox(
+            width: 85,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5.0),
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                //color: Theme.of(context).accentColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                "CBD: $cbd %",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSize,
+                    color: Colors.white),
+              ),
+            ),
+          ),
+          /* Padding(
+            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
+            child: Container(
+              padding: EdgeInsets.all(0.5),
+              child: Text(
+                "CBD",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSize,
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54),
+              ),
+            ),
+          ), */
+          SizedBox(
+            width: 10,
+          ),
+
+          /* Container(
+            width: 35,
+            decoration: BoxDecoration(
+              color: Colors.yellow[400],
+              //color: Theme.of(context).accentColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              "New",
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
+            ),
+          ), */
+        ],
+      ),
+    );
+  }
 }
