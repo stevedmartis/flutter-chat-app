@@ -570,6 +570,7 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
               leading: null,
               backgroundColor: currentTheme.scaffoldBackgroundColor,
               bottom: TabBar(
+                  labelColor: currentTheme.accentColor,
                   indicatorWeight: 3.0,
                   indicatorColor: currentTheme.accentColor,
                   tabs: [

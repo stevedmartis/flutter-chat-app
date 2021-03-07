@@ -15,6 +15,7 @@ import 'package:chat/models/rooms_response.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/models/visits_response.dart';
 import 'package:chat/pages/plant_detail.dart';
+import 'package:chat/pages/product_detail.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/users_service.dart';
@@ -194,17 +195,19 @@ class _CollapsingListState extends State<CollapsingList>
                 return Stack(
                   children: [
                     (plants.length > 0)
-                        ? Container(
-                            padding:
-                                EdgeInsets.only(left: 40, top: 0, bottom: 0),
-                            child: Text(
-                              'Mis Cultivos',
-                              style: TextStyle(
-                                  color: (currentTheme.customTheme)
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15),
+                        ? FadeIn(
+                            child: Container(
+                              padding:
+                                  EdgeInsets.only(left: 40, top: 0, bottom: 0),
+                              child: Text(
+                                'Mis Cultivos',
+                                style: TextStyle(
+                                    color: (currentTheme.customTheme)
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              ),
                             ),
                           )
                         : Container(),
@@ -242,17 +245,19 @@ class _CollapsingListState extends State<CollapsingList>
               return Stack(
                 children: [
                   (visits.length > 0)
-                      ? Container(
-                          padding: EdgeInsets.only(
-                              left: 40, top: size.height / 20, bottom: 0),
-                          child: Text(
-                            'Ultimas Visitas',
-                            style: TextStyle(
-                                color: (currentTheme.customTheme)
-                                    ? Colors.white
-                                    : Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15),
+                      ? FadeIn(
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 40, top: size.height / 30, bottom: 0),
+                            child: Text(
+                              'Ultimas Visitas',
+                              style: TextStyle(
+                                  color: (currentTheme.customTheme)
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15),
+                            ),
                           ),
                         )
                       : Container(),
@@ -593,7 +598,7 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
             return Stack(
               children: [
                 Container(
-                  padding: EdgeInsets.only(right: 10, top: size.height / 10),
+                  padding: EdgeInsets.only(right: 10, top: size.height / 12),
                   child: OpenContainer(
                       closedElevation: 5,
                       openElevation: 5,
@@ -665,7 +670,9 @@ Widget _buildWidgetProducts(products, context) {
                             bottomLeft: Radius.circular(10.0)),
                       ),
                       openBuilder: (_, closeContainer) {
-                        return Container();
+                        return ProductDetailPage(
+                          product: product,
+                        );
                       },
                       closedBuilder: (_, openContainer) {
                         return FadeInLeft(

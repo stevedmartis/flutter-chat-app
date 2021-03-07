@@ -121,8 +121,6 @@ class CoverImageProductPageState extends State<CoverImageProductPage> {
       setState(() {
         //  plantBlo
         loadingImage = true;
-
-        print(loadingImage);
       });
 
       /* awsService.uploadAvatar(
@@ -162,8 +160,6 @@ class CoverImageProductPageState extends State<CoverImageProductPage> {
       setState(() {
         //  plantBlo
         loadingImage = true;
-
-        print(loadingImage);
       });
 
       /* awsService.uploadAvatar(

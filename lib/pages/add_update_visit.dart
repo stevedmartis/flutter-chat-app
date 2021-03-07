@@ -43,13 +43,19 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
 
   final descriptionCtrl = TextEditingController();
 
+  final nameAbonoCtrl = TextEditingController();
+
   // final potCtrl = TextEditingController();
 
   var phCtrl = new MaskedTextController(mask: '0.0');
 
+  var gramsCtrl = new TextEditingController();
+
   var degreesCtrl = new MaskedTextController(mask: '0.0');
 
   var mlCtrl = new MaskedTextController(mask: '0.0');
+
+  var mlAbonoCtrl = new MaskedTextController(mask: '0.0');
 
   bool isAboutChange = false;
 
@@ -82,6 +88,10 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
 
   bool loading = false;
 
+  bool isMlAbonoChange = false;
+
+  bool isGramsChange = false;
+
   bool isDefault;
 
   @override
@@ -103,6 +113,12 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     electroCtrl.text = widget.visit.electro;
     phCtrl.text = widget.visit.ph;
     descriptionCtrl.text = widget.visit.description;
+
+    gramsCtrl.text = widget.visit.grams;
+
+    nameAbonoCtrl.text = widget.visit.nameAbono;
+
+    mlAbonoCtrl.text = widget.visit.mlAbono;
 
     visitBloc.imageUpdate.add(true);
 
@@ -160,6 +176,24 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
       });
     });
 
+    mlAbonoCtrl.addListener(() {
+      setState(() {
+        if (widget.visit.mlAbono != mlAbonoCtrl.text)
+          this.isMlAbonoChange = true;
+        else
+          this.isMlAbonoChange = false;
+      });
+    });
+
+    gramsCtrl.addListener(() {
+      setState(() {
+        if (widget.visit.grams != gramsCtrl.text)
+          this.isGramsChange = true;
+        else
+          this.isGramsChange = false;
+      });
+    });
+
     super.initState();
   }
 
@@ -194,7 +228,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         isCleanChange ||
         isTempChange ||
         isWaterChange ||
-        isAbonoChange;
+        isAbonoChange ||
+        isMlAbonoChange ||
+        isGramsChange;
 
     return SafeArea(
       child: Scaffold(
@@ -339,23 +375,42 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                             SizedBox(
                               height: 10,
                             ),
+                            (isSwitchedCut) ? _createGrams(bloc) : Container(),
                             _createTemperature(bloc),
+                            SizedBox(
+                              height: 10,
+                            ),
                             (isSwitchedTemp)
                                 ? _createDegrees(bloc)
                                 : Container(),
+                            _createWater(bloc),
+                            (isSwitchedWater) ? _createLt(bloc) : Container(),
                             SizedBox(
                               height: 10,
                             ),
-                            _createWater(bloc),
-                            (isSwitchedWater) ? _createLt(bloc) : Container(),
                             (isSwitchedWater) ? _createPh(bloc) : Container(),
+                            SizedBox(
+                              height: 10,
+                            ),
                             (isSwitchedWater)
                                 ? _createElectro(bloc)
+                                : Container(),
+                            _createAbono(bloc),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            (isSwitchedAbono)
+                                ? _createNameAbono(bloc)
                                 : Container(),
                             SizedBox(
                               height: 10,
                             ),
-                            _createAbono(bloc),
+                            (isSwitchedAbono)
+                                ? _createMlAbono(bloc)
+                                : Container(),
+                            SizedBox(
+                              height: 10,
+                            ),
                             _createDescription(bloc),
                             SizedBox(
                               height: 10,
@@ -430,10 +485,62 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                       color: currentTheme.currentTheme.accentColor, width: 2.0),
                 ),
                 hintText: '',
-                labelText: 'Observación *',
+                labelText: 'Observación',
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeDescription,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _createNameAbono(VisitBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.nameAbonoStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
+        return Container(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
+            inputFormatters: [
+              new LengthLimitingTextInputFormatter(100),
+            ],
+            controller: nameAbonoCtrl,
+            //  keyboardType: TextInputType.emailAddress,
+
+            //  keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+                // icon: Icon(Icons.perm_identity),
+                //  fillColor: currentTheme.accentColor,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
+                ),
+                hintText: '',
+                labelText: 'Nombre/Marca',
+                //counterText: snapshot.data,
+                errorText: snapshot.error),
+            onChanged: bloc.changeNameAbono,
           ),
         );
       },
@@ -450,7 +557,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
             child: ListTile(
           //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
           title: Text(
-            'Cortar',
+            'Podar',
             style: TextStyle(
                 color: (currentTheme.customTheme)
                     ? Colors.white54
@@ -479,37 +586,31 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   Widget _createAbono(VisitBloc bloc) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
-    return StreamBuilder(
-      stream: bloc.cutStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-            child: ListTile(
-          //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
-          title: Text(
-            'Fertilizar/Abonar',
-            style: TextStyle(
-                color: (currentTheme.customTheme)
-                    ? Colors.white54
-                    : Colors.black54),
-          ),
-          trailing: Switch.adaptive(
-            activeColor: currentTheme.currentTheme.accentColor,
-            value: isSwitchedAbono,
-            onChanged: (value) {
-              setState(() {
-                isSwitchedAbono = value;
+    return Container(
+        child: ListTile(
+      //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
+      title: Text(
+        'Fertilizar/Abonar',
+        style: TextStyle(
+            color:
+                (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
+      ),
+      trailing: Switch.adaptive(
+        activeColor: currentTheme.currentTheme.accentColor,
+        value: isSwitchedAbono,
+        onChanged: (value) {
+          setState(() {
+            isSwitchedAbono = value;
 
-                if (isSwitchedAbono != widget.visit.abono) {
-                  this.isAbonoChange = true;
-                } else {
-                  this.isAbonoChange = false;
-                }
-              });
-            },
-          ),
-        ));
-      },
-    );
+            if (isSwitchedAbono != widget.visit.abono) {
+              this.isAbonoChange = true;
+            } else {
+              this.isAbonoChange = false;
+            }
+          });
+        },
+      ),
+    ));
   }
 
   Widget _createClean(VisitBloc bloc) {
@@ -785,6 +886,61 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
     );
   }
 
+  Widget _createGrams(VisitBloc bloc) {
+    //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return StreamBuilder(
+      stream: bloc.gramStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
+        return Container(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
+            inputFormatters: [
+              new LengthLimitingTextInputFormatter(4),
+            ],
+            controller: gramsCtrl,
+            keyboardType: TextInputType.number,
+
+            maxLines: 1,
+            //  keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+                // icon: Icon(Icons.perm_identity),
+                //  fillColor: currentTheme.accentColor,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
+                ),
+                hintText: '',
+                labelText: 'Gramos cosechados',
+                //counterText: snapshot.data,
+                errorText: snapshot.error),
+            onChanged: bloc.changeGram,
+          ),
+        );
+      },
+    );
+  }
+
   Widget _createLt(VisitBloc bloc) {
     //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
@@ -834,6 +990,61 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                 //counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changeMl,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _createMlAbono(VisitBloc bloc) {
+    //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return StreamBuilder(
+      stream: bloc.mlAbonoStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
+        return Container(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
+            inputFormatters: [
+              new LengthLimitingTextInputFormatter(4),
+            ],
+            controller: mlAbonoCtrl,
+            keyboardType: TextInputType.number,
+
+            maxLines: 1,
+            //  keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+                // icon: Icon(Icons.perm_identity),
+                //  fillColor: currentTheme.accentColor,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
+                ),
+                hintText: '',
+                labelText: 'ML',
+                //counterText: snapshot.data,
+                errorText: snapshot.error),
+            onChanged: bloc.changeMlAbono,
           ),
         );
       },
@@ -901,9 +1112,19 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
 
     final ml = (mlCtrl.text == "") ? widget.visit.ml : bloc.ml.trim();
 
+    final mlAbono =
+        (mlAbonoCtrl.text == "") ? widget.visit.mlAbono : bloc.mlAbono.trim();
+
+    final nameAbono = (nameAbonoCtrl.text == "")
+        ? widget.visit.nameAbono
+        : bloc.nameAbono.trim();
+
     final description = (descriptionCtrl.text == "")
         ? widget.visit.description
         : bloc.description.trim();
+
+    final grams =
+        (gramsCtrl.text == "") ? widget.visit.grams : bloc.gram.trim();
 
     final newVisit = Visit(
       // name: name,
@@ -920,6 +1141,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
       abono: abono,
       ph: ph,
       ml: ml,
+      grams: grams,
+      mlAbono: mlAbono,
+      nameAbono: nameAbono,
       description: description,
     );
 
@@ -975,6 +1199,16 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
         ? widget.visit.description
         : descriptionCtrl.text.trim();
 
+    final mlAbono =
+        (mlAbonoCtrl.text == "") ? widget.visit.mlAbono : bloc.mlAbono.trim();
+
+    final nameAbono = (nameAbonoCtrl.text == "")
+        ? widget.visit.nameAbono
+        : bloc.nameAbono.trim();
+
+    final grams =
+        (gramsCtrl.text == "") ? widget.visit.grams : bloc.gram.trim();
+
     final newVisit = Visit(
       // name: name,
       coverImage: widget.visit.coverImage,
@@ -989,6 +1223,9 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
       abono: abono,
       ph: ph,
       ml: ml,
+      mlAbono: mlAbono,
+      grams: grams,
+      nameAbono: nameAbono,
       description: description,
     );
 

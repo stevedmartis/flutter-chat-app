@@ -17,7 +17,7 @@ class PlantService with ChangeNotifier {
 
   set plant(Plant valor) {
     this._plant = valor;
-    notifyListeners();
+    // notifyListeners();
   }
 
   final _storage = new FlutterSecureStorage();

@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -49,6 +50,9 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
 
   final quantityCtrl = TextEditingController();
 
+  var tchCtrl = new MaskedTextController(mask: '00');
+  var cbdCtrl = new MaskedTextController(mask: '00');
+
   bool isNameChange = false;
   bool isAboutChange = false;
 
@@ -61,6 +65,10 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
   String optionItemSelected;
 
   bool isDefault;
+
+  bool isThcChange = false;
+
+  bool isCbdChange = false;
   Profiles profile;
 
   double ratingActual = 0;
@@ -102,6 +110,24 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
       });
     });
 
+    tchCtrl.addListener(() {
+      setState(() {
+        if (widget.product.thc != tchCtrl.text)
+          this.isThcChange = true;
+        else
+          this.isThcChange = false;
+      });
+    });
+
+    cbdCtrl.addListener(() {
+      setState(() {
+        if (widget.product.cbd != cbdCtrl.text)
+          this.isCbdChange = true;
+        else
+          this.isCbdChange = false;
+      });
+    });
+
     super.initState();
   }
 
@@ -125,10 +151,13 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
 
     final size = MediaQuery.of(context).size;
 
-    final isControllerChange = isNameChange;
+    final isControllerChange = isNameChange && isThcChange && isCbdChange;
 
-    final isControllerChangeEdit =
-        isNameChange || isAboutChange || isImageUpdate;
+    final isControllerChangeEdit = isNameChange ||
+        isAboutChange ||
+        isImageUpdate ||
+        isThcChange ||
+        isCbdChange;
 
     return SafeArea(
       child: Scaffold(
@@ -245,6 +274,18 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                               height: 10,
                             ),
                             _createDescription(bloc),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(child: _createThc(bloc)),
+                                SizedBox(
+                                  width: 50,
+                                ),
+                                Expanded(child: _createCbd(bloc)),
+                              ],
+                            ),
                             SizedBox(
                               height: 10,
                             ),
@@ -426,6 +467,125 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
     );
   }
 
+  Widget _createThc(ProductBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.tchStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
+        return Container(
+          child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
+            controller: tchCtrl,
+            inputFormatters: <TextInputFormatter>[
+              LengthLimitingTextInputFormatter(3),
+            ],
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+                suffixIcon: Container(
+                    padding: EdgeInsets.only(top: 15),
+                    child: Text(
+                      '%',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54,
+                      ),
+                    )),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+                // icon: Icon(Icons.perm_identity),
+                //  fillColor: currentTheme.accentColor,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
+                ),
+                hintText: '',
+                labelText: 'THC *',
+                //counterText: snapshot.data,
+                errorText: snapshot.error),
+            onChanged: bloc.changeThc,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _createCbd(ProductBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.tchStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final currentTheme = Provider.of<ThemeChanger>(context);
+
+        return Container(
+          child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
+            controller: cbdCtrl,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+                suffixIcon: Container(
+                    padding: EdgeInsets.only(top: 15),
+                    child: Text(
+                      '%',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54,
+                      ),
+                    )),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+                // icon: Icon(Icons.perm_identity),
+                //  fillColor: currentTheme.accentColor,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
+                ),
+                hintText: '',
+                labelText: 'CBD *',
+                //counterText: snapshot.data,
+                errorText: snapshot.error),
+            onChanged: bloc.changeCbd,
+          ),
+        );
+      },
+    );
+  }
+
   Widget _createButton(
     ProductBloc bloc,
     bool isControllerChange,
@@ -480,13 +640,19 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
 
     final ratingActualString = ratingActual.toString();
 
+    final thc = (bloc.thc == null) ? widget.product.thc : bloc.thc.trim();
+
+    final cbd = (bloc.cbd == null) ? widget.product.cbd : bloc.cbd.trim();
+
     final newProduct = Product(
         name: name,
         description: description,
         coverImage: widget.product.coverImage,
         catalogo: catalogo,
         ratingInit: ratingActualString,
-        user: uid);
+        user: uid,
+        cbd: cbd,
+        thc: thc);
 
     final createPlantResp = await productService.createProduct(newProduct);
 
@@ -530,11 +696,17 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
         ? widget.product.description
         : descriptionCtrl.text.trim();
 
+    final thc = (bloc.thc == null) ? widget.product.thc : bloc.thc.trim();
+
+    final cbd = (bloc.cbd == null) ? widget.product.cbd : bloc.cbd.trim();
+
     final editProduct = Product(
         name: name,
         description: description,
         coverImage: productService.product.coverImage,
-        id: widget.product.id);
+        id: widget.product.id,
+        thc: thc,
+        cbd: cbd);
 
     if (widget.isEdit) {
       final editPlantRes = await productService.editProduct(editProduct);

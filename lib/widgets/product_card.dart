@@ -65,8 +65,8 @@ class _CardProductState extends State<CardProduct> {
   Widget productItem() {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context);
-    //  final thc = (widget.product.thc.isEmpty) ? '0' : widget.product.thc;
-    // final cbd = (widget.product.cbd.isEmpty) ? '0' : widget.product.cbd;
+    final thc = (widget.product.thc.isEmpty) ? '0' : widget.product.thc;
+    final cbd = (widget.product.cbd.isEmpty) ? '0' : widget.product.cbd;
     final rating = widget.product.ratingInit;
 
     var ratingDouble = double.parse('$rating');
@@ -82,25 +82,6 @@ class _CardProductState extends State<CardProduct> {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              /* Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
-                child: Container(
-                  padding: EdgeInsets.all(2.5),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    //color: Theme.of(context).accentColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    "-32%",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 10,
-                        color: Colors.white),
-                  ),
-                ),
-              ), */
-
               (ratingDouble > 1)
                   ? Icon(
                       Icons.star,
@@ -166,13 +147,6 @@ class _CardProductState extends State<CardProduct> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              /*  Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                
-              
-              ],
-            ), */
               Container(
                 child: Text(
                   widget.product.name.capitalize(),
@@ -183,8 +157,8 @@ class _CardProductState extends State<CardProduct> {
                 ),
               ),
               CbdthcRow(
-                thc: '30',
-                cbd: '70',
+                thc: '$thc',
+                cbd: '$cbd',
                 fontSize: 7.0,
               ),
               Container(
@@ -202,36 +176,6 @@ class _CardProductState extends State<CardProduct> {
                       color: Colors.grey),
                 ),
               ),
-              /*  Container(
-                margin: EdgeInsets.only(top: 10.0),
-                child: Row(
-                  children: [
-                    Container(
-                        child: FaIcon(
-                      FontAwesomeIcons.seedling,
-                      color: (currentTheme.customTheme)
-                          ? Colors.white54
-                          : Colors.grey,
-                      size: 15,
-                    )),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    /* Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5.0),
-                    child: Text(
-                      widget.product.germinated,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.grey),
-                    ),
-                  ) */
-                  ],
-                ),
-              ), */
             ],
           ),
         ),
@@ -393,7 +337,7 @@ class CbdthcRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              "$thc %",
+              "THC: $thc %",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: fontSize,
@@ -411,7 +355,7 @@ class CbdthcRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              "$cbd %",
+              "CBD: $cbd %",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: fontSize,

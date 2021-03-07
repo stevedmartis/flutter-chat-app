@@ -1,4 +1,5 @@
 import 'package:chat/global/environment.dart';
+import 'package:chat/models/product_response.dart';
 import 'package:chat/models/products.dart';
 import 'package:chat/models/products_response.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -39,6 +40,25 @@ class ProductsApiProvider {
       return plantsResponse.products;
     } catch (e) {
       return [];
+    }
+  }
+
+  final String _endpointProduct = '${Environment.apiUrl}/product/product/';
+
+  Future<Product> getProduct(String productId) async {
+    final urlFinal = _endpointProduct + '$productId';
+
+    final token = await this._storage.read(key: 'token');
+
+    try {
+      final resp = await http.get(urlFinal,
+          headers: {'Content-Type': 'application/json', 'x-token': token});
+
+      final plantResponse = productResponseFromJson(resp.body);
+      return plantResponse.product;
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return new Product(id: '0');
     }
   }
 }

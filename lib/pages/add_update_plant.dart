@@ -255,7 +255,9 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     final isControllerChange = isNameChange &&
         isQuantityChange &&
         isGerminatedChange &&
-        isFlorationChange;
+        isFlorationChange &&
+        isThcChange &&
+        isCbdChange;
 
     final isControllerChangeEdit = isNameChange ||
         isAboutChange ||

@@ -22,6 +22,9 @@ class Visit {
       this.degrees,
       this.water = false,
       this.abono = false,
+      this.mlAbono,
+      this.nameAbono,
+      this.grams,
       isRoute,
       init()});
 
@@ -42,6 +45,9 @@ class Visit {
   String electro;
   String ph;
   String ml;
+  String mlAbono;
+  String nameAbono;
+  String grams;
 
   DateTime createdAt;
   DateTime updatedAt;
@@ -61,7 +67,10 @@ class Visit {
       electro: json["electro"],
       ph: json["ph"],
       ml: json["ml"],
-      abono: json["abono"]
+      abono: json["abono"],
+      mlAbono: json["mlAbono"],
+      nameAbono: json["mlAbono"],
+      grams: json["grams"]
 
       //images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
       );
@@ -82,7 +91,10 @@ class Visit {
         "ph": ph,
         "ml": ml,
         "description": description,
-        "abono": abono
+        "abono": abono,
+        "mlAbono": mlAbono,
+        "nameAbono": nameAbono,
+        "grams": grams,
 
         // "images": List<Image>.from(images.map((x) => x)),
       };

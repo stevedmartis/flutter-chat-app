@@ -88,7 +88,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
 
     var brightness = MediaQuery.of(context).platformBrightness;
     bool darkModeOn = brightness == Brightness.dark;
-    print(darkModeOn);
 
     appTheme.customTheme = darkModeOn;
 

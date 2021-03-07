@@ -14,11 +14,17 @@ class VisitBloc with Validators {
 
   final _pHController = BehaviorSubject<String>();
 
+  final _mLAbonoController = BehaviorSubject<String>();
+
   final _mLController = BehaviorSubject<String>();
 
   final _descriptionController = BehaviorSubject<String>();
 
+  final _nameAbonoController = BehaviorSubject<String>();
+
   final _cutController = BehaviorSubject<bool>();
+
+  final _gramController = BehaviorSubject<String>();
 
   final _cleanController = BehaviorSubject<bool>();
 
@@ -46,13 +52,20 @@ class VisitBloc with Validators {
   Stream<String> get degreesStream =>
       _degreesController.stream.transform(validationNameRequired);
   Stream<String> get descriptionStream => _descriptionController.stream;
+
+  Stream<String> get nameAbonoStream => _nameAbonoController.stream;
+
   Stream<bool> get cutStream => _cutController.stream;
 
   Stream<String> get phStream => _pHController.stream;
 
+  Stream<String> get gramStream => _gramController.stream;
+
   Stream<String> get electroStream => _electroController.stream;
 
   Stream<String> get mlStream => _mLController.stream;
+
+  Stream<String> get mlAbonoStream => _mLAbonoController.stream;
   BehaviorSubject<bool> get imageUpdate => _imageUpdateCtrl;
 
 /*   Stream<bool> get formValidStream => Observable.combineLatest3(
@@ -80,17 +93,28 @@ class VisitBloc with Validators {
 
   Function(String) get changeMl => _mLController.sink.add;
 
+  Function(String) get changeGram => _gramController.sink.add;
+
+  Function(String) get changeMlAbono => _mLAbonoController.sink.add;
+  Function(String) get changeNameAbono => _nameAbonoController.sink.add;
+
   // Obtener el último valor ingresado a los streams
   bool get cut => _cutController.value;
 
   String get ml => _mLController.value;
+  String get mlAbono => _mLAbonoController.value;
+
   String get ph => _pHController.value;
   String get degrees => _degreesController.value;
   String get electro => _electroController.value;
-
+  String get gram => _gramController.value;
   String get description => _descriptionController.value;
+  String get nameAbono => _nameAbonoController.value;
 
   dispose() {
+    _nameAbonoController?.close();
+    _gramController?.close();
+    _mLAbonoController?.close();
     _visitsUser?.close();
     _imageUpdateCtrl?.close();
     _vist?.close();

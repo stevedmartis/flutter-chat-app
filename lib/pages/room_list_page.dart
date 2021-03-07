@@ -279,7 +279,7 @@ class _RoomListState extends State<RoomList> {
                                 return AlertDialog(
                                   title: const Text("Confirmar"),
                                   content: const Text(
-                                      "Eliminaran todos los registros?"),
+                                      "Desea eliminar el Room y todos sus registros?"),
                                   actions: <Widget>[
                                     FlatButton(
                                         onPressed: () =>

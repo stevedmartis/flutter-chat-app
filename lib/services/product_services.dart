@@ -15,7 +15,7 @@ class ProductService with ChangeNotifier {
 
   set product(Product valor) {
     this._product = valor;
-    notifyListeners();
+    //notifyListeners();
   }
 
   final _storage = new FlutterSecureStorage();

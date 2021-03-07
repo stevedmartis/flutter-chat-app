@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:animate_do/animate_do.dart';
-import 'package:animations/animations.dart';
 import 'package:chat/bloc/plant_bloc.dart';
+import 'package:chat/bloc/product_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/plant.dart';
+import 'package:chat/models/products.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
@@ -16,18 +16,16 @@ import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/plants_provider.dart';
-import 'package:chat/providers/visit_provider.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
+import 'package:chat/services/product_services.dart';
 import 'package:chat/services/room_services.dart';
-import 'package:chat/services/visit_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
-import 'package:chat/widgets/visit_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -38,21 +36,21 @@ import '../utils//extension.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class PlantDetailPage extends StatefulWidget {
-  PlantDetailPage({
+class ProductDetailPage extends StatefulWidget {
+  ProductDetailPage({
     Key key,
     this.title,
-    this.plants,
-    @required this.plant,
+    this.products,
+    @required this.product,
   }) : super(key: key);
 
   final String title;
 
-  final Plant plant;
-  final List<Plant> plants;
+  final Product product;
+  final List<Product> products;
 
   @override
-  _PlantDetailPageState createState() => new _PlantDetailPageState();
+  _ProductDetailPageState createState() => new _ProductDetailPageState();
 }
 
 class NetworkImageDecoder {
@@ -75,14 +73,9 @@ class NetworkImageDecoder {
   }
 }
 
-class _PlantDetailPageState extends State<PlantDetailPage>
+class _ProductDetailPageState extends State<ProductDetailPage>
     with TickerProviderStateMixin {
-  List<Visit> visits = [];
   ScrollController _scrollController;
-
-  final visitApiProvider = new VisitApiProvider();
-
-  final visitService = VisitService();
 
   TabController _tabController;
 
@@ -91,9 +84,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
   Future<List<Room>> getRoomsFuture;
   AuthService authService;
-  Plant plant;
-
-  Plant plantInit;
+  Product product;
 
   Profiles profile;
 
@@ -108,18 +99,18 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     _tabController = new TabController(vsync: this, length: 1);
 
-    plantBloc.imageUpdate.add(true);
+    productBloc.imageUpdate.add(true);
 
     super.initState();
     //  name = widget.profile.name;
-    plantBloc.getPlant(widget.plant);
+    //  productBloc.getProduct(widget.product);
 
     final authService = Provider.of<AuthService>(context, listen: false);
 
-    profile = authService.profile;
+    final productService = Provider.of<ProductService>(context, listen: false);
 
-    final plantService = Provider.of<PlantService>(context, listen: false);
-    plantService.plant = null;
+    productService.product = null;
+    profile = authService.profile;
     //roomBloc.getRooms(widget.profile.user.uid);
   }
 
@@ -139,15 +130,17 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
     final size = MediaQuery.of(context).size;
-    final visit = new Visit();
+    /* final visit = new Visit();
 
     final visitService = Provider.of<VisitService>(context, listen: false);
     final aws = Provider.of<AwsService>(context, listen: false);
-
-    final plantService = Provider.of<PlantService>(context, listen: false);
+ */
+    final productService = Provider.of<ProductService>(context, listen: false);
 
     setState(() {
-      plant = (plantService.plant != null) ? plantService.plant : widget.plant;
+      product = (productService.product != null)
+          ? productService.product
+          : widget.product;
     });
 
     return Scaffold(
@@ -194,7 +187,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                         )),
 
                     actions: [
-                      Container(
+                      /*  Container(
                           margin: EdgeInsets.only(left: 10, right: 10),
                           child: ClipRRect(
                             borderRadius:
@@ -212,15 +205,15 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                           visitService.visit = visit,
                                           Navigator.of(context).push(
                                               createRouteNewVisit(visit,
-                                                  widget.plant.id, false)),
+                                                  widget.product.id, false)),
                                         }),
                                 backgroundColor: _showTitle
                                     ? (currentTheme.customTheme)
                                         ? Colors.black54
                                         : Colors.white54
                                     : Colors.black54),
-                          )),
-                      _buildCircleQuantityPlant(),
+                          )), */
+                      //  _buildCircleQuantityPlant(),
                     ],
 
                     centerTitle: true,
@@ -237,7 +230,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                         background: Material(
                             type: MaterialType.transparency,
                             child: FadeInImage(
-                              image: NetworkImage(plant.getCoverImg()),
+                              image: NetworkImage(product.getCoverImg()),
                               placeholder: AssetImage('assets/loading2.gif'),
                               fit: BoxFit.cover,
                               height: 100,
@@ -247,12 +240,12 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                         centerTitle: true,
                         title: Container(
                             //  margin: EdgeInsets.only(left: 0),
-                            width: size.height / 5,
+                            width: size.height / 2,
                             height: 30,
                             child: Container(
                               child: Center(
                                 child: Text(
-                                  plant.name.capitalize(),
+                                  product.name.capitalize(),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: _showTitle
@@ -264,13 +257,12 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                               ),
                             ))
 
-                        /*  StreamBuilder<Plant>(
+                        /* StreamBuilder<Product>(
 
-
-                        stream: plantBloc.plantSelect.stream,
-                        builder: (context, AsyncSnapshot<Plant> snapshot) {
+                        stream: productBloc.productSelect.stream,
+                        builder: (context, AsyncSnapshot<Product> snapshot) {
                           if (snapshot.hasData) {
-                            plant = snapshot.data;
+                            product = snapshot.data;
 
                             return Container(
                                 //  margin: EdgeInsets.only(left: 0),
@@ -279,7 +271,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                 child: Container(
                                   child: Center(
                                     child: Text(
-                                      plant.name.capitalize(),
+                                      product.name.capitalize(),
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: _showTitle
@@ -296,7 +288,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                             return _buildLoadingWidget();
                           }
                         },
-                      ), */
+                      ),  */
                         ),
                   ),
 
@@ -306,7 +298,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
                   makeHeaderTabs(context),
 
-                  makeListVisits(context)
+                  //   makeListVisits(context)
                 ])));
   }
 
@@ -360,7 +352,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
       ),
     );
   }
-
+/* 
   SliverList makeListVisits(context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
@@ -401,15 +393,15 @@ class _PlantDetailPageState extends State<PlantDetailPage>
       ]),
     );
   }
-
-  _deleteVisit(String id, int index) async {
+ */
+/*   _deleteVisit(String id, int index) async {
     final res = await this.visitService.deleteVisit(id);
     if (res) {
       setState(() {
         visits.removeAt(index);
       });
     }
-  }
+  } */
 
   _deletePlant(
     String id,
@@ -427,7 +419,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     }
   }
 
-  SliverList makeVisitCard(context) {
+/*   SliverList makeVisitCard(context) {
     return SliverList(
       delegate: SliverChildListDelegate([
         Container(
@@ -538,32 +530,45 @@ class _PlantDetailPageState extends State<PlantDetailPage>
       ),
     );
   }
-
-  Container _buildCircleQuantityPlant() {
+ */
+/*   Container _buildCircleQuantityPlant() {
     //final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-    final quantity = plant.quantity;
-    return Container(
-      alignment: Alignment.centerRight,
-      padding: EdgeInsets.all(6.0),
-      margin: EdgeInsets.only(right: 10, top: 0),
-      width: 50,
-      height: 50,
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        child: CircleAvatar(
-            child: Text(
-              '$quantity',
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
-            backgroundColor: currentTheme.accentColor),
-      ),
-    );
-  }
 
+    return Container(
+        alignment: Alignment.centerRight,
+        padding: EdgeInsets.all(6.0),
+        margin: EdgeInsets.only(right: 10, top: 0),
+        width: 50,
+        height: 50,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          child: CircleAvatar(
+              child: StreamBuilder<Plant>(
+                stream: plantBloc.plantSelect.stream,
+                builder: (context, AsyncSnapshot<Plant> snapshot) {
+                  if (snapshot.hasData) {
+                    plant = snapshot.data;
+                    final quantity = plant.quantity;
+
+                    return Text(
+                      '$quantity',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    );
+                  } else if (snapshot.hasError) {
+                    return _buildErrorWidget(snapshot.error);
+                  } else {
+                    return _buildLoadingWidget();
+                  }
+                },
+              ),
+              backgroundColor: currentTheme.accentColor),
+        ));
+  }
+ */
   createSelectionNvigator() {
     final currentTheme =
         Provider.of<ThemeChanger>(context, listen: false).currentTheme;
@@ -704,19 +709,28 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   SliverList makeHeaderInfo(context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
-    final thc = (plant.thc.isEmpty) ? '0' : plant.thc;
-    final cbd = (plant.cbd.isEmpty) ? '0' : plant.cbd;
+    final thc = (product.thc.isEmpty) ? '0' : product.thc;
+    final cbd = (product.cbd.isEmpty) ? '0' : product.cbd;
 
-    final about = plant.description;
+    final about = product.description;
     final size = MediaQuery.of(context).size;
-
-    final germina = plant.germinated;
-    final flora = plant.flowering;
-    final plantService = Provider.of<PlantService>(context, listen: false);
-    final aws = Provider.of<AwsService>(context, listen: false);
 
     return SliverList(
       delegate: SliverChildListDelegate([
+        //  final sexo = plant.sexo;
+
+        //  final pot = (plant.pot == "") ? "0" : plant.pot;
+
+        //final nameFinal = name.isEmpty ? "" : name.capitalize();
+        //  final thc = (plant.thc.isEmpty) ? '0' : plant.thc;
+        //  final cbd = (plant.cbd.isEmpty) ? '0' : plant.cbd;
+
+        // final flower = (plant.flowering == "") ? "0" : plant.flowering;
+        // final visit = new Visit();
+
+        /*  final germina = product.germinated;
+              final flora = product.flowering; */
+
         Container(
           color: currentTheme.currentTheme.scaffoldBackgroundColor,
           child: Column(
@@ -730,117 +744,6 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                   thc: thc,
                   cbd: cbd,
                   fontSize: 15,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: size.width / 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5.0),
-                        child: FaIcon(
-                          FontAwesomeIcons.seedling,
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.black54,
-                        )),
-                    Container(
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-                        child: Container(
-                          padding: EdgeInsets.all(2.5),
-                          child: Text(
-                            "Germinación :",
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: (currentTheme.customTheme)
-                                    ? Colors.white54
-                                    : Colors.black54),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: size.width / 10),
-                      child: Text(
-                        "$germina",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.black54,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.width / 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5.0),
-                        child: FaIcon(
-                          FontAwesomeIcons.cannabis,
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.black54,
-                        )),
-                    Container(
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-                        child: Container(
-                          padding: EdgeInsets.all(2.5),
-                          child: Text(
-                            "Floración :",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: (currentTheme.customTheme)
-                                  ? Colors.white54
-                                  : Colors.black54,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 25,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: size.width / 10),
-                      child: Text(
-                        "$flora",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.black54,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: Text(
-                        "Semanas",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 10,
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.black54,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
               SizedBox(
@@ -864,6 +767,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
                     //top: size.height / 3.5,
                     margin: EdgeInsets.only(left: size.width / 10),
+
                     // width: size.width / 1.5,
                     child: Align(
                       alignment: Alignment.center,
@@ -873,10 +777,10 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                           textColor: currentTheme.currentTheme.accentColor,
                           text: 'Editar',
                           onPressed: () {
-                            aws.isUploadImagePlant = false;
-                            plantService.plant = plant;
-                            Navigator.of(context)
-                                .push(createRouteEditPlant(widget.plant));
+                            /*     aws.isUploadImagePlant = false;
+                                  plantService.plant = plant;
+                                  Navigator.of(context)
+                                      .push(createRouteEditPlant(widget.plant)); */
                           }),
                     ),
                   ),
@@ -893,11 +797,11 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                           textColor: Colors.grey,
                           text: 'Eliminar',
                           onPressed: () {
-                            confirmDelete(
-                                context,
-                                'Confirmar',
-                                'Desea eliminar la Planta y todas sus visitas?',
-                                plant.id);
+                            /*   confirmDelete(
+                                      context,
+                                      'Confirmar',
+                                      'Desea eliminar la Planta y todas sus visitas?',
+                                      plant.id); */
                           }),
                     ),
                   ),
@@ -912,7 +816,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
               )
             ],
           ),
-        )
+        ),
       ]),
     );
   }
@@ -1370,96 +1274,99 @@ class CbdthcRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-          child: Container(
-            padding: EdgeInsets.all(5.0),
-            decoration: BoxDecoration(
-              color: Color(0xffF12937E),
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              "THC: $thc %",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSize,
-                  color: Colors.white),
-            ),
-          ),
-        ),
-        /* Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-          child: Container(
-            padding: EdgeInsets.all(0.5),
-            child: Text(
-              "THC",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSize,
-                  color: (currentTheme.customTheme)
-                      ? Colors.white54
-                      : Colors.black54),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
+      child: Row(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              decoration: BoxDecoration(
+                color: Color(0xffF12937E),
+                //color: Theme.of(context).accentColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                "THC: $thc %",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSize,
+                    color: Colors.white),
+              ),
             ),
           ),
-        ), */
-        SizedBox(
-          width: 40,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-          child: Container(
-            padding: EdgeInsets.all(5.0),
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
+          /* Padding(
+            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
+            child: Container(
+              padding: EdgeInsets.all(0.5),
+              child: Text(
+                "THC",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSize,
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54),
+              ),
             ),
-            child: Text(
-              "CBD: $cbd %",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSize,
-                  color: Colors.white),
+          ), */
+          SizedBox(
+            width: 40,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                //color: Theme.of(context).accentColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                "CBD: $cbd %",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSize,
+                    color: Colors.white),
+              ),
             ),
           ),
-        ),
-        /* Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-          child: Container(
-            padding: EdgeInsets.all(0.5),
-            child: Text(
-              "CBD",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSize,
-                  color: (currentTheme.customTheme)
-                      ? Colors.white54
-                      : Colors.black54),
+          /* Padding(
+            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
+            child: Container(
+              padding: EdgeInsets.all(0.5),
+              child: Text(
+                "CBD",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSize,
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54),
+              ),
             ),
+          ), */
+          SizedBox(
+            width: 10,
           ),
-        ), */
-        SizedBox(
-          width: 10,
-        ),
 
-        /* Container(
-          width: 35,
-          decoration: BoxDecoration(
-            color: Colors.yellow[400],
-            //color: Theme.of(context).accentColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            "New",
-            style:
-                TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-          ),
-        ), */
-      ],
+          /* Container(
+            width: 35,
+            decoration: BoxDecoration(
+              color: Colors.yellow[400],
+              //color: Theme.of(context).accentColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              "New",
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
+            ),
+          ), */
+        ],
+      ),
     );
   }
 }

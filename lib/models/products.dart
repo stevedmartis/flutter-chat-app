@@ -9,20 +9,22 @@ Product productFromJson(String str) => Product.fromJson(json.decode(str));
 String productToJson(Product data) => json.encode(data.toJson());
 
 class Product {
-  Product({
-    this.id,
-    this.user,
-    this.name = "",
-    this.description = "",
-    this.dateCreate,
-    //this.products,
-    this.dateUpdate,
-    this.totalProducts,
-    this.coverImage = "",
-    this.catalogo,
-    this.ratingInit,
-    //this.products
-  });
+  Product(
+      {this.id,
+      this.user,
+      this.name = "",
+      this.description = "",
+      this.dateCreate,
+      //this.products,
+      this.dateUpdate,
+      this.totalProducts,
+      this.coverImage = "",
+      this.catalogo,
+      this.ratingInit,
+      this.thc,
+      this.cbd
+      //this.products
+      });
   String id;
   String user;
   String name;
@@ -34,20 +36,26 @@ class Product {
   String catalogo;
   String ratingInit;
 
+  String cbd;
+  String thc;
+
   String coverImage;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-      id: json["id"],
-      user: json["user"],
-      name: json["name"],
-      description: json["description"],
-      //products: List<Room>.from(json["products"].map((x) => x)),
-      dateCreate: json["dateCreate"],
-      dateUpdate: json["dateUpdate"],
-      totalProducts: json["totalProducts"],
-      coverImage: json["coverImage"],
-      catalogo: json["catalogo"],
-      ratingInit: json["ratingInit"]);
+        id: json["id"],
+        user: json["user"],
+        name: json["name"],
+        description: json["description"],
+        //products: List<Room>.from(json["products"].map((x) => x)),
+        dateCreate: json["dateCreate"],
+        dateUpdate: json["dateUpdate"],
+        totalProducts: json["totalProducts"],
+        coverImage: json["coverImage"],
+        catalogo: json["catalogo"],
+        ratingInit: json["ratingInit"],
+        cbd: json["cbd"],
+        thc: json["thc"],
+      );
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -59,7 +67,9 @@ class Product {
         "totalProducts": totalProducts,
         "coverImage": coverImage,
         "catalogo": catalogo,
-        "ratingInit": ratingInit
+        "ratingInit": ratingInit,
+        "cbd": cbd,
+        "thc": thc,
         // "products": List<dynamic>.from(products.map((x) => x)),
       };
 
