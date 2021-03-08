@@ -137,7 +137,7 @@ class _CollapsingListState extends State<CollapsingList>
         CupertinoSliverRefreshControl(onRefresh: () => pullToRefreshData()),
         makeHeaderSpacer(context),
         SliverFixedExtentList(
-          itemExtent: 150.0,
+          itemExtent: 180.0,
           delegate: SliverChildListDelegate(
             [FadeIn(child: BannerSlide())],
           ),
@@ -485,7 +485,9 @@ class BannerSlide extends StatelessWidget {
         child: CarouselSlider(
             options: CarouselOptions(
               autoPlay: true,
-              aspectRatio: (screenSize.height > 500) ? 2.2 : 2.6,
+              viewportFraction: 0.70,
+              height: screenSize.height,
+              aspectRatio: (screenSize.height > 500) ? 2.9 : 2.9,
               enlargeCenterPage: true,
               autoPlayInterval: Duration(seconds: 5),
             ),

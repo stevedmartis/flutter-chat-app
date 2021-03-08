@@ -1,5 +1,6 @@
 import 'package:chat/models/products.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/extension.dart';
@@ -32,7 +33,7 @@ class _CardProductState extends State<CardProduct> {
                 productItem(),
                 Container(
                   width: 100,
-                  height: 130,
+                  height: 165,
                   child: ClipRRect(
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(10.0),
@@ -69,6 +70,11 @@ class _CardProductState extends State<CardProduct> {
     final cbd = (widget.product.cbd.isEmpty) ? '0' : widget.product.cbd;
     final rating = widget.product.ratingInit;
 
+    final profile = widget.product.profile;
+
+    /*   final suscriptionEnabled =
+        profile.subscribeApproved && profile.subscribeActive; */
+
     var ratingDouble = double.parse('$rating');
 
     return Column(
@@ -76,70 +82,6 @@ class _CardProductState extends State<CardProduct> {
       crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-        Container(
-          padding: EdgeInsets.only(left: 10, top: 0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              (ratingDouble > 1)
-                  ? Icon(
-                      Icons.star,
-                      size: 15,
-                      color: Colors.orangeAccent,
-                    )
-                  : Icon(
-                      Icons.star,
-                      size: 15,
-                      color: Colors.grey,
-                    ),
-              (ratingDouble > 2)
-                  ? Icon(
-                      Icons.star,
-                      size: 15,
-                      color: Colors.orangeAccent,
-                    )
-                  : Icon(
-                      Icons.star,
-                      size: 15,
-                      color: Colors.grey,
-                    ),
-              (ratingDouble > 3)
-                  ? Icon(
-                      Icons.star,
-                      size: 15,
-                      color: Colors.orangeAccent,
-                    )
-                  : Icon(
-                      Icons.star,
-                      size: 15,
-                      color: Colors.grey,
-                    ),
-              (ratingDouble > 4)
-                  ? Icon(
-                      Icons.star,
-                      size: 15,
-                      color: Colors.orangeAccent,
-                    )
-                  : Icon(
-                      Icons.star,
-                      size: 15,
-                      color: Colors.grey,
-                    ),
-              (ratingDouble == 5)
-                  ? Icon(
-                      Icons.star,
-                      size: 15,
-                      color: Colors.orangeAccent,
-                    )
-                  : Icon(
-                      Icons.star,
-                      size: 15,
-                      color: Colors.grey,
-                    ),
-            ],
-          ),
-        ),
         SizedBox(height: 5.0),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -174,6 +116,110 @@ class _CardProductState extends State<CardProduct> {
                       fontWeight: FontWeight.normal,
                       fontSize: 10,
                       color: Colors.grey),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 0, top: 5.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    (ratingDouble > 1)
+                        ? Icon(
+                            Icons.star,
+                            size: 15,
+                            color: Colors.orangeAccent,
+                          )
+                        : Icon(
+                            Icons.star,
+                            size: 15,
+                            color: Colors.grey,
+                          ),
+                    (ratingDouble > 2)
+                        ? Icon(
+                            Icons.star,
+                            size: 15,
+                            color: Colors.orangeAccent,
+                          )
+                        : Icon(
+                            Icons.star,
+                            size: 15,
+                            color: Colors.grey,
+                          ),
+                    (ratingDouble > 3)
+                        ? Icon(
+                            Icons.star,
+                            size: 15,
+                            color: Colors.orangeAccent,
+                          )
+                        : Icon(
+                            Icons.star,
+                            size: 15,
+                            color: Colors.grey,
+                          ),
+                    (ratingDouble > 4)
+                        ? Icon(
+                            Icons.star,
+                            size: 15,
+                            color: Colors.orangeAccent,
+                          )
+                        : Icon(
+                            Icons.star,
+                            size: 15,
+                            color: Colors.grey,
+                          ),
+                    (ratingDouble == 5)
+                        ? Icon(
+                            Icons.star,
+                            size: 15,
+                            color: Colors.orangeAccent,
+                          )
+                        : Icon(
+                            Icons.star,
+                            size: 15,
+                            color: Colors.grey,
+                          ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 30,
+                      height: 30,
+                      child: ImageUserChat(
+                          width: 40,
+                          height: 40,
+                          profile: profile,
+                          fontsize: 20),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            margin: EdgeInsets.only(left: 10),
+                            child: Text(
+                              profile.name,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: (currentTheme.customTheme)
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                        Container(
+                            margin: EdgeInsets.only(left: 10),
+                            child: Text(
+                              '@' + profile.user.username,
+                              style:
+                                  TextStyle(fontSize: 9.0, color: Colors.grey),
+                            )),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],

@@ -4,13 +4,11 @@ import 'dart:io';
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/product_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
-import 'package:chat/models/plant.dart';
 import 'package:chat/models/products.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
 import 'package:chat/models/visit.dart';
-import 'package:chat/pages/add_update_plant.dart';
 import 'package:chat/pages/add_update_product.dart';
 import 'package:chat/pages/add_update_visit.dart';
 import 'package:chat/pages/chat_page.dart';
@@ -19,13 +17,15 @@ import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/plants_provider.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
-import 'package:chat/services/plant_services.dart';
+import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/product_services.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
+import 'package:chat/widgets/myprofile.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -296,7 +296,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                   makeHeaderInfo(context),
                   // makeHeaderSpacer(context),
 
-                  makeHeaderTabs(context),
+                  //   makeHeaderTabs(context),
 
                   //   makeListVisits(context)
                 ])));
@@ -709,11 +709,18 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   SliverList makeHeaderInfo(context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
+    final authService = Provider.of<AuthService>(context);
+
+    final profile = authService.profile;
+
     final thc = (product.thc.isEmpty) ? '0' : product.thc;
     final cbd = (product.cbd.isEmpty) ? '0' : product.cbd;
 
     final about = product.description;
     final size = MediaQuery.of(context).size;
+    final rating = widget.product.ratingInit;
+
+    var ratingDouble = double.parse('$rating');
 
     final productService = Provider.of<ProductService>(context, listen: false);
     final aws = Provider.of<AwsService>(context, listen: false);
@@ -762,6 +769,145 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                       : Container()),
               SizedBox(
                 height: 10.0,
+              ),
+              Container(
+                padding:
+                    EdgeInsets.only(top: 10, left: size.width / 5, bottom: 5.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    (ratingDouble > 1)
+                        ? Icon(
+                            Icons.star,
+                            size: 30,
+                            color: Colors.orangeAccent,
+                          )
+                        : Icon(
+                            Icons.star,
+                            size: 30,
+                            color: Colors.grey,
+                          ),
+                    (ratingDouble > 2)
+                        ? Icon(
+                            Icons.star,
+                            size: 30,
+                            color: Colors.orangeAccent,
+                          )
+                        : Icon(
+                            Icons.star,
+                            size: 30,
+                            color: Colors.grey,
+                          ),
+                    (ratingDouble > 3)
+                        ? Icon(
+                            Icons.star,
+                            size: 30,
+                            color: Colors.orangeAccent,
+                          )
+                        : Icon(
+                            Icons.star,
+                            size: 30,
+                            color: Colors.grey,
+                          ),
+                    (ratingDouble > 4)
+                        ? Icon(
+                            Icons.star,
+                            size: 30,
+                            color: Colors.orangeAccent,
+                          )
+                        : Icon(
+                            Icons.star,
+                            size: 30,
+                            color: Colors.grey,
+                          ),
+                    (ratingDouble == 5)
+                        ? Icon(
+                            Icons.star,
+                            size: 30,
+                            color: Colors.orangeAccent,
+                          )
+                        : Icon(
+                            Icons.star,
+                            size: 30,
+                            color: Colors.grey,
+                          ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Container(
+                      child: Text(
+                        '$ratingDouble',
+                        style: TextStyle(
+                            color: (currentTheme.customTheme)
+                                ? Colors.white
+                                : Colors.black,
+                            fontSize: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              GestureDetector(
+                onTap: () {
+                  //profile.user.uid = '';
+                  //Navigator.pushNamed(context, 'detail', arguments: profile);
+
+                  if (widget.product.profile.user.uid != profile.user.uid) {
+                    final chatService =
+                        Provider.of<ChatService>(context, listen: false);
+                    chatService.userFor = profile;
+                    Navigator.push(context,
+                        createRouteProfileSelect(widget.product.profile));
+                  } else {
+                    Navigator.push(context, createRouteProfile());
+                  }
+                },
+                child: Container(
+                  padding: EdgeInsets.only(
+                      top: 10, left: size.width / 5, bottom: 5.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        child: ImageUserChat(
+                            width: 100,
+                            height: 100,
+                            profile: profile,
+                            fontsize: 20),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                              margin: EdgeInsets.only(left: 10),
+                              child: Text(
+                                profile.name,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: (currentTheme.customTheme)
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                          Container(
+                              margin: EdgeInsets.only(left: 10),
+                              child: Text(
+                                '@' + profile.user.username,
+                                style:
+                                    TextStyle(fontSize: 14, color: Colors.grey),
+                              )),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20.0,
               ),
               (widget.isUserAuth)
                   ? Row(
@@ -1232,6 +1378,26 @@ Route createRouteEditProduct(Product product) {
       product: product,
       isEdit: true,
     ),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
+}
+
+Route createRouteProfileSelect(Profiles profile) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        MyProfile(profile: profile),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

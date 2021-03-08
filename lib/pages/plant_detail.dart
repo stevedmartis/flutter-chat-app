@@ -112,7 +112,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
     super.initState();
     //  name = widget.profile.name;
-    plantBloc.getPlant(widget.plant);
+    //   plantBloc.getPlant(widget.plant);
 
     final authService = Provider.of<AuthService>(context, listen: false);
 

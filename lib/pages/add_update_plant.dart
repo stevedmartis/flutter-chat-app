@@ -1029,7 +1029,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
       if (createPlantResp.ok) {
         // widget.plants.add(createPlantResp.plant);
         plantService.plant = createPlantResp.plant;
-        plantBloc.getPlant(createPlantResp.plant);
+        // plantBloc.getPlant(createPlantResp.plant);
 
         roomBloc.getMyRooms(profile.user.uid);
 
