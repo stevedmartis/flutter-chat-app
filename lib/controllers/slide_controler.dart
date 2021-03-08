@@ -63,7 +63,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
               EdgeInsets.only(top: _size.height * 0.8, left: 60, right: 60),
           child: ButtonAccent(
               color: currentTheme.accentColor,
-              text: 'Log In!',
+              text: 'Inciar sesión!',
               onPressed: () => {Navigator.push(context, _createRuteLogIn())}),
         ),
         Container(
@@ -71,7 +71,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
               EdgeInsets.only(top: _size.height * 0.9, left: 60, right: 60),
           child: ButtonLogout(
               color: Color(0xff1C181D),
-              text: 'Sign In!',
+              text: 'Registarme',
               textColor: Colors.white,
               onPressed: () => {Navigator.push(context, _createRuteSignUp())}),
         ),

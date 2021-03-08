@@ -227,6 +227,9 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
         children: <Widget>[
           Flexible(
               child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             controller: _textController,
             onSubmitted: _handleSubmit,
             onChanged: (texto) {
@@ -238,7 +241,13 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                 }
               });
             },
-            decoration: InputDecoration.collapsed(hintText: 'Enviar mensaje'),
+            decoration: InputDecoration.collapsed(
+              hintText: 'Enviar mensaje',
+              hintStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54),
+            ),
             focusNode: _focusNode,
           )),
 

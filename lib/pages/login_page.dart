@@ -1,12 +1,12 @@
 import 'package:chat/bloc/login_bloc.dart';
 import 'package:chat/bloc/provider.dart';
-import 'package:chat/controllers/slide_controler.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/register_page.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/header_curve_signin.dart';
+import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +17,6 @@ import 'package:chat/services/auth_service.dart';
 
 import 'package:chat/helpers/mostrar_alerta.dart';
 
-import 'package:chat/widgets/labels.dart';
 import 'dart:ui' as ui;
 
 class LoginPage extends StatefulWidget {
@@ -49,10 +48,12 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   WavyHeader(),
 
+                  Center(child: _Form()),
+
                   Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
-                        top: _size.width / 4.0,
+                        top: _size.height / 1.45,
                       ),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -63,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                                 _signInGoogle(context);
                               },
                               child: roundedRectSignInSocialMediaButton(
-                                  'Log in with Google',
+                                  'Iniciar sesión con Google',
                                   Colors.orange,
                                   FontAwesomeIcons.google,
                                   true,
@@ -80,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                                 await _signIApple(context);
                               },
                               child: roundedRectSignInSocialMediaButton(
-                                  'Sign In with Apple',
+                                  'Iniciar sesión con Apple',
                                   Colors.white,
                                   FontAwesomeIcons.apple,
                                   false,
@@ -88,24 +89,22 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ])),
 
-                  Center(child: _Form()),
-
                   Center(
                     child: Container(
-                      margin: EdgeInsets.only(top: _size.height / 1.2),
+                      margin: EdgeInsets.only(top: _size.height / 1.1),
                       child: Labels(
                         rute: 'register',
-                        title: "Don't have an account?",
-                        subTitulo: 'Sign Up',
-                        colortText1: Colors.white70,
+                        title: "No tienes una cuenta?",
+                        subTitulo: 'Registate aquí',
+                        colortText1: Colors.grey,
                         colortText2: currentTheme.accentColor,
                       ),
                     ),
                   ),
-                  Center(
+                  /* Center(
                       child: Container(
                           margin: EdgeInsets.only(top: _size.height / 1.1),
-                          child: StyledLogoCustom())),
+                          child: StyledLogoCustom())), */
                   //Container(child: circleYellow())
                 ],
               ),
@@ -184,7 +183,7 @@ class __FormState extends State<_Form> {
     final _size = MediaQuery.of(context).size;
 
     return Container(
-      margin: EdgeInsets.only(top: _size.height / 5),
+      margin: EdgeInsets.only(top: _size.height / 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -202,8 +201,15 @@ class __FormState extends State<_Form> {
                 _login(bloc, context);
               },
               child: roundedRectButton("Entrar", orangeGradients, false)),
-          SizedBox(
-            height: 30,
+          Container(
+            child: Text(
+              'o',
+              style: TextStyle(color: Colors.grey),
+            ),
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(
+              top: 10,
+            ),
           ),
         ],
       ),
@@ -215,23 +221,37 @@ class __FormState extends State<_Form> {
       stream: bloc.emailStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-        final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+        final currentTheme = Provider.of<ThemeChanger>(context);
 
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
                 // icon: Icon(Icons.alternate_email),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: currentTheme.accentColor, width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 hintText: '',
                 labelText: 'Email',
                 counterText: snapshot.data,
+                labelStyle: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54),
                 errorText: snapshot.error),
             onChanged: bloc.changeEmail,
           ),
@@ -244,22 +264,36 @@ class __FormState extends State<_Form> {
     return StreamBuilder(
       stream: bloc.passwordStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+        final currentTheme = Provider.of<ThemeChanger>(context);
 
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             obscureText: true,
             decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54,
+                  ),
+                ),
                 // icon: Icon(Icons.lock_outline),
                 //  fillColor: currentTheme.accentColor,
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: currentTheme.accentColor, width: 2.0),
+                  borderSide: BorderSide(
+                      color: currentTheme.currentTheme.accentColor, width: 2.0),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 hintText: '',
                 labelText: 'Password',
+                labelStyle: TextStyle(
+                    color: (currentTheme.customTheme)
+                        ? Colors.white54
+                        : Colors.black54),
                 counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changePassword,

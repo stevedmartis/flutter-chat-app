@@ -777,7 +777,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    (ratingDouble > 1)
+                    (ratingDouble >= 1)
                         ? Icon(
                             Icons.star,
                             size: 30,
@@ -788,7 +788,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                             size: 30,
                             color: Colors.grey,
                           ),
-                    (ratingDouble > 2)
+                    (ratingDouble >= 2)
                         ? Icon(
                             Icons.star,
                             size: 30,
@@ -799,7 +799,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                             size: 30,
                             color: Colors.grey,
                           ),
-                    (ratingDouble > 3)
+                    (ratingDouble >= 3)
                         ? Icon(
                             Icons.star,
                             size: 30,
@@ -810,7 +810,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                             size: 30,
                             color: Colors.grey,
                           ),
-                    (ratingDouble > 4)
+                    (ratingDouble >= 4)
                         ? Icon(
                             Icons.star,
                             size: 30,
@@ -856,12 +856,12 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                   //profile.user.uid = '';
                   //Navigator.pushNamed(context, 'detail', arguments: profile);
 
-                  if (widget.product.profile.user.uid != profile.user.uid) {
+                  if (product.profile.user.uid != profile.user.uid) {
                     final chatService =
                         Provider.of<ChatService>(context, listen: false);
-                    chatService.userFor = profile;
-                    Navigator.push(context,
-                        createRouteProfileSelect(widget.product.profile));
+                    chatService.userFor = product.profile;
+                    Navigator.push(
+                        context, createRouteProfileSelect(product.profile));
                   } else {
                     Navigator.push(context, createRouteProfile());
                   }
@@ -875,7 +875,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                         child: ImageUserChat(
                             width: 100,
                             height: 100,
-                            profile: profile,
+                            profile: product.profile,
                             fontsize: 20),
                       ),
                       Column(
@@ -885,7 +885,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                           Container(
                               margin: EdgeInsets.only(left: 10),
                               child: Text(
-                                profile.name,
+                                product.profile.name,
                                 style: TextStyle(
                                     fontSize: 15,
                                     color: (currentTheme.customTheme)
@@ -896,7 +896,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                           Container(
                               margin: EdgeInsets.only(left: 10),
                               child: Text(
-                                '@' + profile.user.username,
+                                '@' + product.profile.user.username,
                                 style:
                                     TextStyle(fontSize: 14, color: Colors.grey),
                               )),

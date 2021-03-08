@@ -124,7 +124,7 @@ class _CardProductState extends State<CardProduct> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    (ratingDouble > 1)
+                    (ratingDouble >= 1)
                         ? Icon(
                             Icons.star,
                             size: 15,
@@ -135,7 +135,7 @@ class _CardProductState extends State<CardProduct> {
                             size: 15,
                             color: Colors.grey,
                           ),
-                    (ratingDouble > 2)
+                    (ratingDouble >= 2)
                         ? Icon(
                             Icons.star,
                             size: 15,
@@ -146,7 +146,7 @@ class _CardProductState extends State<CardProduct> {
                             size: 15,
                             color: Colors.grey,
                           ),
-                    (ratingDouble > 3)
+                    (ratingDouble >= 3)
                         ? Icon(
                             Icons.star,
                             size: 15,
@@ -157,7 +157,7 @@ class _CardProductState extends State<CardProduct> {
                             size: 15,
                             color: Colors.grey,
                           ),
-                    (ratingDouble > 4)
+                    (ratingDouble >= 4)
                         ? Icon(
                             Icons.star,
                             size: 15,

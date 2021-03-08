@@ -41,28 +41,31 @@ class RegisterPage extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   WavyHeader(),
+
+                  Center(child: _Form()),
+
                   Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
-                        top: _size.height / 8.5,
+                        top: _size.height / 1.40,
                       ),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             GestureDetector(
-                              onTap: () async {
-                                await _signInGoogle(context);
+                              onTap: () {
+                                _signInGoogle(context);
                               },
                               child: roundedRectSignInSocialMediaButton(
-                                  'Sign with Google',
+                                  'Iniciar sesión con Google',
                                   Colors.orange,
                                   FontAwesomeIcons.google,
                                   true,
                                   30),
                             ),
                             /*   roundedRectSignInSocialMediaButton(
-                                'Sign with Facebook',
+                                'Log in with Facebook',
                                 Color(0xff3C56A6),
                                 FontAwesomeIcons.facebook,
                                 false,
@@ -72,7 +75,7 @@ class RegisterPage extends StatelessWidget {
                                 await _signIApple(context);
                               },
                               child: roundedRectSignInSocialMediaButton(
-                                  'Sign In with Apple',
+                                  'Iniciar sesión con Apple',
                                   Colors.white,
                                   FontAwesomeIcons.apple,
                                   false,
@@ -80,16 +83,14 @@ class RegisterPage extends StatelessWidget {
                             ),
                           ])),
 
-                  Center(child: _Form()),
-
                   Center(
                     child: Container(
                       margin: EdgeInsets.only(top: _size.height / 1.1),
                       child: Labels(
                         rute: 'login',
                         title: '¿Ya tienes una cuenta?',
-                        subTitulo: 'Ingresa ahora!',
-                        colortText1: Colors.white70,
+                        subTitulo: 'Inicia sesión aquí!',
+                        colortText1: Colors.grey,
                         colortText2: currentTheme.accentColor,
                       ),
                     ),
@@ -126,7 +127,7 @@ class __FormState extends State<_Form> {
     final _size = MediaQuery.of(context).size;
 
     return Container(
-      margin: EdgeInsets.only(top: _size.height / 3.5),
+      margin: EdgeInsets.only(top: _size.height / 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,7 +135,7 @@ class __FormState extends State<_Form> {
           Padding(
               padding: EdgeInsets.only(
                   left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
-              child: _createEmail(bloc, context)),
+              child: _createEmail(bloc)),
           Padding(
               padding: EdgeInsets.only(
                   left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
@@ -142,10 +143,17 @@ class __FormState extends State<_Form> {
           Padding(
               padding: EdgeInsets.only(
                   left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
-              child: _createPassword(bloc, context)),
+              child: _createPassword(bloc)),
           _createButton(bloc),
-          SizedBox(
-            height: 30,
+          Container(
+            child: Text(
+              'o',
+              style: TextStyle(color: Colors.grey),
+            ),
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(
+              top: 5.0,
+            ),
           ),
         ],
       ),
@@ -343,8 +351,7 @@ Widget _createButton(RegisterBloc bloc) {
       return Container(
         padding: EdgeInsets.only(left: 30, right: 30),
         child: GestureDetector(
-            child:
-                roundedRectButton("Let's get Started", orangeGradients, false),
+            child: roundedRectButton("Comenzar!", orangeGradients, false),
             onTap: authService.authenticated
                 ? null
                 : snapshot.hasData
@@ -369,28 +376,132 @@ Widget circleYellow() {
   );
 }
 
-Widget _createEmail(RegisterBloc bloc, context) {
-  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
+Widget _createEmail(RegisterBloc bloc) {
   return StreamBuilder(
     stream: bloc.emailStream,
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      //final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+      final currentTheme = Provider.of<ThemeChanger>(context);
+
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: TextField(
+          style: TextStyle(
+            color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+          ),
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+              ),
+              // icon: Icon(Icons.alternate_email),
+              //  fillColor: currentTheme.accentColor,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: currentTheme.currentTheme.accentColor, width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              hintText: '',
+              labelText: 'Email',
+              counterText: snapshot.data,
+              labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54),
+              errorText: snapshot.error),
+          onChanged: bloc.changeEmail,
+        ),
+      );
+    },
+  );
+}
+
+Widget _createPassword(RegisterBloc bloc) {
+  return StreamBuilder(
+    stream: bloc.passwordStream,
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      final currentTheme = Provider.of<ThemeChanger>(context);
+
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: TextField(
+          style: TextStyle(
+            color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+          ),
+          obscureText: true,
+          decoration: InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+              ),
+              // icon: Icon(Icons.lock_outline),
+              //  fillColor: currentTheme.accentColor,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: currentTheme.currentTheme.accentColor, width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              hintText: '',
+              labelText: 'Password',
+              labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54),
+              counterText: snapshot.data,
+              errorText: snapshot.error),
+          onChanged: bloc.changePassword,
+        ),
+      );
+    },
+  );
+}
+
+Widget _createUsername(RegisterBloc bloc, context) {
+  final currentTheme = Provider.of<ThemeChanger>(context);
+
+  return StreamBuilder(
+    stream: bloc.usernameSteam,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextField(
-          keyboardType: TextInputType.emailAddress,
+          style: TextStyle(
+            color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+          ),
+          //  keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-              // icon: Icon(Icons.alternate_email),
-              //  fillColor: currentTheme.accentColor,
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54,
+                ),
+              ),
               focusedBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: currentTheme.accentColor, width: 2.0),
+                borderSide: BorderSide(
+                    color: currentTheme.currentTheme.accentColor, width: 2.0),
                 borderRadius: BorderRadius.circular(25.0),
               ),
+
+              // icon: Icon(Icons.perm_identity),
+              //  fillColor: currentTheme.accentColor,
+
               hintText: '',
-              labelText: 'Phone number or email',
+              labelText: 'Username',
+              labelStyle: TextStyle(
+                  color: (currentTheme.customTheme)
+                      ? Colors.white54
+                      : Colors.black54),
+              // counterText: snapshot.data,
               errorText: snapshot.error),
-          onChanged: bloc.changeEmail,
+          onChanged: bloc.changeUsername,
         ),
       );
     },
@@ -461,35 +572,6 @@ _register(RegisterBloc bloc, BuildContext context) async {
   //Navigator.pushReplacementNamed(context, '');
 }
 
-Widget _createUsername(RegisterBloc bloc, context) {
-  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-  return StreamBuilder(
-    stream: bloc.usernameSteam,
-    builder: (BuildContext context, AsyncSnapshot snapshot) {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        child: TextField(
-          //  keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-              // icon: Icon(Icons.perm_identity),
-              //  fillColor: currentTheme.accentColor,
-              focusedBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: currentTheme.accentColor, width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: '',
-              labelText: 'Username',
-              // counterText: snapshot.data,
-              errorText: snapshot.error),
-          onChanged: bloc.changeUsername,
-        ),
-      );
-    },
-  );
-}
-
 /* Widget _createName(RegisterBloc bloc) {
   return StreamBuilder(
     stream: bloc.nameStream,
@@ -542,34 +624,6 @@ Widget _createUsername(RegisterBloc bloc, context) {
   );
 }
  */
-Widget _createPassword(RegisterBloc bloc, context) {
-  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-  return StreamBuilder(
-    stream: bloc.passwordStream,
-    builder: (BuildContext context, AsyncSnapshot snapshot) {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        child: TextField(
-          obscureText: true,
-          decoration: InputDecoration(
-              // icon: Icon(Icons.lock_outline),
-              //  fillColor: currentTheme.accentColor,
-              focusedBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: currentTheme.accentColor, width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: '',
-              labelText: 'Password',
-              counterText: snapshot.data,
-              errorText: snapshot.error),
-          onChanged: bloc.changePassword,
-        ),
-      );
-    },
-  );
-}
 
 Route _createRute() {
   return PageRouteBuilder(
