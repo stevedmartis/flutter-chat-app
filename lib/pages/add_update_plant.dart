@@ -1101,7 +1101,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
         if (editPlantRes.ok) {
           // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
 
-          plantBloc.getPlant(editPlantRes.plant);
+          // plantBloc.getPlant(editPlantRes.plant);
           plantBloc.getPlantsByUser(profile.user.uid);
 
           setState(() {

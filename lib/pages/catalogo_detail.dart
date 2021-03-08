@@ -15,6 +15,7 @@ import 'package:chat/pages/add_update_air.dart';
 import 'package:chat/pages/add_update_catalogo.dart';
 import 'package:chat/pages/add_update_light.dart';
 import 'package:chat/pages/plant_detail.dart';
+import 'package:chat/pages/product_detail.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/providers/air_provider.dart';
 import 'package:chat/providers/light_provider.dart';
@@ -405,7 +406,8 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                               bottomLeft: Radius.circular(10.0)),
                         ),
                         openBuilder: (_, closeContainer) {
-                          return Container();
+                          return ProductDetailPage(
+                              product: product, isUserAuth: true);
                         },
                         closedBuilder: (_, openContainer) {
                           return Stack(children: [

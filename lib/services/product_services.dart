@@ -72,7 +72,7 @@ class ProductService with ChangeNotifier {
 
     //final data = {'name': name, 'email': description, 'uid': uid};
 
-    final resp = await http.post('${Environment.apiUrl}/product/new',
+    final resp = await http.post('${Environment.apiUrl}/product/update/product',
         body: productToJson(product),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 

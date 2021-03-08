@@ -4,27 +4,30 @@
 
 import 'dart:convert';
 
+import 'package:chat/models/profiles.dart';
+
 Product productFromJson(String str) => Product.fromJson(json.decode(str));
 
 String productToJson(Product data) => json.encode(data.toJson());
 
 class Product {
-  Product(
-      {this.id,
-      this.user,
-      this.name = "",
-      this.description = "",
-      this.dateCreate,
-      //this.products,
-      this.dateUpdate,
-      this.totalProducts,
-      this.coverImage = "",
-      this.catalogo,
-      this.ratingInit,
-      this.thc,
-      this.cbd
-      //this.products
-      });
+  Product({
+    this.id,
+    this.user,
+    this.name = "",
+    this.description = "",
+    this.dateCreate,
+    //this.products,
+    this.dateUpdate,
+    this.totalProducts,
+    this.coverImage = "",
+    this.catalogo,
+    this.ratingInit,
+    this.cbd = "",
+    this.thc = "",
+    this.profile,
+    //this.products
+  });
   String id;
   String user;
   String name;
@@ -38,6 +41,7 @@ class Product {
 
   String cbd;
   String thc;
+  Profiles profile;
 
   String coverImage;
 
@@ -55,6 +59,7 @@ class Product {
         ratingInit: json["ratingInit"],
         cbd: json["cbd"],
         thc: json["thc"],
+        profile: Profiles.fromJson(json["profile"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -70,6 +75,8 @@ class Product {
         "ratingInit": ratingInit,
         "cbd": cbd,
         "thc": thc,
+        "profile": profile.toJson(),
+
         // "products": List<dynamic>.from(products.map((x) => x)),
       };
 

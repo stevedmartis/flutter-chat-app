@@ -164,7 +164,7 @@ class CoverImageProductPageState extends State<CoverImageProductPage> {
 
       /* awsService.uploadAvatar(
             widget.profile.user.uid, fileType[0], fileType[1], image); */
-      final resp = await awsService.updateImageCoverPlant(
+      final resp = await awsService.updateImageCoverProduct(
           fileType[0], fileType[1], imageCover, widget.product.id);
 
       setState(() {

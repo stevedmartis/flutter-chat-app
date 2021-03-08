@@ -69,6 +69,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
   bool isThcChange = false;
 
   bool isCbdChange = false;
+  bool isRatingChange = false;
   Profiles profile;
 
   double ratingActual = 0;
@@ -85,6 +86,9 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
     errorRequired = (widget.isEdit) ? false : true;
     nameCtrl.text = widget.product.name;
     descriptionCtrl.text = widget.product.description;
+
+    ratingActual =
+        (widget.isEdit) ? double.parse(widget.product.ratingInit) : 0;
 
     productBloc.imageUpdate.add(true);
     nameCtrl.addListener(() {
@@ -157,7 +161,8 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
         isAboutChange ||
         isImageUpdate ||
         isThcChange ||
-        isCbdChange;
+        isCbdChange ||
+        isRatingChange;
 
     return SafeArea(
       child: Scaffold(
@@ -273,10 +278,6 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                             SizedBox(
                               height: 10,
                             ),
-                            _createDescription(bloc),
-                            SizedBox(
-                              height: 10,
-                            ),
                             Row(
                               children: [
                                 Expanded(child: _createThc(bloc)),
@@ -287,7 +288,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                               ],
                             ),
                             SizedBox(
-                              height: 10,
+                              height: 20,
                             ),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,8 +312,11 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                                 ),
                               ],
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             RatingBar.builder(
-                              initialRating: 0,
+                              initialRating: ratingActual,
                               minRating: 0,
                               direction: Axis.horizontal,
                               allowHalfRating: true,
@@ -333,8 +337,17 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
 
                                 setState(() {
                                   ratingActual = rating;
+
+                                  isRatingChange = true;
                                 });
                               },
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _createDescription(bloc),
+                            SizedBox(
+                              height: 10,
                             ),
 
                             /*   _createDescription(bloc), */
@@ -654,19 +667,19 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
         cbd: cbd,
         thc: thc);
 
-    final createPlantResp = await productService.createProduct(newProduct);
+    final createProductResp = await productService.createProduct(newProduct);
 
-    if (createPlantResp != null) {
-      if (createPlantResp.ok) {
+    if (createProductResp != null) {
+      if (createProductResp.ok) {
         // widget.plants.add(createPlantResp.plant);
-        productService.product = createPlantResp.product;
+        productService.product = createProductResp.product;
         // productBloc.getPlant(createPlantResp.plant);
 
         setState(() {
           loading = false;
 
           // plantBloc.getPlantsByUser(profile.user.uid);
-          productBloc.getProducts();
+          productBloc.getProducts(uid);
 
           awsService.isUploadImagePlant = true;
         });
@@ -676,7 +689,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
         setState(() {
           loading = false;
         });
-        mostrarAlerta(context, 'Error', createPlantResp.msg);
+        mostrarAlerta(context, 'Error', createProductResp.msg);
       }
     } else {
       mostrarAlerta(
@@ -688,8 +701,9 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
   _editProduct(ProductBloc bloc) async {
     final productService = Provider.of<ProductService>(context, listen: false);
     final awsService = Provider.of<AwsService>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
 
-    // final uid = authService.profile.user.uid;
+    final uid = authService.profile.user.uid;
 
     final name = (bloc.name == null) ? widget.product.name : bloc.name.trim();
     final description = (descriptionCtrl.text == "")
@@ -700,27 +714,30 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
 
     final cbd = (bloc.cbd == null) ? widget.product.cbd : bloc.cbd.trim();
 
+    final ratingActualString = ratingActual.toString();
+
     final editProduct = Product(
         name: name,
         description: description,
+        ratingInit: ratingActualString,
         coverImage: productService.product.coverImage,
         id: widget.product.id,
         thc: thc,
         cbd: cbd);
 
     if (widget.isEdit) {
-      final editPlantRes = await productService.editProduct(editProduct);
+      final editProductRes = await productService.editProduct(editProduct);
 
-      if (editPlantRes != null) {
-        if (editPlantRes.ok) {
+      if (editProductRes != null) {
+        if (editProductRes.ok) {
           // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
 
-          productBloc.getProducts();
+          productBloc.getProducts(uid);
 
           setState(() {
             loading = false;
             awsService.isUploadImageProduct = true;
-            productService.product = editPlantRes.plant;
+            productService.product = editProductRes.product;
           });
           // room = editRoomRes.room;
 
@@ -729,7 +746,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
           setState(() {
             loading = false;
           });
-          mostrarAlerta(context, 'Error', editPlantRes.msg);
+          mostrarAlerta(context, 'Error', editProductRes.msg);
         }
       } else {
         mostrarAlerta(

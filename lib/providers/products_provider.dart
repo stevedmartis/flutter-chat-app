@@ -10,8 +10,8 @@ class ProductsApiProvider {
 
   final _storage = new FlutterSecureStorage();
 
-  Future<ProductsResponse> getProducts() async {
-    final urlFinal = _endpoint + 'principal/products/';
+  Future<ProductsResponse> getProducts(String uid) async {
+    final urlFinal = _endpoint + 'principal/products/$uid';
 
     final token = await this._storage.read(key: 'token');
 

@@ -11,6 +11,7 @@ import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/pages/add_update_plant.dart';
+import 'package:chat/pages/add_update_product.dart';
 import 'package:chat/pages/add_update_visit.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/principal_page.dart';
@@ -42,12 +43,14 @@ class ProductDetailPage extends StatefulWidget {
     this.title,
     this.products,
     @required this.product,
+    this.isUserAuth,
   }) : super(key: key);
 
   final String title;
 
   final Product product;
   final List<Product> products;
+  final bool isUserAuth;
 
   @override
   _ProductDetailPageState createState() => new _ProductDetailPageState();
@@ -102,8 +105,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     productBloc.imageUpdate.add(true);
 
     super.initState();
-    //  name = widget.profile.name;
-    //  productBloc.getProduct(widget.product);
 
     final authService = Provider.of<AuthService>(context, listen: false);
 
@@ -111,7 +112,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
     productService.product = null;
     profile = authService.profile;
-    //roomBloc.getRooms(widget.profile.user.uid);
   }
 
   @override
@@ -715,6 +715,9 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     final about = product.description;
     final size = MediaQuery.of(context).size;
 
+    final productService = Provider.of<ProductService>(context, listen: false);
+    final aws = Provider.of<AwsService>(context, listen: false);
+
     return SliverList(
       delegate: SliverChildListDelegate([
         //  final sexo = plant.sexo;
@@ -760,53 +763,57 @@ class _ProductDetailPageState extends State<ProductDetailPage>
               SizedBox(
                 height: 10.0,
               ),
-              Row(
-                children: [
-                  Container(
-                    width: 130,
+              (widget.isUserAuth)
+                  ? Row(
+                      children: [
+                        Container(
+                          width: 130,
 
-                    //top: size.height / 3.5,
-                    margin: EdgeInsets.only(left: size.width / 10),
+                          //top: size.height / 3.5,
+                          margin: EdgeInsets.only(left: size.width / 10),
 
-                    // width: size.width / 1.5,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: ButtonSubEditProfile(
-                          color:
-                              currentTheme.currentTheme.scaffoldBackgroundColor,
-                          textColor: currentTheme.currentTheme.accentColor,
-                          text: 'Editar',
-                          onPressed: () {
-                            /*     aws.isUploadImagePlant = false;
-                                  plantService.plant = plant;
-                                  Navigator.of(context)
-                                      .push(createRouteEditPlant(widget.plant)); */
-                          }),
-                    ),
-                  ),
-                  Container(
-                    width: 130,
-                    //top: size.height / 3.5,
-                    margin: EdgeInsets.only(left: size.width / 10, right: 10),
-                    // width: size.width / 1.5,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: ButtonSubEditProfile(
-                          color:
-                              currentTheme.currentTheme.scaffoldBackgroundColor,
-                          textColor: Colors.grey,
-                          text: 'Eliminar',
-                          onPressed: () {
-                            /*   confirmDelete(
+                          // width: size.width / 1.5,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: ButtonSubEditProfile(
+                                color: currentTheme
+                                    .currentTheme.scaffoldBackgroundColor,
+                                textColor:
+                                    currentTheme.currentTheme.accentColor,
+                                text: 'Editar',
+                                onPressed: () {
+                                  aws.isUploadImagePlant = false;
+                                  productService.product = product;
+                                  Navigator.of(context).push(
+                                      createRouteEditProduct(widget.product));
+                                }),
+                          ),
+                        ),
+                        Container(
+                          width: 130,
+                          //top: size.height / 3.5,
+                          margin:
+                              EdgeInsets.only(left: size.width / 10, right: 10),
+                          // width: size.width / 1.5,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: ButtonSubEditProfile(
+                                color: currentTheme
+                                    .currentTheme.scaffoldBackgroundColor,
+                                textColor: Colors.grey,
+                                text: 'Eliminar',
+                                onPressed: () {
+                                  /*   confirmDelete(
                                       context,
                                       'Confirmar',
                                       'Desea eliminar la Planta y todas sus visitas?',
                                       plant.id); */
-                          }),
-                    ),
-                  ),
-                ],
-              ),
+                                }),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(),
               SizedBox(
                 height: 20.0,
               ),
@@ -1218,10 +1225,11 @@ class BottomWaveClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-Route createRouteEditPlant(Plant plant) {
+Route createRouteEditProduct(Product product) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => AddUpdatePlantPage(
-      plant: plant,
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        AddUpdateProductPage(
+      product: product,
       isEdit: true,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {

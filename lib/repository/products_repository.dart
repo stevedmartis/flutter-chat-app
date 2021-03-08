@@ -5,8 +5,8 @@ import 'package:chat/providers/products_provider.dart';
 class ProductsRepository {
   ProductsApiProvider _apiProvider = ProductsApiProvider();
 
-  Future<ProductsResponse> getProducts() {
-    return _apiProvider.getProducts();
+  Future<ProductsResponse> getProducts(String uid) {
+    return _apiProvider.getProducts(uid);
   }
 
   Future<Product> getProduct(String productId) {

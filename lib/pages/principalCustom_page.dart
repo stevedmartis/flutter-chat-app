@@ -106,7 +106,7 @@ class _CollapsingListState extends State<CollapsingList>
   _chargeLastProducts() async {
     // this.visits = await visitService.getLastVisitsByUser(profile.user.uid);
 
-    productBloc.getProducts();
+    productBloc.getProducts(profile.user.uid);
   }
 
   pullToRefreshData() async {
@@ -307,7 +307,7 @@ class _CollapsingListState extends State<CollapsingList>
                   builder: (context, AsyncSnapshot<ProductsResponse> snapshot) {
                     if (snapshot.hasData) {
                       products = snapshot.data.products;
-                      return _buildWidgetProducts(products, context);
+                      return _buildWidgetProducts(products, context, profile);
                     } else if (snapshot.hasError) {
                       return _buildErrorWidget(snapshot.error);
                     } else {
@@ -628,7 +628,7 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
       : Container();
 }
 
-Widget _buildWidgetProducts(products, context) {
+Widget _buildWidgetProducts(products, context, profile) {
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
   final size = MediaQuery.of(context).size;
 
@@ -640,6 +640,9 @@ Widget _buildWidgetProducts(products, context) {
           itemCount: products.length,
           itemBuilder: (BuildContext ctxt, int index) {
             final product = products[index];
+
+            final isUserAuth =
+                (product.user == profile.user.uid) ? true : false;
 
             return Stack(
               children: [
@@ -671,8 +674,7 @@ Widget _buildWidgetProducts(products, context) {
                       ),
                       openBuilder: (_, closeContainer) {
                         return ProductDetailPage(
-                          product: product,
-                        );
+                            product: product, isUserAuth: isUserAuth);
                       },
                       closedBuilder: (_, openContainer) {
                         return FadeInLeft(

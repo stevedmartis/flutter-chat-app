@@ -21,8 +21,8 @@ class ProductBloc with Validators {
 
   final BehaviorSubject<Product> _productSelect = BehaviorSubject<Product>();
 
-  getProducts() async {
-    ProductsResponse response = await _repository.getProducts();
+  getProducts(String uid) async {
+    ProductsResponse response = await _repository.getProducts(uid);
     myProduts.sink.add(response);
   }
 

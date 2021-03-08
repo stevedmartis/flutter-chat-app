@@ -232,6 +232,48 @@ class AwsService with ChangeNotifier {
     return respUrl;
   }
 
+  Future<String> updateImageCoverProduct(
+      String fileName, String fileType, File image, String id) async {
+    final url =
+        Uri.parse('${Environment.apiUrl}/aws/upload/update-cover-product');
+
+    final mimeType = mime(image.path).split('/'); //image/jpeg
+
+    final token = await this._storage.read(key: 'token');
+
+    Map<String, String> headers = {
+      "Content-Type": "image/mimeType",
+      "x-token": token,
+      'id': id,
+    };
+
+    final imageUploadRequest = http.MultipartRequest('POST', url);
+
+    final file = await http.MultipartFile.fromPath('file', image.path,
+        contentType: MediaType(mimeType[0], mimeType[1]));
+
+    imageUploadRequest.files.add(file);
+
+    imageUploadRequest.headers.addAll(headers);
+
+    final streamResponse = await imageUploadRequest.send();
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      print('Algo salio mal');
+
+      return null;
+    }
+
+    final respBody = jsonDecode(resp.body);
+
+    //final respData = imageResponseToJson(resp.body);
+
+    final respUrl = respBody['url'];
+    this.imageUpdatePlant = respUrl;
+    return respUrl;
+  }
+
   Future<String> uploadImageCoverPlant(
       String fileName, String fileType, File image) async {
     final url = Uri.parse('${Environment.apiUrl}/aws/upload/cover-plant');
