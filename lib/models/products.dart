@@ -4,8 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:chat/models/profiles.dart';
-
 Product productFromJson(String str) => Product.fromJson(json.decode(str));
 
 String productToJson(Product data) => json.encode(data.toJson());
@@ -16,16 +14,15 @@ class Product {
     this.user,
     this.name = "",
     this.description = "",
-    this.dateCreate,
+    this.createdAt,
     //this.products,
-    this.dateUpdate,
+    this.updatedAt,
     this.totalProducts,
     this.coverImage = "",
     this.catalogo,
     this.ratingInit,
     this.cbd = "",
     this.thc = "",
-    this.profile,
     //this.products
   });
   String id;
@@ -33,15 +30,14 @@ class Product {
   String name;
   String description;
   // List<Product> products;
-  String dateCreate;
-  String dateUpdate;
+  String createdAt;
+  String updatedAt;
   int totalProducts;
   String catalogo;
   String ratingInit;
 
   String cbd;
   String thc;
-  Profiles profile;
 
   String coverImage;
 
@@ -51,15 +47,14 @@ class Product {
         name: json["name"],
         description: json["description"],
         //products: List<Room>.from(json["products"].map((x) => x)),
-        dateCreate: json["dateCreate"],
-        dateUpdate: json["dateUpdate"],
+        createdAt: json["createdAt"],
+        updatedAt: json["updatedAt"],
         totalProducts: json["totalProducts"],
         coverImage: json["coverImage"],
         catalogo: json["catalogo"],
         ratingInit: json["ratingInit"],
         cbd: json["cbd"],
         thc: json["thc"],
-        profile: Profiles.fromJson(json["profile"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -67,15 +62,14 @@ class Product {
         "user": user,
         "name": name,
         "description": description,
-        "dateCreate": dateCreate,
-        "dateUpdate": dateUpdate,
+        "createdAt": createdAt,
+        "updatedAt": updatedAt,
         "totalProducts": totalProducts,
         "coverImage": coverImage,
         "catalogo": catalogo,
         "ratingInit": ratingInit,
         "cbd": cbd,
         "thc": thc,
-        "profile": profile.toJson(),
 
         // "products": List<dynamic>.from(products.map((x) => x)),
       };

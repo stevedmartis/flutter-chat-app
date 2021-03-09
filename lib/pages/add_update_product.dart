@@ -86,6 +86,8 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
     errorRequired = (widget.isEdit) ? false : true;
     nameCtrl.text = widget.product.name;
     descriptionCtrl.text = widget.product.description;
+    tchCtrl.text = widget.product.thc;
+    cbdCtrl.text = widget.product.cbd;
 
     ratingActual =
         (widget.isEdit) ? double.parse(widget.product.ratingInit) : 0;
@@ -658,15 +660,15 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
     final cbd = (bloc.cbd == null) ? widget.product.cbd : bloc.cbd.trim();
 
     final newProduct = Product(
-        name: name,
-        description: description,
-        coverImage: widget.product.coverImage,
-        catalogo: catalogo,
-        ratingInit: ratingActualString,
-        user: uid,
-        cbd: cbd,
-        thc: thc);
-
+      name: name,
+      description: description,
+      coverImage: widget.product.coverImage,
+      catalogo: catalogo,
+      ratingInit: ratingActualString,
+      user: uid,
+      cbd: cbd,
+      thc: thc,
+    );
     final createProductResp = await productService.createProduct(newProduct);
 
     if (createProductResp != null) {
@@ -717,13 +719,14 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
     final ratingActualString = ratingActual.toString();
 
     final editProduct = Product(
-        name: name,
-        description: description,
-        ratingInit: ratingActualString,
-        coverImage: productService.product.coverImage,
-        id: widget.product.id,
-        thc: thc,
-        cbd: cbd);
+      name: name,
+      description: description,
+      ratingInit: ratingActualString,
+      coverImage: productService.product.coverImage,
+      id: widget.product.id,
+      thc: thc,
+      cbd: cbd,
+    );
 
     if (widget.isEdit) {
       final editProductRes = await productService.editProduct(editProduct);
@@ -738,6 +741,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
             loading = false;
             awsService.isUploadImageProduct = true;
             productService.product = editProductRes.product;
+            productService.productProfile.product = editProductRes.product;
           });
           // room = editRoomRes.room;
 

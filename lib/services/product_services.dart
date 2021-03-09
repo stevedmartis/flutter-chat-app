@@ -1,3 +1,4 @@
+import 'package:chat/models/product_principal.dart';
 import 'package:chat/models/product_response.dart';
 import 'package:chat/models/products.dart';
 import 'package:chat/models/products_response.dart';
@@ -11,10 +12,19 @@ class ProductService with ChangeNotifier {
   Product productModel;
 
   Product _product;
+
+  ProductProfile _productProfile;
   Product get product => this._product;
 
   set product(Product valor) {
     this._product = valor;
+    //notifyListeners();
+  }
+
+  ProductProfile get productProfile => this._productProfile;
+
+  set productProfile(ProductProfile valor) {
+    this._productProfile = valor;
     //notifyListeners();
   }
 
@@ -50,7 +60,7 @@ class ProductService with ChangeNotifier {
     //final data = {'name': name, 'email': description, 'uid': uid};
 
     final resp = await http.post('${Environment.apiUrl}/product/new',
-        body: productToJson(product),
+        body: jsonEncode(product),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
     if (resp.statusCode == 200) {
@@ -73,7 +83,7 @@ class ProductService with ChangeNotifier {
     //final data = {'name': name, 'email': description, 'uid': uid};
 
     final resp = await http.post('${Environment.apiUrl}/product/update/product',
-        body: productToJson(product),
+        body: jsonEncode(product),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
     if (resp.statusCode == 200) {

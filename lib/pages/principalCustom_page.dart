@@ -8,14 +8,14 @@ import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/bloc/visit_bloc.dart';
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/plants_response.dart';
-import 'package:chat/models/products.dart';
-import 'package:chat/models/products_response.dart';
+import 'package:chat/models/product_principal.dart';
+import 'package:chat/models/products_profiles_response.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/rooms_response.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/models/visits_response.dart';
 import 'package:chat/pages/plant_detail.dart';
-import 'package:chat/pages/product_detail.dart';
+import 'package:chat/pages/product_profile_detail.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/users_service.dart';
@@ -25,7 +25,7 @@ import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_users.dart';
 import 'package:chat/widgets/header_appbar_pages.dart';
 import 'package:chat/widgets/plant_card.dart';
-import 'package:chat/widgets/product_card.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:chat/widgets/visit_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -61,7 +61,7 @@ class _CollapsingListState extends State<CollapsingList>
   List<Visit> visits = [];
 
   List<Plant> plants = [];
-  List<Product> products = [];
+  List<ProductProfile> productsProfiles = [];
 
   Profiles profile;
 
@@ -302,12 +302,14 @@ class _CollapsingListState extends State<CollapsingList>
             ),
             Container(
                 padding: EdgeInsets.only(top: 40),
-                child: StreamBuilder<ProductsResponse>(
-                  stream: productBloc.myProducts.stream,
-                  builder: (context, AsyncSnapshot<ProductsResponse> snapshot) {
+                child: StreamBuilder<ProductsProfilesResponse>(
+                  stream: productBloc.produtsProfiles.stream,
+                  builder: (context,
+                      AsyncSnapshot<ProductsProfilesResponse> snapshot) {
                     if (snapshot.hasData) {
-                      products = snapshot.data.products;
-                      return _buildWidgetProducts(products, context, profile);
+                      productsProfiles = snapshot.data.productsProfiles;
+                      return _buildWidgetProducts(
+                          productsProfiles, context, profile);
                     } else if (snapshot.hasError) {
                       return _buildErrorWidget(snapshot.error);
                     } else {
@@ -630,7 +632,8 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
       : Container();
 }
 
-Widget _buildWidgetProducts(products, context, profile) {
+Widget _buildWidgetProducts(
+    List<ProductProfile> productsProfiles, context, profile) {
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
   final size = MediaQuery.of(context).size;
 
@@ -639,12 +642,14 @@ Widget _buildWidgetProducts(products, context, profile) {
       child: ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: products.length,
+          itemCount: productsProfiles.length,
           itemBuilder: (BuildContext ctxt, int index) {
-            final product = products[index];
+            final productProfiles = productsProfiles[index];
 
             final isUserAuth =
-                (product.user == profile.user.uid) ? true : false;
+                (productProfiles.profile.user.uid == profile.user.uid)
+                    ? true
+                    : false;
 
             return Stack(
               children: [
@@ -675,13 +680,15 @@ Widget _buildWidgetProducts(products, context, profile) {
                             bottomLeft: Radius.circular(10.0)),
                       ),
                       openBuilder: (_, closeContainer) {
-                        return ProductDetailPage(
-                            product: product, isUserAuth: isUserAuth);
+                        return ProductProfileDetailPage(
+                            productProfile: productProfiles,
+                            isUserAuth: isUserAuth);
                       },
                       closedBuilder: (_, openContainer) {
                         return FadeInLeft(
                             delay: Duration(milliseconds: 300 * index),
-                            child: CardProduct(product: product));
+                            child: CardProductProfile(
+                                productProfile: productProfiles));
                       }),
                 ),
               ],

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:chat/bloc/validators.dart';
 import 'package:chat/models/products.dart';
-import 'package:chat/models/products_response.dart';
+import 'package:chat/models/products_profiles_response.dart';
 import 'package:chat/repository/products_repository.dart';
 
 import 'package:rxdart/rxdart.dart';
@@ -16,14 +16,15 @@ class ProductBloc with Validators {
   final _thcController = BehaviorSubject<String>();
   final ProductsRepository _repository = ProductsRepository();
 
-  final BehaviorSubject<ProductsResponse> myProduts =
-      BehaviorSubject<ProductsResponse>();
+  final BehaviorSubject<ProductsProfilesResponse> _produtsProfiles =
+      BehaviorSubject<ProductsProfilesResponse>();
 
   final BehaviorSubject<Product> _productSelect = BehaviorSubject<Product>();
 
   getProducts(String uid) async {
-    ProductsResponse response = await _repository.getProducts(uid);
-    myProduts.sink.add(response);
+    ProductsProfilesResponse response =
+        await _repository.getProductsProfiles(uid);
+    _produtsProfiles.sink.add(response);
   }
 
   getProduct(Product product) async {
@@ -31,7 +32,8 @@ class ProductBloc with Validators {
     _productSelect.sink.add(response);
   }
 
-  BehaviorSubject<ProductsResponse> get myProducts => myProduts;
+  BehaviorSubject<ProductsProfilesResponse> get produtsProfiles =>
+      _produtsProfiles;
   // Recuperar los datos del Stream
   Stream<String> get nameStream =>
       _nameController.stream.transform(validationNameRequired);
@@ -66,7 +68,7 @@ class ProductBloc with Validators {
   BehaviorSubject<Product> get productSelect => _productSelect;
 
   dispose() {
-    myProduts.close();
+    _produtsProfiles.close();
     _imageUpdateCtrl.close();
     _productSelect?.close();
     _nameController?.close();

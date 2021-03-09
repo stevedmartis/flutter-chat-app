@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/product_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
+import 'package:chat/models/product_principal.dart';
 import 'package:chat/models/products.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
@@ -17,9 +18,11 @@ import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/plants_provider.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
+import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/product_services.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
@@ -35,18 +38,18 @@ import '../utils//extension.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class ProductDetailPage extends StatefulWidget {
-  ProductDetailPage({
+class ProductProfileDetailPage extends StatefulWidget {
+  ProductProfileDetailPage({
     Key key,
     this.title,
     this.products,
-    @required this.product,
+    @required this.productProfile,
     this.isUserAuth,
   }) : super(key: key);
 
   final String title;
 
-  final Product product;
+  final ProductProfile productProfile;
   final List<Product> products;
   final bool isUserAuth;
 
@@ -74,7 +77,7 @@ class NetworkImageDecoder {
   }
 }
 
-class _ProductDetailPageState extends State<ProductDetailPage>
+class _ProductDetailPageState extends State<ProductProfileDetailPage>
     with TickerProviderStateMixin {
   ScrollController _scrollController;
 
@@ -85,7 +88,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
   Future<List<Room>> getRoomsFuture;
   AuthService authService;
-  Product product;
+  ProductProfile productProfile;
 
   Profiles profile;
 
@@ -108,7 +111,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
     final productService = Provider.of<ProductService>(context, listen: false);
 
-    productService.product = null;
+    productService.productProfile = null;
     profile = authService.profile;
   }
 
@@ -136,9 +139,9 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     final productService = Provider.of<ProductService>(context, listen: false);
 
     setState(() {
-      product = (productService.product != null)
-          ? productService.product
-          : widget.product;
+      productProfile = (productService.productProfile != null)
+          ? productService.productProfile
+          : widget.productProfile;
     });
 
     return Scaffold(
@@ -228,7 +231,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                         background: Material(
                             type: MaterialType.transparency,
                             child: FadeInImage(
-                              image: NetworkImage(product.getCoverImg()),
+                              image: NetworkImage(
+                                  productProfile.product.getCoverImg()),
                               placeholder: AssetImage('assets/loading2.gif'),
                               fit: BoxFit.cover,
                               height: 100,
@@ -243,8 +247,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                             child: Container(
                               child: Center(
                                 child: Text(
-                                  (product.name.isNotEmpty)
-                                      ? product.name.capitalize()
+                                  (productProfile.product.name.isNotEmpty)
+                                      ? productProfile.product.name.capitalize()
                                       : '',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -709,12 +713,18 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   SliverList makeHeaderInfo(context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
-    final thc = (product.thc.isEmpty) ? '0' : product.thc;
-    final cbd = (product.cbd.isEmpty) ? '0' : product.cbd;
+    final authService = Provider.of<AuthService>(context);
 
-    final about = product.description;
+    final profile = authService.profile;
+
+    final thc =
+        (productProfile.product.thc.isEmpty) ? '0' : productProfile.product.thc;
+    final cbd =
+        (productProfile.product.cbd.isEmpty) ? '0' : productProfile.product.cbd;
+
+    final about = productProfile.product.description;
     final size = MediaQuery.of(context).size;
-    final rating = widget.product.ratingInit;
+    final rating = widget.productProfile.product.ratingInit;
 
     var ratingDouble = double.parse('$rating');
 
@@ -845,6 +855,64 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                 ),
               ),
               SizedBox(
+                height: 10.0,
+              ),
+              GestureDetector(
+                onTap: () {
+                  //profile.user.uid = '';
+                  //Navigator.pushNamed(context, 'detail', arguments: profile);
+
+                  if (productProfile.profile.user.uid != profile.user.uid) {
+                    final chatService =
+                        Provider.of<ChatService>(context, listen: false);
+                    chatService.userFor = productProfile.profile;
+                    Navigator.push(context,
+                        createRouteProfileSelect(productProfile.profile));
+                  } else {
+                    Navigator.push(context, createRouteProfile());
+                  }
+                },
+                child: Container(
+                  padding: EdgeInsets.only(
+                      top: 10, left: size.width / 5, bottom: 5.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        child: ImageUserChat(
+                            width: 100,
+                            height: 100,
+                            profile: productProfile.profile,
+                            fontsize: 20),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                              margin: EdgeInsets.only(left: 10),
+                              child: Text(
+                                productProfile.profile.name,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: (currentTheme.customTheme)
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                          Container(
+                              margin: EdgeInsets.only(left: 10),
+                              child: Text(
+                                '@' + productProfile.profile.user.username,
+                                style:
+                                    TextStyle(fontSize: 14, color: Colors.grey),
+                              )),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
                 height: 20.0,
               ),
               (widget.isUserAuth)
@@ -867,9 +935,14 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                 text: 'Editar',
                                 onPressed: () {
                                   aws.isUploadImagePlant = false;
-                                  productService.product = product;
+                                  productService.productProfile =
+                                      productProfile;
+                                  productService.product =
+                                      productProfile.product;
+
                                   Navigator.of(context).push(
-                                      createRouteEditProduct(widget.product));
+                                      createRouteEditProduct(
+                                          widget.productProfile.product));
                                 }),
                           ),
                         ),

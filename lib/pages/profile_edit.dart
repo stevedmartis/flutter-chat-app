@@ -707,8 +707,6 @@ class EditProfilePageState extends State<EditProfilePage> {
     if (editProfileOk != null) {
       if (editProfileOk == true) {
         socketService.connect();
-
-        Navigator.push(context, createRoute());
       } else {
         mostrarAlerta(context, 'Error', editProfileOk);
       }

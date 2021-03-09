@@ -1,18 +1,19 @@
-import 'package:chat/models/products.dart';
+import 'package:chat/models/product_principal.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/extension.dart';
 
-class CardProduct extends StatefulWidget {
-  final Product product;
+class CardProductProfile extends StatefulWidget {
+  final ProductProfile productProfile;
 
-  CardProduct({this.product});
+  CardProductProfile({this.productProfile});
   @override
   _CardProductState createState() => _CardProductState();
 }
 
-class _CardProductState extends State<CardProduct> {
+class _CardProductState extends State<CardProductProfile> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -41,10 +42,11 @@ class _CardProductState extends State<CardProduct> {
                           bottomLeft: Radius.circular(10.0)),
                       child: Material(
                         type: MaterialType.transparency,
-                        child: (widget.product.coverImage != "")
+                        child: (widget.productProfile.product.coverImage != "")
                             ? FadeInImage(
-                                image:
-                                    NetworkImage(widget.product.getCoverImg()),
+                                image: NetworkImage(widget
+                                    .productProfile.product
+                                    .getCoverImg()),
                                 placeholder: AssetImage('assets/loading2.gif'),
                                 fit: BoxFit.cover)
                             : FadeInImage(
@@ -65,9 +67,15 @@ class _CardProductState extends State<CardProduct> {
   Widget productItem() {
     final size = MediaQuery.of(context).size;
     final currentTheme = Provider.of<ThemeChanger>(context);
-    final thc = (widget.product.thc.isEmpty) ? '0' : widget.product.thc;
-    final cbd = (widget.product.cbd.isEmpty) ? '0' : widget.product.cbd;
-    final rating = widget.product.ratingInit;
+    final thc = (widget.productProfile.product.thc.isEmpty)
+        ? '0'
+        : widget.productProfile.product.thc;
+    final cbd = (widget.productProfile.product.cbd.isEmpty)
+        ? '0'
+        : widget.productProfile.product.cbd;
+    final rating = widget.productProfile.product.ratingInit;
+
+    final profile = widget.productProfile.profile;
 
     /*   final suscriptionEnabled =
         profile.subscribeApproved && profile.subscribeActive; */
@@ -88,7 +96,7 @@ class _CardProductState extends State<CardProduct> {
             children: <Widget>[
               Container(
                 child: Text(
-                  widget.product.name.capitalize(),
+                  widget.productProfile.product.name.capitalize(),
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
@@ -104,8 +112,8 @@ class _CardProductState extends State<CardProduct> {
                 margin: EdgeInsets.only(top: 5.0),
                 width: size.width / 3.5,
                 child: Text(
-                  (widget.product.description.length > 0)
-                      ? widget.product.description.capitalize()
+                  (widget.productProfile.product.description.length > 0)
+                      ? widget.productProfile.product.description.capitalize()
                       : "Sin descripción",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 3,
@@ -176,6 +184,46 @@ class _CardProductState extends State<CardProduct> {
                             size: 15,
                             color: Colors.grey,
                           ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 30,
+                      height: 30,
+                      child: ImageUserChat(
+                          width: 40,
+                          height: 40,
+                          profile: profile,
+                          fontsize: 20),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            margin: EdgeInsets.only(left: 10),
+                            child: Text(
+                              profile.name,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: (currentTheme.customTheme)
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                        Container(
+                            margin: EdgeInsets.only(left: 10),
+                            child: Text(
+                              '@' + profile.user.username,
+                              style:
+                                  TextStyle(fontSize: 9.0, color: Colors.grey),
+                            )),
+                      ],
+                    ),
                   ],
                 ),
               ),
