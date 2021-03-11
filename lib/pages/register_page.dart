@@ -14,7 +14,6 @@ import 'package:chat/services/socket_service.dart';
 
 import 'package:chat/helpers/mostrar_alerta.dart';
 
-import 'package:chat/widgets/labels.dart';
 import 'dart:ui' as ui;
 
 class RegisterPage extends StatelessWidget {
@@ -47,7 +46,7 @@ class RegisterPage extends StatelessWidget {
                   Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
-                        top: _size.height / 1.40,
+                        top: _size.height / 1.30,
                       ),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -58,7 +57,7 @@ class RegisterPage extends StatelessWidget {
                                 _signInGoogle(context);
                               },
                               child: roundedRectSignInSocialMediaButton(
-                                  'Iniciar sesión con Google',
+                                  'Registrarse con Google',
                                   Colors.orange,
                                   FontAwesomeIcons.google,
                                   true,
@@ -75,7 +74,7 @@ class RegisterPage extends StatelessWidget {
                                 await _signIApple(context);
                               },
                               child: roundedRectSignInSocialMediaButton(
-                                  'Iniciar sesión con Apple',
+                                  'Registrarse con Apple',
                                   Colors.white,
                                   FontAwesomeIcons.apple,
                                   false,
@@ -83,7 +82,7 @@ class RegisterPage extends StatelessWidget {
                             ),
                           ])),
 
-                  Center(
+                  /*  Center(
                     child: Container(
                       margin: EdgeInsets.only(top: _size.height / 1.1),
                       child: Labels(
@@ -94,7 +93,7 @@ class RegisterPage extends StatelessWidget {
                         colortText2: currentTheme.accentColor,
                       ),
                     ),
-                  ),
+                  ), */
                   /*   Center(
                       child: Container(
                           margin: EdgeInsets.only(top: _size.height / 1.1),
@@ -298,6 +297,7 @@ Widget roundedRectSignInSocialMediaButton(
     String title, Color color, IconData icon, bool isGoogle, double sizeIcon) {
   return Builder(builder: (BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Padding(
       padding: EdgeInsets.only(top: 10),
@@ -308,7 +308,9 @@ Widget roundedRectSignInSocialMediaButton(
         decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0)),
-            color: Colors.black26),
+            color: (currentTheme.customTheme)
+                ? currentTheme.currentTheme.cardColor
+                : Colors.white54),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,

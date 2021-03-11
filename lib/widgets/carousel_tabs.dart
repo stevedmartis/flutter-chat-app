@@ -119,36 +119,42 @@ class _TabsScrollCatalogosCustomState extends State<TabsScrollCatalogoCustom> {
       ),
       child: DefaultTabController(
           length: catalogos.length,
-          child: PreferredSize(
-            preferredSize: Size.fromHeight(600.0),
-            child: TabBar(
-              indicatorWeight: 3,
-              isScrollable: true,
-              labelColor: currentTheme.currentTheme.accentColor,
-              unselectedLabelColor: (currentTheme.customTheme)
-                  ? Colors.white54.withOpacity(0.30)
-                  : currentTheme.currentTheme.primaryColor,
-              indicatorColor: currentTheme.currentTheme.accentColor,
-              tabs: List<Widget>.generate(catalogos.length, (int index) {
-                final catalogo = catalogos[index];
+          child: Scaffold(
+            appBar: AppBar(
+                backgroundColor:
+                    currentTheme.currentTheme.scaffoldBackgroundColor,
+                bottom: TabBar(
+                    indicatorWeight: 3,
+                    isScrollable: true,
+                    labelColor: currentTheme.currentTheme.accentColor,
+                    unselectedLabelColor: (currentTheme.customTheme)
+                        ? Colors.white54.withOpacity(0.30)
+                        : currentTheme.currentTheme.primaryColor,
+                    indicatorColor: currentTheme.currentTheme.accentColor,
+                    tabs: List<Widget>.generate(catalogos.length, (int index) {
+                      final catalogo = catalogos[index];
 
-                final name = catalogo.name;
-                final nameCapitalized = name.capitalize();
-                return new Tab(
-                  child: Text(
-                    (nameCapitalized.length >= 15)
-                        ? nameCapitalized.substring(0, 15) + '...'
-                        : nameCapitalized,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 5,
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                );
-              }),
-            ),
+                      final name = catalogo.name;
+                      final nameCapitalized = name.capitalize();
+                      return new Tab(
+                        child: Text(
+                          (nameCapitalized.length >= 15)
+                              ? nameCapitalized.substring(0, 15) + '...'
+                              : nameCapitalized,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 5,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    }),
+                    onTap: (value) => {
+                          setState(() {
+                            currentIndexTab = value;
+                          })
+                        })),
           )),
     );
   }

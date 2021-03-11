@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class AvatarImagePage extends StatefulWidget {
-  AvatarImagePage({this.profile, this.isUserAuth = true});
+  AvatarImagePage({this.profile, this.isUserAuth = false});
   final Profiles profile;
   final bool isUserAuth;
 
@@ -51,15 +51,17 @@ class _AvatarImagePageState extends State<AvatarImagePage> {
           color: Colors.white,
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.add_photo_alternate,
-              color: currentTheme.currentTheme.accentColor,
-            ),
-            iconSize: 40,
-            onPressed: () => _selectImage(),
-            color: Colors.white,
-          ),
+          (widget.isUserAuth)
+              ? IconButton(
+                  icon: Icon(
+                    Icons.add_photo_alternate,
+                    color: currentTheme.currentTheme.accentColor,
+                  ),
+                  iconSize: 40,
+                  onPressed: () => _selectImage(),
+                  color: Colors.white,
+                )
+              : Container(),
         ],
       ),
       body: Hero(

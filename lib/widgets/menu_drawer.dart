@@ -78,7 +78,9 @@ class PrincipalMenu extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     socketService.disconnect();
-                    Navigator.pushReplacementNamed(context, 'login');
+
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, "login", (Route<dynamic> route) => false);
                     AuthService.deleteToken();
                   },
                   child: ListTile(

@@ -173,9 +173,12 @@ class _ProfileCardState extends State<ProfileCard> {
                                                       openBuilder:
                                                           (_, closeContainer) {
                                                         return AvatarImagePage(
-                                                            profile: this
-                                                                .widget
-                                                                .profile);
+                                                          profile: this
+                                                              .widget
+                                                              .profile,
+                                                          isUserAuth:
+                                                              widget.isUserAuth,
+                                                        );
                                                       },
                                                       closedBuilder:
                                                           (_, openContainer) {

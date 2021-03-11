@@ -77,6 +77,8 @@ class NetworkImageDecoder {
 class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   ScrollController _scrollController;
 
+  ScrollController _scrollControllerPageBuilder;
+
   String name = '';
   bool fromRooms = false;
   bool activeTabs = false;
@@ -134,6 +136,9 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   @override
   void initState() {
     _scrollController = ScrollController()..addListener(() => setState(() {}));
+
+    _scrollControllerPageBuilder = ScrollController()
+      ..addListener(() => setState(() {}));
 
     name = widget.profile.name;
 
@@ -283,227 +288,265 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     //final username = widget.profile.user.username.toLowerCase();
 
     return Scaffold(
-        backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
-        endDrawer: PrincipalMenu(),
-        key: scaffolKey,
-        // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
-        body: NestedScrollView(
-          physics:
-              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          controller: _scrollController,
-          headerSliverBuilder: (context, value) {
-            return [
-              // header
+      backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
+      endDrawer: PrincipalMenu(),
+      key: scaffolKey,
+      // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+      body: NotificationListener<ScrollEndNotification>(
+        onNotification: (_) {
+          _snapAppbar();
 
-              SliverAppBar(
-                stretch: true,
-                stretchTriggerOffset: 250.0,
+          return false;
+        },
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: CustomScrollView(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              controller: _scrollController,
+              slivers: <Widget>[
+                SliverAppBar(
+                  stretch: true,
+                  stretchTriggerOffset: 250.0,
 
-                backgroundColor: _showTitle
-                    ? Colors.black
-                    : currentTheme.currentTheme.scaffoldBackgroundColor,
-                leading: Container(
-                    margin: EdgeInsets.only(left: 15),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      child: CircleAvatar(
-                          child: IconButton(
-                              icon: Icon(Icons.arrow_back_ios,
-                                  size: size.width / 20,
-                                  color: (_showTitle)
-                                      ? currentTheme.currentTheme.accentColor
-                                      : Colors.white),
-                              onPressed: () => {
-                                    {},
-                                    Navigator.pop(context),
-                                  }),
-                          backgroundColor: Colors.black.withOpacity(0.60)),
+                  backgroundColor: _showTitle
+                      ? Colors.black
+                      : currentTheme.currentTheme.scaffoldBackgroundColor,
+                  leading: Container(
+                      margin: EdgeInsets.only(left: 15),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        child: CircleAvatar(
+                            child: IconButton(
+                                icon: Icon(Icons.arrow_back_ios,
+                                    size: size.width / 20,
+                                    color: (_showTitle)
+                                        ? currentTheme.currentTheme.accentColor
+                                        : Colors.white),
+                                onPressed: () => {
+                                      {},
+                                      Navigator.pop(context),
+                                    }),
+                            backgroundColor: Colors.black.withOpacity(0.60)),
+                      )),
+
+                  actions: [
+                    (!widget.isUserAuth)
+                        ? Container(
+                            width: 40,
+                            height: 40,
+                            margin: EdgeInsets.only(right: 20),
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              child: CircleAvatar(
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: FaIcon(FontAwesomeIcons.commentDots,
+                                          size: 25,
+                                          color: (_showTitle)
+                                              ? currentTheme
+                                                  .currentTheme.accentColor
+                                              : Colors.white),
+                                      onPressed: () => Navigator.push(
+                                          context, createRouteChat()),
+                                    ),
+                                  ),
+                                  backgroundColor:
+                                      Colors.black.withOpacity(0.60)),
+                            ))
+                        : Container(
+                            width: 40,
+                            height: 40,
+                            margin: EdgeInsets.only(right: 20),
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              child: CircleAvatar(
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: FaIcon(FontAwesomeIcons.cog,
+                                          size: 25,
+                                          color: (_showTitle)
+                                              ? currentTheme
+                                                  .currentTheme.accentColor
+                                              : Colors.white),
+                                      onPressed: () => {
+                                        scaffolKey.currentState.openEndDrawer()
+                                      },
+                                    ),
+                                  ),
+                                  backgroundColor:
+                                      Colors.black.withOpacity(0.60)),
+                            )),
+                  ],
+
+                  centerTitle: false,
+                  pinned: true,
+                  /* title: Center(
+                    child: Container(
+                        //  margin: EdgeInsets.only(left: 0),
+                        width: size.height / 3,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: (!_showTitle)
+                              ? Colors.black.withOpacity(0.60)
+                              : currentTheme.scaffoldBackgroundColor
+                                  .withOpacity(0.90),
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                          boxShadow: [],
+                        ),
+                        child: SearchContent()),
+                  ),
+ */
+                  expandedHeight: maxHeight,
+                  shadowColor:
+                      currentTheme.currentTheme.scaffoldBackgroundColor,
+
+                  // collapsedHeight: 56.0001,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          (_showName)
+                              ? FadeIn(child: Text(widget.profile.name))
+                              : Container(),
+                          (_showName && widget.profile.isClub)
+                              ? FadeIn(
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Stack(children: [
+                                      FaIcon(
+                                        FontAwesomeIcons.certificate,
+                                        color: currentTheme
+                                            .currentTheme.accentColor,
+                                        size: 20,
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 4.5, top: 4.5),
+                                        child: FaIcon(
+                                          FontAwesomeIcons.check,
+                                          color: (currentTheme.customTheme)
+                                              ? Colors.black
+                                              : Colors.white,
+                                          size: 11,
+                                        ),
+                                      )
+                                    ]),
+                                  ),
+                                )
+                              : Container(),
+                        ]),
+                    stretchModes: [
+                      StretchMode.zoomBackground,
+                      StretchMode.fadeTitle,
+                      // StretchMode.blurBackground
+                    ],
+                    background: ProfilePage(
+                      isEmpty: false,
+                      loading: false,
+                      //image: snapshot.data,
+                      isUserAuth: widget.isUserAuth,
+                      isUserEdit: widget.isUserEdit,
+                      profile: widget.profile,
+                    ),
+                    centerTitle: true,
+                  ),
+                ),
+
+                (!this.widget.isUserEdit)
+                    ? makeHeaderInfo(context)
+                    : makeHeaderSpacer(context),
+
+                /*  (widget.isUserAuth)
+                    ? makeHeaderTabsMyCatalogos(context)
+                    : makeHeaderTabsCatalogs(context), */
+
+                // makeListAires(context)
+
+                SliverAppBar(
+                    pinned: true,
+                    backgroundColor:
+                        currentTheme.currentTheme.scaffoldBackgroundColor,
+                    automaticallyImplyLeading: false,
+                    actions: [Container()],
+                    title: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          child: (itemCount != null)
+                              ? TabBar(
+                                  controller: controller,
+                                  indicatorWeight: 3,
+                                  isScrollable: true,
+                                  labelColor:
+                                      currentTheme.currentTheme.accentColor,
+                                  unselectedLabelColor: (currentTheme
+                                          .customTheme)
+                                      ? Colors.white54.withOpacity(0.30)
+                                      : currentTheme.currentTheme.primaryColor,
+                                  indicatorColor:
+                                      currentTheme.currentTheme.accentColor,
+                                  indicator: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: currentTheme
+                                            .currentTheme.accentColor,
+                                        width: 2,
+                                      ),
+                                    ),
+                                  ),
+                                  tabs: List.generate(
+                                    itemCount,
+                                    (index) => tabBuilder(context, index),
+                                  ))
+                              : Container(),
+                        )
+                      ],
                     )),
 
-                actions: [
-                  (!widget.isUserAuth)
-                      ? Container(
-                          width: 40,
-                          height: 40,
-                          margin: EdgeInsets.only(right: 20),
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            child: CircleAvatar(
-                                child: Center(
-                                  child: IconButton(
-                                    icon: FaIcon(FontAwesomeIcons.commentDots,
-                                        size: 25,
-                                        color: (_showTitle)
-                                            ? currentTheme
-                                                .currentTheme.accentColor
-                                            : Colors.white),
-                                    onPressed: () => Navigator.push(
-                                        context, createRouteChat()),
+                SliverFillRemaining(
+                  hasScrollBody: true,
+                  child: (itemCount != null)
+                      ? DefaultTabController(
+                          length: itemCount,
+                          child: NestedScrollView(
+                              controller: _scrollControllerPageBuilder,
+                              headerSliverBuilder: (context, value) {
+                                return [
+                                  // header
+                                ];
+                              },
+
+                              // tab bar view
+                              body:
+                                  NotificationListener<ScrollStartNotification>(
+                                onNotification: (_) {
+                                  _snapAppbar();
+
+                                  print(_scrollControllerPageBuilder);
+                                  if (_scrollController.offset >= 46) {}
+
+                                  if (_scrollController.offset >= 250) {}
+                                  return false;
+                                },
+                                child: TabBarView(
+                                  controller: controller,
+                                  children: List.generate(
+                                    itemCount,
+                                    (index) => pageBuilder(context, index),
                                   ),
                                 ),
-                                backgroundColor:
-                                    Colors.black.withOpacity(0.60)),
-                          ))
-                      : Container(
-                          width: 40,
-                          height: 40,
-                          margin: EdgeInsets.only(right: 20),
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            child: CircleAvatar(
-                                child: Center(
-                                  child: IconButton(
-                                    icon: FaIcon(FontAwesomeIcons.cog,
-                                        size: 25,
-                                        color: (_showTitle)
-                                            ? currentTheme
-                                                .currentTheme.accentColor
-                                            : Colors.white),
-                                    onPressed: () => {
-                                      scaffolKey.currentState.openEndDrawer()
-                                    },
-                                  ),
-                                ),
-                                backgroundColor:
-                                    Colors.black.withOpacity(0.60)),
-                          )),
-                ],
-
-                centerTitle: false,
-                pinned: true,
-                /* title: Center(
-                child: Container(
-                    //  margin: EdgeInsets.only(left: 0),
-                    width: size.height / 3,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: (!_showTitle)
-                          ? Colors.black.withOpacity(0.60)
-                          : currentTheme.scaffoldBackgroundColor
-                              .withOpacity(0.90),
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      boxShadow: [],
-                    ),
-                    child: SearchContent()),
-              ),
- */
-                expandedHeight: maxHeight,
-                shadowColor: currentTheme.currentTheme.scaffoldBackgroundColor,
-
-                // collapsedHeight: 56.0001,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        (_showName)
-                            ? FadeIn(child: Text(widget.profile.name))
-                            : Container(),
-                        (_showName && widget.profile.isClub)
-                            ? FadeIn(
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  child: Stack(children: [
-                                    FaIcon(
-                                      FontAwesomeIcons.certificate,
-                                      color:
-                                          currentTheme.currentTheme.accentColor,
-                                      size: 20,
-                                    ),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.only(left: 4.5, top: 4.5),
-                                      child: FaIcon(
-                                        FontAwesomeIcons.check,
-                                        color: (currentTheme.customTheme)
-                                            ? Colors.black
-                                            : Colors.white,
-                                        size: 11,
-                                      ),
-                                    )
-                                  ]),
-                                ),
-                              )
-                            : Container(),
-                      ]),
-                  stretchModes: [
-                    StretchMode.zoomBackground,
-                    StretchMode.fadeTitle,
-                    // StretchMode.blurBackground
-                  ],
-                  background: ProfilePage(
-                    isEmpty: false,
-                    loading: false,
-                    //image: snapshot.data,
-                    isUserAuth: widget.isUserAuth,
-                    isUserEdit: widget.isUserEdit,
-                    profile: widget.profile,
-                  ),
-                  centerTitle: true,
+                              )),
+                        )
+                      : Container(),
                 ),
-              ),
 
-              (!this.widget.isUserEdit)
-                  ? makeHeaderInfo(context)
-                  : makeHeaderSpacer(context),
-
-              /*  (widget.isUserAuth)
-                ? makeHeaderTabsMyCatalogos(context)
-                : makeHeaderTabsCatalogs(context), */
-
-              // makeListAires(context)
-
-              SliverAppBar(
-                  pinned: true,
-                  backgroundColor:
-                      currentTheme.currentTheme.scaffoldBackgroundColor,
-                  automaticallyImplyLeading: false,
-                  actions: [Container()],
-                  title: Container(
-                    alignment: Alignment.centerLeft,
-                    child: (itemCount != null)
-                        ? TabBar(
-                            controller: controller,
-                            indicatorWeight: 3,
-                            isScrollable: true,
-                            labelColor: currentTheme.currentTheme.accentColor,
-                            unselectedLabelColor: (currentTheme.customTheme)
-                                ? Colors.white54.withOpacity(0.30)
-                                : currentTheme.currentTheme.primaryColor,
-                            indicatorColor:
-                                currentTheme.currentTheme.accentColor,
-                            indicator: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: currentTheme.currentTheme.accentColor,
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                            tabs: List.generate(
-                              itemCount,
-                              (index) => tabBuilder(context, index),
-                            ))
-                        : Container(),
-                  )),
-            ];
-          },
-
-          // tab bar view
-          body: (itemCount != null)
-              ? TabBarView(
-                  controller: controller,
-                  children: List.generate(
-                    itemCount,
-                    (index) => pageBuilder(context, index),
-                  ),
-                )
-              : _buildLoadingWidget(),
-        )
-
-        /*  SliverFillRemaining(
+                /*  SliverFillRemaining(
                   child: (itemCount != null)
                       ? TabBarView(
                           controller: controller,
@@ -513,14 +556,14 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       : Container(),
                 ) */
 
-        // if (!widget.isUserEdit) makeHeaderTabs(context),
+                // if (!widget.isUserEdit) makeHeaderTabs(context),
 
-        //  makeListCatalogos(context),
+                //  makeListCatalogos(context),
 
-        // makeListCatalogos(context)
-        //makeListProducts(context)
+                // makeListCatalogos(context)
+                //makeListProducts(context)
 
-        /* SliverList(
+                /* SliverList(
                   delegate: SliverChildListDelegate(
                       List<Widget>.generate(10, (int i) {
                     return Stack(
@@ -532,8 +575,10 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                     );
                   })),
                 ), */
-
-        );
+              ]),
+        ),
+      ),
+    );
   }
 
   SliverList makeListAires(context) {
@@ -771,7 +816,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     return Container(
       child: SizedBox(
         child: ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: products.length,
             itemBuilder: (BuildContext ctxt, int index) {

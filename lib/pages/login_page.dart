@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                                 _signInGoogle(context);
                               },
                               child: roundedRectSignInSocialMediaButton(
-                                  'Iniciar sesión con Google',
+                                  'Ingresar con Google',
                                   Colors.orange,
                                   FontAwesomeIcons.google,
                                   true,
@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                                 await _signIApple(context);
                               },
                               child: roundedRectSignInSocialMediaButton(
-                                  'Iniciar sesión con Apple',
+                                  'Ingresar con Apple',
                                   Colors.white,
                                   FontAwesomeIcons.apple,
                                   false,
@@ -200,7 +200,7 @@ class __FormState extends State<_Form> {
               onTap: () {
                 _login(bloc, context);
               },
-              child: roundedRectButton("Entrar", orangeGradients, false)),
+              child: roundedRectButton("Ingresar", orangeGradients, false)),
           Container(
             child: Text(
               'o',
