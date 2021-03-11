@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:chat/bloc/validators.dart';
 import 'package:chat/models/catalogo.dart';
+import 'package:chat/models/catalogos_products_response.dart';
 import 'package:chat/models/catalogos_response.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
@@ -20,17 +21,20 @@ class CatalogoBloc with Validators {
   final BehaviorSubject<CatalogosResponse> _myCatalogos =
       BehaviorSubject<CatalogosResponse>();
 
-  final BehaviorSubject<CatalogosResponse> _userCatalogos =
-      BehaviorSubject<CatalogosResponse>();
+  final BehaviorSubject<CatalogosProductsResponse> _myCatalogosProducts =
+      BehaviorSubject<CatalogosProductsResponse>();
+
+  final BehaviorSubject<CatalogosProductsResponse> _userCatalogos =
+      BehaviorSubject<CatalogosProductsResponse>();
 
   final BehaviorSubject<RoomsResponse> _roomsProfile =
       BehaviorSubject<RoomsResponse>();
 
   final BehaviorSubject<Catalogo> _catalogoSelect = BehaviorSubject<Catalogo>();
 
-  getCatalogosUser(String userId, String userAuthId) async {
-    CatalogosResponse response =
-        await _repository.getCtalogos(userId, userAuthId);
+  getCatalogosUserProducts(String userId, String userAuthId) async {
+    CatalogosProductsResponse response =
+        await _repository.getCatalogosProductsUser(userId, userAuthId);
 
     _userCatalogos.sink.add(response);
   }
@@ -39,6 +43,13 @@ class CatalogoBloc with Validators {
     CatalogosResponse response = await _repository.getMyCatalogos(userId);
 
     _myCatalogos.sink.add(response);
+  }
+
+  getMyCatalogosProducts(String userId) async {
+    CatalogosProductsResponse response =
+        await _repository.getMyCatalogosProducts(userId);
+
+    _myCatalogosProducts.sink.add(response);
   }
 
 /*   getRoomsProfile(String userId) async {
@@ -56,7 +67,8 @@ class CatalogoBloc with Validators {
 
   BehaviorSubject<CatalogosResponse> get myCatalogos => _myCatalogos;
 
-  BehaviorSubject<CatalogosResponse> get userCatalogos => _userCatalogos;
+  BehaviorSubject<CatalogosProductsResponse> get userCatalogos =>
+      _userCatalogos;
 
   BehaviorSubject<RoomsResponse> get roomsProfile => _roomsProfile;
 
@@ -84,7 +96,7 @@ class CatalogoBloc with Validators {
     _userCatalogos.close();
     _catalogoSelect.close();
     _privacityController?.close();
-
+    _myCatalogosProducts?.close();
     _nameController?.close();
 
     _descriptionController?.close();

@@ -50,6 +50,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
   bool isDefault;
 
   FocusNode _focusNode;
+  bool optionSelectChange = false;
 
   @override
   void initState() {
@@ -102,12 +103,10 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
 
 //    final size = MediaQuery.of(context).size;
 
-    final isPrivacityChange = optionItemSelected != widget.catalogo.privacity;
-
     final isControllerChange = isNameChange;
 
     final isControllerChangeEdit =
-        isNameChange || isAboutChange || isPrivacityChange;
+        isNameChange || isAboutChange || optionSelectChange;
 
     return Scaffold(
       backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
@@ -343,6 +342,7 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
               onChanged: (optionItem) {
                 setState(() {
                   optionItemSelected = optionItem;
+                  optionSelectChange = true;
                   _focusNode.unfocus();
                 });
               },

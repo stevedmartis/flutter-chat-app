@@ -5,6 +5,7 @@ import 'package:animations/animations.dart';
 import 'package:chat/bloc/catalogo_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/catalogo.dart';
+import 'package:chat/models/catalogo_products.dart';
 import 'package:chat/models/catalogos_response.dart';
 import 'package:chat/models/products.dart';
 import 'package:chat/models/profiles.dart';
@@ -143,10 +144,10 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     // profileBloc.imageUpdate.add(true);
 
     // roomBloc.getMyRooms(widget.profile.user.uid);
-    (widget.isUserAuth)
-        ? catalogoBloc.getMyCatalogos(widget.profile.user.uid)
+/*     (widget.isUserAuth)
+        ? catalogoBloc.getMyCatalogosProducts(widget.profile.user.uid)
         : catalogoBloc.getCatalogosUser(
-            widget.profile.user.uid, profile.user.uid);
+            widget.profile.user.uid, profile.user.uid); */
 
     /*   catalogoBloc.myCatalogos.stream.listen((event) {
       event.catalogos.forEach((category) {
@@ -215,9 +216,20 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
   List<Product> productsPageBuilder = [];
 
+  Catalogo currentCatalogo;
+
+  List<Product> productsCurrentTab = [];
+
+  List<Product> productsFinal = [];
+
+  List<CatalogoProducts> catalogosProducts2;
+
+  List<CatalogoProducts> productsCatalogos = [];
+
   onPositionChangeF() {
     if (!controller.indexIsChanging) {
       _currentPosition = controller.index;
+
       if (onPositionChange is ValueChanged<int>) {
         onPositionChange(_currentPosition);
       }
@@ -231,18 +243,26 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   }
 
   void fetchMyCatalogos() async {
-    var result = await catalogoService.getMyCatalogos(profile.user.uid);
-    setState(() {
-      catalogos = result.catalogos;
+    var result;
 
-      products = result.products;
-    });
+    (widget.isUserAuth)
+        ? result =
+            await catalogoService.getMyCatalogosProducts(profile.user.uid)
+        : result = await catalogoService.getCatalogosProductsUser(
+            widget.profile.user.uid, profile.user.uid);
+
+    setState(() {});
+
+    print(result);
 
     setState(() {
-      itemCount = catalogos.length;
-      tabBuilder = (context, index) => Tab(text: catalogos[index].name);
-      pageBuilder =
-          (context, index) => Center(child: _buildWidgetProducts(products));
+      itemCount = result.catalogosProducts.length;
+      tabBuilder =
+          (context, index) => Tab(text: result.catalogosProducts[index].name);
+
+      pageBuilder = (context, index) => Center(
+          child:
+              _buildWidgetProducts(result.catalogosProducts[index].products));
     });
 
     _currentPosition = initPosition ?? 0;
@@ -287,8 +307,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
         key: scaffolKey,
         // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
         body: NestedScrollView(
-          physics:
-              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),
           controller: _scrollController,
           headerSliverBuilder: (context, value) {
             return [
@@ -463,28 +483,32 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                   title: Container(
                     alignment: Alignment.centerLeft,
                     child: (itemCount != null)
-                        ? TabBar(
-                            controller: controller,
-                            indicatorWeight: 3,
-                            isScrollable: true,
-                            labelColor: currentTheme.currentTheme.accentColor,
-                            unselectedLabelColor: (currentTheme.customTheme)
-                                ? Colors.white54.withOpacity(0.30)
-                                : currentTheme.currentTheme.primaryColor,
-                            indicatorColor:
-                                currentTheme.currentTheme.accentColor,
-                            indicator: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: currentTheme.currentTheme.accentColor,
-                                  width: 2,
+                        ? FadeInLeft(
+                            child: TabBar(
+                                controller: controller,
+                                indicatorWeight: 3,
+                                isScrollable: true,
+                                labelColor:
+                                    currentTheme.currentTheme.accentColor,
+                                unselectedLabelColor: (currentTheme.customTheme)
+                                    ? Colors.white54.withOpacity(0.30)
+                                    : currentTheme.currentTheme.primaryColor,
+                                indicatorColor:
+                                    currentTheme.currentTheme.accentColor,
+                                indicator: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color:
+                                          currentTheme.currentTheme.accentColor,
+                                      width: 2,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            tabs: List.generate(
-                              itemCount,
-                              (index) => tabBuilder(context, index),
-                            ))
+                                tabs: List.generate(
+                                  itemCount,
+                                  (index) => tabBuilder(context, index),
+                                )),
+                          )
                         : Container(),
                   )),
             ];
@@ -669,7 +693,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildWidgetProducts(products) {
+  Widget _buildWidgetProducts(List<Product> products) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Container(
@@ -712,7 +736,9 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                         },
                         closedBuilder: (_, openContainer) {
                           return Stack(children: [
-                            CardProduct(product: product),
+                            FadeIn(
+                                delay: Duration(milliseconds: 100 * index),
+                                child: CardProduct(product: product)),
                           ]);
                         }),
                   ),
@@ -810,32 +836,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     );
   }
 
-  SliverPersistentHeader makeHeaderTabsCatalogs(context) {
-    //   final roomModel = Provider.of<Room>(context);
-
-    return SliverPersistentHeader(
-      pinned: true,
-      delegate: SliverAppBarDelegate(
-        minHeight: 200.0,
-        maxHeight: 200.0,
-        child: StreamBuilder<CatalogosResponse>(
-          stream: catalogoBloc.userCatalogos.stream,
-          builder: (context, AsyncSnapshot<CatalogosResponse> snapshot) {
-            if (snapshot.hasData) {
-              catalogos = snapshot.data.catalogos;
-
-              return _buildCatalogoWidget();
-            } else if (snapshot.hasError) {
-              return _buildErrorWidget(snapshot.error);
-            } else {
-              return _buildLoadingWidget();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
   SliverPersistentHeader makeRoomsCard(context) {
     //   final roomModel = Provider.of<Room>(context);
 
@@ -903,103 +903,107 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
       delegate: SliverAppBarDelegate(
           minHeight: (about.length > 10) ? 150.0 : 80.0,
           maxHeight: (about.length > 80) ? 180.0 : 80.0,
-          child: Container(
-            padding: EdgeInsets.only(top: 10.0),
-            color: currentTheme.currentTheme.scaffoldBackgroundColor,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (!this.widget.isUserEdit)
-                  Container(
-                    child: Container(
-                        width: size.width - 15.0,
-                        padding:
-                            EdgeInsets.only(left: size.width / 20.0, top: 5.0),
-                        //margin: EdgeInsets.only(left: size.width / 6, top: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            (nameFinal == "")
-                                ? Text(username,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: (name.length >= 15) ? 20 : 22,
-                                        color: (currentTheme.customTheme)
-                                            ? Colors.white
-                                            : Colors.black))
-                                : Text(
-                                    (nameFinal.length >= 45)
-                                        ? nameFinal.substring(0, 45)
-                                        : nameFinal,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize:
-                                            (nameFinal.length >= 15) ? 20 : 22,
-                                        color: (currentTheme.customTheme)
-                                            ? Colors.white
-                                            : Colors.black)),
-                            (isClub)
-                                ? Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    child: Stack(children: [
-                                      FaIcon(
-                                        FontAwesomeIcons.certificate,
-                                        color: currentTheme
-                                            .currentTheme.accentColor,
-                                        size: 20,
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(
-                                            left: 4.5, top: 4.5),
-                                        child: FaIcon(
-                                          FontAwesomeIcons.check,
+          child: FadeIn(
+            child: Container(
+              padding: EdgeInsets.only(top: 10.0),
+              color: currentTheme.currentTheme.scaffoldBackgroundColor,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (!this.widget.isUserEdit)
+                    Container(
+                      child: Container(
+                          width: size.width - 15.0,
+                          padding: EdgeInsets.only(
+                              left: size.width / 20.0, top: 5.0),
+                          //margin: EdgeInsets.only(left: size.width / 6, top: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              (nameFinal == "")
+                                  ? Text(username,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize:
+                                              (name.length >= 15) ? 20 : 22,
                                           color: (currentTheme.customTheme)
-                                              ? Colors.black
-                                              : Colors.white,
-                                          size: 11,
+                                              ? Colors.white
+                                              : Colors.black))
+                                  : Text(
+                                      (nameFinal.length >= 45)
+                                          ? nameFinal.substring(0, 45)
+                                          : nameFinal,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: (nameFinal.length >= 15)
+                                              ? 20
+                                              : 22,
+                                          color: (currentTheme.customTheme)
+                                              ? Colors.white
+                                              : Colors.black)),
+                              (isClub)
+                                  ? Container(
+                                      margin: EdgeInsets.only(left: 10),
+                                      child: Stack(children: [
+                                        FaIcon(
+                                          FontAwesomeIcons.certificate,
+                                          color: currentTheme
+                                              .currentTheme.accentColor,
+                                          size: 20,
                                         ),
-                                      )
-                                    ]),
-                                  )
-                                : Container(),
-                          ],
-                        )),
-                  ),
-                if (!this.widget.isUserEdit)
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                              left: 4.5, top: 4.5),
+                                          child: FaIcon(
+                                            FontAwesomeIcons.check,
+                                            color: (currentTheme.customTheme)
+                                                ? Colors.black
+                                                : Colors.white,
+                                            size: 11,
+                                          ),
+                                        )
+                                      ]),
+                                    )
+                                  : Container(),
+                            ],
+                          )),
+                    ),
+                  if (!this.widget.isUserEdit)
+                    Expanded(
+                      flex: -2,
+                      child: Container(
+                          width: size.width - 1.10,
+                          padding: EdgeInsets.only(
+                              left: size.width / 20.0, top: 5.0, bottom: 10),
+                          //margin: EdgeInsets.only(left: size.width / 6, top: 10),
+
+                          child: Text('@' + username,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: (username.length >= 16) ? 16 : 18,
+                                  color: (currentTheme.customTheme)
+                                      ? Colors.white.withOpacity(0.60)
+                                      : Colors.grey))),
+                    ),
                   Expanded(
-                    flex: -2,
                     child: Container(
-                        width: size.width - 1.10,
-                        padding: EdgeInsets.only(
-                            left: size.width / 20.0, top: 5.0, bottom: 10),
+                        width: size.width - 50,
+                        padding:
+                            EdgeInsets.only(left: size.width / 20.0, right: 10),
                         //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
-                        child: Text('@' + username,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontSize: (username.length >= 16) ? 16 : 18,
-                                color: (currentTheme.customTheme)
-                                    ? Colors.white.withOpacity(0.60)
-                                    : Colors.grey))),
+                        child: (about.length > 0)
+                            ? convertHashtag(about, context)
+                            : Container()),
                   ),
-                Expanded(
-                  child: Container(
-                      width: size.width - 50,
-                      padding:
-                          EdgeInsets.only(left: size.width / 20.0, right: 10),
-                      //margin: EdgeInsets.only(left: size.width / 6, top: 10),
-
-                      child: (about.length > 0)
-                          ? convertHashtag(about, context)
-                          : Container()),
-                ),
-              ],
+                ],
+              ),
             ),
           )),
     );

@@ -17,7 +17,7 @@ class Product {
     this.createdAt,
     //this.products,
     this.updatedAt,
-    this.totalProducts,
+    this.price = 0,
     this.coverImage = "",
     this.catalogo,
     this.ratingInit,
@@ -32,9 +32,9 @@ class Product {
   // List<Product> products;
   String createdAt;
   String updatedAt;
-  int totalProducts;
   String catalogo;
   String ratingInit;
+  int price;
 
   String cbd;
   String thc;
@@ -42,20 +42,19 @@ class Product {
   String coverImage;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-        id: json["id"],
-        user: json["user"],
-        name: json["name"],
-        description: json["description"],
-        //products: List<Room>.from(json["products"].map((x) => x)),
-        createdAt: json["createdAt"],
-        updatedAt: json["updatedAt"],
-        totalProducts: json["totalProducts"],
-        coverImage: json["coverImage"],
-        catalogo: json["catalogo"],
-        ratingInit: json["ratingInit"],
-        cbd: json["cbd"],
-        thc: json["thc"],
-      );
+      id: json["id"],
+      user: json["user"],
+      name: json["name"],
+      description: json["description"],
+      //products: List<Room>.from(json["products"].map((x) => x)),
+      createdAt: json["createdAt"],
+      updatedAt: json["updatedAt"],
+      coverImage: json["coverImage"],
+      catalogo: json["catalogo"],
+      ratingInit: json["ratingInit"],
+      cbd: json["cbd"],
+      thc: json["thc"],
+      price: json["price"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -64,12 +63,12 @@ class Product {
         "description": description,
         "createdAt": createdAt,
         "updatedAt": updatedAt,
-        "totalProducts": totalProducts,
         "coverImage": coverImage,
         "catalogo": catalogo,
         "ratingInit": ratingInit,
         "cbd": cbd,
         "thc": thc,
+        "price": price
 
         // "products": List<dynamic>.from(products.map((x) => x)),
       };
