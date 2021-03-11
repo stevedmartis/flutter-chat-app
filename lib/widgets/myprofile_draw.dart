@@ -21,7 +21,6 @@ import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/card_product.dart';
-import 'package:chat/widgets/carousel_tabs.dart';
 import 'package:chat/widgets/menu_drawer.dart';
 import 'package:chat/widgets/product_card.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
@@ -1170,21 +1169,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildRoomsWidget(RoomsResponse data) {
-    return Container(
-      child: Stack(fit: StackFit.expand, children: [
-        TabsScrollCustom(
-          rooms: data.rooms,
-          isAuthUser: widget.isUserAuth,
-        ),
-        /*  AnimatedOpacity(
-            opacity: !_showTitle ? 1.0 : 0.0,
-            duration: Duration(milliseconds: 250),
-            child: _buildEditCircle()) */
-      ]),
-    );
-  }
-
   Widget _buildCatalogoWidget() {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
@@ -1833,8 +1817,6 @@ class _CustomTabs2State extends State<CustomTab2View>
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context);
-
     if (widget.itemCount < 1) return widget.stub ?? Container();
 
     return Column(
