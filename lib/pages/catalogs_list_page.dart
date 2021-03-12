@@ -266,11 +266,11 @@ class _CatalogsListState extends State<CatalogsList> {
                     borderRadius: BorderRadius.circular(0.0)),
                 key: Key(item.id),
                 padding: EdgeInsets.only(bottom: 1.0),
-                child: FadeInLeft(
-                  delay: Duration(milliseconds: 300 * index),
-                  child: Stack(
-                    children: [
-                      GestureDetector(
+                child: Stack(
+                  children: [
+                    FadeInLeft(
+                      delay: Duration(milliseconds: 200 * index),
+                      child: GestureDetector(
                         key: Key(item.id),
                         onTap: () => {
                           Navigator.of(context)
@@ -406,18 +406,18 @@ class _CatalogsListState extends State<CatalogsList> {
                               ),
                             )),
                       ),
-                      SizedBox(
-                        height: 1.0,
-                        child: Center(
-                          child: Container(
-                            height: 1.0,
-                            color: currentTheme
-                                .currentTheme.scaffoldBackgroundColor,
-                          ),
+                    ),
+                    SizedBox(
+                      height: 1.0,
+                      child: Center(
+                        child: Container(
+                          height: 1.0,
+                          color:
+                              currentTheme.currentTheme.scaffoldBackgroundColor,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               );
             },

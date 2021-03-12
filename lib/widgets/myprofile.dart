@@ -5,7 +5,6 @@ import 'package:animations/animations.dart';
 import 'package:chat/bloc/catalogo_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/catalogo.dart';
-import 'package:chat/models/catalogo_products.dart';
 import 'package:chat/models/catalogos_response.dart';
 import 'package:chat/models/products.dart';
 import 'package:chat/models/profiles.dart';
@@ -141,35 +140,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
     profile = authService.profile;
 
-    // profileBloc.imageUpdate.add(true);
-
-    // roomBloc.getMyRooms(widget.profile.user.uid);
-/*     (widget.isUserAuth)
-        ? catalogoBloc.getMyCatalogosProducts(widget.profile.user.uid)
-        : catalogoBloc.getCatalogosUser(
-            widget.profile.user.uid, profile.user.uid); */
-
-    /*   catalogoBloc.myCatalogos.stream.listen((event) {
-      event.catalogos.forEach((category) {
-        categoryTabsTemp.add(Tab(
-          text: category.name,
-        ));
-        items.add(Text(category.name));
-      });
-
-      setState(() {
-        categoryTabs = categoryTabsTemp;
-      });
-
-      _tabController = TabController(vsync: this, length: catalogos.length);
-    }); */
-
     fetchMyCatalogos();
     super.initState();
-    //this.catalogoService.getMyCatalogos(profile.user.uid);
-
-    /*  _tabController =
-        new TabController(vsync: this, length: categoryTabs.length); */
   }
 
   @override
@@ -212,19 +184,9 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     super.didUpdateWidget(oldWidget);
   }
 
-  List<Catalogo> catalogoTabsBuilder = [];
-
   List<Product> productsPageBuilder = [];
 
   Catalogo currentCatalogo;
-
-  List<Product> productsCurrentTab = [];
-
-  List<Product> productsFinal = [];
-
-  List<CatalogoProducts> catalogosProducts2;
-
-  List<CatalogoProducts> productsCatalogos = [];
 
   onPositionChangeF() {
     if (!controller.indexIsChanging) {
@@ -253,16 +215,13 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
     setState(() {});
 
-    print(result);
-
     setState(() {
       itemCount = result.catalogosProducts.length;
       tabBuilder =
           (context, index) => Tab(text: result.catalogosProducts[index].name);
 
-      pageBuilder = (context, index) => Center(
-          child:
-              _buildWidgetProducts(result.catalogosProducts[index].products));
+      pageBuilder = (context, index) =>
+          _buildWidgetProducts(result.catalogosProducts[index].products);
     });
 
     _currentPosition = initPosition ?? 0;
@@ -319,7 +278,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                 stretchTriggerOffset: 250.0,
 
                 backgroundColor: _showTitle
-                    ? Colors.black
+                    ? (currentTheme.customTheme ? Colors.black : Colors.white)
                     : currentTheme.currentTheme.scaffoldBackgroundColor,
                 leading: Container(
                     margin: EdgeInsets.only(left: 15),
@@ -331,12 +290,16 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                   size: size.width / 20,
                                   color: (_showTitle)
                                       ? currentTheme.currentTheme.accentColor
-                                      : Colors.white),
+                                      : (currentTheme.customTheme
+                                          ? Colors.white
+                                          : Colors.black)),
                               onPressed: () => {
                                     {},
                                     Navigator.pop(context),
                                   }),
-                          backgroundColor: Colors.black.withOpacity(0.60)),
+                          backgroundColor: (currentTheme.customTheme
+                              ? Colors.black.withOpacity(0.60)
+                              : Colors.white.withOpacity(0.60))),
                     )),
 
                 actions: [
@@ -356,58 +319,48 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                         color: (_showTitle)
                                             ? currentTheme
                                                 .currentTheme.accentColor
-                                            : Colors.white),
+                                            : (currentTheme.customTheme
+                                                ? Colors.white
+                                                : Colors.black)),
                                     onPressed: () => Navigator.push(
                                         context, createRouteChat()),
                                   ),
                                 ),
-                                backgroundColor:
-                                    Colors.black.withOpacity(0.60)),
+                                backgroundColor: (currentTheme.customTheme
+                                    ? Colors.black.withOpacity(0.60)
+                                    : Colors.white.withOpacity(0.60))),
                           ))
                       : Container(
                           width: 40,
                           height: 40,
                           margin: EdgeInsets.only(right: 20),
                           child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            child: CircleAvatar(
-                                child: Center(
-                                  child: IconButton(
-                                    icon: FaIcon(FontAwesomeIcons.cog,
-                                        size: 25,
-                                        color: (_showTitle)
-                                            ? currentTheme
-                                                .currentTheme.accentColor
-                                            : Colors.white),
-                                    onPressed: () => {
-                                      scaffolKey.currentState.openEndDrawer()
-                                    },
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              child: CircleAvatar(
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: FaIcon(FontAwesomeIcons.cog,
+                                          size: 25,
+                                          color: (_showTitle)
+                                              ? currentTheme
+                                                  .currentTheme.accentColor
+                                              : (currentTheme.customTheme
+                                                  ? Colors.white
+                                                  : Colors.black)),
+                                      onPressed: () => {
+                                        scaffolKey.currentState.openEndDrawer()
+                                      },
+                                    ),
                                   ),
-                                ),
-                                backgroundColor:
-                                    Colors.black.withOpacity(0.60)),
-                          )),
+                                  backgroundColor: (currentTheme.customTheme
+                                      ? Colors.black.withOpacity(0.60)
+                                      : Colors.white.withOpacity(0.60))))),
                 ],
 
                 centerTitle: false,
                 pinned: true,
-                /* title: Center(
-                child: Container(
-                    //  margin: EdgeInsets.only(left: 0),
-                    width: size.height / 3,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: (!_showTitle)
-                          ? Colors.black.withOpacity(0.60)
-                          : currentTheme.scaffoldBackgroundColor
-                              .withOpacity(0.90),
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      boxShadow: [],
-                    ),
-                    child: SearchContent()),
-              ),
- */
+
                 expandedHeight: maxHeight,
                 shadowColor: currentTheme.currentTheme.scaffoldBackgroundColor,
 
@@ -418,7 +371,13 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         (_showName)
-                            ? FadeIn(child: Text(widget.profile.name))
+                            ? FadeIn(
+                                child: Text(widget.profile.name,
+                                    style: TextStyle(
+                                      color: (currentTheme.customTheme)
+                                          ? Colors.white
+                                          : Colors.black,
+                                    )))
                             : Container(),
                         (_showName && widget.profile.isClub)
                             ? FadeIn(
@@ -467,12 +426,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
               (!this.widget.isUserEdit)
                   ? makeHeaderInfo(context)
                   : makeHeaderSpacer(context),
-
-              /*  (widget.isUserAuth)
-                ? makeHeaderTabsMyCatalogos(context)
-                : makeHeaderTabsCatalogs(context), */
-
-              // makeListAires(context)
 
               SliverAppBar(
                   pinned: true,
@@ -705,11 +658,14 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
             itemBuilder: (BuildContext ctxt, int index) {
               final product = products[index];
 
+              final isUserAuth =
+                  (product.user == profile.user.uid) ? true : false;
+
               return Stack(
                 children: [
                   Container(
                     padding: EdgeInsets.only(
-                        top: 20, left: 20, right: 20, bottom: 0.0),
+                        top: 0, left: 20, right: 20, bottom: 0.0),
                     child: OpenContainer(
                         closedElevation: 5,
                         openElevation: 5,
@@ -732,7 +688,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                         ),
                         openBuilder: (_, closeContainer) {
                           return ProductDetailPage(
-                              product: product, isUserAuth: true);
+                              product: product, isUserAuth: isUserAuth);
                         },
                         closedBuilder: (_, openContainer) {
                           return Stack(children: [

@@ -68,6 +68,7 @@ class _CardProductState extends State<CardProduct> {
     final thc = (widget.product.thc.isEmpty) ? '0' : widget.product.thc;
     final cbd = (widget.product.cbd.isEmpty) ? '0' : widget.product.cbd;
     final rating = widget.product.ratingInit;
+    final about = widget.product.description;
 
     /*   final suscriptionEnabled =
         profile.subscribeApproved && profile.subscribeActive; */
@@ -95,18 +96,22 @@ class _CardProductState extends State<CardProduct> {
                       color: currentTheme.currentTheme.accentColor),
                 ),
               ),
+              SizedBox(
+                height: 10,
+              ),
               CbdthcRow(
                 thc: '$thc',
                 cbd: '$cbd',
                 fontSize: 7.0,
               ),
+              SizedBox(
+                height: 10,
+              ),
               Container(
                 margin: EdgeInsets.only(top: 5.0),
                 width: size.width / 3.5,
                 child: Text(
-                  (widget.product.description.length > 0)
-                      ? widget.product.description.capitalize()
-                      : "Sin descripción",
+                  (about.length > 0) ? about.capitalize() : "Sin descripción",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 3,
                   style: TextStyle(
@@ -114,6 +119,9 @@ class _CardProductState extends State<CardProduct> {
                       fontSize: 10,
                       color: Colors.grey),
                 ),
+              ),
+              SizedBox(
+                height: (about.length < 20) ? 30 : 10,
               ),
               Container(
                 padding: EdgeInsets.only(left: 0, top: 5.0),

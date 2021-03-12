@@ -104,6 +104,17 @@ class _ProfileCardState extends State<ProfileCard> {
 
     return Stack(
       children: [
+        /*  SizedBox(
+          child: Container(
+            child: CustomPaint(
+              painter: ProfileCardPainter(
+                  image: widget.image,
+                  color: widget.profileColor,
+                  avatarRadius: 55),
+            ),
+          ),
+        ), */
+
         Hero(
             tag: profileUser.imageHeader,
             child: FadeInImage(
@@ -116,7 +127,9 @@ class _ProfileCardState extends State<ProfileCard> {
             )),
         Positioned(
             child: Container(
-                margin: EdgeInsets.only(left: (widget.isUserEdit) ? 0 : 22),
+                margin: EdgeInsets.only(
+                  left: (widget.isUserEdit) ? 0 : 22,
+                ),
                 child: Align(
                     alignment: (widget.isUserEdit)
                         ? Alignment.bottomCenter

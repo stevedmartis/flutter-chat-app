@@ -32,12 +32,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-    final size = MediaQuery.of(context).size;
-    final _profileCardHeight = size.height / 3;
-    return SizedBox.expand(
+    return SizedBox(
+      height: 100,
       child: Container(
         color: currentTheme.scaffoldBackgroundColor,
-        height: _profileCardHeight,
         child: ProfileCard(
             loading: widget.loading,
             image: widget.image,
