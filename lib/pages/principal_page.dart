@@ -2,8 +2,11 @@ import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/models/notification.dart';
+import 'package:chat/models/profiles.dart';
 
 import 'package:chat/routes/routes.dart';
+import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/notification_service.dart';
 import 'package:chat/services/socket_service.dart';
 
 import 'package:chat/theme/theme.dart';
@@ -24,17 +27,44 @@ class _PrincipalPageState extends State<PrincipalPage> {
   ScrollController _hideBottomNavController;
 
   SocketService socketService;
+  final notificationService = new NotificationService();
+  AuthService authService;
 
   var _isVisible;
 
+  Profiles profile;
+
   @override
   initState() {
-    super.initState();
     this.socketService = Provider.of<SocketService>(context, listen: false);
+
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    profile = authService.profile;
+
+    getNotificationsActive();
 
     this.socketService.socket?.on('principal-message', _listenMessage);
 
     this.bottomControll();
+    super.initState();
+  }
+
+  void getNotificationsActive() async {
+    var notifications =
+        await notificationService.getNotificationByUser(profile.user.uid);
+
+    print(notifications);
+
+    final notifiModel = Provider.of<NotificationModel>(context, listen: false);
+    int number = notifiModel.numberNotifiBell;
+    number = notifications.subscriptionsNotifi.length;
+    notifiModel.numberNotifiBell = number;
+
+    if (number >= 2) {
+      final controller = notifiModel.bounceControllerBell;
+      controller.forward(from: 0.0);
+    }
   }
 
   @override
@@ -120,35 +150,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
   }
 }
 
-class ButtomFloating extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final appTheme = Provider.of<ThemeChanger>(context);
-
-    return FloatingActionButton(
-      backgroundColor: appTheme.currentTheme.accentColor,
-      onPressed: () {
-        final notifiModel =
-            Provider.of<NotificationModel>(context, listen: false);
-        int number = notifiModel.number;
-        number++;
-        notifiModel.number = number;
-
-        if (number >= 2) {
-          final controller = notifiModel.bounceController;
-          controller.forward(from: 0.0);
-        }
-      },
-      child: FaIcon(
-        FontAwesomeIcons.plus,
-        color: (appTheme.darkTheme)
-            ? Colors.black
-            : appTheme.currentTheme.primaryColorLight,
-      ),
-    );
-  }
-}
-
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({
     Key key,
@@ -171,6 +172,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
       Provider.of<MenuModel>(context, listen: false).currentPage = currentIndex;
 
+      if (currentIndex == 4) {
+        Provider.of<NotificationModel>(context, listen: false)
+            .numberNotifiBell = 0;
+      }
       /*  if (currentIndex != currentPage) {
         Navigator.push(
             context,
@@ -245,7 +250,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
                   icon: Stack(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(left: 20),
+                        margin: EdgeInsets.only(
+                            left: (number > 0) ? 0 : 24, top: 10),
                         child: FaIcon(
                           (currentPage == 4)
                               ? FontAwesomeIcons.solidBell
@@ -253,19 +259,20 @@ class _BottomNavigationState extends State<BottomNavigation> {
                           color: (currentPage == 4)
                               ? currentTheme.currentTheme.accentColor
                               : currentTheme.currentTheme.primaryColor,
-                          size: (currentPage == 4) ? 25 : 25,
+                          size: (currentPage == 4) ? 30 : 30,
                         ),
                       ),
                       (number > 0)
                           ? Positioned(
                               top: 0.0,
-                              right: 4.0,
+                              right: 10.0,
+                              bottom: 15.0,
                               child: BounceInDown(
-                                from: 10,
+                                from: 5,
                                 animate: (number > 0) ? true : false,
                                 child: Bounce(
                                   delay: Duration(seconds: 2),
-                                  from: 15,
+                                  from: 5,
                                   controller: (controller) =>
                                       Provider.of<NotificationModel>(context)
                                           .bounceControllerBell = controller,
@@ -280,8 +287,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     alignment: Alignment.center,
-                                    width: 20,
-                                    height: 20,
+                                    width: 15,
+                                    height: 15,
                                     decoration: BoxDecoration(
                                         color: (currentTheme.customTheme)
                                             ? currentTheme

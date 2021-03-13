@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:chat/bloc/plant_bloc.dart';
 import 'package:chat/bloc/product_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/product_principal.dart';
@@ -15,7 +14,7 @@ import 'package:chat/pages/add_update_visit.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/room_list_page.dart';
-import 'package:chat/providers/plants_provider.dart';
+import 'package:chat/providers/products_provider.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/chat_service.dart';
@@ -83,7 +82,7 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
 
   TabController _tabController;
 
-  final plantsApiProvider = new PlantsApiProvider();
+  final productApiProvider = new ProductsApiProvider();
   String name = '';
 
   Future<List<Room>> getRoomsFuture;
@@ -356,6 +355,7 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
       ),
     );
   }
+
 /* 
   SliverList makeListVisits(context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
@@ -406,16 +406,15 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
       });
     }
   } */
-
-  _deletePlant(
+  _deleteProduct(
     String id,
   ) async {
-    final res = await this.plantsApiProvider.deletePlant(id);
+    final res = await this.productApiProvider.deleteProduct(id);
     if (res) {
       setState(() {
         //    widget.plants.removeAt(index);
-        roomBloc.getMyRooms(profile.user.uid);
-        plantBloc.getPlantsByUser(profile.user.uid);
+
+        productBloc.getProducts(profile.user.uid);
 
         Navigator.pop(context);
         Navigator.pop(context);
@@ -423,156 +422,6 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
     }
   }
 
-/*   SliverList makeVisitCard(context) {
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        Container(
-          child: FutureBuilder(
-            future: this.visitApiProvider.getVisitPlant(widget.plant.id),
-            initialData: null,
-            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-              if (snapshot.hasData) {
-                visits = snapshot.data;
-                return (visits.length > 0)
-                    ? Container(
-                        margin: EdgeInsets.only(
-                          left: 10,
-                        ),
-                        child:
-                            _buildWidgetVisits(snapshot.data)) // image is ready
-                    : Center(
-                        child: Container(
-                            padding: EdgeInsets.all(50),
-                            child: Text('Sin Plantas, add new')),
-                      ); // image is ready
-              } else {
-                return Container(
-                    height: 500.0,
-                    child: Center(
-                        child: CircularProgressIndicator())); // placeholder
-              }
-            },
-          ),
-        ),
-      ]),
-    );
-  }
-
-  Widget _buildWidgetVisits(visits) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-    return Container(
-      child: SizedBox(
-        child: ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: visits.length,
-            itemBuilder: (BuildContext ctxt, int index) {
-              final visit = visits[index];
-
-              return OpenContainer(
-                  closedColor: currentTheme.scaffoldBackgroundColor,
-                  openColor: currentTheme.scaffoldBackgroundColor,
-                  transitionType: ContainerTransitionType.fade,
-                  openShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  closedShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0)),
-                  openBuilder: (_, closeContainer) {
-                    return AddUpdateVisitPage(
-                      visit: visit,
-                      plant: visit.plant,
-                      isEdit: true,
-                    );
-                  },
-                  closedBuilder: (_, openContainer) {
-                    return FadeIn(
-                      child: Dismissible(
-                          child: CardVisit(visit: visit),
-                          key: UniqueKey(),
-                          direction: DismissDirection.endToStart,
-                          onDismissed: (direction) =>
-                              {_deleteVisit(visit.id, index)},
-                          background: Container(
-                            height: 170.0,
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                margin: EdgeInsets.only(
-                                    bottom: 20, left: 10, right: 20),
-                                alignment: Alignment.centerRight,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(right: 10),
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Colors.black,
-                                        size: 30,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 12,
-                                    ),
-                                    /* Text(
-                                    'Delete',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600),
-                                  ) */
-                                  ],
-                                )),
-                          )),
-                    );
-                  });
-            }),
-      ),
-    );
-  }
- */
-/*   Container _buildCircleQuantityPlant() {
-    //final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-    return Container(
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.all(6.0),
-        margin: EdgeInsets.only(right: 10, top: 0),
-        width: 50,
-        height: 50,
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          child: CircleAvatar(
-              child: StreamBuilder<Plant>(
-                stream: plantBloc.plantSelect.stream,
-                builder: (context, AsyncSnapshot<Plant> snapshot) {
-                  if (snapshot.hasData) {
-                    plant = snapshot.data;
-                    final quantity = plant.quantity;
-
-                    return Text(
-                      '$quantity',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    );
-                  } else if (snapshot.hasError) {
-                    return _buildErrorWidget(snapshot.error);
-                  } else {
-                    return _buildLoadingWidget();
-                  }
-                },
-              ),
-              backgroundColor: currentTheme.accentColor),
-        ));
-  }
- */
   createSelectionNvigator() {
     final currentTheme =
         Provider.of<ThemeChanger>(context, listen: false).currentTheme;
@@ -960,11 +809,11 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                 textColor: Colors.grey,
                                 text: 'Eliminar',
                                 onPressed: () {
-                                  /*   confirmDelete(
+                                  confirmDelete(
                                       context,
                                       'Confirmar',
-                                      'Desea eliminar la Planta y todas sus visitas?',
-                                      plant.id); */
+                                      'Desea eliminar el tratamiento?',
+                                      widget.productProfile.product.id);
                                 }),
                           ),
                         ),
@@ -999,9 +848,9 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                 content: Text(subtitulo),
                 actions: <Widget>[
                   MaterialButton(
-                      child: Text('Confirmar'),
+                      child: Text('Eliminar'),
                       elevation: 5,
-                      textColor: Color(0xff34EC9C),
+                      textColor: Colors.red,
                       onPressed: () => Navigator.pop(context)),
                   MaterialButton(
                       child: Text(
@@ -1024,9 +873,8 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
               actions: <Widget>[
                 CupertinoDialogAction(
                   isDefaultAction: true,
-                  child: Text('Confirmar',
-                      style: TextStyle(color: Color(0xff34EC9C))),
-                  onPressed: () => _deletePlant(id),
+                  child: Text('Eliminar', style: TextStyle(color: Colors.red)),
+                  onPressed: () => _deleteProduct(id),
                 ),
                 CupertinoDialogAction(
                   isDefaultAction: true,

@@ -63,9 +63,7 @@ class _NotificationsPageState extends State<NotificationsPage>
     profile = authService.profile;
     //this.socketService.socket.on('personal-message', _listenMessage);
 
-    (profile.isClub)
-        ? subscriptionBloc.getSubscriptionsPending(profile.user.uid)
-        : subscriptionBloc.getSubscriptionsClubsApprove(profile.user.uid);
+    subscriptionBloc.getSubscriptionsNotifi(profile.user.uid);
 
     super.initState();
   }
@@ -144,29 +142,28 @@ class _NotificationsPageState extends State<NotificationsPage>
   Widget _buildList(BuildContext context, Axis direction) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
-    return (profile.isClub)
-        ? StreamBuilder<ProfilesResponse>(
-            stream: subscriptionBloc.subscriptionsPending.stream,
-            builder: (context, AsyncSnapshot<ProfilesResponse> snapshot) {
-              if (snapshot.hasData) {
-                profiles = snapshot.data.profiles;
+    return StreamBuilder<ProfilesResponse>(
+      stream: subscriptionBloc.subscriptionsApproveNotifi.stream,
+      builder: (context, AsyncSnapshot<ProfilesResponse> snapshot) {
+        if (snapshot.hasData) {
+          profiles = snapshot.data.profiles;
 
-                if (profiles.length > 0) {
-                  return ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: profiles.length,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      var item = profiles[index];
+          if (profiles.length > 0) {
+            return ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: profiles.length,
+              itemBuilder: (BuildContext ctxt, int index) {
+                var item = profiles[index];
 
-                      final DateTime dateMessage = item.messageDate;
+                final DateTime dateMessage = item.messageDate;
 
-                      final DateFormat formatter =
-                          DateFormat('dd MMM - kk:mm a');
-                      final String formatted = formatter.format(dateMessage);
-                      final nameSub =
-                          (item.name == "") ? item.user.username : item.name;
-                      return Container(
+                final DateFormat formatter = DateFormat('dd MMM - kk:mm a');
+                final String formatted = formatter.format(dateMessage);
+                final nameSub =
+                    (item.name == "") ? item.user.username : item.name;
+                return (profile.isClub)
+                    ? Container(
                         child: Column(
                           children: [
                             //final int t = index;
@@ -351,41 +348,9 @@ class _NotificationsPageState extends State<NotificationsPage>
                             Divider(height: 1),
                           ],
                         ),
-                      );
-                    },
-                  );
-                } else {
-                  return _buildEmptyWidget();
-                }
-              } else if (snapshot.hasError) {
-                return _buildErrorWidget(snapshot.error);
-              } else {
-                return _buildLoadingWidget();
-              }
-            },
-          )
-        : StreamBuilder<ProfilesResponse>(
-            stream: subscriptionBloc.subscriptionsApproveBySubId.stream,
-            builder: (context, AsyncSnapshot<ProfilesResponse> snapshot) {
-              if (snapshot.hasData) {
-                profiles = snapshot.data.profiles;
-
-                if (profiles.length > 0) {
-                  return ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: profiles.length,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      var item = profiles[index];
-
-                      final DateTime dateMessage = item.messageDate;
-
-                      final DateFormat formatter =
-                          DateFormat('dd MMM - kk:mm a');
-                      final String formatted = formatter.format(dateMessage);
-                      final nameSub =
-                          (item.name == "") ? item.user.username : item.name;
-                      return Column(
+                      )
+                    : Container(
+                        child: Column(
                         children: [
                           //final int t = index;
                           Slidable.builder(
@@ -496,7 +461,7 @@ class _NotificationsPageState extends State<NotificationsPage>
                                     },
                                   );
                                 }), */
-                            secondaryActionDelegate: SlideActionBuilderDelegate(
+                            /* secondaryActionDelegate: SlideActionBuilderDelegate(
                                 actionCount: 1,
                                 builder:
                                     (context, index, animation, renderingMode) {
@@ -557,22 +522,23 @@ class _NotificationsPageState extends State<NotificationsPage>
                                     },
                                   );
                                 }),
+                           */
                           ),
                           Divider(height: 1),
                         ],
-                      );
-                    },
-                  );
-                } else {
-                  return _buildEmptyWidget();
-                }
-              } else if (snapshot.hasError) {
-                return _buildErrorWidget(snapshot.error);
-              } else {
-                return _buildLoadingWidget();
-              }
-            },
-          );
+                      ));
+              },
+            );
+          } else {
+            return _buildEmptyWidget();
+          }
+        } else if (snapshot.hasError) {
+          return _buildErrorWidget(snapshot.error);
+        } else {
+          return _buildLoadingWidget();
+        }
+      },
+    );
   }
 
   Widget _buildEmptyWidget() {

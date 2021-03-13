@@ -11,7 +11,11 @@ class SubscribeBloc with Validators {
 
   final BehaviorSubject<ProfilesResponse> _subscriptionsPending =
       BehaviorSubject<ProfilesResponse>();
+
   final BehaviorSubject<ProfilesResponse> _subscriptionsApprove =
+      BehaviorSubject<ProfilesResponse>();
+
+  final BehaviorSubject<ProfilesResponse> _subscriptionsApproveNotifi =
       BehaviorSubject<ProfilesResponse>();
 
   final BehaviorSubject<ProfilesResponse> _subscriptionsApproveBySubId =
@@ -37,6 +41,13 @@ class SubscribeBloc with Validators {
     _subscriptionsApproveBySubId.sink.add(response);
   }
 
+  getSubscriptionsNotifi(String subId) async {
+    ProfilesResponse response =
+        await _repository.getProfilesSubsciptionsApproveNotifi(subId);
+
+    _subscriptionsApproveNotifi.sink.add(response);
+  }
+
   getSubscriptionsApprove(String subId) async {
     ProfilesResponse response =
         await _repository.getProfilesSubsciptionsApprove(subId);
@@ -60,7 +71,11 @@ class SubscribeBloc with Validators {
   BehaviorSubject<ProfilesResponse> get subscriptionsApprove =>
       _subscriptionsApprove;
 
+  BehaviorSubject<ProfilesResponse> get subscriptionsApproveNotifi =>
+      _subscriptionsApproveNotifi;
+
   dispose() {
+    _subscriptionsApproveNotifi?.close();
     _subscriptionsPending?.close();
     _subscriptionsApproveBySubId?.close();
     _subscriptionCtrl?.close();

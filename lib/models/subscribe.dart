@@ -16,6 +16,8 @@ class Subscription {
       this.isUpload = false,
       this.subscribeActive = false,
       this.subscribeApproved = false,
+      this.isClubNotifi = false,
+      this.isUserNotifi = false,
       isRoute,
       init()});
 
@@ -28,6 +30,9 @@ class Subscription {
   bool subscribeActive;
   bool subscribeApproved;
 
+  bool isClubNotifi;
+  bool isUserNotifi;
+
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -38,6 +43,8 @@ class Subscription {
         imageRecipe: json["imageRecipe"],
         subscribeActive: json["subscribeActive"],
         subscribeApproved: json["subscribeApproved"],
+        isClubNotifi: json["isClubNotifi"],
+        isUserNotifi: json["isUserNotifi"],
 
         isUpload: json["isUpload"],
         createdAt: DateTime.parse(json["createdAt"]),
@@ -53,6 +60,8 @@ class Subscription {
         "subscribeApproved": subscribeApproved,
         "subscriptor": subscriptor,
         "imageRecipe": imageRecipe,
-        "isUpload": isUpload
+        "isUpload": isUpload,
+        "isClubNotifi": isClubNotifi,
+        "isUserNotifi": isUserNotifi
       };
 }

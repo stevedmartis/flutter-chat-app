@@ -63,4 +63,17 @@ class ProductsApiProvider {
       return new Product(id: '0');
     }
   }
+
+  Future deleteProduct(String productId) async {
+    final token = await this._storage.read(key: 'token');
+
+    try {
+      await http.delete('${Environment.apiUrl}/product/delete/$productId',
+          headers: {'Content-Type': 'application/json', 'x-token': token});
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

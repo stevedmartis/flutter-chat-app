@@ -277,7 +277,10 @@ class _RoomListState extends State<RoomList> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: const Text("Confirmar"),
+                                  title: const Text(
+                                    "Eliminar",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
                                   content: const Text(
                                       "Desea eliminar el Room y todos sus registros?"),
                                   actions: <Widget>[

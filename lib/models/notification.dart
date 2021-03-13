@@ -32,7 +32,7 @@ class NotificationModel extends ChangeNotifier {
   int get numberNotifiBell => this._numberNotifiBell;
 
   set numberNotifiBell(int value) {
-    this._number = value;
+    this._numberNotifiBell = value;
     notifyListeners();
   }
 

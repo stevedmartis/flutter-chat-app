@@ -17,4 +17,8 @@ class SubscriptionRepository {
   Future<ProfilesResponse> getProfilesSubsciptionsApprove(String userId) {
     return _apiProvider.getProfilesSubsciptionsApprove(userId);
   }
+
+  Future<ProfilesResponse> getProfilesSubsciptionsApproveNotifi(String userId) {
+    return _apiProvider.getProfilesSubsciptionsApproveNotifi(userId);
+  }
 }

@@ -1,8 +1,5 @@
-import 'package:chat/models/air.dart';
-import 'package:chat/models/air_response.dart';
 import 'package:chat/models/message_error.dart';
 
-import 'package:chat/models/room.dart';
 import 'package:chat/models/subscribe.dart';
 import 'package:chat/models/subscription_response.dart';
 
@@ -60,28 +57,6 @@ class SubscriptionService with ChangeNotifier {
     }
   }
 
-  Future editPlant(Air plant) async {
-    // this.authenticated = true;
-
-    final token = await this._storage.read(key: 'token');
-
-    final resp = await http.post('${Environment.apiUrl}/air/update/air',
-        body: jsonEncode(plant),
-        headers: {'Content-Type': 'application/json', 'x-token': token});
-
-    if (resp.statusCode == 200) {
-      // final roomResponse = roomsResponseFromJson(resp.body);
-      final airResponse = airResponseFromJson(resp.body);
-      // this.rooms = roomResponse.rooms;
-
-      return airResponse;
-    } else {
-      final respBody = errorMessageResponseFromJson(resp.body);
-
-      return respBody;
-    }
-  }
-
   Future deletePlant(String plantId) async {
     final token = await this._storage.read(key: 'token');
 
@@ -92,31 +67,6 @@ class SubscriptionService with ChangeNotifier {
       return true;
     } catch (e) {
       return false;
-    }
-  }
-
-  Future updatePositionRoom(
-      List<Room> rooms, int position, String userId) async {
-    // this.authenticated = true;
-
-    final token = await this._storage.read(key: 'token');
-
-    //final data = {'name': name, 'email': description, 'uid': uid};
-    final data = {'rooms': rooms, 'userId': userId};
-
-    final resp = await http.post('${Environment.apiUrl}/room/update/position',
-        body: json.encode(data),
-        headers: {'Content-Type': 'application/json', 'x-token': token});
-
-    if (resp.statusCode == 200) {
-      // final roomResponse = roomsResponseFromJson(resp.body);
-
-      // this.rooms = roomResponse.rooms;
-
-      return true;
-    } else {
-      final respBody = jsonDecode(resp.body);
-      return respBody['msg'];
     }
   }
 }

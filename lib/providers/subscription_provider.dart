@@ -151,7 +151,26 @@ class SubscriptionApiProvider {
   Future<ProfilesResponse> getProfilesSubsciptionsApprove(String subId) async {
     try {
       final resp = await http.get(
-        '${Environment.apiUrl}/notification/profiles/subscriptions/approve/$subId',
+        '${Environment.apiUrl}/notification/profiles/subscriptions/approve/user/$subId',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-token': await AuthService.getToken(),
+        },
+      );
+
+      final profilesResponse = profilesResponseFromJson(resp.body);
+
+      return profilesResponse;
+    } catch (error) {
+      return ProfilesResponse.withError("$error");
+    }
+  }
+
+  Future<ProfilesResponse> getProfilesSubsciptionsApproveNotifi(
+      String subId) async {
+    try {
+      final resp = await http.get(
+        '${Environment.apiUrl}/notification/profiles/subscriptions/notifi/user/$subId',
         headers: {
           'Content-Type': 'application/json',
           'x-token': await AuthService.getToken(),

@@ -321,14 +321,18 @@ Widget roundedRectSignInSocialMediaButton(
                     : Container(
                         child: FaIcon(
                           icon,
-                          color: color,
+                          color: (currentTheme.customTheme)
+                              ? Colors.white
+                              : Colors.black,
                           size: sizeIcon,
                         ),
                       )),
             Container(
               child: Text(title,
                   style: TextStyle(
-                      color: Colors.white,
+                      color: (currentTheme.customTheme)
+                          ? Colors.white
+                          : Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.w500)),
             ),

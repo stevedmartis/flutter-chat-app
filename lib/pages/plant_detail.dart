@@ -931,9 +931,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                 content: Text(subtitulo),
                 actions: <Widget>[
                   MaterialButton(
-                      child: Text('Confirmar'),
+                      child: Text('Eliminar'),
                       elevation: 5,
-                      textColor: Color(0xff34EC9C),
+                      textColor: Colors.red,
                       onPressed: () => Navigator.pop(context)),
                   MaterialButton(
                       child: Text(
