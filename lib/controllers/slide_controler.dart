@@ -1,9 +1,8 @@
 import 'package:chat/pages/login_page.dart';
 import 'package:chat/pages/register_page.dart';
-import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/button_gold.dart';
+
+import 'package:chat/widgets/header_curve_signin.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class OnBoardingSelector extends StatefulWidget {
   final List<Widget> pages;
@@ -23,11 +22,15 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     bool _isLastPage = widget.pages.length == this._currentPage + 1;
 
     Size _size = MediaQuery.of(context).size;
+
+    const List<Color> blackGradients = [
+      Color(0xff151518),
+      Color(0xff151518),
+      Color(0xff151518),
+    ];
 
     return Stack(
       children: [
@@ -59,21 +62,23 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
           height: (_isLastPage) ? 115 : 150,
         ),
         Container(
-          padding:
-              EdgeInsets.only(top: _size.height * 0.8, left: 60, right: 60),
-          child: ButtonAccent(
-              color: currentTheme.accentColor,
-              text: 'Inciar sesión!',
-              onPressed: () => {Navigator.push(context, _createRuteLogIn())}),
+          padding: EdgeInsets.only(
+              top: _size.height * 0.8,
+              left: 60,
+              right: 60,
+              bottom: _size.height * 0.1),
+          child: GestureDetector(
+              child: roundedRectButton(
+                  "Iniciar sesión!", orangeGradients, false, false),
+              onTap: () => {Navigator.push(context, _createRuteLogIn())}),
         ),
         Container(
           padding:
               EdgeInsets.only(top: _size.height * 0.9, left: 60, right: 60),
-          child: ButtonLogout(
-              color: Color(0xff1C181D),
-              text: 'Registarme',
-              textColor: Colors.white,
-              onPressed: () => {Navigator.push(context, _createRuteSignUp())}),
+          child: GestureDetector(
+              child: roundedRectButton(
+                  "Registrarme!", blackGradients, false, true),
+              onTap: () => {Navigator.push(context, _createRuteSignUp())}),
         ),
         /*  Center(
           child: Container(

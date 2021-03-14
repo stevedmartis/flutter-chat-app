@@ -208,12 +208,10 @@ class __FormState extends State<_Form> {
 }
 
 Widget roundedRectButton(
-    String title, List<Color> gradient, bool isEndIconVisible) {
+    String title, List<Color> gradient, bool isEndIconVisible, bool isBlack) {
   return Builder(builder: (BuildContext context) {
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
     return Padding(
-      padding: EdgeInsets.only(top: 25),
+      padding: EdgeInsets.only(top: 0),
       child: Stack(
         alignment: Alignment(1.0, 0.0),
         children: <Widget>[
@@ -230,7 +228,7 @@ Widget roundedRectButton(
             ),
             child: Text(title,
                 style: TextStyle(
-                    color: currentTheme.scaffoldBackgroundColor,
+                    color: (!isBlack) ? Colors.black : Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w500)),
             padding: EdgeInsets.only(top: 16, bottom: 16),
@@ -357,7 +355,8 @@ Widget _createButton(RegisterBloc bloc) {
       return Container(
         padding: EdgeInsets.only(left: 30, right: 30),
         child: GestureDetector(
-            child: roundedRectButton("Comenzar!", orangeGradients, false),
+            child:
+                roundedRectButton("Comenzar!", orangeGradients, false, false),
             onTap: authService.authenticated
                 ? null
                 : snapshot.hasData

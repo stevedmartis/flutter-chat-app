@@ -8,8 +8,11 @@ import 'dart:async';
 class NotificationsProvider {
   Future<ProfilesResponse> getProfilesSubscriptionsByUser(String userId) async {
     try {
+      final urlFinal = Uri.https('${Environment.apiUrl}',
+          '/api/notification/profiles/subscriptions/$userId');
+
       final resp = await http.get(
-        '${Environment.apiUrl}/notification/profiles/subscriptions/$userId',
+        urlFinal,
         headers: {
           'Content-Type': 'application/json',
           'x-token': await AuthService.getToken(),

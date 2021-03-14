@@ -17,7 +17,10 @@ class SubscriptionService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/subscription/new',
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/subscription/new');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode(subscription),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -38,9 +41,10 @@ class SubscriptionService with ChangeNotifier {
     // this.authenticated = true;
 
     final token = await this._storage.read(key: 'token');
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/subscription/unsubscribe');
 
-    final resp = await http.post(
-        '${Environment.apiUrl}/subscription/unsubscribe',
+    final resp = await http.post(urlFinal,
         body: jsonEncode(subscription),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -54,19 +58,6 @@ class SubscriptionService with ChangeNotifier {
       final respBody = errorMessageResponseFromJson(resp.body);
 
       return respBody;
-    }
-  }
-
-  Future deletePlant(String plantId) async {
-    final token = await this._storage.read(key: 'token');
-
-    try {
-      await http.delete('${Environment.apiUrl}/room/delete/$plantId',
-          headers: {'Content-Type': 'application/json', 'x-token': token});
-
-      return true;
-    } catch (e) {
-      return false;
     }
   }
 }

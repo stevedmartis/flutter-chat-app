@@ -8,8 +8,11 @@ import 'dart:async';
 class MessagesProvider {
   Future<ProfilesResponse> getProfilesChatByUser(String userId) async {
     try {
+      final urlFinal =
+          Uri.https('${Environment.apiUrl}', '/api/messages/profiles/$userId');
+
       final resp = await http.get(
-        '${Environment.apiUrl}/messages/profiles/$userId',
+        urlFinal,
         headers: {
           'Content-Type': 'application/json',
           'x-token': await AuthService.getToken(),

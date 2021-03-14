@@ -16,9 +16,11 @@ class RoomService with ChangeNotifier {
   Future<List<Room>> getRoomsUser(String userId) async {
     final token = await this._storage.read(key: 'token');
 
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/room/rooms/user/$userId');
+
     try {
-      final resp = await http.get(
-          '${Environment.apiUrl}/room/rooms/user/$userId',
+      final resp = await http.get(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       final roomsResponse = roomsResponseFromJson(resp.body);
@@ -39,8 +41,9 @@ class RoomService with ChangeNotifier {
     // this.authenticated = true;
 
     final token = await this._storage.read(key: 'token');
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/api/room/new');
 
-    final resp = await http.post('${Environment.apiUrl}/room/new',
+    final resp = await http.post(urlFinal,
         body: jsonEncode(room),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -61,8 +64,10 @@ class RoomService with ChangeNotifier {
     // this.authenticated = true;
 
     final token = await this._storage.read(key: 'token');
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/room/update/room');
 
-    final resp = await http.post('${Environment.apiUrl}/room/update/room',
+    final resp = await http.post(urlFinal,
         body: jsonEncode(room),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -81,9 +86,11 @@ class RoomService with ChangeNotifier {
 
   Future deleteRoom(String roomId) async {
     final token = await this._storage.read(key: 'token');
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/room/delete/$roomId');
 
     try {
-      await http.delete('${Environment.apiUrl}/room/delete/$roomId',
+      await http.delete(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       return true;
@@ -95,13 +102,15 @@ class RoomService with ChangeNotifier {
   Future updatePositionRoom(
       List<Room> rooms, int position, String userId) async {
     // this.authenticated = true;
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/room/update/position');
 
     final token = await this._storage.read(key: 'token');
 
     //final data = {'name': name, 'email': description, 'uid': uid};
     final data = {'rooms': rooms, 'userId': userId};
 
-    final resp = await http.post('${Environment.apiUrl}/room/update/position',
+    final resp = await http.post(urlFinal,
         body: json.encode(data),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 

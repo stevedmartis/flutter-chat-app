@@ -7,12 +7,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class LightApiProvider {
-  final String _endpoint = '${Environment.apiUrl}/light/lights/room/';
-
   final _storage = new FlutterSecureStorage();
 
   Future<LightsResponse> getLight(String roomId) async {
-    final urlFinal = _endpoint + '$roomId';
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/light/lights/room/$roomId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -29,7 +28,8 @@ class LightApiProvider {
   }
 
   Future<List<Light>> getLightsRoom(String roomId) async {
-    final urlFinal = _endpoint + '$roomId';
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/light/lights/room/$roomId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -44,10 +44,9 @@ class LightApiProvider {
     }
   }
 
-  final String _endpointRoom = '${Environment.apiUrl}/plant/plant/';
-
   Future<Plant> getPlant(String roomId) async {
-    final urlFinal = _endpointRoom + '$roomId';
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/plant/plant/$roomId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -66,8 +65,11 @@ class LightApiProvider {
   Future deleteLight(String lightId) async {
     final token = await this._storage.read(key: 'token');
 
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/light/delete/$lightId');
+
     try {
-      await http.delete('${Environment.apiUrl}/light/delete/$lightId',
+      await http.delete(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       return true;

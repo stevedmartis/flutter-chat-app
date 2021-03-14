@@ -71,7 +71,7 @@ class AwsService with ChangeNotifier {
 
   Future<String> uploadImageAvatar(
       String uid, String fileName, String fileType, File image) async {
-    final url = Uri.parse('${Environment.apiUrl}/aws/upload/avatar');
+    final url = Uri.parse('${Environment.apiUrl}/api/aws/upload/avatar');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 
@@ -110,7 +110,7 @@ class AwsService with ChangeNotifier {
 
   Future<String> uploadImageHeader(
       String uid, String fileName, String fileType, File image) async {
-    final url = Uri.parse('${Environment.apiUrl}/aws/upload/header');
+    final url = Uri.parse('${Environment.apiUrl}/api/aws/upload/header');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 

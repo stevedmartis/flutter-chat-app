@@ -323,7 +323,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                               TextStyle(color: Colors.white54),
                                         ),
                                         actions: <Widget>[
-                                          FlatButton(
+                                          TextButton(
                                             child: Text(
                                               'Cancelar',
                                               style: TextStyle(
@@ -333,7 +333,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                                                 Navigator.of(context)
                                                     .pop(false),
                                           ),
-                                          FlatButton(
+                                          TextButton(
                                             child: Text(
                                               'Ok',
                                               style:
@@ -505,7 +505,7 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
   }
 
   void _showSnackBar(BuildContext context, String text) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.black,
         content: Text(text,
             style: TextStyle(

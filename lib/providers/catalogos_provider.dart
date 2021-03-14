@@ -9,13 +9,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class CatalogosApiProvider {
-  final String _endpoint = '${Environment.apiUrl}/catalogo/catalogos/';
-
   final _storage = new FlutterSecureStorage();
 
   Future<CatalogosProductsResponse> getCatalogosProductsUser(
       String userId, String userAuthId) async {
-    final urlFinal = _endpoint + 'user/$userId' + '/userAuth/$userAuthId';
+    final urlFinal = Uri.https('${Environment.apiUrl}',
+        '/api/catalogo/catalogos/user/$userId/userAuth/$userAuthId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -32,7 +31,8 @@ class CatalogosApiProvider {
   }
 
   Future<CatalogosResponse> getMyCatalogos(String userId) async {
-    final urlFinal = _endpoint + 'user/$userId';
+    final urlFinal = Uri.https(
+        '${Environment.apiUrl}', '/api/catalogo/catalogos/user/$userId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -50,7 +50,8 @@ class CatalogosApiProvider {
 
   Future<CatalogosProductsResponse> getMyCatalogosProducts(
       String userId) async {
-    final urlFinal = _endpoint + 'products/user/$userId';
+    final urlFinal = Uri.https('${Environment.apiUrl}',
+        '/api/catalogo/catalogos/products/user/$userId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -72,10 +73,9 @@ class CatalogosApiProvider {
     }
   }
 
-  final String _endpointRoom = '${Environment.apiUrl}/catalogo/catalogo/';
-
   Future<Catalogo> getCatalogo(String catalogoId) async {
-    final urlFinal = _endpointRoom + '$catalogoId';
+    final urlFinal = Uri.https(
+        '${Environment.apiUrl}', '/api/catalogo/catalogo/$catalogoId');
 
     final token = await this._storage.read(key: 'token');
 

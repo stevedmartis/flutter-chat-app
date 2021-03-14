@@ -87,7 +87,9 @@ class AuthService with ChangeNotifier {
 
     final data = {'email': email, 'password': password};
 
-    final resp = await http.post('${Environment.apiUrl}/profile/login',
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/api/profile/login');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
 
     this.authenticated = false;
@@ -107,7 +109,9 @@ class AuthService with ChangeNotifier {
   }
 
   Future siginWithGoogleBack(token) async {
-    final resp = await http.post('${Environment.apiUrl}/google/sign-in',
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/api/google/sign-in');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode({'token': token}),
         headers: {'Content-Type': 'application/json'});
 
@@ -145,6 +149,9 @@ class AuthService with ChangeNotifier {
 
   Future siginWithApple(String code, String email, String firstName,
       bool useBundleId, String state) async {
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/apple/sign_in_with_apple');
+
     final data = {
       'code': code,
       'email': email,
@@ -152,10 +159,8 @@ class AuthService with ChangeNotifier {
       'useBundleId': useBundleId,
       if (state != null) 'state': state
     };
-    final resp = await http.post(
-        '${Environment.apiUrl}/apple/sign_in_with_apple',
-        body: jsonEncode(data),
-        headers: {'Content-Type': 'application/json'});
+    final resp = await http.post(urlFinal,
+        body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
 
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
@@ -183,7 +188,9 @@ class AuthService with ChangeNotifier {
 
     final data = {'username': username, 'email': email, 'password': password};
 
-    final resp = await http.post('${Environment.apiUrl}/login/new',
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/api/login/new');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
 
     this.authenticated = false;
@@ -207,6 +214,8 @@ class AuthService with ChangeNotifier {
       String email, String password) async {
     // this.authenticated = true;
 
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/api/profile/edit');
+
     final data = {
       'uid': uid,
       'username': username,
@@ -218,7 +227,7 @@ class AuthService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/profile/edit',
+    final resp = await http.post(urlFinal,
         body: jsonEncode(data),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -235,9 +244,13 @@ class AuthService with ChangeNotifier {
   }
 
   Future<bool> isLoggedIn() async {
+    print('urlFinal');
+
+    var urlFinal = Uri.https('${Environment.apiUrl}', '/api/login/renew');
+
     final token = await this._storage.read(key: 'token');
     //this.logout();
-    final resp = await http.get('${Environment.apiUrl}/login/renew',
+    final resp = await http.get(urlFinal,
         headers: {'Content-Type': 'application/json', 'x-token': token});
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);

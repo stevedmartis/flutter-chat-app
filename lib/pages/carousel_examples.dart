@@ -166,20 +166,20 @@ class _ManuallyControlledSliderState extends State<ManuallyControlledSlider> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Flexible(
-                child: RaisedButton(
+                child: ElevatedButton(
                   onPressed: () => _controller.previousPage(),
                   child: Text('←'),
                 ),
               ),
               Flexible(
-                child: RaisedButton(
+                child: ElevatedButton(
                   onPressed: () => _controller.nextPage(),
                   child: Text('→'),
                 ),
               ),
               ...Iterable<int>.generate(imgList.length).map(
                 (int pageIndex) => Flexible(
-                  child: RaisedButton(
+                  child: ElevatedButton(
                     onPressed: () => _controller.animateToPage(pageIndex),
                     child: Text("$pageIndex"),
                   ),
@@ -426,20 +426,20 @@ class _CarouselChangeReasonDemoState extends State<CarouselChangeReasonDemo> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Flexible(
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       onPressed: () => _controller.previousPage(),
                       child: Text('←'),
                     ),
                   ),
                   Flexible(
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       onPressed: () => _controller.nextPage(),
                       child: Text('→'),
                     ),
                   ),
                   ...Iterable<int>.generate(imgList.length).map(
                     (int pageIndex) => Flexible(
-                      child: RaisedButton(
+                      child: ElevatedButton(
                         onPressed: () => _controller.animateToPage(pageIndex),
                         child: Text("$pageIndex"),
                       ),

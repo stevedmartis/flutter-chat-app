@@ -7,12 +7,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class VisitApiProvider {
-  final String _endpoint = '${Environment.apiUrl}/visit/visits/plant/';
-
   final _storage = new FlutterSecureStorage();
 
   Future<VisitsResponse> getVisit(String plantId) async {
-    final urlFinal = _endpoint + '$plantId';
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/visit/visits/plant/$plantId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -29,7 +28,8 @@ class VisitApiProvider {
   }
 
   Future<List<Visit>> getVisitPlant(String plantId) async {
-    final urlFinal = _endpoint + '$plantId';
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/visit/visits/plant/$plantId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -48,8 +48,10 @@ class VisitApiProvider {
     try {
       final token = await this._storage.read(key: 'token');
 
-      final resp = await http.get(
-          '${Environment.apiUrl}/visit/visits/user/$userId',
+      final urlFinal =
+          Uri.https('${Environment.apiUrl}', '/api/visit/visits/user/$userId');
+
+      final resp = await http.get(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       final visitsResponse = visitsResponseFromJson(resp.body);
@@ -60,10 +62,9 @@ class VisitApiProvider {
     }
   }
 
-  final String _endpointRoom = '${Environment.apiUrl}/plant/plant/';
-
   Future<Plant> getPlant(String roomId) async {
-    final urlFinal = _endpointRoom + '$roomId';
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/plant/plant/$roomId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -82,8 +83,11 @@ class VisitApiProvider {
   Future deletePlant(String plantId) async {
     final token = await this._storage.read(key: 'token');
 
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/plant/delete/$plantId');
+
     try {
-      await http.delete('${Environment.apiUrl}/plant/delete/$plantId',
+      await http.delete(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       return true;

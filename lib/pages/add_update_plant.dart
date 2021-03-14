@@ -8,7 +8,6 @@ import 'package:chat/models/plant.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/pages/image_plant_cover.dart';
-import 'package:chat/pages/new_product.dart';
 import 'package:chat/pages/profile_page.dart';
 
 import 'package:chat/services/auth_service.dart';
@@ -1147,7 +1146,7 @@ Route createRoute() {
   );
 }
 
-Route createRouteAddImages(Room room) {
+/* Route createRouteAddImages(Room room) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => NewProductPage(
       room: room,
@@ -1167,3 +1166,4 @@ Route createRouteAddImages(Room room) {
     transitionDuration: Duration(milliseconds: 400),
   );
 }
+ */

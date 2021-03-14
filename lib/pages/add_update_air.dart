@@ -7,7 +7,6 @@ import 'package:chat/models/air.dart';
 
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/room.dart';
-import 'package:chat/pages/new_product.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/services/air_service.dart';
 
@@ -477,7 +476,7 @@ class AddUpdateAirPageState extends State<AddUpdateAirPage> {
         name: name, description: description, watts: watts, id: widget.air.id);
 
     if (widget.isEdit) {
-      final editRoomRes = await airService.editPlant(editPlant);
+      final editRoomRes = await airService.editAir(editPlant);
 
       if (editRoomRes != null) {
         if (editRoomRes.ok) {
@@ -520,7 +519,7 @@ Route createRoute() {
     },
   );
 }
-
+/* 
 Route createRouteAddImages(Room room) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => NewProductPage(
@@ -541,3 +540,4 @@ Route createRouteAddImages(Room room) {
     transitionDuration: Duration(milliseconds: 400),
   );
 }
+ */

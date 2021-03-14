@@ -312,7 +312,7 @@ class _NotificationsPageState extends State<NotificationsPage>
                                                         color: Colors.white54),
                                                   ),
                                                   actions: <Widget>[
-                                                    FlatButton(
+                                                    TextButton(
                                                       child: Text(
                                                         'Cancelar',
                                                         style: TextStyle(
@@ -323,7 +323,7 @@ class _NotificationsPageState extends State<NotificationsPage>
                                                           Navigator.of(context)
                                                               .pop(false),
                                                     ),
-                                                    FlatButton(
+                                                    TextButton(
                                                       child: Text(
                                                         'Ok',
                                                         style: TextStyle(
@@ -651,7 +651,7 @@ class _NotificationsPageState extends State<NotificationsPage>
   }
 
   void _showSnackBar(BuildContext context, String text) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.black,
         content: Text(text,
             style: TextStyle(

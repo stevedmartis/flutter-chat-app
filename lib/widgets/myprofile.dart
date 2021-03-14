@@ -109,8 +109,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
   var itemsTabsCatalogos = <String>[];
 
-  List<Tab> categoryTabsTemp = List<Tab>();
-  List<Tab> categoryTabs = List<Tab>();
+  List<Tab> categoryTabsTemp = [];
+  List<Tab> categoryTabs = [];
 
   TabController _tabController;
 

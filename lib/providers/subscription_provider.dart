@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:chat/global/environment.dart';
-import 'package:chat/models/air.dart';
-import 'package:chat/models/air_response.dart';
-import 'package:chat/models/aires_response.dart';
+
 import 'package:chat/models/message_error.dart';
 import 'package:chat/models/profiles_response.dart';
 import 'package:chat/models/subscribe.dart';
@@ -13,12 +11,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class SubscriptionApiProvider {
-  final String _endpoint = '${Environment.apiUrl}/subscription/';
-
   final _storage = new FlutterSecureStorage();
 
   Future<Subscription> getSubscription(String userAuth, String userId) async {
-    final urlFinal = _endpoint + 'subscription' + '/$userAuth' + '/$userId';
+    final urlFinal = Uri.https('${Environment.apiUrl}',
+        '/api/subscription/subscription/$userAuth/$userId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -35,62 +32,16 @@ class SubscriptionApiProvider {
     }
   }
 
-  Future<List<Air>> getAiresRoom(String roomId) async {
-    final urlFinal = _endpoint + '$roomId';
-
-    final token = await this._storage.read(key: 'token');
-
-    try {
-      final resp = await http.get(urlFinal,
-          headers: {'Content-Type': 'application/json', 'x-token': token});
-
-      final airesResponse = airesResponseFromJson(resp.body);
-      return airesResponse.airs;
-    } catch (e) {
-      return [];
-    }
-  }
-
-  final String _endpointRoom = '${Environment.apiUrl}/plant/plant/';
-
-  Future<Air> getAir(String roomId) async {
-    final urlFinal = _endpointRoom + '$roomId';
-
-    final token = await this._storage.read(key: 'token');
-
-    try {
-      final resp = await http.get(urlFinal,
-          headers: {'Content-Type': 'application/json', 'x-token': token});
-
-      final airResponse = airResponseFromJson(resp.body);
-      return airResponse.air;
-    } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return new Air(id: '0');
-    }
-  }
-
-  Future deleteAir(String airId) async {
-    final token = await this._storage.read(key: 'token');
-
-    try {
-      await http.delete('${Environment.apiUrl}/air/delete/$airId',
-          headers: {'Content-Type': 'application/json', 'x-token': token});
-
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
   Future disapproveSubscription(String subId) async {
     // this.authenticated = true;
 
     final token = await this._storage.read(key: 'token');
     final data = {'id': subId};
 
-    final resp = await http.post(
-        '${Environment.apiUrl}/subscription/disapprove',
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/subscription/disapprove');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode(data),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -112,8 +63,10 @@ class SubscriptionApiProvider {
 
     final token = await this._storage.read(key: 'token');
     final data = {'id': subId};
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/subscription/approve');
 
-    final resp = await http.post('${Environment.apiUrl}/subscription/approve',
+    final resp = await http.post(urlFinal,
         body: jsonEncode(data),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -132,8 +85,11 @@ class SubscriptionApiProvider {
 
   Future<ProfilesResponse> getProfilesSubscriptionsByUser(String userId) async {
     try {
+      final urlFinal = Uri.https('${Environment.apiUrl}',
+          '/api/notification/profiles/subscriptions/pending/$userId');
+
       final resp = await http.get(
-        '${Environment.apiUrl}/notification/profiles/subscriptions/pending/$userId',
+        urlFinal,
         headers: {
           'Content-Type': 'application/json',
           'x-token': await AuthService.getToken(),
@@ -150,8 +106,11 @@ class SubscriptionApiProvider {
 
   Future<ProfilesResponse> getProfilesSubsciptionsApprove(String subId) async {
     try {
+      final urlFinal = Uri.https('${Environment.apiUrl}',
+          '/api/notification/profiles/subscriptions/approve/user/$subId');
+
       final resp = await http.get(
-        '${Environment.apiUrl}/notification/profiles/subscriptions/approve/user/$subId',
+        urlFinal,
         headers: {
           'Content-Type': 'application/json',
           'x-token': await AuthService.getToken(),
@@ -169,8 +128,11 @@ class SubscriptionApiProvider {
   Future<ProfilesResponse> getProfilesSubsciptionsApproveNotifi(
       String subId) async {
     try {
+      final urlFinal = Uri.https('${Environment.apiUrl}',
+          '/api/notification/profiles/subscriptions/notifi/user/$subId');
+
       final resp = await http.get(
-        '${Environment.apiUrl}/notification/profiles/subscriptions/notifi/user/$subId',
+        urlFinal,
         headers: {
           'Content-Type': 'application/json',
           'x-token': await AuthService.getToken(),

@@ -19,13 +19,15 @@ class CatalogoService with ChangeNotifier {
 
   final _storage = new FlutterSecureStorage();
 
-  Future createCatalogo(Catalogo air) async {
+  Future createCatalogo(Catalogo catalogo) async {
     // this.authenticated = true;
+
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/api/catalogo/new');
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/catalogo/new',
-        body: jsonEncode(air),
+    final resp = await http.post(urlFinal,
+        body: jsonEncode(catalogo),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
     if (resp.statusCode == 200) {
@@ -45,9 +47,10 @@ class CatalogoService with ChangeNotifier {
     // this.authenticated = true;
 
     final token = await this._storage.read(key: 'token');
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/catalogo/update/catalogo');
 
-    final resp = await http.post(
-        '${Environment.apiUrl}/catalogo/update/catalogo',
+    final resp = await http.post(urlFinal,
         body: jsonEncode(plant),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -67,8 +70,11 @@ class CatalogoService with ChangeNotifier {
   Future deleteCatalogo(String catalogoId) async {
     final token = await this._storage.read(key: 'token');
 
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/catalogo/delete/$catalogoId');
+
     try {
-      await http.delete('${Environment.apiUrl}/catalogo/delete/$catalogoId',
+      await http.delete(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       return true;
@@ -81,13 +87,15 @@ class CatalogoService with ChangeNotifier {
       List<Catalogo> catalogos, int position, String userId) async {
     // this.authenticated = true;
 
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/catalogo/update/position');
+
     final token = await this._storage.read(key: 'token');
 
     //final data = {'name': name, 'email': description, 'uid': uid};
     final data = {'catalogos': catalogos, 'userId': userId};
 
-    final resp = await http.post(
-        '${Environment.apiUrl}/catalogo/update/position',
+    final resp = await http.post(urlFinal,
         body: json.encode(data),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 

@@ -75,7 +75,7 @@ class ProfilesChat {
   getHeaderImg() {
     if (imageHeader == "") {
       var imageDefault =
-          "http://images-cdn-br.s3-sa-east-1.amazonaws.com/default_banner.jpeg";
+          "https://images-cdn-br.s3-sa-east-1.amazonaws.com/default_banner.jpeg";
 
       return imageDefault;
     } else {

@@ -10,8 +10,10 @@ import 'package:chat/global/environment.dart';
 
 class UsuariosService {
   Future<List<User>> getUsers() async {
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/api/users');
+
     try {
-      final resp = await http.get('${Environment.apiUrl}/users', headers: {
+      final resp = await http.get(urlFinal, headers: {
         'Content-Type': 'application/json',
         'x-token': await AuthService.getToken()
       });
@@ -24,12 +26,14 @@ class UsuariosService {
   }
 
   Future<List<Profiles>> getProfilesLastUsers() async {
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/profile/last/users');
+
     try {
-      final resp = await http.get('${Environment.apiUrl}/profile/last/users',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-token': await AuthService.getToken()
-          });
+      final resp = await http.get(urlFinal, headers: {
+        'Content-Type': 'application/json',
+        'x-token': await AuthService.getToken()
+      });
 
       final profilesResponse = profilesResponseFromJson(resp.body);
 

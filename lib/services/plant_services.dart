@@ -27,7 +27,9 @@ class PlantService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/plant/new',
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/api/plant/new');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode(plant),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -49,7 +51,10 @@ class PlantService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/plant/update/plant',
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/plant/update/plant');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode(plant),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -69,8 +74,11 @@ class PlantService with ChangeNotifier {
   Future deletePlant(String plantId) async {
     final token = await this._storage.read(key: 'token');
 
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/room/delete/$plantId');
+
     try {
-      await http.delete('${Environment.apiUrl}/room/delete/$plantId',
+      await http.delete(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       return true;
@@ -85,10 +93,13 @@ class PlantService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/room/update/position');
+
     //final data = {'name': name, 'email': description, 'uid': uid};
     final data = {'rooms': rooms, 'userId': userId};
 
-    final resp = await http.post('${Environment.apiUrl}/room/update/position',
+    final resp = await http.post(urlFinal,
         body: json.encode(data),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -108,8 +119,10 @@ class PlantService with ChangeNotifier {
     try {
       final token = await this._storage.read(key: 'token');
 
-      final resp = await http.get(
-          '${Environment.apiUrl}/plant/plants/user/$userId',
+      final urlFinal =
+          Uri.https('${Environment.apiUrl}', '/api/plant/plants/user/$userId');
+
+      final resp = await http.get(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       final plantsResponse = plantsResponseFromJson(resp.body);

@@ -33,9 +33,11 @@ class ProductService with ChangeNotifier {
   Future<List<Product>> geProductByRoom(String roomId) async {
     final token = await this._storage.read(key: 'token');
 
+    final urlFinal = Uri.https(
+        '${Environment.apiUrl}', '/api/product/products/room/$roomId');
+
     try {
-      final resp = await http.get(
-          '${Environment.apiUrl}/product/products/room/$roomId',
+      final resp = await http.get(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       final productsResponse = productsResponseFromJson(resp.body);
@@ -57,9 +59,11 @@ class ProductService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/api/product/new');
+
     //final data = {'name': name, 'email': description, 'uid': uid};
 
-    final resp = await http.post('${Environment.apiUrl}/product/new',
+    final resp = await http.post(urlFinal,
         body: jsonEncode(product),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -82,7 +86,10 @@ class ProductService with ChangeNotifier {
 
     //final data = {'name': name, 'email': description, 'uid': uid};
 
-    final resp = await http.post('${Environment.apiUrl}/product/update/product',
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/product/update/product');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode(product),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -100,9 +107,11 @@ class ProductService with ChangeNotifier {
 
   Future deleteRoom(String roomId) async {
     final token = await this._storage.read(key: 'token');
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/room/delete/$roomId');
 
     try {
-      await http.delete('${Environment.apiUrl}/room/delete/$roomId',
+      await http.delete(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       return true;

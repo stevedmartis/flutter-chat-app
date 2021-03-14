@@ -1,6 +1,5 @@
 import 'package:chat/models/message_error.dart';
 
-import 'package:chat/models/room.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/models/visit_response.dart';
 import 'package:chat/models/visits_response.dart';
@@ -27,7 +26,9 @@ class VisitService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/visit/new',
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/visit/new');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode(visit),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -49,7 +50,9 @@ class VisitService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/visit/update/visit',
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/visit/update/visit');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode(visit),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -68,8 +71,11 @@ class VisitService with ChangeNotifier {
   Future deleteVisit(String visitId) async {
     final token = await this._storage.read(key: 'token');
 
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/visit/delete/$visitId');
+
     try {
-      await http.delete('${Environment.apiUrl}/visit/delete/$visitId',
+      await http.delete(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       return true;
@@ -78,37 +84,14 @@ class VisitService with ChangeNotifier {
     }
   }
 
-  Future updatePositionRoom(
-      List<Room> rooms, int position, String userId) async {
-    // this.authenticated = true;
-
-    final token = await this._storage.read(key: 'token');
-
-    //final data = {'name': name, 'email': description, 'uid': uid};
-    final data = {'rooms': rooms, 'userId': userId};
-
-    final resp = await http.post('${Environment.apiUrl}/room/update/position',
-        body: json.encode(data),
-        headers: {'Content-Type': 'application/json', 'x-token': token});
-
-    if (resp.statusCode == 200) {
-      // final roomResponse = roomsResponseFromJson(resp.body);
-
-      // this.rooms = roomResponse.rooms;
-
-      return true;
-    } else {
-      final respBody = jsonDecode(resp.body);
-      return respBody['msg'];
-    }
-  }
-
   Future<List<Visit>> getLastVisitsByUser(String userId) async {
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/visit/visits/user/$userId');
+
     try {
       final token = await this._storage.read(key: 'token');
 
-      final resp = await http.get(
-          '${Environment.apiUrl}/visit/visits/user/$userId',
+      final resp = await http.get(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       final visitsResponse = visitsResponseFromJson(resp.body);

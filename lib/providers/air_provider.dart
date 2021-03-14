@@ -6,12 +6,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AiresApiProvider {
-  final String _endpoint = '${Environment.apiUrl}/air/airs/room/';
-
   final _storage = new FlutterSecureStorage();
 
   Future<AiresResponse> getAires(String roomId) async {
-    final urlFinal = _endpoint + '$roomId';
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/air/airs/room/$roomId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -27,26 +26,9 @@ class AiresApiProvider {
     }
   }
 
-  Future<List<Air>> getAiresRoom(String roomId) async {
-    final urlFinal = _endpoint + '$roomId';
-
-    final token = await this._storage.read(key: 'token');
-
-    try {
-      final resp = await http.get(urlFinal,
-          headers: {'Content-Type': 'application/json', 'x-token': token});
-
-      final airesResponse = airesResponseFromJson(resp.body);
-      return airesResponse.airs;
-    } catch (e) {
-      return [];
-    }
-  }
-
-  final String _endpointRoom = '${Environment.apiUrl}/plant/plant/';
-
   Future<Air> getAir(String roomId) async {
-    final urlFinal = _endpointRoom + '$roomId';
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/plant/plant/$roomId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -62,11 +44,31 @@ class AiresApiProvider {
     }
   }
 
-  Future deleteAir(String airId) async {
+  Future<List<Air>> getAiresRoom(String roomId) async {
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/air/airs/room/$roomId');
+
     final token = await this._storage.read(key: 'token');
 
     try {
-      await http.delete('${Environment.apiUrl}/air/delete/$airId',
+      final resp = await http.get(urlFinal,
+          headers: {'Content-Type': 'application/json', 'x-token': token});
+
+      final airesResponse = airesResponseFromJson(resp.body);
+      return airesResponse.airs;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future deleteAir(String airId) async {
+    final token = await this._storage.read(key: 'token');
+
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/air/delete/$airId');
+
+    try {
+      await http.delete(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       return true;

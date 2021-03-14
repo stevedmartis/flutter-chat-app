@@ -8,8 +8,11 @@ import 'dart:async';
 class UsersProvider {
   Future<ProfilesResponse> getSearchPrincipalByQuery(String query) async {
     try {
+      final urlFinal =
+          Uri.https('${Environment.apiUrl}', '/api/search/principal/$query');
+
       final resp = await http.get(
-        '${Environment.apiUrl}/search/principal/$query',
+        urlFinal,
         headers: {
           'Content-Type': 'application/json',
           'x-token': await AuthService.getToken(),

@@ -16,11 +16,7 @@ class ButtonAccent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      elevation: 2,
-      highlightElevation: 5,
-      color: this.color,
-      shape: StadiumBorder(),
+    return ElevatedButton(
       onPressed: this.onPressed,
       child: Container(
         width: double.infinity,
@@ -58,11 +54,7 @@ class ButtonLogout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      elevation: 2,
-      highlightElevation: 5,
-      color: this.color,
-      shape: StadiumBorder(),
+    return ElevatedButton(
       onPressed: this.onPressed,
       child: Container(
         width: double.infinity,
@@ -98,13 +90,13 @@ class ButtonSubEditProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
+    return ElevatedButton(
+      /*  shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),
           side: BorderSide(color: this.textColor, width: 1.5)),
       elevation: 2,
       highlightElevation: 5,
-      color: this.color,
+      color: this.color, */
 
       // shape: StadiumBorder(),
       onPressed: this.onPressed,

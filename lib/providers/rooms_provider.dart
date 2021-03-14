@@ -6,12 +6,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class RoomsApiProvider {
-  final String _endpoint = '${Environment.apiUrl}/room/rooms/user/';
-
   final _storage = new FlutterSecureStorage();
 
   Future<RoomsResponse> getRooms(String userId) async {
-    final urlFinal = _endpoint + '$userId';
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/room/rooms/user/$userId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -27,10 +26,9 @@ class RoomsApiProvider {
     }
   }
 
-  final String _endpointRoom = '${Environment.apiUrl}/room/room/';
-
   Future<Room> getRoom(String roomId) async {
-    final urlFinal = _endpointRoom + '$roomId';
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/room/room/$roomId');
 
     final token = await this._storage.read(key: 'token');
 

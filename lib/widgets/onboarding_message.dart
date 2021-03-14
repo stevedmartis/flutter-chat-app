@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:websafe_svg/websafe_svg.dart';
+import 'package:flutter_svg/svg.dart';
 
 class OnboardingMessages extends StatelessWidget {
   final String title;
@@ -59,7 +59,8 @@ class OnboardingMessages extends StatelessWidget {
                 child: Container(
                   width: _size.width - 50,
                   height: _size.width - 50,
-                  child: WebsafeSvg.asset("assets/images/intro-background.svg"),
+                  child: SvgPicture.asset("assets/images/intro-background.svg",
+                      semanticsLabel: 'Acme Logo'),
                 ),
               ),
               Positioned(
@@ -68,7 +69,7 @@ class OnboardingMessages extends StatelessWidget {
                 child: Container(
                   width: _size.width * width,
                   height: _size.height * height,
-                  child: WebsafeSvg.asset(image),
+                  child: SvgPicture.asset(image, semanticsLabel: 'Acme Logo'),
                 ),
               ),
             ],

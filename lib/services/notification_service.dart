@@ -10,12 +10,13 @@ class NotificationService with ChangeNotifier {
   Profiles userFor;
 
   Future<NotificationsResponse> getNotificationByUser(String userID) async {
-    final resp = await http.get(
-        '${Environment.apiUrl}/notification/notifications/user/$userID',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-token': await AuthService.getToken()
-        });
+    final urlFinal = Uri.https('${Environment.apiUrl}',
+        '/api/notification/notifications/user/$userID');
+
+    final resp = await http.get(urlFinal, headers: {
+      'Content-Type': 'application/json',
+      'x-token': await AuthService.getToken()
+    });
 
     final messageResponse = notificationsResponseFromJson(resp.body);
 

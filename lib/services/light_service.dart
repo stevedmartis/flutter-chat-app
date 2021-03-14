@@ -26,7 +26,9 @@ class LightService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/light/new',
+    final urlFinal = Uri.https('${Environment.apiUrl}', '/api/light/new');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode(light),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -48,7 +50,10 @@ class LightService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.post('${Environment.apiUrl}/light/update/light',
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/light/update/light');
+
+    final resp = await http.post(urlFinal,
         body: jsonEncode(light),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
@@ -68,8 +73,11 @@ class LightService with ChangeNotifier {
   Future deletePlant(String plantId) async {
     final token = await this._storage.read(key: 'token');
 
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/room/delete/$plantId');
+
     try {
-      await http.delete('${Environment.apiUrl}/room/delete/$plantId',
+      await http.delete(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
       return true;
@@ -83,11 +91,13 @@ class LightService with ChangeNotifier {
     // this.authenticated = true;
 
     final token = await this._storage.read(key: 'token');
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/room/update/position');
 
     //final data = {'name': name, 'email': description, 'uid': uid};
     final data = {'rooms': rooms, 'userId': userId};
 
-    final resp = await http.post('${Environment.apiUrl}/room/update/position',
+    final resp = await http.post(urlFinal,
         body: json.encode(data),
         headers: {'Content-Type': 'application/json', 'x-token': token});
 

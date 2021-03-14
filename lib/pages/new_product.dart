@@ -1,4 +1,4 @@
-import 'package:chat/models/room.dart';
+/* import 'package:chat/models/room.dart';
 import 'package:chat/pages/form_new_product.dart';
 import 'package:chat/pages/profile_page.dart';
 
@@ -83,8 +83,8 @@ class _MediaGridState extends State<MediaGrid> {
   }
 
   loadList() {
-    itemList = List();
-    selectedList = List();
+    itemList = [];
+    selectedList = [];
   }
 
   _handleScrollEvent(ScrollNotification scroll) {
@@ -281,3 +281,4 @@ Route createRouteNewProduct() {
     transitionDuration: Duration(milliseconds: 400),
   );
 }
+ */

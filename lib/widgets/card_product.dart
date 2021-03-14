@@ -166,10 +166,10 @@ class _InforPageState extends State<InfoPage> {
                   Container(
                     height: 40,
                     width: MediaQuery.of(context).size.width * 0.5,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
+                    child: ElevatedButton(
+                      /*  shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      color: Colors.blue[400],
+                      color: Colors.blue[400], */
                       child: Text("Place Order",
                           style: TextStyle(color: Colors.white, fontSize: 22)),
                       onPressed: () {},

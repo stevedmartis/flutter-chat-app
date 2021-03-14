@@ -339,7 +339,7 @@ class _BottomNavBarV2State extends State<BottomNavBarV2> {
               width: size.width,
               height: 80,
               child: Stack(
-                overflow: Overflow.visible,
+                clipBehavior: Clip.none,
                 children: [
                   CustomPaint(
                     size: Size(size.width, 80),

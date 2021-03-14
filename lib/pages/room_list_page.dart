@@ -284,14 +284,14 @@ class _RoomListState extends State<RoomList> {
                                   content: const Text(
                                       "Desea eliminar el Room y todos sus registros?"),
                                   actions: <Widget>[
-                                    FlatButton(
+                                    TextButton(
                                         onPressed: () =>
                                             Navigator.of(context).pop(true),
                                         child: const Text(
                                           "Eliminar",
                                           style: TextStyle(color: Colors.red),
                                         )),
-                                    FlatButton(
+                                    TextButton(
                                       onPressed: () =>
                                           Navigator.of(context).pop(false),
                                       child: const Text("Cancelar"),

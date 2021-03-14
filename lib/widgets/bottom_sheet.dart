@@ -38,14 +38,13 @@ class BottomSheetRoom extends StatelessWidget {
               textAlign: TextAlign.center,
               onChanged: (newText) {},
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 'Close',
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
-              color: Colors.blue,
               onPressed: () {
                 Navigator.pop(context);
               },
