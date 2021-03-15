@@ -22,6 +22,7 @@ import 'package:chat/providers/rooms_provider.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
+import 'package:chat/services/room_services.dart';
 import 'package:chat/widgets/air_card.dart';
 import 'package:chat/widgets/light_card.dart';
 import 'package:chat/widgets/plant_card_widget.dart';
@@ -87,6 +88,10 @@ class _RoomDetailPageState extends State<RoomDetailPage>
 
     _tabController = new TabController(vsync: this, length: myTabs.length);
 
+    final roomService = Provider.of<RoomService>(context, listen: false);
+
+    roomService.room = null;
+
     roomBloc.getRoom(widget.room);
   }
 
@@ -104,30 +109,21 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
+    final roomService = Provider.of<RoomService>(context, listen: false);
+
+    setState(() {
+      room = (roomService.room != null) ? roomService.room : widget.room;
+    });
+    final nameFinal = room.name.isEmpty ? "" : room.name.capitalize();
+
     return Scaffold(
       backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
-          title: StreamBuilder<Room>(
-            stream: roomBloc.roomSelect.stream,
-            builder: (context, AsyncSnapshot<Room> snapshot) {
-              if (snapshot.hasData) {
-                final room = snapshot.data;
-                final nameFinal =
-                    room.name.isEmpty ? "" : room.name.capitalize();
-
-                return Text(
-                  nameFinal,
-                  style: TextStyle(
-                      color: (currentTheme.customTheme)
-                          ? Colors.white
-                          : Colors.black),
-                );
-              } else if (snapshot.hasError) {
-                return _buildErrorWidget(snapshot.error);
-              } else {
-                return _buildLoadingWidget();
-              }
-            },
+          title: Text(
+            nameFinal,
+            style: TextStyle(
+                color:
+                    (currentTheme.customTheme) ? Colors.white : Colors.black),
           ),
           backgroundColor:
               (currentTheme.customTheme) ? Colors.black : Colors.white,
@@ -164,54 +160,30 @@ class _RoomDetailPageState extends State<RoomDetailPage>
             color: Colors.white,
           )),
       body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: StreamBuilder<Room>(
-          stream: roomBloc.roomSelect.stream,
-          builder: (context, AsyncSnapshot<Room> snapshot) {
-            if (snapshot.hasData) {
-              room = snapshot.data;
-
-              return CustomScrollView(
-                  physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
-                  controller: _scrollController,
-                  slivers: <Widget>[
-                    makeHeaderInfo(context),
-                    makeHeaderTabs(context),
-                    (_tabController.index == 0)
-                        ? makeListPlants(context)
-                        : (_tabController.index == 1)
-                            ? makeListAires(context)
-                            : (_tabController.index == 2)
-                                ? makeListLight(context)
-                                : makeHeaderSpacer(context)
-                  ]);
-            } else if (snapshot.hasError) {
-              return _buildErrorWidget(snapshot.error);
-            } else {
-              return _buildLoadingWidget();
-            }
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
           },
-        ),
-      ),
+          child: CustomScrollView(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              controller: _scrollController,
+              slivers: <Widget>[
+                makeHeaderInfo(context),
+                makeHeaderTabs(context),
+                (_tabController.index == 0)
+                    ? makeListPlants(context)
+                    : (_tabController.index == 1)
+                        ? makeListAires(context)
+                        : (_tabController.index == 2)
+                            ? makeListLight(context)
+                            : makeHeaderSpacer(context)
+              ])),
     );
   }
 
   Widget _buildLoadingWidget() {
     return Container(
         height: 400.0, child: Center(child: CircularProgressIndicator()));
-  }
-
-  Widget _buildErrorWidget(String error) {
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text("Error occured: $error"),
-      ],
-    ));
   }
 
   SliverPersistentHeader makeHeaderSpacer(context) {
@@ -363,7 +335,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     child: ButtonSubEditProfile(
                         color:
                             currentTheme.currentTheme.scaffoldBackgroundColor,
-                        textColor: currentTheme.currentTheme.accentColor,
+                        textColor: Colors.grey,
                         text: 'Editar',
                         onPressed: () {
                           Navigator.of(context)

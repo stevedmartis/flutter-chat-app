@@ -65,6 +65,15 @@ class _PrincipalPageState extends State<PrincipalPage> {
       final controller = notifiModel.bounceControllerBell;
       controller.forward(from: 0.0);
     }
+
+    int numberMessages = notifiModel.number;
+    numberMessages = notifications.messagesNotifi.length;
+    notifiModel.number = numberMessages;
+
+    if (numberMessages >= 2) {
+      final controller = notifiModel.bounceController;
+      controller.forward(from: 0.0);
+    }
   }
 
   @override

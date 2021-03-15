@@ -71,7 +71,7 @@ class AwsService with ChangeNotifier {
 
   Future<String> uploadImageAvatar(
       String uid, String fileName, String fileType, File image) async {
-    final url = Uri.parse('${Environment.apiUrl}/api/aws/upload/avatar');
+    final url = Uri.https('${Environment.apiUrl}', '/api/aws/upload/avatar');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 
@@ -110,7 +110,7 @@ class AwsService with ChangeNotifier {
 
   Future<String> uploadImageHeader(
       String uid, String fileName, String fileType, File image) async {
-    final url = Uri.parse('${Environment.apiUrl}/api/aws/upload/header');
+    final url = Uri.https('${Environment.apiUrl}', '/api/aws/upload/header');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 
@@ -152,7 +152,8 @@ class AwsService with ChangeNotifier {
 
   Future<String> uploadImageCoverVisit(
       String fileName, String fileType, File image) async {
-    final url = Uri.parse('${Environment.apiUrl}/aws/upload/cover-visit');
+    final url =
+        Uri.https('${Environment.apiUrl}', '/api/aws/upload/cover-visit');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 
@@ -192,8 +193,8 @@ class AwsService with ChangeNotifier {
 
   Future<String> updateImageCoverPlant(
       String fileName, String fileType, File image, String id) async {
-    final url =
-        Uri.parse('${Environment.apiUrl}/aws/upload/update-cover-plant');
+    final url = Uri.https(
+        '${Environment.apiUrl}', '/api/aws/upload/update-cover-plant');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 
@@ -234,8 +235,8 @@ class AwsService with ChangeNotifier {
 
   Future<String> updateImageCoverProduct(
       String fileName, String fileType, File image, String id) async {
-    final url =
-        Uri.parse('${Environment.apiUrl}/aws/upload/update-cover-product');
+    final url = Uri.https(
+        '${Environment.apiUrl}', '/api/aws/upload/update-cover-product');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 
@@ -276,7 +277,8 @@ class AwsService with ChangeNotifier {
 
   Future<String> uploadImageCoverPlant(
       String fileName, String fileType, File image) async {
-    final url = Uri.parse('${Environment.apiUrl}/aws/upload/cover-plant');
+    final url =
+        Uri.https('${Environment.apiUrl}', '/api/aws/upload/cover-plant');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 
@@ -316,8 +318,8 @@ class AwsService with ChangeNotifier {
 
   Future<String> updateImageCoverVisit(
       String fileName, String fileType, File image, String id) async {
-    final url =
-        Uri.parse('${Environment.apiUrl}/aws/upload/update-cover-visit');
+    final url = Uri.https(
+        '${Environment.apiUrl}', '/api/aws/upload/update-cover-visit');
 
     final mimeType = mime(image.path).split('/'); //image/jpeg
 

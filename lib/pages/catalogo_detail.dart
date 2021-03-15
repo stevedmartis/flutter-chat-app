@@ -315,7 +315,7 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                     child: ButtonSubEditProfile(
                         color:
                             currentTheme.currentTheme.scaffoldBackgroundColor,
-                        textColor: currentTheme.currentTheme.accentColor,
+                        textColor: Colors.grey,
                         text: 'Editar',
                         onPressed: () {
                           Navigator.of(context)
@@ -347,7 +347,7 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                         child: Container(
                             padding: EdgeInsets.all(50),
                             child: Text(
-                              'Sin Plantas, crea una nueva!',
+                              'Sin Tratamientos, crea uno nuevo!',
                               style: TextStyle(
                                 color: (currentTheme.customTheme)
                                     ? Colors.white54

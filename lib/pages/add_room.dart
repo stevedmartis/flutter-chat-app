@@ -928,6 +928,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
       if (createRoomRes.ok) {
         // widget.rooms.add(createRoomRes.room);
         roomBloc.getMyRooms(profile.user.uid);
+        roomService.room = createRoomRes.room;
         //roomBloc.getRoom(widget.room);
         loading = false;
         setState(() {});
@@ -991,8 +992,8 @@ class AddRoomPagePageState extends State<AddRoomPage> {
 
           loading = false;
 
+          roomService.room = editRoomRes.room;
           roomBloc.getMyRooms(profile.user.uid);
-          roomBloc.getRoom(widget.room);
 
           setState(() {});
           Navigator.pop(context);

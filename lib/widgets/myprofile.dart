@@ -266,8 +266,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
         key: scaffolKey,
         // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
         body: NestedScrollView(
-          physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics()),
+          physics:
+              BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
           controller: _scrollController,
           headerSliverBuilder: (context, value) {
             return [

@@ -79,18 +79,30 @@ class ButtonSubEditProfile extends StatelessWidget {
   final Function onPressed;
   final Color color;
   final Color textColor;
+  final bool isSecond;
 
   const ButtonSubEditProfile(
       {Key key,
       @required this.text,
       @required this.onPressed,
       @required this.color,
+      this.isSecond = false,
       this.textColor = Colors.black})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          primary: this.color.withOpacity(0.10),
+          onPrimary: this.color,
+          elevation: 5,
+          side: BorderSide(
+              color: (isSecond) ? this.color.withOpacity(0.10) : this.textColor,
+              width: 5),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              side: BorderSide(color: this.textColor, width: 1.5))),
       /*  shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),
           side: BorderSide(color: this.textColor, width: 1.5)),

@@ -113,10 +113,12 @@ class _MessagesPageState extends State<MessagesPage>
         if (snapshot.hasData) {
           final profiles = snapshot.data.profiles;
 
+          final itemCount = (profiles == null) ? 0 : profiles.length;
+
           return ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: profiles.length,
+            itemCount: itemCount,
             itemBuilder: (BuildContext ctxt, int index) {
               final message = profiles[index];
 

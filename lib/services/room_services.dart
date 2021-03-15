@@ -9,7 +9,14 @@ import 'package:chat/global/environment.dart';
 import 'package:flutter/material.dart';
 
 class RoomService with ChangeNotifier {
-  Room roomModel;
+  Room _room;
+
+  Room get room => this._room;
+
+  set room(Room valor) {
+    this._room = valor;
+    //notifyListeners();
+  }
 
   final _storage = new FlutterSecureStorage();
 

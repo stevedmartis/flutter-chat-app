@@ -870,7 +870,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                       child: ButtonSubEditProfile(
                           color:
                               currentTheme.currentTheme.scaffoldBackgroundColor,
-                          textColor: currentTheme.currentTheme.accentColor,
+                          textColor: Colors.grey,
                           text: 'Editar',
                           onPressed: () {
                             aws.isUploadImagePlant = false;
@@ -888,9 +888,10 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                     child: Align(
                       alignment: Alignment.center,
                       child: ButtonSubEditProfile(
+                          isSecond: true,
                           color:
                               currentTheme.currentTheme.scaffoldBackgroundColor,
-                          textColor: Colors.grey,
+                          textColor: Colors.red,
                           text: 'Eliminar',
                           onPressed: () {
                             confirmDelete(

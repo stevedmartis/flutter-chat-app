@@ -639,7 +639,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                             child: ButtonSubEditProfile(
                                 color: currentTheme
                                     .currentTheme.scaffoldBackgroundColor,
-                                textColor: Colors.grey,
+                                isSecond: true,
+                                textColor: Colors.red,
                                 text: 'Eliminar',
                                 onPressed: () {
                                   confirmDelete(

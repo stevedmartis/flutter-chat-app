@@ -144,7 +144,6 @@ class _CollapsingListState extends State<CollapsingList>
         ),
         makeHeaderSpacer(context),
         makeListClubes(context),
-        makeHeaderSpacer(context),
         makelistCarouselMyPlants(context),
         makeListCarouselMyVisits(context),
         makeListProducts(context)
