@@ -1,3 +1,4 @@
+import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/text_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/services/auth_service.dart';
@@ -26,14 +27,16 @@ class ChatMessage extends StatelessWidget {
             CurvedAnimation(parent: animationController, curve: Curves.easeOut),
         child: Container(
           child: this.uid == authService.profile.user.uid
-              ? _myMessage()
+              ? _myMessage(context)
               : _notMyMessage(),
         ),
       ),
     );
   }
 
-  Widget _myMessage() {
+  Widget _myMessage(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
@@ -44,7 +47,8 @@ class ChatMessage extends StatelessWidget {
             style: TextStyle(color: Colors.white, fontSize: 15),
             emojiFontMultiplier: 2),
         decoration: BoxDecoration(
-            color: Colors.black, borderRadius: BorderRadius.circular(50)),
+            color: currentTheme.currentTheme.accentColor,
+            borderRadius: BorderRadius.circular(50)),
       ),
     );
   }

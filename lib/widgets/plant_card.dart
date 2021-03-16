@@ -79,14 +79,14 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
               widget.plant.name.capitalize(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 15,
+                  fontSize: 20,
                   color: currentTheme.currentTheme.accentColor),
             ),
           ),
           CbdthcRow(
             thc: thc,
             cbd: cbd,
-            fontSize: 11,
+            fontSize: 15,
           ),
           Container(
             margin: EdgeInsets.only(top: 5.0),
@@ -99,7 +99,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
               maxLines: 3,
               style: TextStyle(
                   fontWeight: FontWeight.normal,
-                  fontSize: 15,
+                  fontSize: 18,
                   color: Colors.grey),
             ),
           ),
@@ -112,7 +112,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
                   FontAwesomeIcons.seedling,
                   color:
                       (currentTheme.customTheme) ? Colors.white54 : Colors.grey,
-                  size: 15,
+                  size: 18,
                 )),
                 SizedBox(
                   width: 5.0,
@@ -123,7 +123,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
                     widget.plant.germinated,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 10,
+                        fontSize: 15,
                         color: (currentTheme.customTheme)
                             ? Colors.white54
                             : Colors.grey),
@@ -169,7 +169,7 @@ class CbdthcRow extends StatelessWidget {
             ),
           ), */
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+            padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
             child: Container(
               padding: EdgeInsets.all(5.0),
               decoration: BoxDecoration(

@@ -63,7 +63,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
         ),
         Container(
           padding: EdgeInsets.only(
-              top: _size.height * 0.8,
+              top: _size.height * 0.82,
               left: 60,
               right: 60,
               bottom: _size.height * 0.1),

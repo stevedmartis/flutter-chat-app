@@ -8,7 +8,6 @@ import 'package:chat/pages/profile_card.dart';
 import 'package:chat/pages/profile_page.dart';
 import 'package:chat/services/auth_service.dart';
 
-import 'package:chat/services/socket_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
@@ -679,7 +678,6 @@ class EditProfilePageState extends State<EditProfilePage> {
 
   _editProfile(ProfileBloc bloc, BuildContext context) async {
     final authService = Provider.of<AuthService>(context, listen: false);
-    final socketService = Provider.of<SocketService>(context, listen: false);
 
     final profile = authService.profile;
 
@@ -706,7 +704,7 @@ class EditProfilePageState extends State<EditProfilePage> {
 
     if (editProfileOk != null) {
       if (editProfileOk == true) {
-        socketService.connect();
+        Navigator.pop(context);
       } else {
         mostrarAlerta(context, 'Error', editProfileOk);
       }

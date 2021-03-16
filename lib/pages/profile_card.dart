@@ -304,7 +304,7 @@ class _ProfileCardState extends State<ProfileCard> {
                     (snapshot.data.imageRecipe == "") ? false : true;
 
                 if (loadSub &&
-                    widget.profile.isClub &&
+                    profileUser.isClub &&
                     !widget.isUserAuth &&
                     !subscription.subscribeActive &&
                     !subscription.subscribeApproved) {
@@ -343,7 +343,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 } else if (loadSub &&
                     !widget.isUserAuth &&
                     imageRecipe &&
-                    widget.profile.isClub &&
+                    profileUser.isClub &&
                     subscription.subscribeActive &&
                     !subscription.subscribeApproved) {
                   return FadeIn(
@@ -381,7 +381,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 } else if (loadSub &&
                     !widget.isUserAuth &&
                     imageRecipe &&
-                    widget.profile.isClub &&
+                    profileUser.isClub &&
                     !subscription.subscribeActive &&
                     !subscription.subscribeApproved) {
                   return FadeIn(
@@ -419,7 +419,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 } else if (loadSub &&
                     !widget.isUserAuth &&
                     imageRecipe &&
-                    widget.profile.isClub &&
+                    profileUser.isClub &&
                     subscription.subscribeActive &&
                     subscription.subscribeApproved) {
                   return FadeIn(

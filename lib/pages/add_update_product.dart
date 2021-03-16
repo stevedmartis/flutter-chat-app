@@ -298,7 +298,10 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                                 Container(
                                   child: Text(
                                     'Valoración inicial: ',
-                                    style: TextStyle(color: Colors.white54),
+                                    style: TextStyle(
+                                        color: (currentTheme.customTheme)
+                                            ? Colors.white54
+                                            : Colors.black54),
                                   ),
                                 ),
                                 SizedBox(
@@ -308,7 +311,10 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                                   child: Text(
                                     '$ratingActual',
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
+                                        color: (currentTheme.customTheme)
+                                            ? Colors.white54
+                                            : Colors.black54,
+                                        fontSize: 20),
                                   ),
                                 ),
                               ],
@@ -322,6 +328,9 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                               direction: Axis.horizontal,
                               allowHalfRating: true,
                               itemCount: 5,
+                              unratedColor: (currentTheme.customTheme)
+                                  ? Colors.white54
+                                  : Colors.black54,
                               itemPadding:
                                   EdgeInsets.symmetric(horizontal: 5.0),
                               itemBuilder: (context, i) => (ratingActual == 5.0)

@@ -94,12 +94,11 @@ class ButtonSubEditProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          primary: this.color.withOpacity(0.10),
+          primary: this.color,
           onPrimary: this.color,
-          elevation: 5,
+          elevation: (isSecond) ? 1 : 5,
           side: BorderSide(
-              color: (isSecond) ? this.color.withOpacity(0.10) : this.textColor,
-              width: 5),
+              color: (isSecond) ? this.color : this.textColor, width: 5),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
               side: BorderSide(color: this.textColor, width: 1.5))),

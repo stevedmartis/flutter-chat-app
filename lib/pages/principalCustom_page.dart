@@ -137,7 +137,7 @@ class _CollapsingListState extends State<CollapsingList>
         CupertinoSliverRefreshControl(onRefresh: () => pullToRefreshData()),
         makeHeaderSpacer(context),
         SliverFixedExtentList(
-          itemExtent: 180.0,
+          itemExtent: 170.0,
           delegate: SliverChildListDelegate(
             [FadeIn(child: BannerSlide())],
           ),

@@ -777,9 +777,9 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                           child: Align(
                             alignment: Alignment.center,
                             child: ButtonSubEditProfile(
-                                color: currentTheme
+                                color: currentTheme.currentTheme.accentColor,
+                                textColor: currentTheme
                                     .currentTheme.scaffoldBackgroundColor,
-                                textColor: Colors.grey,
                                 text: 'Editar',
                                 onPressed: () {
                                   aws.isUploadImagePlant = false;

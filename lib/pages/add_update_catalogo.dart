@@ -189,6 +189,9 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             focusNode: _focusNode,
             controller: nameCtrl,
             inputFormatters: <TextInputFormatter>[
@@ -236,6 +239,9 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
           child: TextField(
+            style: TextStyle(
+              color: (currentTheme.customTheme) ? Colors.white : Colors.black,
+            ),
             inputFormatters: [
               new LengthLimitingTextInputFormatter(100),
             ],
@@ -341,7 +347,6 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
                 setState(() {
                   optionItemSelected = optionItem;
                   optionSelectChange = true;
-                  _focusNode.unfocus();
                 });
               },
             ));

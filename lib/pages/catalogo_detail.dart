@@ -309,13 +309,15 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                 ),
                 Container(
                   //top: size.height / 3.5,
-                  width: size.width / 1.3,
+                  margin: EdgeInsets.only(top: 10),
+
+                  width: size.width / 2.0,
                   child: Align(
                     alignment: Alignment.center,
                     child: ButtonSubEditProfile(
-                        color:
+                        color: currentTheme.currentTheme.accentColor,
+                        textColor:
                             currentTheme.currentTheme.scaffoldBackgroundColor,
-                        textColor: Colors.grey,
                         text: 'Editar',
                         onPressed: () {
                           Navigator.of(context)

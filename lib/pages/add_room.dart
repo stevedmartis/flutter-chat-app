@@ -511,9 +511,12 @@ class AddRoomPagePageState extends State<AddRoomPage> {
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return Container(
         padding: EdgeInsets.all(10),
         height: 200.0,
+        color: currentTheme.currentTheme.accentColor,
         child: Center(child: CircularProgressIndicator()));
   }
 

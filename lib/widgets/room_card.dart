@@ -6,22 +6,22 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class CustomListItemTwoRoom extends StatelessWidget {
-  CustomListItemTwoRoom(
-      {Key key,
-      this.thumbnail,
-      this.title,
-      this.subtitle,
-      this.wide,
-      this.long,
-      this.tall,
-      this.publishDate,
-      this.readDuration,
-      this.timeOn,
-      this.timeOff,
-      this.totalPlants,
-      this.totalAirs,
-      this.totalLigths})
-      : super(key: key);
+  CustomListItemTwoRoom({
+    Key key,
+    this.thumbnail,
+    this.title,
+    this.subtitle,
+    this.wide,
+    this.long,
+    this.tall,
+    this.publishDate,
+    this.readDuration,
+    this.timeOn,
+    this.timeOff,
+    this.totalPlants,
+    this.totalAirs,
+    this.totalLigths,
+  }) : super(key: key);
 
   final Widget thumbnail;
   final String title;
@@ -247,7 +247,7 @@ class _ArticleDescription extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            RowMeassureRoom(wide: wide, long: long, tall: tall),
+            RowMeassureRoom(ismin: true, wide: wide, long: long, tall: tall),
             SizedBox(
               height: 10,
             ),
@@ -331,6 +331,7 @@ class RowMeassureRoom extends StatelessWidget {
     @required this.long,
     @required this.tall,
     this.center = false,
+    this.ismin = false,
     this.fontSize = 15.0,
   }) : super(key: key);
 
@@ -339,6 +340,7 @@ class RowMeassureRoom extends StatelessWidget {
   final String tall;
   final double fontSize;
   final bool center;
+  final bool ismin;
 
   @override
   Widget build(BuildContext context) {
@@ -363,7 +365,7 @@ class RowMeassureRoom extends StatelessWidget {
         ),
 
         Text(
-          ' W',
+          (ismin) ? ' An' : ' Ancho',
           style: TextStyle(
               fontSize: fontSize,
               color:
@@ -380,7 +382,7 @@ class RowMeassureRoom extends StatelessWidget {
               color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
         Text(
-          ' L',
+          (ismin) ? ' La' : ' Largo',
           style: TextStyle(
               fontSize: fontSize,
               color:
@@ -397,7 +399,7 @@ class RowMeassureRoom extends StatelessWidget {
               color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
         Text(
-          ' T',
+          (ismin) ? ' Al' : ' Alto',
           style: TextStyle(
               fontSize: fontSize,
               color:

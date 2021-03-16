@@ -863,14 +863,14 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                     width: 130,
 
                     //top: size.height / 3.5,
-                    margin: EdgeInsets.only(left: size.width / 10),
+                    margin: EdgeInsets.only(left: size.width / 10, top: 10),
                     // width: size.width / 1.5,
                     child: Align(
                       alignment: Alignment.center,
                       child: ButtonSubEditProfile(
-                          color:
+                          color: currentTheme.currentTheme.accentColor,
+                          textColor:
                               currentTheme.currentTheme.scaffoldBackgroundColor,
-                          textColor: Colors.grey,
                           text: 'Editar',
                           onPressed: () {
                             aws.isUploadImagePlant = false;
@@ -903,9 +903,6 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                     ),
                   ),
                 ],
-              ),
-              SizedBox(
-                height: 20.0,
               ),
               Divider(
                 thickness: 2.0,
@@ -1205,9 +1202,7 @@ RichText convertHashtag(String text, context) {
         TextSpan(
             text: split.first,
             style: TextStyle(
-                color: (currentTheme.customTheme)
-                    ? Colors.white54
-                    : Colors.black54,
+                color: (currentTheme.customTheme) ? Colors.white : Colors.black,
                 fontWeight: FontWeight.w400,
                 fontSize: 16))
       ]..addAll(hashtags

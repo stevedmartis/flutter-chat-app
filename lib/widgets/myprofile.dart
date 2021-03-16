@@ -134,8 +134,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   void initState() {
     _scrollController = ScrollController()..addListener(() => setState(() {}));
 
-    name = widget.profile.name;
-
     final authService = Provider.of<AuthService>(context, listen: false);
 
     profile = authService.profile;
@@ -258,6 +256,14 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
     final size = MediaQuery.of(context).size;
+
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    setState(() {
+      profile =
+          (authService.profile != null) ? authService.profile : widget.profile;
+    });
+
     //final username = widget.profile.user.username.toLowerCase();
 
     return Scaffold(
@@ -372,14 +378,14 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       children: [
                         (_showName)
                             ? FadeIn(
-                                child: Text(widget.profile.name,
+                                child: Text(profile.name,
                                     style: TextStyle(
                                       color: (currentTheme.customTheme)
                                           ? Colors.white
                                           : Colors.black,
                                     )))
                             : Container(),
-                        (_showName && widget.profile.isClub)
+                        (_showName && profile.isClub)
                             ? FadeIn(
                                 child: Container(
                                   margin: EdgeInsets.only(left: 10),
@@ -417,7 +423,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                     //image: snapshot.data,
                     isUserAuth: widget.isUserAuth,
                     isUserEdit: widget.isUserEdit,
-                    profile: widget.profile,
+                    profile: profile,
                   ),
                   centerTitle: true,
                 ),
@@ -847,18 +853,20 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   SliverPersistentHeader makeHeaderInfo(context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
-    final username = widget.profile.user.username.toLowerCase();
-    final about = widget.profile.about;
+    final username = profile.user.username.toLowerCase();
+    final about = profile.about;
     final size = MediaQuery.of(context).size;
-    final isClub = widget.profile.isClub;
+    final isClub = profile.isClub;
+
+    name = profile.name;
 
     final nameFinal = name.isEmpty ? "" : name.capitalize();
 
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: (about.length > 10) ? 150.0 : 80.0,
-          maxHeight: (about.length > 80) ? 180.0 : 80.0,
+          minHeight: (about.length > 80) ? 150.0 : 120.0,
+          maxHeight: (about.length > 80) ? 150.0 : 120.0,
           child: FadeIn(
             child: Container(
               padding: EdgeInsets.only(top: 10.0),

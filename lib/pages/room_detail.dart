@@ -329,13 +329,14 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                 ),
                 Container(
                   //top: size.height / 3.5,
-                  width: size.width / 1.3,
+                  width: size.width / 2.0,
+                  margin: EdgeInsets.only(top: 10),
                   child: Align(
                     alignment: Alignment.center,
                     child: ButtonSubEditProfile(
-                        color:
+                        color: currentTheme.currentTheme.accentColor,
+                        textColor:
                             currentTheme.currentTheme.scaffoldBackgroundColor,
-                        textColor: Colors.grey,
                         text: 'Editar',
                         onPressed: () {
                           Navigator.of(context)

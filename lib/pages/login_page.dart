@@ -48,28 +48,48 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   WavyHeader(),
 
+                  Container(
+                    margin: EdgeInsets.only(top: 100),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: _size.width / 5.0,
+                          height: _size.height / 5.0,
+                          child: Image.asset('assets/icons/leafety.png'),
+                          alignment: Alignment.topCenter,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 30),
+                          child: Text(
+                            'leafety',
+                            style: TextStyle(
+                                letterSpacing: -1.0,
+                                fontWeight: FontWeight.w600,
+                                color: currentTheme.accentColor,
+                                fontSize: 30),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                   Center(child: _Form()),
 
                   Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
-                        top: _size.height / 1.45,
+                        top: _size.height / 1.7,
                       ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                _signInGoogle(context);
-                              },
-                              child: roundedRectSignInSocialMediaButton(
-                                  'Ingresar con Google',
-                                  Colors.orange,
-                                  FontAwesomeIcons.google,
-                                  true,
-                                  30),
-                            ),
+                                onTap: () {
+                                  _signInGoogle(context);
+                                },
+                                child: _buildCircleGoogle()),
                             /*   roundedRectSignInSocialMediaButton(
                                 'Log in with Facebook',
                                 Color(0xff3C56A6),
@@ -77,21 +97,15 @@ class _LoginPageState extends State<LoginPage> {
                                 false,
                                 25), */
                             GestureDetector(
-                              onTap: () async {
-                                await _signIApple(context);
-                              },
-                              child: roundedRectSignInSocialMediaButton(
-                                  'Ingresar con Apple',
-                                  Colors.white,
-                                  FontAwesomeIcons.apple,
-                                  false,
-                                  27),
-                            ),
+                                onTap: () async {
+                                  await _signIApple(context);
+                                },
+                                child: _buildCircleApple()),
                           ])),
 
                   Center(
                     child: Container(
-                      margin: EdgeInsets.only(top: _size.height / 1.1),
+                      margin: EdgeInsets.only(top: _size.height / 1.15),
                       child: Labels(
                         rute: 'register',
                         title: "No tienes una cuenta?",
@@ -111,6 +125,52 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ));
+  }
+
+  Container _buildCircleGoogle() {
+    //final size = MediaQuery.of(context).size;
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return Container(
+      alignment: Alignment.center,
+      margin: EdgeInsets.only(right: 20, top: 0),
+      width: 50,
+      height: 50,
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        child: CircleAvatar(
+            child: Container(
+                width: 25,
+                height: 25,
+                child: Image.asset('assets/google_logo_icon.png')),
+            backgroundColor: currentTheme.accentColor),
+      ),
+    );
+  }
+
+  Container _buildCircleApple() {
+    //final size = MediaQuery.of(context).size;
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(0.0),
+      margin: EdgeInsets.only(right: 0, top: 0),
+      width: 50,
+      height: 50,
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        child: CircleAvatar(
+            child: Container(
+              child: FaIcon(
+                FontAwesomeIcons.apple,
+                color: Colors.black,
+                size: 25,
+              ),
+            ),
+            backgroundColor: currentTheme.currentTheme.accentColor),
+      ),
+    );
   }
 
   _signIApple(BuildContext context) async {
@@ -196,21 +256,22 @@ class __FormState extends State<_Form> {
               padding: EdgeInsets.only(
                   left: 40.0, right: 20.0, top: 10.0, bottom: 10.0),
               child: _createPassword(bloc)),
-          GestureDetector(
-              onTap: () {
-                _login(bloc, context);
-              },
-              child:
-                  roundedRectButton("Ingresar", orangeGradients, false, false)),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: GestureDetector(
+                onTap: () {
+                  _login(bloc, context);
+                },
+                child: roundedRectButton(
+                    "Ingresar", orangeGradients, false, false)),
+          ),
           Container(
+            padding: EdgeInsets.only(top: _size.height / 30),
             child: Text(
-              'o',
+              'o accede con:',
               style: TextStyle(color: Colors.grey),
             ),
             alignment: Alignment.center,
-            margin: EdgeInsets.only(
-              top: 10,
-            ),
           ),
         ],
       ),

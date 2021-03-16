@@ -4,6 +4,7 @@ import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/header_curve_signin.dart';
+import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -41,28 +42,49 @@ class RegisterPage extends StatelessWidget {
                 children: <Widget>[
                   WavyHeader(),
 
+                  Container(
+                    margin: EdgeInsets.only(top: 100),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: _size.width / 5.0,
+                          height: _size.height / 5.0,
+                          child: Image.asset('assets/icons/leafety.png'),
+                          alignment: Alignment.topCenter,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 30),
+                          child: Text(
+                            'leafety',
+                            style: TextStyle(
+                                letterSpacing: -1.0,
+                                fontWeight: FontWeight.w600,
+                                color: currentTheme.accentColor,
+                                fontSize: 30),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+
                   Center(child: _Form()),
 
                   Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
-                        top: _size.height / 1.30,
+                        top: _size.height / 1.5,
                       ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                _signInGoogle(context);
-                              },
-                              child: roundedRectSignInSocialMediaButton(
-                                  'Registrarse con Google',
-                                  Colors.orange,
-                                  FontAwesomeIcons.google,
-                                  true,
-                                  30),
-                            ),
+                                onTap: () {
+                                  _signInGoogle(context);
+                                },
+                                child: _buildCircleGoogle(context)),
                             /*   roundedRectSignInSocialMediaButton(
                                 'Log in with Facebook',
                                 Color(0xff3C56A6),
@@ -70,19 +92,13 @@ class RegisterPage extends StatelessWidget {
                                 false,
                                 25), */
                             GestureDetector(
-                              onTap: () async {
-                                await _signIApple(context);
-                              },
-                              child: roundedRectSignInSocialMediaButton(
-                                  'Registrarse con Apple',
-                                  Colors.white,
-                                  FontAwesomeIcons.apple,
-                                  false,
-                                  27),
-                            ),
+                                onTap: () async {
+                                  await _signIApple(context);
+                                },
+                                child: _buildCircleApple(context)),
                           ])),
 
-                  /*  Center(
+                  Center(
                     child: Container(
                       margin: EdgeInsets.only(top: _size.height / 1.1),
                       child: Labels(
@@ -93,7 +109,7 @@ class RegisterPage extends StatelessWidget {
                         colortText2: currentTheme.accentColor,
                       ),
                     ),
-                  ), */
+                  ),
                   /*   Center(
                       child: Container(
                           margin: EdgeInsets.only(top: _size.height / 1.1),
@@ -105,6 +121,52 @@ class RegisterPage extends StatelessWidget {
           ),
         ));
   }
+}
+
+Container _buildCircleGoogle(context) {
+  //final size = MediaQuery.of(context).size;
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+  return Container(
+    alignment: Alignment.center,
+    margin: EdgeInsets.only(right: 20, top: 0),
+    width: 50,
+    height: 50,
+    child: ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+      child: CircleAvatar(
+          child: Container(
+              width: 25,
+              height: 25,
+              child: Image.asset('assets/google_logo_icon.png')),
+          backgroundColor: currentTheme.accentColor),
+    ),
+  );
+}
+
+Container _buildCircleApple(context) {
+  //final size = MediaQuery.of(context).size;
+  final currentTheme = Provider.of<ThemeChanger>(context);
+
+  return Container(
+    alignment: Alignment.center,
+    padding: EdgeInsets.all(0.0),
+    margin: EdgeInsets.only(right: 0, top: 0),
+    width: 50,
+    height: 50,
+    child: ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      child: CircleAvatar(
+          child: Container(
+            child: FaIcon(
+              FontAwesomeIcons.apple,
+              color: Colors.black,
+              size: 25,
+            ),
+          ),
+          backgroundColor: currentTheme.currentTheme.accentColor),
+    ),
+  );
 }
 
 class _Form extends StatefulWidget {
@@ -126,7 +188,7 @@ class __FormState extends State<_Form> {
     final _size = MediaQuery.of(context).size;
 
     return Container(
-      margin: EdgeInsets.only(top: _size.height / 20),
+      margin: EdgeInsets.only(top: _size.height / 25),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -145,14 +207,12 @@ class __FormState extends State<_Form> {
               child: _createPassword(bloc)),
           _createButton(bloc),
           Container(
+            padding: EdgeInsets.only(top: _size.height / 25),
             child: Text(
-              'o',
+              'o accede con:',
               style: TextStyle(color: Colors.grey),
             ),
             alignment: Alignment.center,
-            margin: EdgeInsets.only(
-              top: 5.0,
-            ),
           ),
         ],
       ),
@@ -353,7 +413,7 @@ Widget _createButton(RegisterBloc bloc) {
       final authService = Provider.of<AuthService>(context);
 
       return Container(
-        padding: EdgeInsets.only(left: 30, right: 30),
+        padding: EdgeInsets.only(left: 30, right: 30, top: 20),
         child: GestureDetector(
             child:
                 roundedRectButton("Comenzar!", orangeGradients, false, false),

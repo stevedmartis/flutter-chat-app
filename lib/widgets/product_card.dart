@@ -96,16 +96,13 @@ class _CardProductState extends State<CardProduct> {
                       color: currentTheme.currentTheme.accentColor),
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
               CbdthcRow(
                 thc: '$thc',
                 cbd: '$cbd',
                 fontSize: 7.0,
               ),
               SizedBox(
-                height: 10,
+                height: 5.0,
               ),
               Container(
                 margin: EdgeInsets.only(top: 5.0),
@@ -121,7 +118,7 @@ class _CardProductState extends State<CardProduct> {
                 ),
               ),
               SizedBox(
-                height: (about.length < 20) ? 30 : 10,
+                height: (about.length < 20) ? 20 : 5.0,
               ),
               Container(
                 padding: EdgeInsets.only(left: 0, top: 5.0),
@@ -337,22 +334,23 @@ class CbdthcRow extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(top: 5.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(5.0),
-            decoration: BoxDecoration(
-              color: Color(0xffF12937E),
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              "THC: $thc %",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSize,
-                  color: Colors.white),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              decoration: BoxDecoration(
+                color: Color(0xffF12937E),
+                //color: Theme.of(context).accentColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                "THC: $thc %",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSize,
+                    color: Colors.white),
+              ),
             ),
           ),
           SizedBox(
