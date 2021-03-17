@@ -261,20 +261,6 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                         ),
                                       ],
                                     ),
-                                    /*  IconButton(
-                                    icon: Icon(Icons.add,
-                                        size: size.width / 15,
-                                        color: (_showTitle)
-                                            ? currentTheme
-                                                .currentTheme.accentColor
-                                            : Colors.white),
-                                    onPressed: () => {
-                                          aws.isUploadImagePlant = false,
-                                          visitService.visit = visit,
-                                          Navigator.of(context).push(
-                                              createRouteNewVisit(visit,
-                                                  widget.plant.id, false)),
-                                        }), */
                                     backgroundColor: _showTitle
                                         ? (currentTheme.customTheme)
                                             ? Colors.black54
@@ -327,50 +313,9 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                           : Colors.white),
                                 ),
                               ),
-                            ))
-
-                        /* StreamBuilder<Product>(
-
-                        stream: productBloc.productSelect.stream,
-                        builder: (context, AsyncSnapshot<Product> snapshot) {
-                          if (snapshot.hasData) {
-                            product = snapshot.data;
-
-                            return Container(
-                                //  margin: EdgeInsets.only(left: 0),
-                                width: size.height / 5,
-                                height: 30,
-                                child: Container(
-                                  child: Center(
-                                    child: Text(
-                                      product.name.capitalize(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: _showTitle
-                                              ? (currentTheme.customTheme)
-                                                  ? Colors.white
-                                                  : Colors.black
-                                              : Colors.white),
-                                    ),
-                                  ),
-                                ));
-                          } else if (snapshot.hasError) {
-                            return _buildErrorWidget(snapshot.error);
-                          } else {
-                            return _buildLoadingWidget();
-                          }
-                        },
-                      ),  */
-                        ),
+                            ))),
                   ),
-
-                  // makeHeaderSpacer(context),
                   makeHeaderInfo(context),
-                  // makeHeaderSpacer(context),
-
-                  //   makeHeaderTabs(context),
-
-                  //   makeListVisits(context)
                 ])));
   }
 
@@ -394,16 +339,6 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                   indicatorWeight: 3.0,
                   indicatorColor: currentTheme.accentColor,
                   tabs: [
-                    /*   Tab(
-                        icon: Icon(Icons.local_florist,
-                            color: (_tabController.index == 0)
-                                ? currentTheme.accentColor
-                                : Colors.grey)),
-                    Tab(
-                        icon: FaIcon(FontAwesomeIcons.wind,
-                            color: (_tabController.index == 1)
-                                ? currentTheme.accentColor
-                                : Colors.grey)), */
                     Tab(
                         text: 'Vistas',
                         icon: FaIcon(FontAwesomeIcons.eye,
@@ -411,13 +346,7 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                 ? currentTheme.accentColor
                                 : Colors.grey)),
                   ],
-                  onTap: (value) => {
-                        /* _tabController
-                            .animateTo((_tabController.index + 1) % 2),
-                        setState(() {
-                          _tabController.index = value;
-                        }) */
-                      }),
+                  onTap: (value) => {}),
             ),
           ),
         ),
@@ -425,56 +354,6 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
     );
   }
 
-/* 
-  SliverList makeListVisits(context) {
-    final currentTheme = Provider.of<ThemeChanger>(context);
-
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        Container(
-          child: FutureBuilder(
-            future: this.visitApiProvider.getVisitPlant(widget.plant.id),
-            initialData: null,
-            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-              if (snapshot.hasData) {
-                visits = snapshot.data;
-                return (visits.length > 0)
-                    ? Container(
-                        margin: EdgeInsets.only(
-                          left: 10,
-                        ),
-                        child: _buildWidgetVisits(visits))
-                    : Center(
-                        child: Container(
-                            padding: EdgeInsets.all(50),
-                            child: Text('No hay visitas, Agrega una nueva!',
-                                style: TextStyle(
-                                  color: (currentTheme.customTheme)
-                                      ? Colors.white54
-                                      : Colors.black54,
-                                ))),
-                      ); // image is ready
-              } else {
-                return Container(
-                    height: 100.0,
-                    child: Center(
-                        child: CircularProgressIndicator())); // placeholder
-              }
-            },
-          ),
-        ),
-      ]),
-    );
-  }
- */
-/*   _deleteVisit(String id, int index) async {
-    final res = await this.visitService.deleteVisit(id);
-    if (res) {
-      setState(() {
-        visits.removeAt(index);
-      });
-    }
-  } */
   _deleteProduct(
     String id,
   ) async {
@@ -648,20 +527,6 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
 
     return SliverList(
       delegate: SliverChildListDelegate([
-        //  final sexo = plant.sexo;
-
-        //  final pot = (plant.pot == "") ? "0" : plant.pot;
-
-        //final nameFinal = name.isEmpty ? "" : name.capitalize();
-        //  final thc = (plant.thc.isEmpty) ? '0' : plant.thc;
-        //  final cbd = (plant.cbd.isEmpty) ? '0' : plant.cbd;
-
-        // final flower = (plant.flowering == "") ? "0" : plant.flowering;
-        // final visit = new Visit();
-
-        /*  final germina = product.germinated;
-              final flora = product.flowering; */
-
         Container(
           color: currentTheme.currentTheme.scaffoldBackgroundColor,
           child: Column(
@@ -895,15 +760,9 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
 
   Widget _buildUserWidget(RoomsResponse data) {
     return Container(
-      child: Stack(fit: StackFit.expand, children: [
-        TabsScrollCustom(
-          rooms: data.rooms,
-        ),
-        /*  AnimatedOpacity(
-            opacity: !_showTitle ? 1.0 : 0.0,
-            duration: Duration(milliseconds: 250),
-            child: _buildEditCircle()) */
-      ]),
+      child: TabsScrollCustom(
+        rooms: data.rooms,
+      ),
     );
   }
 
@@ -933,223 +792,6 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
       ],
     ));
   }
-
-  Widget itemCake() {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            height: 15,
-          ),
-          Text(
-            "Dark Belgium chocolate",
-            style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 15,
-                color: Colors.white),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlue[100],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Cold",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.red[100],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Fresh",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text(
-                    "\$30.25",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: Colors.black54),
-                  ),
-                  Text(
-                    "per Quantity",
-                    style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 10,
-                        color: Colors.black),
-                  )
-                ],
-              )
-            ],
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                width: 5,
-              ),
-              Icon(Icons.star, size: 15, color: Colors.orangeAccent),
-              Icon(Icons.star, size: 15, color: Colors.orangeAccent),
-              Icon(Icons.star, size: 15, color: Colors.orangeAccent),
-              Icon(Icons.star, size: 15, color: Colors.orangeAccent),
-              Icon(Icons.star, size: 15, color: Colors.orangeAccent),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-/*   void _snapAppbar() {
-    final scrollDistance = maxHeight - minHeight;
-
-    if (_scrollController.offset > 0 &&
-        _scrollController.offset < scrollDistance) {
-      final double snapOffset =
-          _scrollController.offset / scrollDistance > 0.5 ? scrollDistance : 0;
-
-      Future.microtask(() => _scrollController.animateTo(snapOffset,
-          duration: Duration(milliseconds: 200), curve: Curves.easeIn));
-    }
-  } */
-}
-
-class SABT extends StatefulWidget {
-  final Widget child;
-  const SABT({
-    Key key,
-    @required this.child,
-  }) : super(key: key);
-  @override
-  _SABTState createState() {
-    return new _SABTState();
-  }
-}
-
-class _SABTState extends State<SABT> {
-  ScrollPosition _position;
-  bool _visible;
-
-  @override
-  void dispose() {
-    _removeListener();
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _removeListener();
-    _addListener();
-  }
-
-  void _addListener() {
-    _position = Scrollable.of(context)?.position;
-    _position?.addListener(_positionListener);
-    _positionListener();
-  }
-
-  void _removeListener() {
-    _position?.removeListener(_positionListener);
-  }
-
-  void _positionListener() {
-    final FlexibleSpaceBarSettings settings =
-        context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
-    bool visible =
-        settings == null || settings.currentExtent <= settings.minExtent;
-    if (_visible != visible) {
-      setState(() {
-        _visible = visible;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: _visible,
-      child: widget.child,
-    );
-  }
-}
-
-RichText convertHashtag(String text, context) {
-  final currentTheme = Provider.of<ThemeChanger>(context);
-
-  List<String> split = text.split(RegExp("#"));
-
-  List<String> hashtags = split.getRange(1, split.length).fold([], (t, e) {
-    var texts = e.split(" ");
-
-    if (texts.length > 1) {
-      return List.from(t)
-        ..addAll(["#${texts.first}", "${e.substring(texts.first.length)}"]);
-    }
-    return List.from(t)..add("#${texts.first}");
-  });
-
-  return RichText(
-    text: TextSpan(
-      children: [
-        TextSpan(
-            text: split.first,
-            style: TextStyle(
-                color: (currentTheme.customTheme)
-                    ? Colors.white54
-                    : Colors.black54,
-                fontWeight: FontWeight.w400,
-                fontSize: 16))
-      ]..addAll(hashtags
-          .map((text) => text.contains("#")
-              ? TextSpan(
-                  text: text,
-                  style: TextStyle(
-                      color: currentTheme.currentTheme.accentColor,
-                      fontSize: 16))
-              : TextSpan(
-                  text: text,
-                  style: TextStyle(
-                      color: (currentTheme.customTheme)
-                          ? Colors.white54
-                          : Colors.black54,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16)))
-          .toList()),
-    ),
-  );
 }
 
 Route createRoutePrincipalPage() {
@@ -1336,21 +978,6 @@ class CbdthcRow extends StatelessWidget {
               ),
             ),
           ),
-          /* Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(0.5),
-              child: Text(
-                "THC",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: (currentTheme.customTheme)
-                        ? Colors.white54
-                        : Colors.black54),
-              ),
-            ),
-          ), */
           SizedBox(
             width: 40,
           ),
@@ -1372,39 +999,9 @@ class CbdthcRow extends StatelessWidget {
               ),
             ),
           ),
-          /* Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(0.5),
-              child: Text(
-                "CBD",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: (currentTheme.customTheme)
-                        ? Colors.white54
-                        : Colors.black54),
-              ),
-            ),
-          ), */
           SizedBox(
             width: 10,
           ),
-
-          /* Container(
-            width: 35,
-            decoration: BoxDecoration(
-              color: Colors.yellow[400],
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "New",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-            ),
-          ), */
         ],
       ),
     );

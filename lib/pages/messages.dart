@@ -47,21 +47,6 @@ class _MessagesPageState extends State<MessagesPage>
     // this.socketService.socket.on('personal-message', _listenMessage);
   }
 
-/*   void _listenMessage(dynamic payload) {
-    ChatMessage message = new ChatMessage(
-      text: payload['message'],
-      uid: payload['by'],
-      animationController: AnimationController(
-          vsync: this, duration: Duration(milliseconds: 300)),
-    );
-
-    setState(() {
-      _messages.insert(0, message);
-    });
-
-    message.animationController.forward();
-  } */
-
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
@@ -245,11 +230,6 @@ class _MessagesPageState extends State<MessagesPage>
 
   @override
   void dispose() {
-    /*   for (ChatMessage message in _messages) {
-      message.animationController.dispose();
-    } */
-
-    //this.socketService.socket.off('personal-message');
     super.dispose();
   }
 }

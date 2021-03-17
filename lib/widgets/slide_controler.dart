@@ -51,26 +51,6 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: _buildPageIndicator(),
               )
-            /* : StyledButton(
-                label: "Ingresar",
-                borderColor: Colors.transparent,
-                press: () => {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/login', (route) => false)
-                },
-              ), */
-            /*  (_isLastPage)
-            ? StyledButton(
-                label: "Create Account",
-                backgroundColor: Colors.transparent,
-                borderColor: Color(0xff3374F8),
-                fontColor: Color(0xff3374F8),
-                borderWidth: 2,
-                press: () => {
-     
-                },
-              )
-            : */
             : ButtonAccent(
                 color: currentTheme.accentColor,
                 text: 'Start now!',

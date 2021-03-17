@@ -23,11 +23,6 @@ class ProfileBloc with Validators {
   Stream<String> get aboutStream => _aboutController.stream;
   Stream<String> get lastNameStream => _lastNameController.stream;
 
-  //Stream<bool> get imageUpdate => _imageUpdateCtrl.stream;
-  /*  Stream<bool> get formValidStream => Observable.combineLatest3(
-      emailStream, nameStream, usernameSteam, (e, n, u) => true);
- */
-
   BehaviorSubject<bool> get imageUpdate => _imageUpdateCtrl;
 
   Stream<bool> get formValidStream => CombineLatestStream.combine3(

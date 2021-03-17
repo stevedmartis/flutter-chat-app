@@ -55,8 +55,6 @@ class EditProfilePageState extends State<EditProfilePage> {
     profileBloc.imageUpdate.add(true);
 
     usernameCtrl.addListener(() {
-      //print('${usernameCtrl.text}');
-
       setState(() {
         if (usernameCtrl.text != profile.user.username)
           this.isUsernameChange = true;
@@ -70,7 +68,6 @@ class EditProfilePageState extends State<EditProfilePage> {
       });
     });
     nameCtrl.addListener(() {
-      // print('${nameCtrl.text}');
       setState(() {
         if (profile.name != nameCtrl.text)
           this.isNameChange = true;
@@ -83,7 +80,6 @@ class EditProfilePageState extends State<EditProfilePage> {
       });
     });
     aboutCtrl.addListener(() {
-      // print('${nameCtrl.text}');
       setState(() {
         if (profile.about != aboutCtrl.text)
           this.isAboutChange = true;
@@ -92,7 +88,6 @@ class EditProfilePageState extends State<EditProfilePage> {
       });
     });
     emailCtrl.addListener(() {
-      //print('${emailCtrl.text}');
       setState(() {
         if (profile.user.email != emailCtrl.text)
           this.isEmailChange = true;
@@ -106,7 +101,6 @@ class EditProfilePageState extends State<EditProfilePage> {
       });
     });
     passCtrl.addListener(() {
-      // print('${passCtrl.text}');
       setState(() {
         if (passCtrl.text.length >= 6)
           this.isPassChange = true;
@@ -157,9 +151,7 @@ class EditProfilePageState extends State<EditProfilePage> {
               color: currentTheme.currentTheme.accentColor,
             ),
             iconSize: 30,
-            onPressed: () =>
-                //  Navigator.pushReplacement(context, createRouteProfile()),
-                Navigator.pop(context),
+            onPressed: () => Navigator.pop(context),
             color: Colors.white,
           ),
           title: Text(
@@ -182,7 +174,6 @@ class EditProfilePageState extends State<EditProfilePage> {
             child: CustomScrollView(
                 physics: const BouncingScrollPhysics(
                     parent: AlwaysScrollableScrollPhysics()),
-                // controller: _scrollController,
                 slivers: <Widget>[
                   SliverFixedExtentList(
                     itemExtent: size.height / 3.7,
@@ -223,39 +214,6 @@ class EditProfilePageState extends State<EditProfilePage> {
                             }
                           },
                         ),
-
-                        /*  FutureBuilder<ui.Image>(
-                            future: _image(profile.getHeaderImg()),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<ui.Image> snapshot) {
-                              if (snapshot.hasData) {
-                                if (profile.imageHeader == "") {
-                                  return ProfilePage(
-                                    isEmpty: true,
-                                    image: snapshot.data,
-                                    isUserAuth: true,
-                                    isUserEdit: true,
-                                    profile: profile,
-                                  );
-                                } else {
-                                  return ProfilePage(
-                                    isEmpty: false,
-                                    image: snapshot.data,
-                                    isUserAuth: true,
-                                    isUserEdit: true,
-                                    profile: profile,
-                                  );
-                                }
-                              } else {
-                                return ProfilePage(
-                                  isEmpty: false,
-                                  image: snapshot.data,
-                                  isUserAuth: true,
-                                  isUserEdit: true,
-                                  profile: profile,
-                                );
-                              }
-                            }), */
                       ],
                     ),
                   ),
@@ -347,25 +305,6 @@ class EditProfilePageState extends State<EditProfilePage> {
                             SizedBox(
                               height: 50,
                             ),
-                            /* ButtonLogout(
-                              textColor:
-                                  currentTheme.currentTheme.secondaryHeaderColor,
-                              color: currentTheme
-                                  .currentTheme.scaffoldBackgroundColor,
-                              text: 'Log out',
-                              onPressed: authService.authenticated
-                                  ? null
-                                  : () async {
-                                      final socketService =
-                                          Provider.of<SocketService>(context,
-                                              listen: false);
-
-                                      socketService.disconnect();
-                                      Navigator.pushReplacementNamed(
-                                          context, 'login');
-                                      AuthService.deleteToken();
-                                    },
-                            ), */
                           ],
                         ),
                       )),

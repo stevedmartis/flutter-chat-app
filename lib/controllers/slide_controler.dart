@@ -80,11 +80,6 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
                   "Registrarme!", blackGradients, false, true),
               onTap: () => {Navigator.push(context, _createRuteSignUp())}),
         ),
-        /*  Center(
-          child: Container(
-              padding: EdgeInsets.only(top: _size.height * 0.9),
-              child: StyledLogoCustom()),
-        ), */
       ],
     );
   }
@@ -199,36 +194,5 @@ class StyledLogoCustom extends StatelessWidget {
         ),
       ],
     );
-
-/* RichText(
-
-      textAlign: TextAlign.center,
-      text: new TextSpan(
-        children: [
-          TextSpan(
-            text: "G",
-            style: TextStyle(
-              fontFamily: 'GTWalsheimPro',
-              color: currentTheme.accentColor,
-              fontSize: 27,
-              fontWeight: FontWeight.w500,
-              fontStyle: FontStyle.normal,
-            ),
-          ),
-
-          
-          TextSpan(
-            text: "safety",
-            style: TextStyle(
-              fontFamily: 'GTWalsheimPro',
-              fontStyle: FontStyle.normal,
-              color: currentTheme.scaffoldBackgroundColor,
-              fontSize: 27,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    ); */
   }
 }

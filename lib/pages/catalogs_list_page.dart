@@ -301,12 +301,6 @@ class _CatalogsListState extends State<CatalogsList> {
                                     SizedBox(
                                       width: 12,
                                     ),
-                                    /* Text(
-                                    'Delete',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600),
-                                  ) */
                                   ],
                                 )),
                             child: Padding(
@@ -319,11 +313,6 @@ class _CatalogsListState extends State<CatalogsList> {
                                       MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    /*    AspectRatio(
-              aspectRatio: 1.0,
-              child: thumbnail,
-            ), */
-
                                     Expanded(
                                       child: Padding(
                                           padding: const EdgeInsets.fromLTRB(
@@ -357,19 +346,6 @@ class _CatalogsListState extends State<CatalogsList> {
                                                     SizedBox(
                                                       width: 15,
                                                     ),
-                                                    /* Text(
-                                                      'Visibile para: ',
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        color: (currentTheme
-                                                                .customTheme)
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                      ),
-                                                    ), */
                                                     Text(
                                                       privacity,
                                                       maxLines: 2,

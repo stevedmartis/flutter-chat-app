@@ -325,12 +325,6 @@ class _RoomListState extends State<RoomList> {
                                   SizedBox(
                                     width: 12,
                                   ),
-                                  /* Text(
-                                    'Delete',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600),
-                                  ) */
                                 ],
                               )),
                           child: CustomListItemTwoRoom(

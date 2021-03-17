@@ -112,8 +112,6 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
         loadImage = true;
       });
 
-      /* awsService.uploadAvatar(
-            widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.uploadImageHeader(
           widget.profile.user.uid, fileType[0], fileType[1], imageHeader);
 
@@ -123,16 +121,6 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
 
         loadImage = false;
       });
-
-/*       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => EditProfilePage()),
-          (Route<dynamic> route) => true); */
-      /*    Navigator.of(context)
-          .pushNamedAndRemoveUntil('profile-edit', (route) => true);
- */
-      //
     } else {
       print('No image selected.');
     }

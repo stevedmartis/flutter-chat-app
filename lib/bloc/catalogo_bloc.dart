@@ -52,12 +52,6 @@ class CatalogoBloc with Validators {
     _myCatalogosProducts.sink.add(response);
   }
 
-/*   getRoomsProfile(String userId) async {
-    RoomsResponse response = await _repository.g(userId);
-
-    _roomsProfile.sink.add(response);
-  } */
-
   getCatalogo(Catalogo catalogo) async {
     Catalogo response = await _repository.getCatalogo(catalogo.id);
     _catalogoSelect.sink.add(response);

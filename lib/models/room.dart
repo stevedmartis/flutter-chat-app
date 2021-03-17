@@ -84,13 +84,4 @@ class Room {
         "totalLights": totalLights,
         //"products": List<dynamic>.from(products.map((x) => x)),
       };
-
-/*   getPosterImg() {
-    if (avatar == "") {
-      return "";
-    } else {
-      return avatar;
-    }
-  } */
-
 }

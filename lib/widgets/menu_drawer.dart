@@ -38,43 +38,6 @@ class PrincipalMenu extends StatelessWidget {
                     ),
                   ),
                 ),
-/*               Expanded(
-                    child: _OptionsList(),
-                  ), */
-                /*  ListTile(
-                  leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
-                  title: Text(
-                    'Dark mode',
-                    style: TextStyle(
-                      color: (currentTheme.customTheme)
-                          ? Colors.white
-                          : Colors.black,
-                    ),
-                  ),
-                  trailing: Switch.adaptive(
-                    value: appTheme.customTheme,
-                    onChanged: (value) {
-                      appTheme.customTheme = value;
-                    },
-                  ),
-                ), */
-                /*  SafeArea(
-                  bottom: true,
-                  top: false,
-                  left: false,
-                  right: false,
-                  child: ListTile(
-                    leading: Icon(Icons.add_to_home_screen, color: accentColor),
-                    title: Text('Custom theme'),
-                    trailing: Switch.adaptive(
-                      value: appTheme.customTheme,
-                      activeColor: Colors.blue,
-                      onChanged: (value) {
-                        appTheme.customTheme = value;
-                      },
-                    ),
-                  ),
-                ), */
                 GestureDetector(
                   onTap: () {
                     socketService.disconnect();

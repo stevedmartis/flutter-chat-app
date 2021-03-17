@@ -123,8 +123,6 @@ class CoverImageProductPageState extends State<CoverImageProductPage> {
         loadingImage = true;
       });
 
-      /* awsService.uploadAvatar(
-            widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.uploadImageCoverVisit(
           fileType[0], fileType[1], imageCover);
 
@@ -162,8 +160,6 @@ class CoverImageProductPageState extends State<CoverImageProductPage> {
         loadingImage = true;
       });
 
-      /* awsService.uploadAvatar(
-            widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.updateImageCoverProduct(
           fileType[0], fileType[1], imageCover, widget.product.id);
 

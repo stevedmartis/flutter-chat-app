@@ -183,13 +183,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
         Provider.of<NotificationModel>(context, listen: false)
             .numberNotifiBell = 0;
       }
-      /*  if (currentIndex != currentPage) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    pageRouter[currentIndex].page));
-      } */
     });
   }
 

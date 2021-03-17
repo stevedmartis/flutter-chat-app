@@ -102,14 +102,6 @@ class ButtonSubEditProfile extends StatelessWidget {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
               side: BorderSide(color: this.textColor, width: 1.5))),
-      /*  shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0),
-          side: BorderSide(color: this.textColor, width: 1.5)),
-      elevation: 2,
-      highlightElevation: 5,
-      color: this.color, */
-
-      // shape: StadiumBorder(),
       onPressed: this.onPressed,
       child: Container(
         width: double.infinity,

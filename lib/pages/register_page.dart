@@ -41,7 +41,6 @@ class RegisterPage extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   WavyHeader(),
-
                   Container(
                     margin: EdgeInsets.only(top: _size.height / 5),
                     child: Row(
@@ -68,9 +67,7 @@ class RegisterPage extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   Center(child: _Form()),
-
                   Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
@@ -85,19 +82,12 @@ class RegisterPage extends StatelessWidget {
                                   _signInGoogle(context);
                                 },
                                 child: _buildCircleGoogle(context)),
-                            /*   roundedRectSignInSocialMediaButton(
-                                'Log in with Facebook',
-                                Color(0xff3C56A6),
-                                FontAwesomeIcons.facebook,
-                                false,
-                                25), */
                             GestureDetector(
                                 onTap: () async {
                                   await _signIApple(context);
                                 },
                                 child: _buildCircleApple(context)),
                           ])),
-
                   Center(
                     child: Container(
                       margin: EdgeInsets.only(top: _size.height / 1.1),
@@ -110,11 +100,6 @@ class RegisterPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  /*   Center(
-                      child: Container(
-                          margin: EdgeInsets.only(top: _size.height / 1.1),
-                          child: StyledLogoCustom())), */
-                  //Container(child: circleYellow())
                 ],
               ),
             ),
@@ -217,47 +202,6 @@ class __FormState extends State<_Form> {
         ],
       ),
     );
-
-    /* Container(
-      margin: EdgeInsets.only(top: 20),
-      // padding: EdgeInsets.symmetric(horizontal: 50),
-      child: Column(
-        children: <Widget>[
-          _createUsername(bloc, context),
-          SizedBox(
-            height: 10,
-          ),
-          _createEmail(bloc, context),
-          SizedBox(
-            height: 10,
-          ),
-          /*     _createName(bloc),
-          SizedBox(
-            height: 10,
-          ), */
-          // _createLastName(bloc),
-
-          _createPassword(bloc, context),
-          SizedBox(
-            height: 30,
-          ),
-          _createButton(bloc),
-
-          ButtonGold(
-              color: currentTheme.accentColor,
-              text: 'Sign in with Google!',
-              onPressed: authService.authenticated
-                  ? null
-                  : () async {
-                      FocusScope.of(context).unfocus();
-                      _signInGoogle(context);
-                    }),
-
-          //  _createButtonSignInGoole(bloc)
-        ],
-      ),
-    );
-   */
   }
 
   final List<Color> orangeGradients = [
@@ -403,10 +347,6 @@ Widget roundedRectSignInSocialMediaButton(
 }
 
 Widget _createButton(RegisterBloc bloc) {
-  // formValidStream
-  // snapshot.hasData
-  //  true ? algo si true : algo si false
-
   return StreamBuilder(
     stream: bloc.formValidStream,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -587,8 +527,6 @@ _signInGoogle(BuildContext context) async {
     // Mostara alerta
     mostrarAlerta(context, 'Login incorrecto', 'El correo ya existe');
   }
-
-  //Navigator.pushReplacementNamed(context, '');
 }
 
 _signIApple(BuildContext context) async {
@@ -605,8 +543,6 @@ _signIApple(BuildContext context) async {
     // Mostara alerta
     mostrarAlerta(context, 'Login incorrecto', 'El correo ya existe');
   }
-
-  //Navigator.pushReplacementNamed(context, '');
 }
 
 _register(RegisterBloc bloc, BuildContext context) async {
@@ -615,13 +551,6 @@ _register(RegisterBloc bloc, BuildContext context) async {
 
   final registroOk = await authService.register(
       bloc.username.trim(), bloc.email.trim(), bloc.password.trim());
-
-  print('================');
-  print('name: ${bloc.name}');
-  print('Password: ${bloc.password}');
-  print('email: ${bloc.email}');
-  print('username: ${bloc.username}');
-  print('================');
 
   if (registroOk != null) {
     if (registroOk == true) {
@@ -634,61 +563,7 @@ _register(RegisterBloc bloc, BuildContext context) async {
     mostrarAlerta(
         context, 'Error del servidor', 'Ingrese un correo electrónico valido');
   }
-  //Navigator.pushReplacementNamed(context, '');
 }
-
-/* Widget _createName(RegisterBloc bloc) {
-  return StreamBuilder(
-    stream: bloc.nameStream,
-    builder: (BuildContext context, AsyncSnapshot snapshot) {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        child: TextField(
-          //  keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-              icon: Icon(Icons.perm_identity),
-              //  fillColor: currentTheme.accentColor,
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.yellow, width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: '',
-              labelText: 'Name',
-              //counterText: snapshot.data,
-              errorText: snapshot.error),
-          onChanged: bloc.changeName,
-        ),
-      );
-    },
-  );
-}
- */
-/* Widget _createLastName(RegisterBloc bloc) {
-  return StreamBuilder(
-    stream: bloc.lastNameStream,
-    builder: (BuildContext context, AsyncSnapshot snapshot) {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        child: TextField(
-          //  keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-              icon: Icon(Icons.perm_identity),
-              //  fillColor: currentTheme.accentColor,
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.yellow, width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: '',
-              labelText: 'Last Name',
-              counterText: snapshot.data,
-              errorText: snapshot.error),
-          onChanged: bloc.changeLastName,
-        ),
-      );
-    },
-  );
-}
- */
 
 Route _createRute() {
   return PageRouteBuilder(

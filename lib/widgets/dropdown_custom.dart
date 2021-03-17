@@ -82,14 +82,6 @@ class _SelectDropListState extends State<SelectDropList>
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  /*   Icon(
-                    Icons.card_travel,
-                    color: currentTheme.scaffoldBackgroundColor,
-                  ), 
-                  SizedBox(
-                    width: 10,
-                  ),
-                  */
                   Expanded(
                       child: Text(
                     optionItemSelected.title,

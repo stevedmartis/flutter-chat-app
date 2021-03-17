@@ -56,17 +56,7 @@ class _RecipeImagePageState extends State<RecipeImagePage> {
           //  Navigator.pushReplacementNamed(context, '/profile-edit'),
           color: Colors.white,
         ),
-        actions: [
-          /*  IconButton(
-            icon: Icon(
-              Icons.add_photo_alternate,
-              color: currentTheme.accentColor,
-            ),
-            iconSize: 40,
-            onPressed: () async => _selectImage(),
-            color: Colors.white,
-          ), */
-        ],
+        actions: [],
       ),
       backgroundColor: Colors.black,
       body: Hero(

@@ -52,11 +52,6 @@ class CustomListItemTwoRoom extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            /*    AspectRatio(
-              aspectRatio: 1.0,
-              child: thumbnail,
-            ), */
-
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
@@ -252,14 +247,6 @@ class _ArticleDescription extends StatelessWidget {
               height: 10,
             ),
             RowTimeOnOffRoom(timeOn: timeOn, timeOff: timeOff),
-
-            /* Text(
-              '$publishDate - $readDuration',
-              style: const TextStyle(
-                fontSize: 12.0,
-                color: Colors.white54,
-              ),
-            ), */
           ],
         ),
       ],

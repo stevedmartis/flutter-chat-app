@@ -104,17 +104,6 @@ class _ProfileCardState extends State<ProfileCard> {
 
     return Stack(
       children: [
-        /*  SizedBox(
-          child: Container(
-            child: CustomPaint(
-              painter: ProfileCardPainter(
-                  image: widget.image,
-                  color: widget.profileColor,
-                  avatarRadius: 55),
-            ),
-          ),
-        ), */
-
         Hero(
             tag: profileUser.imageHeader,
             child: FadeInImage(
@@ -765,8 +754,6 @@ class _ProfileCardState extends State<ProfileCard> {
 
       final fileType = pickedFile.path.split('.');
 
-      /* awsService.uploadAvatar(
-            widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.uploadImageCoverPlant(
           fileType[0], fileType[1], imageCover);
 
@@ -790,8 +777,6 @@ void addSubscription(
 ) async {
   Subscription subscription = subscriptionBloc.subscription.value;
 
-  //final socketService = Provider.of<SocketService>(context, listen: false);
-  //  socketService.emit('add-band', {'name': name});
   final subscriptionService =
       Provider.of<SubscriptionService>(context, listen: false);
 
@@ -806,8 +791,7 @@ void addSubscription(
 
 void unSubscription(context) async {
   final subscription = subscriptionBloc.subscription.value;
-  //final socketService = Provider.of<SocketService>(context, listen: false);
-  //  socketService.emit('add-band', {'name': name});
+
   final subscriptionService =
       Provider.of<SubscriptionService>(context, listen: false);
 

@@ -359,8 +359,6 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                             SizedBox(
                               height: 10,
                             ),
-
-                            /*   _createDescription(bloc), */
                           ],
                         ),
                       )),
@@ -788,25 +786,3 @@ Route createRoute() {
     },
   );
 }
-
-/* Route createRouteAddImages(Room room) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => NewProductPage(
-      room: room,
-    ),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(1.0, 0.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-    transitionDuration: Duration(milliseconds: 400),
-  );
-}
- */

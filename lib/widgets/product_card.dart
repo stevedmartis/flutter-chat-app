@@ -70,9 +70,6 @@ class _CardProductState extends State<CardProduct> {
     final rating = widget.product.ratingInit;
     final about = widget.product.description;
 
-    /*   final suscriptionEnabled =
-        profile.subscribeApproved && profile.subscribeActive; */
-
     var ratingDouble = double.parse('$rating');
 
     return Column(
@@ -373,21 +370,6 @@ class CbdthcRow extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-
-          /* Container(
-            width: 35,
-            decoration: BoxDecoration(
-              color: Colors.yellow[400],
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "New",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-            ),
-          ), */
         ],
       ),
     );

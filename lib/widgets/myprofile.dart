@@ -1048,19 +1048,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
       ],
     ));
   }
-
-/*   void _snapAppbar() {
-    final scrollDistance = maxHeight - minHeight;
-
-    if (_scrollController.offset > 0 &&
-        _scrollController.offset < scrollDistance) {
-      final double snapOffset =
-          _scrollController.offset / scrollDistance > 0.5 ? scrollDistance : 0;
-
-      Future.microtask(() => _scrollController.animateTo(snapOffset,
-          duration: Duration(milliseconds: 200), curve: Curves.easeIn));
-    }
-  } */
 }
 
 RichText convertHashtag(String text, context) {

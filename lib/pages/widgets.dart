@@ -57,14 +57,6 @@ class About extends StatelessWidget {
           height: 40,
           thickness: 1,
         ),
-/*         Align(
-            alignment: Alignment.centerLeft,
-            child: Text('About', style: Theme.of(context).textTheme.title)), */
-        /*  SizedBox(height: 8),
-        Text(
-          profileData.about,
-          style: Theme.of(context).textTheme.subhead,
-        ), */
       ],
     );
   }

@@ -136,16 +136,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     color: currentTheme.currentTheme.accentColor,
                   ),
                   iconSize: 30,
-                  onPressed: () => {
-                        createModalSelection()
-                        /*  setState(() {
-                          //createRouteNewProduct(widget.room);
-
-                          Navigator.pushReplacement(
-                              context, createRouteNewProduct(widget.room));
-                          //addNewProduct();
-                        }) */
-                      }),
+                  onPressed: () => {createModalSelection()}),
             )
           ],
           leading: IconButton(
@@ -154,9 +145,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
               color: currentTheme.currentTheme.accentColor,
             ),
             iconSize: 30,
-            onPressed: () =>
-                //  Navigator.pushReplacement(context, createRouteProfile()),
-                Navigator.pop(context),
+            onPressed: () => Navigator.pop(context),
             color: Colors.white,
           )),
       body: GestureDetector(
@@ -447,12 +436,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                             SizedBox(
                               width: 12,
                             ),
-                            /* Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600),
-                                ) */
                           ],
                         )),
                   ));
@@ -511,12 +494,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                             SizedBox(
                               width: 12,
                             ),
-                            /* Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600),
-                                ) */
                           ],
                         )),
                   ));

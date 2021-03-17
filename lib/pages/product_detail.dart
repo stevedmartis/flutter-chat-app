@@ -125,11 +125,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
     final size = MediaQuery.of(context).size;
-    /* final visit = new Visit();
 
-    final visitService = Provider.of<VisitService>(context, listen: false);
-    final aws = Provider.of<AwsService>(context, listen: false);
- */
     final productService = Provider.of<ProductService>(context, listen: false);
 
     setState(() {
@@ -253,20 +249,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                         ),
                                       ],
                                     ),
-                                    /*  IconButton(
-                                    icon: Icon(Icons.add,
-                                        size: size.width / 15,
-                                        color: (_showTitle)
-                                            ? currentTheme
-                                                .currentTheme.accentColor
-                                            : Colors.white),
-                                    onPressed: () => {
-                                          aws.isUploadImagePlant = false,
-                                          visitService.visit = visit,
-                                          Navigator.of(context).push(
-                                              createRouteNewVisit(visit,
-                                                  widget.plant.id, false)),
-                                        }), */
                                     backgroundColor: _showTitle
                                         ? (currentTheme.customTheme)
                                             ? Colors.black54
@@ -358,13 +340,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                 ? currentTheme.accentColor
                                 : Colors.grey)),
                   ],
-                  onTap: (value) => {
-                        /* _tabController
-                            .animateTo((_tabController.index + 1) % 2),
-                        setState(() {
-                          _tabController.index = value;
-                        }) */
-                      }),
+                  onTap: (value) => {}),
             ),
           ),
         ),
@@ -539,20 +515,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
     return SliverList(
       delegate: SliverChildListDelegate([
-        //  final sexo = plant.sexo;
-
-        //  final pot = (plant.pot == "") ? "0" : plant.pot;
-
-        //final nameFinal = name.isEmpty ? "" : name.capitalize();
-        //  final thc = (plant.thc.isEmpty) ? '0' : plant.thc;
-        //  final cbd = (plant.cbd.isEmpty) ? '0' : plant.cbd;
-
-        // final flower = (plant.flowering == "") ? "0" : plant.flowering;
-        // final visit = new Visit();
-
-        /*  final germina = product.germinated;
-              final flora = product.flowering; */
-
         Container(
           color: currentTheme.currentTheme.scaffoldBackgroundColor,
           child: Column(
@@ -729,15 +691,9 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
   Widget _buildUserWidget(RoomsResponse data) {
     return Container(
-      child: Stack(fit: StackFit.expand, children: [
-        TabsScrollCustom(
-          rooms: data.rooms,
-        ),
-        /*  AnimatedOpacity(
-            opacity: !_showTitle ? 1.0 : 0.0,
-            duration: Duration(milliseconds: 250),
-            child: _buildEditCircle()) */
-      ]),
+      child: TabsScrollCustom(
+        rooms: data.rooms,
+      ),
     );
   }
 
@@ -865,19 +821,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       ),
     );
   }
-
-/*   void _snapAppbar() {
-    final scrollDistance = maxHeight - minHeight;
-
-    if (_scrollController.offset > 0 &&
-        _scrollController.offset < scrollDistance) {
-      final double snapOffset =
-          _scrollController.offset / scrollDistance > 0.5 ? scrollDistance : 0;
-
-      Future.microtask(() => _scrollController.animateTo(snapOffset,
-          duration: Duration(milliseconds: 200), curve: Curves.easeIn));
-    }
-  } */
 }
 
 class SABT extends StatefulWidget {
@@ -1170,21 +1113,6 @@ class CbdthcRow extends StatelessWidget {
               ),
             ),
           ),
-          /* Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(0.5),
-              child: Text(
-                "THC",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: (currentTheme.customTheme)
-                        ? Colors.white54
-                        : Colors.black54),
-              ),
-            ),
-          ), */
           SizedBox(
             width: 40,
           ),
@@ -1206,39 +1134,9 @@ class CbdthcRow extends StatelessWidget {
               ),
             ),
           ),
-          /* Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(0.5),
-              child: Text(
-                "CBD",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: (currentTheme.customTheme)
-                        ? Colors.white54
-                        : Colors.black54),
-              ),
-            ),
-          ), */
           SizedBox(
             width: 10,
           ),
-
-          /* Container(
-            width: 35,
-            decoration: BoxDecoration(
-              color: Colors.yellow[400],
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "New",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-            ),
-          ), */
         ],
       ),
     );

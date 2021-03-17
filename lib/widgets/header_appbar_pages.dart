@@ -231,24 +231,6 @@ Route _createRouteMessages() {
   );
 }
 
-/* Route _createRute() {
-  return PageRouteBuilder(
-      pageBuilder: (BuildContext context, Animation<double> animation,
-              Animation<double> secondaryAnimation) =>
-          SliverAppBarProfilepPage(),
-      transitionDuration: Duration(seconds: 1),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final curvedAnimation =
-            CurvedAnimation(parent: animation, curve: Curves.easeInOut);
-
-        return SlideTransition(
-          position: Tween<Offset>(begin: Offset(-1.0, 10.0), end: Offset.zero)
-              .animate(curvedAnimation),
-          child: child,
-        );
-      });
-} */
-
 class CustomSliverAppBarHeader extends StatelessWidget {
   CustomSliverAppBarHeader({this.user});
   final User user;
@@ -261,22 +243,6 @@ class CustomSliverAppBarHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          /*        GestureDetector(
-            onTap: () {
-              Scaffold.of(context).openDrawer();
-              //globalKey.currentState.openEndDrawer();
-            },
-/*             child: Container(
-              child: Hero(
-                  tag: userAuth.uid + '+1',
-                  child: ImageUserChat(
-                    width: 50,
-                    height: 50,
-                    user: userAuth,
-                    fontsize: 20,
-                  )),
-            ), */
-          ), */
           Container(
               margin: EdgeInsets.only(left: 30),
               width: size.height / 3,
@@ -306,43 +272,6 @@ class CustomSliverAppBarHeader extends StatelessWidget {
   }
 }
 
-/* 
-class _ItemCircular extends StatelessWidget {
-  final IconData icon;
-  const _ItemCircular({Key key, @required this.icon}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final color = Colors.white.withOpacity(0.30);
-
-    return Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xff202020),
-                Color(0xff1D1D1D),
-                Color(0xff161616),
-              ]),
-          borderRadius: BorderRadius.all(Radius.circular(30)),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black54,
-                spreadRadius: -5,
-                blurRadius: 10,
-                offset: Offset(0, 5))
-          ],
-        ),
-        child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(icon, color: color)));
-  }
-}
- */
 class SearchContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

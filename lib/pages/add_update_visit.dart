@@ -120,15 +120,6 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
 
     visitBloc.imageUpdate.add(true);
 
-/*     nameCtrl.addListener(() {
-      // print('${nameCtrl.text}');
-      setState(() {
-        if (widget.visit.name != nameCtrl.text)
-          this.isNameChange = true;
-        else
-          this.isNameChange = false;
-      });
-    }); */
     descriptionCtrl.addListener(() {
       setState(() {
         if (widget.visit.description != descriptionCtrl.text)
@@ -413,8 +404,6 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                             SizedBox(
                               height: 10,
                             ),
-
-                            /*   _createDescription(bloc), */
                           ],
                         ),
                       )),

@@ -353,7 +353,6 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                           SizedBox(
                             height: 10,
                           ),
-
                           Row(
                             children: [
                               Expanded(
@@ -365,7 +364,6 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                           SizedBox(
                             height: 10,
                           ),
-
                           Row(
                             children: [
                               Expanded(
@@ -481,26 +479,6 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                           SizedBox(
                             height: 10,
                           ),
-                          /*   _createVentilation(bloc),
-                          SizedBox(
-                            height: 10,
-                          ), */
-                          // _createLastName(bloc),
-
-                          /*     _createTypeLight(bloc),
-                          SizedBox(
-                            height: 10,
-                          ), */
-
-                          /*  _createWhats(bloc),
-                          SizedBox(
-                            height: 10,
-                          ), */
-                          /*   _createKelvin(bloc), */
-
-// inside Widget build
-
-                          /*   _createDescription(bloc), */
                         ],
                       ),
                     )),

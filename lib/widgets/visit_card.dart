@@ -283,21 +283,6 @@ class SexLtRow extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-
-          /* Container(
-            width: 35,
-            decoration: BoxDecoration(
-              color: Colors.yellow[400],
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "New",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-            ),
-          ), */
         ],
       ),
     );
@@ -387,55 +372,8 @@ class DateGDurationF extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-
-          /* Container(
-            width: 35,
-            decoration: BoxDecoration(
-              color: Colors.yellow[400],
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "New",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-            ),
-          ), */
         ],
       ),
     );
   }
 }
-
-/*  Card(
-            shadowColor: Colors.black,
-            color: currentTheme.scaffoldBackgroundColor,
-            // color: Colors.red,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            elevation: 5,
-            child: Hero(
-              tag: widget.visit.id,
-              child: Container(
-                width: size.width,
-                height: size.height / 4,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5.0),
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: (widget.visit.coverImage != "")
-                        ? FadeInImage(
-                            image: NetworkImage(widget.visit.getCoverImg()),
-                            placeholder: AssetImage('assets/loading2.gif'),
-                            fit: BoxFit.cover)
-                        : FadeInImage(
-                            image: AssetImage('assets/images/empty_image.png'),
-                            placeholder: AssetImage('assets/loading2.gif'),
-                            fit: BoxFit.cover),
-                  ),
-                ),
-              ),
-            ),
-          ) */

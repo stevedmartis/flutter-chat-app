@@ -273,27 +273,6 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
                             ),
                           ),
                         ),
-                        /*  actionDelegate: SlideActionBuilderDelegate(
-                                  actionCount: 1,
-                                  builder:
-                                      (context, index, animation, renderingMode) {
-                                    return IconSlideAction(
-                                      caption: 'Aprobar',
-                                      color: renderingMode ==
-                                              SlidableRenderingMode.slide
-                                          ? Colors.blue
-                                              .withOpacity(animation.value)
-                                          : (renderingMode ==
-                                                  SlidableRenderingMode.dismiss
-                                              ? Colors.blue
-                                              : currentTheme.accentColor),
-                                      icon: Icons.check_circle,
-                                      onTap: () async {
-                                        var state = Slidable.of(context);
-                                        state.dismiss();
-                                      },
-                                    );
-                                  }), */
                         secondaryActionDelegate: SlideActionBuilderDelegate(
                             actionCount: 1,
                             builder:

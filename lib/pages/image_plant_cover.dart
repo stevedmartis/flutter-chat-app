@@ -139,8 +139,6 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
         loadingImage = true;
       });
 
-      /* awsService.uploadAvatar(
-            widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.uploadImageCoverVisit(
           fileType[0], fileType[1], imageCover);
 
@@ -179,8 +177,6 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
         loadingImage = true;
       });
 
-      /* awsService.uploadAvatar(
-            widget.profile.user.uid, fileType[0], fileType[1], image); */
       final resp = await awsService.updateImageCoverPlant(
           fileType[0], fileType[1], imageCover, widget.plant.id);
 

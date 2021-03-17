@@ -246,11 +246,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
 
     final size = MediaQuery.of(context).size;
 
-    /* final isSexoChange =
-        (widget.plant.sexo != optionItemSelected && optionItemSelected != null)
-            ? true
-            : false; */
-
     final isControllerChange = isNameChange &&
         isQuantityChange &&
         isGerminatedChange &&
@@ -381,12 +376,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                             SizedBox(
                               height: 10,
                             ),
-                            /* GestureDetector(
-                                onTap: () {
-                                  FocusScope.of(context)
-                                      .requestFocus(new FocusNode());
-                                },
-                                child: _createSexo(bloc)), */
                             SizedBox(
                               height: 10,
                             ),
@@ -465,8 +454,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                             SizedBox(
                               height: 10,
                             ),
-
-                            /*   _createDescription(bloc), */
                           ],
                         ),
                       )),
@@ -596,87 +583,6 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     );
   }
 
-/* 
-  Widget _createSexo(PlantBloc bloc) {
-    final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context);
-
-    List<DropdownMenuItem> categories = [
-      DropdownMenuItem(
-        child: Text(
-          'Macho',
-          style: TextStyle(
-              color:
-                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
-        ),
-        value: "Macho",
-      ),
-      DropdownMenuItem(
-        child: Text(
-          'Hembra',
-          style: TextStyle(
-              color:
-                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
-        ),
-        value: "Hembra",
-      ),
-      DropdownMenuItem(
-        child: Text(
-          'Automatica',
-          style: TextStyle(
-              color:
-                  (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
-        ),
-        value: "Automatica",
-      )
-    ];
-
-    return StreamBuilder(
-      stream: bloc.sexoStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-
-            //leading: FaIcon(FontAwesomeIcons.moon, color: accentColor),
-            height: 50,
-            width: size.width,
-            child: DropdownButtonFormField(
-              decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.black54))),
-              dropdownColor:
-                  (currentTheme.customTheme) ? Colors.black : Colors.white,
-              hint: Text(
-                'Sexo',
-                style: TextStyle(
-                    color: (currentTheme.customTheme)
-                        ? Colors.white54
-                        : Colors.black54),
-              ),
-              value: optionItemSelected,
-              items: categories,
-              onChanged: (optionItem) {
-                setState(() {
-                  optionItemSelected = optionItem;
-                });
-              },
-            ));
-        /* SelectDropList(
-              optionItemSelected,
-              dropListModel,
-              (optionItem) {
-                setState(() {
-                  optionItemSelected = optionItem;
-                  sexoModel.sexo = optionItemSelected;
-                });
-              },
-            )); */
-      },
-    );
-  }
- */
   Widget _createQuantity(PlantBloc bloc) {
     return StreamBuilder(
       stream: bloc.quantityStream,
@@ -1145,25 +1051,3 @@ Route createRoute() {
     },
   );
 }
-
-/* Route createRouteAddImages(Room room) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => NewProductPage(
-      room: room,
-    ),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(1.0, 0.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-    transitionDuration: Duration(milliseconds: 400),
-  );
-}
- */

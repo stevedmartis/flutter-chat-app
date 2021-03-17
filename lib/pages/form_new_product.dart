@@ -155,27 +155,7 @@ class FormNewProductPageState extends State<FormNewProductPage> {
                 SliverFixedExtentList(
                   itemExtent: size.height / 3.7,
                   delegate: SliverChildListDelegate(
-                    [
-                      /* FutureBuilder<ui.Image>(
-                        future: _image(profile.getHeaderImg()),
-                        builder: (BuildContext context,
-                                AsyncSnapshot<ui.Image> snapshot) =>
-                            !snapshot.hasData
-                                ? ProfilePage(
-                                    image: snapshot.data,
-                                    isUserAuth: true,
-                                    isEmpty: true,
-                                    isUserEdit: true,
-                                    profile: profile,
-                                  )
-                                : ProfilePage(
-                                    image: snapshot.data,
-                                    isUserAuth: true,
-                                    isUserEdit: true,
-                                    profile: profile,
-                                  ),
-                      ), */
-                    ],
+                    [],
                   ),
                 ),
                 SliverFillRemaining(

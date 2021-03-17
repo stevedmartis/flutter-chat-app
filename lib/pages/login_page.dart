@@ -47,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
               child: Stack(
                 children: <Widget>[
                   WavyHeader(),
-
                   Container(
                     margin: EdgeInsets.only(top: _size.height / 5),
                     child: Row(
@@ -75,7 +74,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Center(child: _Form()),
-
                   Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
@@ -90,19 +88,12 @@ class _LoginPageState extends State<LoginPage> {
                                   _signInGoogle(context);
                                 },
                                 child: _buildCircleGoogle()),
-                            /*   roundedRectSignInSocialMediaButton(
-                                'Log in with Facebook',
-                                Color(0xff3C56A6),
-                                FontAwesomeIcons.facebook,
-                                false,
-                                25), */
                             GestureDetector(
                                 onTap: () async {
                                   await _signIApple(context);
                                 },
                                 child: _buildCircleApple()),
                           ])),
-
                   Center(
                     child: Container(
                       margin: EdgeInsets.only(top: _size.height / 1.1),
@@ -115,11 +106,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  /* Center(
-                      child: Container(
-                          margin: EdgeInsets.only(top: _size.height / 1.1),
-                          child: StyledLogoCustom())), */
-                  //Container(child: circleYellow())
                 ],
               ),
             ),
@@ -382,35 +368,6 @@ class __FormState extends State<_Form> {
         });
   }
 
-  /* Widget _crearBoton(LoginBloc bloc) {
-    // formValidStream
-    // snapshot.hasData
-    //  true ? algo si true : algo si false
-
-    return StreamBuilder(
-      stream: bloc.formValidStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        final authService = Provider.of<AuthService>(context);
-        final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
-
-        return Container(
-          padding: EdgeInsets.all(20),
-          child: ButtonGold(
-            color: currentTheme.accentColor,
-            text: 'Log In',
-            onPressed: authService.authenticated
-                ? null
-                : () async {
-                    FocusScope.of(context).unfocus();
-
-                    _login(bloc, context);
-                  },
-          ),
-        );
-      },
-    );
-  }
- */
   _login(LoginBloc bloc, BuildContext context) async {
     final authService = Provider.of<AuthService>(context, listen: false);
     final socketService = Provider.of<SocketService>(context, listen: false);

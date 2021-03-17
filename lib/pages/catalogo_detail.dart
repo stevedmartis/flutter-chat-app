@@ -496,8 +496,6 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                       aws.isUploadImagePlant = false,
                       plantService.plant = plant,
                       Navigator.of(context).pop(),
-                      /*  Navigator.of(context)
-                          .push(createRouteNewPlant(plant, widget.room, false)), */
                     },
                     child: ListTile(
                       tileColor: (currentTheme.customTheme)
@@ -522,8 +520,6 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                         iconSize: 30.0,
                         onPressed: () => {
                           Navigator.of(context).pop(),
-                          /*  Navigator.of(context).push(
-                              createRouteNewPlant(plant, widget.room, false)), */
                         },
                       ),
                       //trailing:
@@ -578,16 +574,6 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                   indicatorWeight: 3.0,
                   indicatorColor: currentTheme.accentColor,
                   tabs: [
-                    /*   Tab(
-                        icon: Icon(Icons.local_florist,
-                            color: (_tabController.index == 0)
-                                ? currentTheme.accentColor
-                                : Colors.grey)),
-                    Tab(
-                        icon: FaIcon(FontAwesomeIcons.wind,
-                            color: (_tabController.index == 1)
-                                ? currentTheme.accentColor
-                                : Colors.grey)), */
                     Tab(
                         text: 'Tratamientos',
                         icon: FaIcon(FontAwesomeIcons.notesMedical,
@@ -595,13 +581,7 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                                 ? currentTheme.accentColor
                                 : Colors.grey)),
                   ],
-                  onTap: (value) => {
-                        /* _tabController
-                            .animateTo((_tabController.index + 1) % 2),
-                        setState(() {
-                          _tabController.index = value;
-                        }) */
-                      }),
+                  onTap: (value) => {}),
             ),
           ),
         ),

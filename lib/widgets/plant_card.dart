@@ -67,13 +67,6 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          /*  Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              
-            
-            ],
-          ), */
           Container(
             child: Text(
               widget.plant.name.capitalize(),
@@ -152,21 +145,6 @@ class CbdthcRow extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
       child: Row(
         children: <Widget>[
-          /* Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(0.5),
-              child: Text(
-                "THC:",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: (currentTheme.customTheme)
-                        ? Colors.white54
-                        : Colors.black54),
-              ),
-            ),
-          ), */
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
             child: Container(
@@ -188,21 +166,6 @@ class CbdthcRow extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-          /* Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-            child: Container(
-              padding: EdgeInsets.all(0.5),
-              child: Text(
-                "CBD:",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize,
-                    color: (currentTheme.customTheme)
-                        ? Colors.white54
-                        : Colors.black54),
-              ),
-            ),
-          ), */
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5.0),
             child: Container(
@@ -224,21 +187,6 @@ class CbdthcRow extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-
-          /* Container(
-            width: 35,
-            decoration: BoxDecoration(
-              color: Colors.yellow[400],
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "New",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-            ),
-          ), */
         ],
       ),
     );
@@ -317,21 +265,6 @@ class SexLtRow extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-
-          /* Container(
-            width: 35,
-            decoration: BoxDecoration(
-              color: Colors.yellow[400],
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "New",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-            ),
-          ), */
         ],
       ),
     );
@@ -421,55 +354,8 @@ class DateGDurationF extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-
-          /* Container(
-            width: 35,
-            decoration: BoxDecoration(
-              color: Colors.yellow[400],
-              //color: Theme.of(context).accentColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "New",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 9.5),
-            ),
-          ), */
         ],
       ),
     );
   }
 }
-
-/*  Card(
-            shadowColor: Colors.black,
-            color: currentTheme.scaffoldBackgroundColor,
-            // color: Colors.red,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            elevation: 5,
-            child: Hero(
-              tag: widget.visit.id,
-              child: Container(
-                width: size.width,
-                height: size.height / 4,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5.0),
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: (widget.visit.coverImage != "")
-                        ? FadeInImage(
-                            image: NetworkImage(widget.visit.getCoverImg()),
-                            placeholder: AssetImage('assets/loading2.gif'),
-                            fit: BoxFit.cover)
-                        : FadeInImage(
-                            image: AssetImage('assets/images/empty_image.png'),
-                            placeholder: AssetImage('assets/loading2.gif'),
-                            fit: BoxFit.cover),
-                  ),
-                ),
-              ),
-            ),
-          ) */

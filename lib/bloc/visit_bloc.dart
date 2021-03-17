@@ -68,14 +68,6 @@ class VisitBloc with Validators {
   Stream<String> get mlAbonoStream => _mLAbonoController.stream;
   BehaviorSubject<bool> get imageUpdate => _imageUpdateCtrl;
 
-/*   Stream<bool> get formValidStream => Observable.combineLatest3(
-      nameStream,
-      wattsStream,
-      kelvinStream,
-      //timeOnStream,
-      //timeOffStream,
-      (a, b, c) => true); */
-
   getVisitsByUser(String uid) async {
     VisitsResponse response = await repositoryVisit.getVisits(uid);
 
