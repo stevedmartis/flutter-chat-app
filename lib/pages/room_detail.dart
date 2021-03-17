@@ -958,8 +958,8 @@ Container buildCircleFavoritePlant(String quantity, context) {
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
   return Container(
-      alignment: Alignment.topRight,
-      margin: EdgeInsets.only(left: size.width / 2.5, top: 0.0),
+      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(left: size.width / 1.50, top: 0.0),
       width: 100,
       height: 100,
       child: ClipRRect(

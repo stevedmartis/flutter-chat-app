@@ -16,6 +16,7 @@ import 'package:chat/models/visit.dart';
 import 'package:chat/models/visits_response.dart';
 import 'package:chat/pages/plant_detail.dart';
 import 'package:chat/pages/product_profile_detail.dart';
+import 'package:chat/pages/room_detail.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/users_service.dart';
@@ -563,10 +564,15 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
                     return PlantDetailPage(plant: plant);
                   },
                   closedBuilder: (_, openContainer) {
-                    return Container(
-                      child: CardPlantPrincipal(
-                        plant: plant,
-                      ),
+                    return Stack(
+                      children: [
+                        Container(
+                          child: CardPlantPrincipal(
+                            plant: plant,
+                          ),
+                        ),
+                        buildCircleFavoritePlant(plant.quantity, context),
+                      ],
                     );
                   }),
             );

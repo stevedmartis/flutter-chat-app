@@ -43,7 +43,7 @@ class RegisterPage extends StatelessWidget {
                   WavyHeader(),
 
                   Container(
-                    margin: EdgeInsets.only(top: 100),
+                    margin: EdgeInsets.only(top: _size.height / 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +188,7 @@ class __FormState extends State<_Form> {
     final _size = MediaQuery.of(context).size;
 
     return Container(
-      margin: EdgeInsets.only(top: _size.height / 40),
+      margin: EdgeInsets.only(top: _size.height / 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -207,7 +207,7 @@ class __FormState extends State<_Form> {
               child: _createPassword(bloc)),
           _createButton(bloc),
           Container(
-            padding: EdgeInsets.only(top: _size.height / 25),
+            padding: EdgeInsets.only(top: _size.height / 20),
             child: Text(
               'o accede con:',
               style: TextStyle(color: Colors.grey),

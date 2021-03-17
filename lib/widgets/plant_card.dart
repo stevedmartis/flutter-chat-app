@@ -86,7 +86,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
           CbdthcRow(
             thc: thc,
             cbd: cbd,
-            fontSize: 15,
+            fontSize: 13,
           ),
           Container(
             width: size.width / 2.0,
