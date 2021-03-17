@@ -19,7 +19,6 @@ class ProductsApiProvider {
       final resp = await http.get(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
-      print(resp);
       final productsResponse = productsProfilesResponseFromJson(resp.body);
       return productsResponse;
     } catch (error, stacktrace) {

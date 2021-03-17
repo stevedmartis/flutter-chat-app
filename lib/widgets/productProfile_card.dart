@@ -109,8 +109,7 @@ class _CardProductState extends State<CardProductProfile> {
                 fontSize: 8.0,
               ),
               Container(
-                margin: EdgeInsets.only(top: 5.0),
-                width: size.width / 3.5,
+                width: size.width / 3.0,
                 child: Text(
                   (widget.productProfile.product.description.length > 0)
                       ? widget.productProfile.product.description.capitalize()

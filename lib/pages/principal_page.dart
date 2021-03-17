@@ -54,8 +54,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
     var notifications =
         await notificationService.getNotificationByUser(profile.user.uid);
 
-    print(notifications);
-
     final notifiModel = Provider.of<NotificationModel>(context, listen: false);
     int number = notifiModel.numberNotifiBell;
     number = notifications.subscriptionsNotifi.length;

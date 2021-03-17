@@ -105,10 +105,10 @@ class _LoginPageState extends State<LoginPage> {
 
                   Center(
                     child: Container(
-                      margin: EdgeInsets.only(top: _size.height / 1.15),
+                      margin: EdgeInsets.only(top: _size.height / 1.1),
                       child: Labels(
                         rute: 'register',
-                        title: "No tienes una cuenta?",
+                        title: "¿No tienes una cuenta?",
                         subTitulo: 'Registate aquí',
                         colortText1: Colors.grey,
                         colortText2: currentTheme.accentColor,
@@ -308,7 +308,7 @@ class __FormState extends State<_Form> {
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 hintText: '',
-                labelText: 'Email',
+                labelText: 'Email *',
                 counterText: snapshot.data,
                 labelStyle: TextStyle(
                     color: (currentTheme.customTheme)
@@ -351,7 +351,7 @@ class __FormState extends State<_Form> {
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 hintText: '',
-                labelText: 'Password',
+                labelText: 'Contraseña *',
                 labelStyle: TextStyle(
                     color: (currentTheme.customTheme)
                         ? Colors.white54

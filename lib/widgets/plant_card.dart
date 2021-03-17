@@ -89,8 +89,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
             fontSize: 15,
           ),
           Container(
-            margin: EdgeInsets.only(top: 5.0),
-            width: size.width / 2.5,
+            width: size.width / 2.0,
             child: Text(
               (widget.plant.description.length > 0)
                   ? widget.plant.description.capitalize()

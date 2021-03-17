@@ -68,8 +68,8 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
               right: 60,
               bottom: _size.height * 0.1),
           child: GestureDetector(
-              child: roundedRectButton(
-                  "Iniciar sesión!", orangeGradients, false, false),
+              child:
+                  roundedRectButton("Entrar!", orangeGradients, false, false),
               onTap: () => {Navigator.push(context, _createRuteLogIn())}),
         ),
         Container(

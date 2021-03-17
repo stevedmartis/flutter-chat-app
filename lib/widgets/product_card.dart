@@ -32,7 +32,7 @@ class _CardProductState extends State<CardProduct> {
                 productItem(),
                 Container(
                   width: 100,
-                  height: 165,
+                  height: 150,
                   child: ClipRRect(
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(10.0),
@@ -99,13 +99,12 @@ class _CardProductState extends State<CardProduct> {
               CbdthcRow(
                 thc: '$thc',
                 cbd: '$cbd',
-                fontSize: 7.0,
+                fontSize: 9.0,
               ),
               SizedBox(
                 height: 5.0,
               ),
               Container(
-                margin: EdgeInsets.only(top: 5.0),
                 width: size.width / 3.5,
                 child: Text(
                   (about.length > 0) ? about.capitalize() : "Sin descripción",

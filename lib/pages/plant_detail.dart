@@ -23,7 +23,6 @@ import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/services/visit_service.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
@@ -74,6 +73,20 @@ class NetworkImageDecoder {
     return _info.image;
   }
 }
+
+class Options {
+  final int id;
+  final String name;
+  final String code;
+
+  const Options(this.id, this.name, this.code);
+}
+
+const List<Options> getOptions = <Options>[
+  Options(1, 'English', 'en'),
+  Options(2, 'فارسی', 'fa'),
+  Options(3, 'پشتو', 'ps'),
+];
 
 class _PlantDetailPageState extends State<PlantDetailPage>
     with TickerProviderStateMixin {
@@ -195,12 +208,103 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
                     actions: [
                       Container(
-                          margin: EdgeInsets.only(left: 10, right: 10),
+                          margin: EdgeInsets.only(left: 0, right: 0),
                           child: ClipRRect(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20.0)),
                             child: CircleAvatar(
-                                child: IconButton(
+                                child: PopupMenuButton<String>(
+                                  icon: FaIcon(FontAwesomeIcons.ellipsisV,
+                                      color: (_showTitle)
+                                          ? currentTheme
+                                              .currentTheme.accentColor
+                                          : Colors.white),
+                                  onSelected: (String result) {
+                                    switch (result) {
+                                      case '1':
+                                        aws.isUploadImagePlant = false;
+                                        visitService.visit = visit;
+                                        Navigator.of(context).push(
+                                            createRouteNewVisit(
+                                                visit, widget.plant.id, false));
+
+                                        break;
+                                      case '2':
+                                        aws.isUploadImagePlant = false;
+                                        plantService.plant = plant;
+                                        Navigator.of(context).push(
+                                            createRouteEditPlant(widget.plant));
+                                        break;
+                                      case '3':
+                                        confirmDelete(
+                                            context,
+                                            'Confirmar',
+                                            'Desea eliminar la Planta y todas sus visitas?',
+                                            plant.id);
+                                        break;
+                                      default:
+                                    }
+                                  },
+                                  itemBuilder: (BuildContext context) =>
+                                      <PopupMenuEntry<String>>[
+                                    PopupMenuItem<String>(
+                                        value: '1',
+                                        child: Row(
+                                          children: [
+                                            FaIcon(FontAwesomeIcons.eye,
+                                                size: 20,
+                                                color: currentTheme
+                                                    .currentTheme.accentColor),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              'Visitar',
+                                              style: TextStyle(
+                                                  color: currentTheme
+                                                      .currentTheme
+                                                      .accentColor),
+                                            ),
+                                          ],
+                                        )),
+                                    PopupMenuItem<String>(
+                                        value: '2',
+                                        child: Row(
+                                          children: [
+                                            FaIcon(
+                                              FontAwesomeIcons.edit,
+                                              color: currentTheme
+                                                  .currentTheme.accentColor,
+                                              size: 20,
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text('Editar',
+                                                style: TextStyle(
+                                                    color: currentTheme
+                                                        .currentTheme
+                                                        .accentColor)),
+                                          ],
+                                        )),
+                                    PopupMenuItem<String>(
+                                      value: '3',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.delete,
+                                              color: Colors.grey),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text('Eliminar',
+                                              style: TextStyle(
+                                                  color: Colors.grey)),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                /*  IconButton(
                                     icon: Icon(Icons.add,
                                         size: size.width / 15,
                                         color: (_showTitle)
@@ -213,7 +317,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                                           Navigator.of(context).push(
                                               createRouteNewVisit(visit,
                                                   widget.plant.id, false)),
-                                        }),
+                                        }), */
                                 backgroundColor: _showTitle
                                     ? (currentTheme.customTheme)
                                         ? Colors.black54
@@ -712,8 +816,6 @@ class _PlantDetailPageState extends State<PlantDetailPage>
 
     final germina = plant.germinated;
     final flora = plant.flowering;
-    final plantService = Provider.of<PlantService>(context, listen: false);
-    final aws = Provider.of<AwsService>(context, listen: false);
 
     return SliverList(
       delegate: SliverChildListDelegate([
@@ -855,54 +957,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                       ? convertHashtag(about, context)
                       : Container()),
               SizedBox(
-                height: 10.0,
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: 130,
-
-                    //top: size.height / 3.5,
-                    margin: EdgeInsets.only(left: size.width / 10, top: 10),
-                    // width: size.width / 1.5,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: ButtonSubEditProfile(
-                          color: currentTheme.currentTheme.accentColor,
-                          textColor:
-                              currentTheme.currentTheme.scaffoldBackgroundColor,
-                          text: 'Editar',
-                          onPressed: () {
-                            aws.isUploadImagePlant = false;
-                            plantService.plant = plant;
-                            Navigator.of(context)
-                                .push(createRouteEditPlant(widget.plant));
-                          }),
-                    ),
-                  ),
-                  Container(
-                    width: 130,
-                    //top: size.height / 3.5,
-                    margin: EdgeInsets.only(left: size.width / 10, right: 10),
-                    // width: size.width / 1.5,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: ButtonSubEditProfile(
-                          isSecond: true,
-                          color:
-                              currentTheme.currentTheme.scaffoldBackgroundColor,
-                          textColor: Colors.red,
-                          text: 'Eliminar',
-                          onPressed: () {
-                            confirmDelete(
-                                context,
-                                'Confirmar',
-                                'Desea eliminar la Planta y todas sus visitas?',
-                                plant.id);
-                          }),
-                    ),
-                  ),
-                ],
+                height: 20.0,
               ),
               Divider(
                 thickness: 2.0,
@@ -954,8 +1009,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
               actions: <Widget>[
                 CupertinoDialogAction(
                   isDefaultAction: true,
-                  child: Text('Confirmar',
-                      style: TextStyle(color: Color(0xff34EC9C))),
+                  child: Text('Eliminar', style: TextStyle(color: Colors.red)),
                   onPressed: () => _deletePlant(id),
                 ),
                 CupertinoDialogAction(

@@ -15,11 +15,9 @@ import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/products_provider.dart';
 import 'package:chat/services/auth_service.dart';
-import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/product_services.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/button_gold.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
 import 'package:chat/widgets/myprofile.dart';
@@ -184,13 +182,78 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                         )),
 
                     actions: [
-                      /*  Container(
-                          margin: EdgeInsets.only(left: 10, right: 10),
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            child: CircleAvatar(
-                                child: IconButton(
+                      (widget.isUserAuth)
+                          ? Container(
+                              margin: EdgeInsets.only(left: 0, right: 10),
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                child: CircleAvatar(
+                                    child: PopupMenuButton<String>(
+                                      icon: FaIcon(FontAwesomeIcons.ellipsisV,
+                                          color: (_showTitle)
+                                              ? currentTheme
+                                                  .currentTheme.accentColor
+                                              : Colors.white),
+                                      onSelected: (String result) {
+                                        switch (result) {
+                                          case '1':
+                                            productService.product = product;
+                                            Navigator.of(context).push(
+                                                createRouteEditProduct(
+                                                    widget.product));
+                                            break;
+                                          case '2':
+                                            confirmDelete(
+                                                context,
+                                                'Confirmar',
+                                                'Desea eliminar el tratamiento?',
+                                                product.id);
+                                            break;
+
+                                          default:
+                                        }
+                                      },
+                                      itemBuilder: (BuildContext context) =>
+                                          <PopupMenuEntry<String>>[
+                                        PopupMenuItem<String>(
+                                            value: '1',
+                                            child: Row(
+                                              children: [
+                                                FaIcon(
+                                                  FontAwesomeIcons.edit,
+                                                  color: currentTheme
+                                                      .currentTheme.accentColor,
+                                                  size: 20,
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text('Editar',
+                                                    style: TextStyle(
+                                                        color: currentTheme
+                                                            .currentTheme
+                                                            .accentColor)),
+                                              ],
+                                            )),
+                                        PopupMenuItem<String>(
+                                          value: '2',
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.delete,
+                                                  color: Colors.grey),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text('Eliminar',
+                                                  style: TextStyle(
+                                                      color: Colors.grey)),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    /*  IconButton(
                                     icon: Icon(Icons.add,
                                         size: size.width / 15,
                                         color: (_showTitle)
@@ -202,14 +265,15 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                           visitService.visit = visit,
                                           Navigator.of(context).push(
                                               createRouteNewVisit(visit,
-                                                  widget.product.id, false)),
-                                        }),
-                                backgroundColor: _showTitle
-                                    ? (currentTheme.customTheme)
-                                        ? Colors.black54
-                                        : Colors.white54
-                                    : Colors.black54),
-                          )), */
+                                                  widget.plant.id, false)),
+                                        }), */
+                                    backgroundColor: _showTitle
+                                        ? (currentTheme.customTheme)
+                                            ? Colors.black54
+                                            : Colors.white54
+                                        : Colors.black54),
+                              ))
+                          : Container(),
                       //  _buildCircleQuantityPlant(),
                     ],
 
@@ -473,9 +537,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
     var ratingDouble = double.parse('$rating');
 
-    final productService = Provider.of<ProductService>(context, listen: false);
-    final aws = Provider.of<AwsService>(context, listen: false);
-
     return SliverList(
       delegate: SliverChildListDelegate([
         //  final sexo = plant.sexo;
@@ -599,60 +660,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                   ],
                 ),
               ),
-              SizedBox(
-                height: 20.0,
-              ),
-              (widget.isUserAuth)
-                  ? Row(
-                      children: [
-                        Container(
-                          width: 130,
-
-                          //top: size.height / 3.5,
-                          margin: EdgeInsets.only(left: size.width / 10),
-
-                          // width: size.width / 1.5,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: ButtonSubEditProfile(
-                                color: currentTheme.currentTheme.accentColor,
-                                textColor: currentTheme
-                                    .currentTheme.scaffoldBackgroundColor,
-                                text: 'Editar',
-                                onPressed: () {
-                                  aws.isUploadImagePlant = false;
-                                  productService.product = product;
-                                  Navigator.of(context).push(
-                                      createRouteEditProduct(widget.product));
-                                }),
-                          ),
-                        ),
-                        Container(
-                          width: 130,
-                          //top: size.height / 3.5,
-                          margin:
-                              EdgeInsets.only(left: size.width / 10, right: 10),
-                          // width: size.width / 1.5,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: ButtonSubEditProfile(
-                                color: currentTheme
-                                    .currentTheme.scaffoldBackgroundColor,
-                                isSecond: true,
-                                textColor: Colors.red,
-                                text: 'Eliminar',
-                                onPressed: () {
-                                  confirmDelete(
-                                      context,
-                                      'Confirmar',
-                                      'Desea eliminar el tratamiento?',
-                                      product.id);
-                                }),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Container(),
               SizedBox(
                 height: 20.0,
               ),

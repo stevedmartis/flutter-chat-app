@@ -188,7 +188,7 @@ class __FormState extends State<_Form> {
     final _size = MediaQuery.of(context).size;
 
     return Container(
-      margin: EdgeInsets.only(top: _size.height / 25),
+      margin: EdgeInsets.only(top: _size.height / 40),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -471,7 +471,7 @@ Widget _createEmail(RegisterBloc bloc) {
                 borderRadius: BorderRadius.circular(25.0),
               ),
               hintText: '',
-              labelText: 'Email',
+              labelText: 'Email *',
               counterText: snapshot.data,
               labelStyle: TextStyle(
                   color: (currentTheme.customTheme)
@@ -514,7 +514,7 @@ Widget _createPassword(RegisterBloc bloc) {
                 borderRadius: BorderRadius.circular(25.0),
               ),
               hintText: '',
-              labelText: 'Password',
+              labelText: 'Contraseña *',
               labelStyle: TextStyle(
                   color: (currentTheme.customTheme)
                       ? Colors.white54
@@ -559,7 +559,7 @@ Widget _createUsername(RegisterBloc bloc, context) {
               //  fillColor: currentTheme.accentColor,
 
               hintText: '',
-              labelText: 'Username',
+              labelText: 'Nombre de usuario *',
               labelStyle: TextStyle(
                   color: (currentTheme.customTheme)
                       ? Colors.white54
