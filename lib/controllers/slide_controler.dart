@@ -27,9 +27,9 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
     Size _size = MediaQuery.of(context).size;
 
     const List<Color> blackGradients = [
-      Color(0xff151518),
-      Color(0xff151518),
-      Color(0xff151518),
+      Color(0xff1A1A1A),
+      Color(0xff1A1A1A),
+      Color(0xff1A1A1A),
     ];
 
     return Stack(
@@ -51,10 +51,12 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
         ),
         Container(
           margin: EdgeInsets.only(
-            left: _size.width / 2.9,
-            top: _size.height * 0.75,
+            top: _size.height / 2,
           ),
+          alignment: Alignment.center,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: _buildPageIndicator(),
           ),
         ),
@@ -62,17 +64,16 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
           height: (_isLastPage) ? 115 : 150,
         ),
         Container(
+          alignment: Alignment.center,
           padding: EdgeInsets.only(
-              top: _size.height * 0.82,
-              left: 60,
-              right: 60,
-              bottom: _size.height * 0.1),
+              top: _size.height * 0.82, bottom: _size.height * 0.1),
           child: GestureDetector(
               child:
                   roundedRectButton("Entrar!", orangeGradients, false, false),
               onTap: () => {Navigator.push(context, _createRuteLogIn())}),
         ),
         Container(
+          alignment: Alignment.center,
           padding:
               EdgeInsets.only(top: _size.height * 0.9, left: 60, right: 60),
           child: GestureDetector(

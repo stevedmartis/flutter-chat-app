@@ -982,7 +982,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       ? Expanded(
                           flex: (about.length > 0) ? 0 : 10,
                           child: Container(
-                            padding: EdgeInsets.only(left: 20),
+                            padding: EdgeInsets.only(left: size.width / 20),
                             child: GestureDetector(
                               onTap: () => {
                                 Navigator.push(context,

@@ -32,7 +32,7 @@ class OnboardingMessages extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-              fontSize: 30,
+              fontSize: _size.width / 20,
               fontWeight: FontWeight.w600,
               color: Colors.white,
             ),
@@ -46,7 +46,7 @@ class OnboardingMessages extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'GTWalsheimPro',
               color: Color(0xffffffff),
-              fontSize: 20,
+              fontSize: _size.width / 25,
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.normal,
             ),
@@ -55,22 +55,18 @@ class OnboardingMessages extends StatelessWidget {
         Center(
           child: Stack(
             children: [
-              Positioned(
-                child: Container(
-                  width: _size.width - 50,
-                  height: _size.width - 50,
-                  child: SvgPicture.asset("assets/images/intro-background.svg",
-                      semanticsLabel: 'Acme Logo'),
-                ),
+              Container(
+                width: _size.width / 1.1,
+                height: _size.width,
+                child: SvgPicture.asset("assets/images/intro-background.svg",
+                    semanticsLabel: 'Acme Logo'),
               ),
-              Positioned(
-                top: 50,
-                left: this.left,
-                child: Container(
-                  width: _size.width * width,
-                  height: _size.height * height,
-                  child: SvgPicture.asset(image, semanticsLabel: 'Acme Logo'),
-                ),
+              Container(
+                margin: EdgeInsets.only(
+                    top: _size.height / 8, left: _size.width / 7),
+                width: _size.width / 1.7,
+                height: _size.width / 2.0,
+                child: SvgPicture.asset(image, semanticsLabel: 'Acme Logo'),
               ),
             ],
           ),

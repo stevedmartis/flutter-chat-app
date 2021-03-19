@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                                 letterSpacing: -1.0,
                                 fontWeight: FontWeight.w600,
                                 color: currentTheme.accentColor,
-                                fontSize: 30),
+                                fontSize: _size.height / 20),
                           ),
                         )
                       ],
@@ -114,19 +114,18 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Container _buildCircleGoogle() {
-    //final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
     return Container(
-      alignment: Alignment.center,
       margin: EdgeInsets.only(right: 20, top: 0),
-      width: 50,
-      height: 50,
+      width: size.width / 6,
+      height: size.height / 6,
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
         child: CircleAvatar(
             child: Container(
-                width: 25,
-                height: 25,
+                width: 50,
+                height: 50,
                 child: Image.asset('assets/google_logo_icon.png')),
             backgroundColor: Colors.white),
       ),
@@ -134,14 +133,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Container _buildCircleApple() {
-    //final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
     return Container(
-      alignment: Alignment.center,
       padding: EdgeInsets.all(0.0),
       margin: EdgeInsets.only(right: 0, top: 0),
-      width: 50,
-      height: 50,
+      width: size.width / 6,
+      height: size.height / 6,
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
         child: CircleAvatar(
@@ -149,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
               child: FaIcon(
                 FontAwesomeIcons.apple,
                 color: Colors.black,
-                size: 25,
+                size: 60,
               ),
             ),
             backgroundColor: Colors.white),
@@ -248,10 +246,10 @@ class __FormState extends State<_Form> {
                     "Ingresar", orangeGradients, false, false)),
           ),
           Container(
-            padding: EdgeInsets.only(top: _size.height / 20),
+            padding: EdgeInsets.only(top: _size.height / 30),
             child: Text(
               'o accede con:',
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: Colors.grey, fontSize: _size.height / 40),
             ),
             alignment: Alignment.center,
           ),

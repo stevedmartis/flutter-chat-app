@@ -229,9 +229,9 @@ class _ProfileCardState extends State<ProfileCard> {
                 duration: Duration(milliseconds: 500),
                 child: Container(
                     //top: size.height / 3.5,
-                    padding: EdgeInsets.only(top: 35.0),
+
                     margin: EdgeInsets.only(
-                        top: size.height / 4.5,
+                        top: size.height / 10.5,
                         left: size.width / 1.8,
                         right: size.width / 20),
                     child: Align(
@@ -258,9 +258,9 @@ class _ProfileCardState extends State<ProfileCard> {
                 duration: Duration(milliseconds: 500),
                 child: Container(
                     //top: size.height / 3.5,
-                    padding: EdgeInsets.only(top: 35.0),
+                    // padding: EdgeInsets.only(top: 0.0),
                     margin: EdgeInsets.only(
-                        top: size.height / 4.5,
+                        top: size.height / 10.5,
                         left: size.width / 1.8,
                         right: size.width / 20),
                     child: Align(
@@ -299,9 +299,9 @@ class _ProfileCardState extends State<ProfileCard> {
                     duration: Duration(milliseconds: 500),
                     child: Container(
                       //top: size.height / 3.5,
-                      padding: EdgeInsets.only(top: 35.0),
+
                       margin: EdgeInsets.only(
-                          top: size.height / 4.5,
+                          top: size.height / 10.5,
                           left: size.width / 1.9,
                           right: size.width / 20),
                       child: Align(
@@ -334,9 +334,9 @@ class _ProfileCardState extends State<ProfileCard> {
                     duration: Duration(milliseconds: 500),
                     child: Container(
                       //top: size.height / 3.5,
-                      padding: EdgeInsets.only(top: 35.0),
+
                       margin: EdgeInsets.only(
-                          top: size.height / 4.5,
+                          top: size.height / 10.5,
                           left: size.width / 1.9,
                           right: size.width / 20),
                       child: Align(
@@ -371,9 +371,8 @@ class _ProfileCardState extends State<ProfileCard> {
                     duration: Duration(milliseconds: 500),
                     child: Container(
                       //top: size.height / 3.5,
-                      padding: EdgeInsets.only(top: 35.0),
                       margin: EdgeInsets.only(
-                          top: size.height / 4.5,
+                          top: size.height / 10.5,
                           left: size.width / 1.9,
                           right: size.width / 20),
                       child: Align(
@@ -406,9 +405,8 @@ class _ProfileCardState extends State<ProfileCard> {
                     duration: Duration(milliseconds: 500),
                     child: Container(
                       //top: size.height / 3.5,
-                      padding: EdgeInsets.only(top: 35.0),
                       margin: EdgeInsets.only(
-                          top: size.height / 4.5,
+                          top: size.height / 10.5,
                           left: size.width / 1.9,
                           right: size.width / 20),
                       child: Align(

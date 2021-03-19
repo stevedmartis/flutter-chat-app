@@ -78,7 +78,7 @@ class ThemeChanger with ChangeNotifier {
         cardColor: Color(0xff151518),
         brightness: Brightness.dark,
         primaryColorLight: Colors.white,
-        scaffoldBackgroundColor: Colors.black, // gummetal
+        scaffoldBackgroundColor: Color(0xff1A1A1A), // gummetal
         textTheme: TextTheme(bodyText1: TextStyle(color: Colors.white)),
       );
     } else {
