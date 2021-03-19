@@ -189,8 +189,12 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
+        height: 400.0,
+        child: Center(
+            child: CircularProgressIndicator(color: currentTheme.accentColor)));
   }
 
   Widget _buildErrorWidget(String error) {
@@ -315,6 +319,7 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                   child: Align(
                     alignment: Alignment.center,
                     child: ButtonSubEditProfile(
+                        isSecond: true,
                         color: currentTheme.currentTheme.accentColor,
                         textColor:
                             currentTheme.currentTheme.scaffoldBackgroundColor,
@@ -361,7 +366,9 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
                 return Container(
                     height: 400.0,
                     child: Center(
-                        child: CircularProgressIndicator())); // placeholder
+                        child: CircularProgressIndicator(
+                      color: currentTheme.currentTheme.accentColor,
+                    ))); // placeholder
               }
             },
           ),
@@ -590,7 +597,7 @@ class _CatalogoDetailPagePageState extends State<CatalogoDetailPage>
   }
 }
 
-Container buildCircleFavoritePlantDash(String quantity, context) {
+Container buildCircleQuantityPlantDash(String quantity, context) {
   final size = MediaQuery.of(context).size;
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
@@ -613,7 +620,7 @@ Container buildCircleFavoritePlantDash(String quantity, context) {
       ));
 }
 
-Container buildCircleFavoritePlant(String quantity, context) {
+Container buildCircleQuantityPlant(String quantity, context) {
   final size = MediaQuery.of(context).size;
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 

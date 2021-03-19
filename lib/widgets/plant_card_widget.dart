@@ -72,7 +72,8 @@ class _CardPlantState extends State<CardPlant> {
               widget.plant.name.capitalize(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: (widget.isPrincipal) ? 55 : 40,
+                  fontSize:
+                      (widget.isPrincipal) ? size.width / 5.0 : size.width / 10,
                   color: currentTheme.currentTheme.accentColor),
             ),
           ),
@@ -80,7 +81,7 @@ class _CardPlantState extends State<CardPlant> {
           CbdthcRow(
             thc: thc,
             cbd: cbd,
-            fontSize: 30,
+            fontSize: size.width / 15,
           ),
           SizedBox(height: 10.0),
           Container(
@@ -94,7 +95,9 @@ class _CardPlantState extends State<CardPlant> {
               maxLines: 4,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: (widget.isPrincipal) ? 50 : 30,
+                  fontSize: (widget.isPrincipal)
+                      ? size.width / 10
+                      : size.width / 12.5,
                   color: Colors.grey),
             ),
           ),
@@ -110,7 +113,7 @@ class _CardPlantState extends State<CardPlant> {
                     color: (currentTheme.customTheme)
                         ? Colors.white54
                         : Colors.grey,
-                    size: 40,
+                    size: size.width / 10,
                   )),
                 ),
                 SizedBox(
@@ -122,7 +125,9 @@ class _CardPlantState extends State<CardPlant> {
                     widget.plant.germinated,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: (widget.isPrincipal) ? 40 : 30,
+                        fontSize: (widget.isPrincipal)
+                            ? size.width / 10
+                            : size.width / 13,
                         color: (currentTheme.customTheme)
                             ? Colors.white54
                             : Colors.grey),

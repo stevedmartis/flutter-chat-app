@@ -80,6 +80,7 @@ class ButtonSubEditProfile extends StatelessWidget {
   final Color color;
   final Color textColor;
   final bool isSecond;
+  final bool isSub;
 
   const ButtonSubEditProfile(
       {Key key,
@@ -87,6 +88,7 @@ class ButtonSubEditProfile extends StatelessWidget {
       @required this.onPressed,
       @required this.color,
       this.isSecond = false,
+      this.isSub = false,
       this.textColor = Colors.black})
       : super(key: key);
 
@@ -94,14 +96,14 @@ class ButtonSubEditProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          primary: this.color,
-          onPrimary: this.color,
+          primary: (isSub) ? Colors.black54 : this.color,
+          onPrimary: Colors.white,
           elevation: (isSecond) ? 1 : 5,
           side: BorderSide(
               color: (isSecond) ? this.color : this.textColor, width: 5),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
-              side: BorderSide(color: this.textColor, width: 1.5))),
+              side: BorderSide(color: this.color, width: 1.5))),
       onPressed: this.onPressed,
       child: Container(
         width: double.infinity,

@@ -30,7 +30,9 @@ class _ImageCoverProductExpandedState extends State<ImageCoverProductExpanded> {
   @override
   void initState() {
     final productService = Provider.of<ProductService>(context, listen: false);
-    product = productService.product;
+    product = (productService.productProfile != null)
+        ? productService.productProfile.product
+        : productService.product;
 
     super.initState();
   }

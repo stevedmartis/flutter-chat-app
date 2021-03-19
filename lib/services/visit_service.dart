@@ -26,7 +26,7 @@ class VisitService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final urlFinal = Uri.https('${Environment.apiUrl}', '/visit/new');
+    final urlFinal = Uri.https('${Environment.apiUrl}', 'api/visit/new');
 
     final resp = await http.post(urlFinal,
         body: jsonEncode(visit),
@@ -50,7 +50,8 @@ class VisitService with ChangeNotifier {
 
     final token = await this._storage.read(key: 'token');
 
-    final urlFinal = Uri.https('${Environment.apiUrl}', '/visit/update/visit');
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', 'api/visit/update/visit');
 
     final resp = await http.post(urlFinal,
         body: jsonEncode(visit),
@@ -72,7 +73,7 @@ class VisitService with ChangeNotifier {
     final token = await this._storage.read(key: 'token');
 
     final urlFinal =
-        Uri.https('${Environment.apiUrl}', '/visit/delete/$visitId');
+        Uri.https('${Environment.apiUrl}', 'api/visit/delete/$visitId');
 
     try {
       await http.delete(urlFinal,
@@ -86,7 +87,7 @@ class VisitService with ChangeNotifier {
 
   Future<List<Visit>> getLastVisitsByUser(String userId) async {
     final urlFinal =
-        Uri.https('${Environment.apiUrl}', '/visit/visits/user/$userId');
+        Uri.https('${Environment.apiUrl}', 'api/visit/visits/user/$userId');
 
     try {
       final token = await this._storage.read(key: 'token');

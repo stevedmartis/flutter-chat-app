@@ -104,7 +104,7 @@ class NewRoomScreen extends StatelessWidget {
             ),
             ButtonAccent(
                 color: currentTheme.accentColor,
-                text: 'Done',
+                text: 'Guardar',
                 onPressed: () => {handleadd}),
           ],
         ),

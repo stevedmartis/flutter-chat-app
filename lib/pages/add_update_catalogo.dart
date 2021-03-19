@@ -363,11 +363,11 @@ class _AddUpdateCatalogoPageState extends State<AddUpdateCatalogoPage> {
           padding: const EdgeInsets.all(10.0),
           child: Center(
             child: Text(
-              'Done',
+              (widget.isEdit) ? 'Guardar' : 'Crear',
               style: TextStyle(
                   color: (isControllerChange && !errorRequired)
                       ? currentTheme.accentColor
-                      : Colors.white.withOpacity(0.30),
+                      : Colors.grey,
                   fontSize: 18),
             ),
           ),

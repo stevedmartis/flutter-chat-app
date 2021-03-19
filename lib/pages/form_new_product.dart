@@ -235,7 +235,7 @@ class FormNewProductPageState extends State<FormNewProductPage> {
               padding: const EdgeInsets.all(10.0),
               child: Center(
                 child: Text(
-                  'Done',
+                  'Crear',
                   style: TextStyle(
                       color: isControllerChange && !isInvalid
                           ? currentTheme.accentColor

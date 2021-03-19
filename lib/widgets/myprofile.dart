@@ -14,6 +14,7 @@ import 'package:chat/pages/chat_page.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/product_detail.dart';
 import 'package:chat/pages/profile_page2.dart';
+import 'package:chat/pages/recipe_image_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/catalogos_provider.dart';
 import 'package:chat/providers/products_provider.dart';
@@ -255,13 +256,14 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
-    final size = MediaQuery.of(context).size;
 
     final authService = Provider.of<AuthService>(context, listen: false);
 
+    final isUserAuth = authService.profile.user.uid == widget.profile.user.uid;
     setState(() {
-      profile =
-          (authService.profile != null) ? authService.profile : widget.profile;
+      profile = (widget.isUserAuth && isUserAuth)
+          ? authService.profile
+          : widget.profile;
     });
 
     //final username = widget.profile.user.username.toLowerCase();
@@ -293,7 +295,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       child: CircleAvatar(
                           child: IconButton(
                               icon: Icon(Icons.arrow_back_ios,
-                                  size: size.width / 20,
+                                  size: 20,
                                   color: (_showTitle)
                                       ? currentTheme.currentTheme.accentColor
                                       : (currentTheme.customTheme
@@ -346,8 +348,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                               child: CircleAvatar(
                                   child: Center(
                                     child: IconButton(
-                                      icon: FaIcon(FontAwesomeIcons.cog,
-                                          size: 25,
+                                      icon: FaIcon(FontAwesomeIcons.ellipsisV,
+                                          size: 20,
                                           color: (_showTitle)
                                               ? currentTheme
                                                   .currentTheme.accentColor
@@ -616,10 +618,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                             )),
                       ); // image is ready
               } else {
-                return Container(
-                    height: 400.0,
-                    child: Center(
-                        child: CircularProgressIndicator())); // placeholder
+                return _buildLoadingWidget(); // placeholder
               }
             },
           ),
@@ -664,9 +663,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
             itemBuilder: (BuildContext ctxt, int index) {
               final product = products[index];
 
-              final isUserAuth =
-                  (product.user == profile.user.uid) ? true : false;
-
               return Stack(
                 children: [
                   Container(
@@ -694,7 +690,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                         ),
                         openBuilder: (_, closeContainer) {
                           return ProductDetailPage(
-                              product: product, isUserAuth: isUserAuth);
+                              product: product, isUserAuth: widget.isUserAuth);
                         },
                         closedBuilder: (_, openContainer) {
                           return Stack(children: [
@@ -861,12 +857,23 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     name = profile.name;
 
     final nameFinal = name.isEmpty ? "" : name.capitalize();
+    //var imageRecipe = profile.imageRecipe;
+    // var parts = imageRecipe.split('image_picker');
+    //var nameImageRecipe = parts.sublist(1).join('image_picker').trim();
 
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: (about.length > 80) ? 150.0 : 120.0,
-          maxHeight: (about.length > 80) ? 150.0 : 120.0,
+          minHeight: (about != null)
+              ? (about.length > 80)
+                  ? 180.0
+                  : 100.0
+              : null,
+          maxHeight: (about != null)
+              ? (about.length > 80)
+                  ? 180.0
+                  : 100.0
+              : null,
           child: FadeIn(
             child: Container(
               padding: EdgeInsets.only(top: 10.0),
@@ -956,16 +963,57 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                       : Colors.grey))),
                     ),
                   Expanded(
+                    flex: 4,
                     child: Container(
                         width: size.width - 50,
-                        padding:
-                            EdgeInsets.only(left: size.width / 20.0, right: 10),
+                        padding: EdgeInsets.only(
+                          left: size.width / 20.0,
+                          right: 10,
+                        ),
                         //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
-                        child: (about.length > 0)
-                            ? convertHashtag(about, context)
-                            : Container()),
+                        child: (about != null)
+                            ? (about.length > 0)
+                                ? convertHashtag(about, context)
+                                : Container()
+                            : null),
                   ),
+                  (widget.isUserAuth)
+                      ? Expanded(
+                          flex: (about.length > 0) ? 0 : 10,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 20),
+                            child: GestureDetector(
+                              onTap: () => {
+                                Navigator.push(context,
+                                    createRouteRecipeViewImage(widget.profile))
+                              },
+                              child: Container(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    FaIcon(
+                                      FontAwesomeIcons.notesMedical,
+                                      size: 20,
+                                      color:
+                                          currentTheme.currentTheme.accentColor,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Mi receta',
+                                      style: TextStyle(
+                                          color: currentTheme
+                                              .currentTheme.accentColor),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container()
                 ],
               ),
             ),
@@ -1035,8 +1083,14 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
+        height: 400.0,
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.accentColor,
+        )));
   }
 
   Widget _buildErrorWidget(String error) {
@@ -1048,6 +1102,26 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
       ],
     ));
   }
+}
+
+Route createRouteRecipeViewImage(Profiles item) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        RecipeImagePage(profile: item),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+    transitionDuration: Duration(milliseconds: 400),
+  );
 }
 
 RichText convertHashtag(String text, context) {

@@ -84,7 +84,6 @@ class _CardProductState extends State<CardProductProfile> {
       crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-        SizedBox(height: 5.0),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
           child: Column(
@@ -371,7 +370,7 @@ class CbdthcRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
+      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
       child: Row(
         children: <Widget>[
           Padding(
@@ -381,7 +380,7 @@ class CbdthcRow extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Color(0xffF12937E),
                 //color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.circular(5.0),
+                borderRadius: BorderRadius.circular(10.0),
               ),
               child: Text(
                 "THC: $thc %",
@@ -402,7 +401,7 @@ class CbdthcRow extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.blue,
                 //color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.circular(5.0),
+                borderRadius: BorderRadius.circular(10.0),
               ),
               child: Text(
                 "CBD: $cbd %",

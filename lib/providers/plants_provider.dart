@@ -63,7 +63,7 @@ class PlantsApiProvider {
 
   Future<Plant> getPlant(String roomId) async {
     final urlFinal =
-        Uri.https('${Environment.apiUrl}', '/api/api/plant/plant/$roomId');
+        Uri.https('${Environment.apiUrl}', '/api/plant/plant/$roomId');
 
     final token = await this._storage.read(key: 'token');
 
@@ -83,12 +83,13 @@ class PlantsApiProvider {
     final token = await this._storage.read(key: 'token');
 
     final urlFinal =
-        Uri.https('${Environment.apiUrl}', '/api/api/plant/delete/$plantId');
+        Uri.https('${Environment.apiUrl}', '/api/plant/delete/$plantId');
 
     try {
-      await http.delete(urlFinal,
+      final res = await http.delete(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
+      print(res);
       return true;
     } catch (e) {
       return false;

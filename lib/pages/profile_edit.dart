@@ -620,13 +620,6 @@ class EditProfilePageState extends State<EditProfilePage> {
 
     final profile = authService.profile;
 
-    print('================');
-    print('name: ${bloc.name}');
-    print('Password: ${bloc.password}');
-    print('email: ${bloc.email}');
-    print('username: ${bloc.username}');
-    print('================');
-
     final username =
         (bloc.username == null) ? profile.user.username : bloc.username.trim();
 

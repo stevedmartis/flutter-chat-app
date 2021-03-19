@@ -24,13 +24,9 @@ class PrincipalPage extends StatefulWidget {
 }
 
 class _PrincipalPageState extends State<PrincipalPage> {
-  ScrollController _hideBottomNavController;
-
   SocketService socketService;
   final notificationService = new NotificationService();
   AuthService authService;
-
-  var _isVisible;
 
   Profiles profile;
 
@@ -46,7 +42,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
 
     this.socketService.socket?.on('principal-message', _listenMessage);
 
-    this.bottomControll();
     super.initState();
   }
 
@@ -69,8 +64,8 @@ class _PrincipalPageState extends State<PrincipalPage> {
     notifiModel.number = numberMessages;
 
     if (numberMessages >= 2) {
-      final controller = notifiModel.bounceController;
-      controller.forward(from: 0.0);
+      final controller2 = notifiModel.bounceController;
+      controller2.forward(from: 0.0);
     }
   }
 
@@ -78,7 +73,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
   void dispose() {
     // this.socketService.socket.off('principal-message');
     super.dispose();
-    _hideBottomNavController.dispose();
   }
 
   void _listenMessage(dynamic payload) {
@@ -93,28 +87,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
     }
   }
 
-  bottomControll() {
-    _isVisible = true;
-    _hideBottomNavController = ScrollController();
-    _hideBottomNavController.addListener(
-      () {
-        if (_hideBottomNavController.position.userScrollDirection ==
-            ScrollDirection.reverse) {
-          if (_isVisible)
-            setState(() {
-              _isVisible = false;
-            });
-        }
-        if (_hideBottomNavController.position.userScrollDirection ==
-            ScrollDirection.forward) {
-          if (!_isVisible)
-            setState(() {
-              _isVisible = true;
-            });
-        }
-      },
-    );
-  }
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +95,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
 
     final currentTheme = Provider.of<ThemeChanger>(context);
     final appTheme = Provider.of<ThemeChanger>(context);
+    final authService = Provider.of<AuthService>(context);
 
     var brightness = MediaQuery.of(context).platformBrightness;
     bool darkModeOn = brightness == Brightness.dark;
@@ -151,7 +125,8 @@ class _PrincipalPageState extends State<PrincipalPage> {
       ),
 
       //CollapsingList(_hideBottomNavController),
-      bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+      bottomNavigationBar:
+          BottomNavigation(isVisible: authService.bottomVisible),
       // floatingActionButton: ButtomFloating(),
     ));
   }

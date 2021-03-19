@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(
-                        top: _size.height / 1.7,
+                        top: _size.height / 1.6,
                       ),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -115,7 +115,6 @@ class _LoginPageState extends State<LoginPage> {
 
   Container _buildCircleGoogle() {
     //final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
     return Container(
       alignment: Alignment.center,
@@ -129,14 +128,13 @@ class _LoginPageState extends State<LoginPage> {
                 width: 25,
                 height: 25,
                 child: Image.asset('assets/google_logo_icon.png')),
-            backgroundColor: currentTheme.accentColor),
+            backgroundColor: Colors.white),
       ),
     );
   }
 
   Container _buildCircleApple() {
     //final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Container(
       alignment: Alignment.center,
@@ -154,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                 size: 25,
               ),
             ),
-            backgroundColor: currentTheme.currentTheme.accentColor),
+            backgroundColor: Colors.white),
       ),
     );
   }
@@ -165,7 +163,6 @@ class _LoginPageState extends State<LoginPage> {
 
     final signInGoogleOk = await authService.appleSignIn();
 
-    print(signInGoogleOk);
     if (signInGoogleOk) {
       socketService.connect();
       Navigator.push(context, _createRute());
@@ -182,7 +179,6 @@ class _LoginPageState extends State<LoginPage> {
     final authService = Provider.of<AuthService>(context, listen: false);
     final signInGoogleOk = await authService.signInWitchGoogle();
 
-    print(signInGoogleOk);
     if (signInGoogleOk) {
       socketService.connect();
       Navigator.push(context, _createRute());
@@ -252,7 +248,7 @@ class __FormState extends State<_Form> {
                     "Ingresar", orangeGradients, false, false)),
           ),
           Container(
-            padding: EdgeInsets.only(top: _size.height / 10),
+            padding: EdgeInsets.only(top: _size.height / 20),
             child: Text(
               'o accede con:',
               style: TextStyle(color: Colors.grey),
@@ -371,11 +367,6 @@ class __FormState extends State<_Form> {
   _login(LoginBloc bloc, BuildContext context) async {
     final authService = Provider.of<AuthService>(context, listen: false);
     final socketService = Provider.of<SocketService>(context, listen: false);
-
-    print('================');
-    print('Email: ${bloc.email}');
-    print('Password: ${bloc.password}');
-    print('================');
 
     final loginOk =
         await authService.login(bloc.email.trim(), bloc.password.trim());

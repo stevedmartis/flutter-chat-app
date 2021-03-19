@@ -37,8 +37,9 @@ class _CardVisitState extends State<CardVisit> {
       child: Stack(
         children: [
           Container(
+              color: Colors.black,
               width: size.width,
-              height: 170.0,
+              height: size.height / 4.5,
               child: ColorFiltered(
                 colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.50), BlendMode.dstATop),

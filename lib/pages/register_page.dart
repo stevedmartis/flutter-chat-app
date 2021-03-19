@@ -42,7 +42,7 @@ class RegisterPage extends StatelessWidget {
                 children: <Widget>[
                   WavyHeader(),
                   Container(
-                    margin: EdgeInsets.only(top: _size.height / 5),
+                    margin: EdgeInsets.only(top: _size.height / 6),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +110,6 @@ class RegisterPage extends StatelessWidget {
 
 Container _buildCircleGoogle(context) {
   //final size = MediaQuery.of(context).size;
-  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
   return Container(
     alignment: Alignment.center,
@@ -124,15 +123,12 @@ Container _buildCircleGoogle(context) {
               width: 25,
               height: 25,
               child: Image.asset('assets/google_logo_icon.png')),
-          backgroundColor: currentTheme.accentColor),
+          backgroundColor: Colors.white),
     ),
   );
 }
 
 Container _buildCircleApple(context) {
-  //final size = MediaQuery.of(context).size;
-  final currentTheme = Provider.of<ThemeChanger>(context);
-
   return Container(
     alignment: Alignment.center,
     padding: EdgeInsets.all(0.0),
@@ -149,7 +145,7 @@ Container _buildCircleApple(context) {
               size: 25,
             ),
           ),
-          backgroundColor: currentTheme.currentTheme.accentColor),
+          backgroundColor: Colors.white),
     ),
   );
 }
@@ -173,7 +169,7 @@ class __FormState extends State<_Form> {
     final _size = MediaQuery.of(context).size;
 
     return Container(
-      margin: EdgeInsets.only(top: _size.height / 10),
+      margin: EdgeInsets.only(top: _size.height / 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -192,7 +188,7 @@ class __FormState extends State<_Form> {
               child: _createPassword(bloc)),
           _createButton(bloc),
           Container(
-            padding: EdgeInsets.only(top: _size.height / 20),
+            padding: EdgeInsets.only(top: _size.height / 30),
             child: Text(
               'o accede con:',
               style: TextStyle(color: Colors.grey),
@@ -519,7 +515,6 @@ _signInGoogle(BuildContext context) async {
 
   final signInGoogleOk = await authService.signInWitchGoogle();
 
-  print(signInGoogleOk);
   if (signInGoogleOk) {
     socketService.connect();
     Navigator.push(context, _createRute());
@@ -535,7 +530,6 @@ _signIApple(BuildContext context) async {
 
   final signInGoogleOk = await authService.appleSignIn();
 
-  print(signInGoogleOk);
   if (signInGoogleOk) {
     socketService.connect();
     Navigator.push(context, _createRute());

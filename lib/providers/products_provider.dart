@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:chat/global/environment.dart';
+import 'package:chat/models/favorite_response.dart';
 import 'package:chat/models/product_response.dart';
 import 'package:chat/models/products.dart';
 import 'package:chat/models/products_profiles_response.dart';
@@ -75,6 +78,32 @@ class ProductsApiProvider {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  Future<FavoriteResponse> addUpdateFavorite(
+      String productId, String userId) async {
+    // this.authenticated = true;
+
+    final data = {'product': productId, 'user': userId};
+
+    final token = await this._storage.read(key: 'token');
+
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/favorite/update/');
+
+    final resp = await http.post(urlFinal,
+        body: jsonEncode(data),
+        headers: {'Content-Type': 'application/json', 'x-token': token});
+
+    if (resp.statusCode == 200) {
+      // final roomResponse = roomsResponseFromJson(resp.body);
+      final favoriteResponse = favoriteResponseFromJson(resp.body);
+      // this.rooms = roomResponse.rooms;
+
+      return favoriteResponse;
+    } else {
+      return FavoriteResponse.withError("");
     }
   }
 }

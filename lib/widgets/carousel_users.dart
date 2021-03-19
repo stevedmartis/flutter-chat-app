@@ -408,6 +408,7 @@ Route createRouteProfileSelect(Profiles profile) {
     pageBuilder: (context, animation, secondaryAnimation) => MyProfile(
       title: '',
       profile: profile,
+      isUserAuth: false,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);

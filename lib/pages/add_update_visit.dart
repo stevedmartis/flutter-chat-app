@@ -49,7 +49,7 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
 
   var gramsCtrl = new TextEditingController();
 
-  var degreesCtrl = new MaskedTextController(mask: '0.0');
+  var degreesCtrl = new MaskedTextController(mask: '00.0');
 
   var mlCtrl = new MaskedTextController(mask: '0.0');
 
@@ -415,8 +415,12 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
+        height: 400.0,
+        child: Center(
+            child: CircularProgressIndicator(color: currentTheme.accentColor)));
   }
 
   Widget _buildErrorWidget(String error) {
@@ -1051,11 +1055,11 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
           padding: const EdgeInsets.all(10.0),
           child: Center(
             child: Text(
-              'Done',
+              (widget.isEdit) ? 'Guardar' : 'Crear',
               style: TextStyle(
                   color: (isControllerChange) || isUpload
                       ? currentTheme.accentColor
-                      : Colors.grey.withOpacity(0.60),
+                      : Colors.grey,
                   fontSize: 18),
             ),
           ),

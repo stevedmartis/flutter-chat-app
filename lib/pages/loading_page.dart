@@ -1,4 +1,5 @@
 import 'package:chat/pages/onBoarding_page.dart';
+import 'package:chat/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,16 +16,22 @@ class LoadingPage extends StatelessWidget {
         future: checkLoginState(context),
         builder: (context, snapshot) {
           return Center(
-            child: _buildLoadingWidget(),
+            child: _buildLoadingWidget(context),
           );
         },
       ),
     );
   }
 
-  Widget _buildLoadingWidget() {
+  Widget _buildLoadingWidget(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
+        height: 400.0,
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.accentColor,
+        )));
   }
 
   Future checkLoginState(BuildContext context) async {

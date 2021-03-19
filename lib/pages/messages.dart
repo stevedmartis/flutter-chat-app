@@ -143,15 +143,18 @@ class _MessagesPageState extends State<MessagesPage>
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            EmojiText(
-                                text: message.message,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: (currentTheme.customTheme)
-                                      ? Colors.white54
-                                      : Colors.grey,
-                                ),
-                                emojiFontMultiplier: 1.5),
+                            Container(
+                              width: 100,
+                              child: EmojiText(
+                                  text: message.message,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: (currentTheme.customTheme)
+                                        ? Colors.white54
+                                        : Colors.grey,
+                                  ),
+                                  emojiFontMultiplier: 1.5),
+                            ),
                             SizedBox(
                               width: 10.0,
                             ),
@@ -202,8 +205,14 @@ class _MessagesPageState extends State<MessagesPage>
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
+        height: 400.0,
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.currentTheme.accentColor,
+        )));
   }
 
   Route createRouteChat() {

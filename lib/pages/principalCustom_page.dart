@@ -31,6 +31,7 @@ import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:chat/widgets/visit_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'add_update_visit.dart';
@@ -64,6 +65,8 @@ class _CollapsingListState extends State<CollapsingList>
   List<Plant> plants = [];
   List<ProductProfile> productsProfiles = [];
 
+  var _isVisible;
+
   Profiles profile;
 
   void setStateIfMounted(f) {
@@ -86,8 +89,35 @@ class _CollapsingListState extends State<CollapsingList>
 
     this._chargeLastProducts();
 
+    this.bottomControll();
+
+    _isVisible = true;
+    _hideBottomNavController = ScrollController();
+    _hideBottomNavController.addListener(
+      () {
+        if (_hideBottomNavController.position.userScrollDirection ==
+            ScrollDirection.reverse) {
+          if (_isVisible)
+            setState(() {
+              _isVisible = false;
+              authService.bottomVisible = false;
+            });
+        }
+        if (_hideBottomNavController.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          if (!_isVisible)
+            setState(() {
+              _isVisible = true;
+              authService.bottomVisible = true;
+            });
+        }
+      },
+    );
+
     super.initState();
   }
+
+  bottomControll() {}
 
   _chargeClubesProfileUsers() async {
     this.profiles = await usuarioService.getProfilesLastUsers();
@@ -120,12 +150,14 @@ class _CollapsingListState extends State<CollapsingList>
   @override
   void dispose() {
     _tabController.dispose();
-
+    _hideBottomNavController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return
         // room = snapshot.data;
 
@@ -136,15 +168,16 @@ class _CollapsingListState extends State<CollapsingList>
       slivers: <Widget>[
         makeHeaderCustom(),
         CupertinoSliverRefreshControl(onRefresh: () => pullToRefreshData()),
-        makeHeaderSpacer(context),
+        makeHeaderSpacerShort(context),
         SliverFixedExtentList(
-          itemExtent: 170.0,
+          itemExtent: size.height / 4,
           delegate: SliverChildListDelegate(
             [FadeIn(child: BannerSlide())],
           ),
         ),
-        makeHeaderSpacer(context),
+        makeHeaderSpacerShort(context),
         makeListClubes(context),
+        makeHeaderSpacerShort(context),
         makelistCarouselMyPlants(context),
         makeListCarouselMyVisits(context),
         makeListProducts(context)
@@ -167,10 +200,7 @@ class _CollapsingListState extends State<CollapsingList>
                     child: CarouselUsersSliderCustom(
                         profiles: snapshot.data)); // image is ready
               } else {
-                return Container(
-                    height: 400.0,
-                    child: Center(
-                        child: CircularProgressIndicator())); // placeholder
+                return Container(); // placeholder
               }
             },
           ),
@@ -220,7 +250,7 @@ class _CollapsingListState extends State<CollapsingList>
               } else if (snapshot.hasError) {
                 return _buildErrorWidget(snapshot.error);
               } else {
-                return _buildLoadingWidget();
+                return _buildLoadingWidget(context);
               }
             },
           ),
@@ -270,7 +300,7 @@ class _CollapsingListState extends State<CollapsingList>
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
             } else {
-              return _buildLoadingWidget();
+              return _buildLoadingWidget(context);
             }
           },
         )),
@@ -308,12 +338,14 @@ class _CollapsingListState extends State<CollapsingList>
                       AsyncSnapshot<ProductsProfilesResponse> snapshot) {
                     if (snapshot.hasData) {
                       productsProfiles = snapshot.data.productsProfiles;
-                      return _buildWidgetProducts(
-                          productsProfiles, context, profile);
+                      return (productsProfiles.length > 0)
+                          ? _buildWidgetProducts(
+                              productsProfiles, context, profile)
+                          : Container();
                     } else if (snapshot.hasError) {
                       return _buildErrorWidget(snapshot.error);
                     } else {
-                      return _buildLoadingWidget();
+                      return _buildLoadingWidget(context);
                     }
                   },
                 )),
@@ -331,6 +363,20 @@ class _CollapsingListState extends State<CollapsingList>
       delegate: SliverAppBarDelegate(
           minHeight: 40,
           maxHeight: 40,
+          child: Row(
+            children: [Container()],
+          )),
+    );
+  }
+
+  SliverPersistentHeader makeHeaderSpacerShort(context) {
+    //   final roomModel = Provider.of<Room>(context);
+
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+          minHeight: 20,
+          maxHeight: 20,
           child: Row(
             children: [Container()],
           )),
@@ -413,7 +459,7 @@ SliverPersistentHeader makeProductsCard(context) {
           } else if (snapshot.hasError) {
             return _buildErrorWidget(snapshot.error);
           } else {
-            return _buildLoadingWidget();
+            return _buildLoadingWidget(context);
           }
         },
       ),
@@ -421,9 +467,15 @@ SliverPersistentHeader makeProductsCard(context) {
   );
 }
 
-Widget _buildLoadingWidget() {
+Widget _buildLoadingWidget(context) {
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
   return Container(
-      height: 400.0, child: Center(child: CircularProgressIndicator()));
+      height: 400.0,
+      child: Center(
+          child: CircularProgressIndicator(
+        color: currentTheme.accentColor,
+      )));
 }
 
 Widget _buildErrorWidget(String error) {
@@ -565,13 +617,14 @@ Widget _buildWidgetPlants(List<Plant> plants, context) {
                   },
                   closedBuilder: (_, openContainer) {
                     return Stack(
+                      fit: StackFit.expand,
                       children: [
                         Container(
                           child: CardPlantPrincipal(
                             plant: plant,
                           ),
                         ),
-                        buildCircleFavoritePlant(plant.quantity, context),
+                        buildCircleQuantityPlant(plant.quantity, context),
                       ],
                     );
                   }),
@@ -703,15 +756,34 @@ Widget _buildWidgetProducts(
   );
 }
 
-final List<String> imgList = [
-  'assets/banners/banner_weed4.jpg',
-  'assets/banners/banner_weed1.jpg',
-  'assets/banners/banner_weed2.jpg',
-  'assets/banners/banner_weed5.png',
-  'assets/banners/banner_weed3.jpg',
+class Banners {
+  final int id;
+  final String title;
+  final String subTitle;
+  final String url;
+
+  const Banners(this.id, this.url, this.title, this.subTitle);
+}
+
+const List<Banners> getBanners = <Banners>[
+  Banners(
+      1,
+      'assets/banners/10-2.png',
+      'Cultivo Medicinal Seguro y Transparente.',
+      'dispensarios, pacientes y tratamientos'),
+  Banners(
+      2,
+      'assets/banners/ba8.jpeg',
+      'Cultiva mejor! registra tus Plantas y Visitas',
+      'Visitas y Tratamientos'),
+  Banners(
+      3,
+      'assets/banners/a10.jpeg',
+      'Suscribete a Clubs y encuentra tu Tratamientos',
+      'Suscripciones en línea para pacientes con receta médica'),
 ];
 
-final List<Widget> imageSliders = imgList
+final List<Widget> imageSliders = getBanners
     .map((item) => Container(
           child: Container(
             margin: EdgeInsets.all(5.0),
@@ -720,7 +792,7 @@ final List<Widget> imageSliders = imgList
                 child: Stack(
                   children: <Widget>[
                     Image.asset(
-                      item,
+                      item.url,
                       height: 1000.0,
                       width: 1000.0,
                       fit: BoxFit.cover,
@@ -736,17 +808,17 @@ final List<Widget> imageSliders = imgList
                               Color.fromARGB(200, 0, 0, 0),
                               Color.fromARGB(0, 0, 0, 0)
                             ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
                           ),
                         ),
                         padding: EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 20.0),
                         child: Text(
-                          '',
+                          item.title,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 20.0,
+                            fontSize: 15.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

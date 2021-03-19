@@ -303,7 +303,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
         ),
         title: (widget.isEdit)
             ? Text(
-                'Edit room',
+                'Editar room',
                 style: TextStyle(
                     color: (currentTheme.customTheme)
                         ? Colors.white
@@ -403,7 +403,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                                                   .currentTheme.accentColor,
                                               width: 2.0),
                                         ),
-                                        labelText: 'Hora apagada *',
+                                        labelText: 'Hora encendido *',
 
                                         prefixIcon: Icon(Icons.wb_incandescent,
                                             color: (currentTheme.customTheme)
@@ -455,7 +455,7 @@ class AddRoomPagePageState extends State<AddRoomPage> {
                                                   .currentTheme.accentColor,
                                               width: 2.0),
                                         ),
-                                        labelText: 'Hora encendida *',
+                                        labelText: 'Hora apagado *',
 
                                         prefixIcon: Icon(Icons.bedtime,
                                             color: (currentTheme.customTheme)
@@ -494,8 +494,10 @@ class AddRoomPagePageState extends State<AddRoomPage> {
     return Container(
         padding: EdgeInsets.all(10),
         height: 200.0,
-        color: currentTheme.currentTheme.accentColor,
-        child: Center(child: CircularProgressIndicator()));
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.currentTheme.accentColor,
+        )));
   }
 
   Widget _createName(RoomBloc bloc) {
@@ -850,11 +852,11 @@ class AddRoomPagePageState extends State<AddRoomPage> {
               padding: const EdgeInsets.all(10.0),
               child: Center(
                 child: Text(
-                  'Done',
+                  (widget.isEdit) ? 'Guardar' : 'Crear',
                   style: TextStyle(
                       color: (isControllerChange && !errorRequired)
                           ? currentTheme.accentColor
-                          : Colors.white.withOpacity(0.30),
+                          : Colors.grey,
                       fontSize: 18),
                 ),
               ),

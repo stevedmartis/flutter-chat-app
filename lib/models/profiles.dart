@@ -91,6 +91,7 @@ class Profiles {
     }
   }
 
+//https://images-cdn-br.s3-sa-east-1.amazonaws.com/default_banner.jpeg
   getHeaderImg() {
     if (imageHeader == "") {
       var imageDefault =

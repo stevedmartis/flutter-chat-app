@@ -11,7 +11,6 @@ import 'package:chat/pages/profile_page.dart';
 
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/aws_service.dart';
-import 'package:chat/services/plant_services.dart';
 import 'package:chat/services/product_services.dart';
 
 import 'package:chat/theme/theme.dart';
@@ -76,7 +75,11 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
   @override
   void initState() {
     final productService = Provider.of<ProductService>(context, listen: false);
-    product = (widget.isEdit) ? productService.product : widget.product;
+    product = (widget.isEdit)
+        ? (productService.productProfile != null)
+            ? productService.productProfile.product
+            : productService.product
+        : widget.product;
 
     final authService = Provider.of<AuthService>(context, listen: false);
 
@@ -184,9 +187,11 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
             iconSize: 30,
             onPressed: () {
               final plantService =
-                  Provider.of<PlantService>(context, listen: false);
+                  Provider.of<ProductService>(context, listen: false);
 
-              plantService.plant = null;
+              plantService.product = null;
+
+              plantService.productProfile = null;
 
               //  Navigator.pushReplacement(context, createRouteProfile()),
               Navigator.pop(context);
@@ -343,8 +348,6 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                                       color: Colors.amber,
                                     ),
                               onRatingUpdate: (rating) {
-                                print(rating);
-
                                 setState(() {
                                   ratingActual = rating;
 
@@ -370,8 +373,14 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
+        height: 400.0,
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.accentColor,
+        )));
   }
 
   Widget _buildErrorWidget(String error) {
@@ -621,11 +630,11 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
               padding: const EdgeInsets.all(10.0),
               child: Center(
                 child: Text(
-                  'Done',
+                  (widget.isEdit) ? 'Guardar' : 'Crear',
                   style: TextStyle(
                       color: (isControllerChange && !errorRequired)
                           ? currentTheme.accentColor
-                          : Colors.grey.withOpacity(0.60),
+                          : Colors.grey,
                       fontSize: 18),
                 ),
               ),
@@ -680,7 +689,11 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
     if (createProductResp != null) {
       if (createProductResp.ok) {
         // widget.plants.add(createPlantResp.plant);
-        productService.product = createProductResp.product;
+
+        (productService.productProfile != null)
+            ? productService.productProfile.product = createProductResp.product
+            : productService.product = createProductResp.product;
+
         // productBloc.getPlant(createPlantResp.plant);
 
         setState(() {
@@ -728,7 +741,9 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
       name: name,
       description: description,
       ratingInit: ratingActualString,
-      coverImage: productService.product.coverImage,
+      coverImage: (productService.productProfile != null)
+          ? productService.productProfile.product.coverImage
+          : productService.product.coverImage,
       id: widget.product.id,
       thc: thc,
       cbd: cbd,
@@ -746,8 +761,10 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
           setState(() {
             loading = false;
             awsService.isUploadImageProduct = true;
-            productService.product = editProductRes.product;
-            productService.productProfile.product = editProductRes.product;
+
+            (productService.productProfile != null)
+                ? productService.productProfile.product = editProductRes.product
+                : productService.product = editProductRes.product;
           });
           // room = editRoomRes.room;
 

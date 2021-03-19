@@ -459,14 +459,16 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Center(
-                child: Text(
-                  'Next',
-                  style: TextStyle(
-                      color: (isControllerChange && !errorRequired)
-                          ? currentTheme.accentColor
-                          : Colors.white.withOpacity(0.30),
-                      fontSize: 18),
-                ),
+                child: (!loading)
+                    ? Text(
+                        (widget.isEdit) ? 'Guardar' : 'Crear',
+                        style: TextStyle(
+                            color: (isControllerChange && !errorRequired)
+                                ? currentTheme.accentColor
+                                : Colors.grey,
+                            fontSize: 18),
+                      )
+                    : _buildLoadingWidget(),
               ),
             ),
             onTap: isControllerChange && !errorRequired && !loading
@@ -480,6 +482,16 @@ class AddUpdateLightPageState extends State<AddUpdateLightPage> {
                 : null);
       },
     );
+  }
+
+  Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+    return Container(
+        padding: EdgeInsets.only(right: 10),
+        height: 400.0,
+        child: Center(
+            child: CircularProgressIndicator(color: currentTheme.accentColor)));
   }
 
   _createLight(LightBloc bloc) async {

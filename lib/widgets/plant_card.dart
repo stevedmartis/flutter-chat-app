@@ -62,7 +62,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
     final cbd = (widget.plant.cbd.isEmpty) ? '0' : widget.plant.cbd;
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,14 +72,14 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
               widget.plant.name.capitalize(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: size.height / 30,
                   color: currentTheme.currentTheme.accentColor),
             ),
           ),
           CbdthcRow(
             thc: thc,
             cbd: cbd,
-            fontSize: 13,
+            fontSize: size.width / 30,
           ),
           Container(
             width: size.width / 2.0,
@@ -91,7 +91,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
               maxLines: 3,
               style: TextStyle(
                   fontWeight: FontWeight.normal,
-                  fontSize: 18,
+                  fontSize: size.height / 40,
                   color: Colors.grey),
             ),
           ),
@@ -104,7 +104,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
                   FontAwesomeIcons.seedling,
                   color:
                       (currentTheme.customTheme) ? Colors.white54 : Colors.grey,
-                  size: 18,
+                  size: size.height / 30,
                 )),
                 SizedBox(
                   width: 5.0,
@@ -115,7 +115,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
                     widget.plant.germinated,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                        fontSize: size.height / 40,
                         color: (currentTheme.customTheme)
                             ? Colors.white54
                             : Colors.grey),

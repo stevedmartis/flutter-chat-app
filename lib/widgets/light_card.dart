@@ -48,7 +48,7 @@ class _CardLightState extends State<CardLight> {
 
   Widget airItem() {
     final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
     final watts = widget.light.watts;
     final kelvin = widget.light.kelvin;
     return Container(
@@ -61,13 +61,13 @@ class _CardLightState extends State<CardLight> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text(
                 widget.light.name.capitalize(),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
-                    color: currentTheme.accentColor),
+                    color: currentTheme.currentTheme.accentColor),
               ),
             ),
             // CbdthcRow(thc: thc, cbd: cbd),
@@ -75,7 +75,9 @@ class _CardLightState extends State<CardLight> {
               height: 5,
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
               width: size.width / 1.5,
               child: Text(
                 (widget.light.description.length > 0)
@@ -103,9 +105,10 @@ class _CardLightState extends State<CardLight> {
                   Text(
                     'Watts: ',
                     style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white54,
-                    ),
+                        fontSize: 12,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54),
                   ),
                   SizedBox(
                     width: 5.0,
@@ -115,9 +118,11 @@ class _CardLightState extends State<CardLight> {
                   Text(
                     ' $watts',
                     style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.white,
-                    ),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54),
                   ),
                   SizedBox(
                     width: 10.0,
@@ -125,9 +130,10 @@ class _CardLightState extends State<CardLight> {
                   Text(
                     'Kelvin: ',
                     style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white54,
-                    ),
+                        fontSize: 12,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54),
                   ),
                   SizedBox(
                     width: 5.0,
@@ -137,9 +143,11 @@ class _CardLightState extends State<CardLight> {
                   Text(
                     ' $kelvin',
                     style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.white,
-                    ),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: (currentTheme.customTheme)
+                            ? Colors.white54
+                            : Colors.black54),
                   ),
                 ],
               ),
@@ -153,7 +161,7 @@ class _CardLightState extends State<CardLight> {
               margin: EdgeInsets.only(right: 10),
               child: Icon(
                 Icons.chevron_right,
-                color: currentTheme.accentColor,
+                color: currentTheme.currentTheme.accentColor,
                 size: 30,
               ),
             ))),

@@ -413,8 +413,14 @@ class _SubscriptorsPageState extends State<SubscriptorsPage>
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
+        height: 400.0,
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.accentColor,
+        )));
   }
 
   Route createRouteRecipeViewImage(Profiles item) {

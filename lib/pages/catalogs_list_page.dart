@@ -209,8 +209,14 @@ class _CatalogsListState extends State<CatalogsList> {
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
+        height: 400.0,
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.currentTheme.accentColor,
+        )));
   }
 
   Widget _buildEmptyWidget() {

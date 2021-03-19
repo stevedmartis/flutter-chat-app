@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'dart:io';
 
+import 'package:chat/models/profile_response.dart';
 import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthService with ChangeNotifier {
   Profiles _profile;
+  bool _bottomVisible = true;
   List<Room> rooms;
   bool _authenticated = false;
 
@@ -66,6 +68,13 @@ class AuthService with ChangeNotifier {
 
   set profile(Profiles valor) {
     this._profile = valor;
+    notifyListeners();
+  }
+
+  bool get bottomVisible => this._bottomVisible;
+
+  set bottomVisible(bool valor) {
+    this._bottomVisible = valor;
     notifyListeners();
   }
 
@@ -237,6 +246,36 @@ class AuthService with ChangeNotifier {
       this.profile = loginResponse.profile;
 
       return true;
+    } else {
+      final respBody = jsonDecode(resp.body);
+      return respBody['msg'];
+    }
+  }
+
+  Future editImageRecipe(String imageRecipe, String uid) async {
+    // this.authenticated = true;
+
+    final urlFinal =
+        Uri.https('${Environment.apiUrl}', '/api/profile/image_recipe/edit');
+
+    final data = {
+      'uid': uid,
+      'imageRecipe': imageRecipe,
+    };
+
+    final token = await this._storage.read(key: 'token');
+
+    final resp = await http.post(urlFinal,
+        body: jsonEncode(data),
+        headers: {'Content-Type': 'application/json', 'x-token': token});
+
+    if (resp.statusCode == 200) {
+      final profileResponse = profileResponseFromJson(resp.body);
+
+      print(profileResponse);
+      this.profile.imageRecipe = profileResponse.profile.imageRecipe;
+
+      return profileResponse;
     } else {
       final respBody = jsonDecode(resp.body);
       return respBody['msg'];

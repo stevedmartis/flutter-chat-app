@@ -40,7 +40,7 @@ class _RecipeImageExpandedState extends State<RecipeImageExpanded> {
         clipBehavior: Clip.antiAlias,
         child: InteractiveViewer(
             panEnabled: false, // Set it to false to prevent panning.
-            boundaryMargin: EdgeInsets.all(80),
+
             minScale: 0.5,
             maxScale: 4,
             child: FadeInImage(

@@ -29,6 +29,7 @@ import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 import '../utils//extension.dart';
@@ -125,6 +126,8 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
     return _scrollController.hasClients && _scrollController.offset >= 130;
   }
 
+  bool isLikedSave = false;
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
@@ -193,6 +196,7 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                 child: CircleAvatar(
                                     child: PopupMenuButton<String>(
                                       icon: FaIcon(FontAwesomeIcons.ellipsisV,
+                                          size: 20,
                                           color: (_showTitle)
                                               ? currentTheme
                                                   .currentTheme.accentColor
@@ -203,8 +207,6 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                             aws.isUploadImagePlant = false;
                                             productService.productProfile =
                                                 productProfile;
-                                            productService.product =
-                                                productProfile.product;
 
                                             Navigator.of(context).push(
                                                 createRouteEditProduct(widget
@@ -267,7 +269,38 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                             : Colors.white54
                                         : Colors.black54),
                               ))
-                          : Container(),
+                          : Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: CircleAvatar(
+                                  child: LikeButton(
+                                    isLiked: isLikedSave,
+                                    onTap: onLikeButtonTapped,
+                                    circleColor: CircleColor(
+                                        start: Colors.white,
+                                        end: currentTheme
+                                            .currentTheme.accentColor),
+                                    bubblesColor: BubblesColor(
+                                      dotPrimaryColor:
+                                          currentTheme.currentTheme.accentColor,
+                                      dotSecondaryColor:
+                                          currentTheme.currentTheme.accentColor,
+                                    ),
+                                    likeBuilder: (bool isLiked) {
+                                      return Icon(
+                                        Icons.favorite,
+                                        color: isLikedSave
+                                            ? currentTheme
+                                                .currentTheme.accentColor
+                                            : Colors.white54,
+                                        size: isLikedSave ? 25 : 22,
+                                      );
+                                    },
+                                  ),
+                                  backgroundColor: _showTitle
+                                      ? (currentTheme.customTheme)
+                                          ? Colors.black54
+                                          : Colors.white54
+                                      : Colors.black54))
                       //  _buildCircleQuantityPlant(),
                     ],
 
@@ -317,6 +350,20 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                   ),
                   makeHeaderInfo(context),
                 ])));
+  }
+
+  Future<bool> onLikeButtonTapped(bool isLiked) async {
+    /// send your request here
+    // final bool success= await sendRequest();
+
+    final success = await productApiProvider.addUpdateFavorite(
+        productProfile.product.id, profile.user.uid);
+
+    /// if failed, you can do nothing
+
+    isLikedSave = success.favorite.isLike;
+
+    return isLikedSave;
   }
 
   SliverPersistentHeader makeHeaderTabs(context) {

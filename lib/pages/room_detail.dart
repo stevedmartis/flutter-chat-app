@@ -91,8 +91,6 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     final roomService = Provider.of<RoomService>(context, listen: false);
 
     roomService.room = null;
-
-    roomBloc.getRoom(widget.room);
   }
 
   @override
@@ -110,6 +108,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     final currentTheme = Provider.of<ThemeChanger>(context);
 
     final roomService = Provider.of<RoomService>(context, listen: false);
+    final size = MediaQuery.of(context).size;
 
     setState(() {
       room = (roomService.room != null) ? roomService.room : widget.room;
@@ -122,6 +121,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
           title: Text(
             nameFinal,
             style: TextStyle(
+                fontSize: size.height / 30,
                 color:
                     (currentTheme.customTheme) ? Colors.white : Colors.black),
           ),
@@ -144,7 +144,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
               Icons.chevron_left,
               color: currentTheme.currentTheme.accentColor,
             ),
-            iconSize: 30,
+            iconSize: size.height / 20,
             onPressed: () => Navigator.pop(context),
             color: Colors.white,
           )),
@@ -171,8 +171,14 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
+        height: 400.0,
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.accentColor,
+        )));
   }
 
   SliverPersistentHeader makeHeaderSpacer(context) {
@@ -213,11 +219,13 @@ class _RoomDetailPageState extends State<RoomDetailPage>
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: (about.length > 10) ? 230 : 200,
-          maxHeight: (about.length > 10) ? 230 : 200,
+          minHeight:
+              (about.length > 10) ? size.height / 2.8 : size.height / 3.0,
+          maxHeight:
+              (about.length > 10) ? size.height / 2.8 : size.height / 3.0,
           child: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.only(bottom: 10.0, top: 10),
+            padding: EdgeInsets.only(bottom: 10.0, top: 0),
             color: currentTheme.currentTheme.scaffoldBackgroundColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -226,7 +234,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                 Container(
                   alignment: Alignment.center,
                   //margin: EdgeInsets.only(left: size.width / 6, top: 10),
-                  width: size.width / 1.3,
+                  width: size.height / 1.3,
                   child: Text(
                     about,
                     overflow: TextOverflow.ellipsis,
@@ -234,14 +242,14 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 15.0,
+                        fontSize: size.height / 40,
                         color: (currentTheme.customTheme)
                             ? Colors.white
                             : Colors.black),
                   ),
                 ),
                 SizedBox(
-                  height: 5.0,
+                  height: 10.0,
                 ),
                 RowMeassureRoom(
                   wide: room.wide,
@@ -261,7 +269,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                       child: Text(
                         'Co2: ',
                         style: TextStyle(
-                            fontSize: 15.0,
+                            fontSize: size.height / 40.0,
                             color: (currentTheme.customTheme)
                                 ? Colors.white54
                                 : Colors.black54),
@@ -272,7 +280,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         '$co2',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 15.0,
+                            fontSize: size.height / 40.0,
                             color: (currentTheme.customTheme)
                                 ? Colors.white
                                 : Colors.black),
@@ -285,7 +293,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                       child: Text(
                         'Timer: ',
                         style: TextStyle(
-                            fontSize: 15.0,
+                            fontSize: size.height / 40.0,
                             color: (currentTheme.customTheme)
                                 ? Colors.white54
                                 : Colors.black54),
@@ -296,7 +304,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                         '$co2Control',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 15.0,
+                            fontSize: size.height / 40.0,
                             color: (currentTheme.customTheme)
                                 ? Colors.white
                                 : Colors.black),
@@ -310,7 +318,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                 RowTimeOnOffRoom(
                   timeOn: timeOn,
                   timeOff: timeOff,
-                  size: 15.0,
+                  size: size.height / 40.0,
                   center: true,
                 ),
                 SizedBox(
@@ -323,9 +331,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   child: Align(
                     alignment: Alignment.center,
                     child: ButtonSubEditProfile(
+                        isSecond: true,
                         color: currentTheme.currentTheme.accentColor,
-                        textColor:
-                            currentTheme.currentTheme.scaffoldBackgroundColor,
+                        textColor: Colors.black,
                         text: 'Editar',
                         onPressed: () {
                           Navigator.of(context)
@@ -383,7 +391,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                           return Stack(children: [
                             CardPlant(plant: plant),
                             Container(
-                              child: buildCircleFavoritePlantDash(
+                              child: buildCircleQuantityPlantDash(
                                   plant.quantity, context),
                             ),
                           ]);
@@ -754,6 +762,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
 
   SliverList makeListPlants(context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
+    final size = MediaQuery.of(context).size;
 
     return SliverList(
       delegate: SliverChildListDelegate([
@@ -772,6 +781,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                             child: Text(
                               'Sin Plantas, crea una nueva',
                               style: TextStyle(
+                                fontSize: size.width / 30,
                                 color: (currentTheme.customTheme)
                                     ? Colors.white54
                                     : Colors.black54,
@@ -792,6 +802,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 
   SliverList makeListAires(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+    final size = MediaQuery.of(context).size;
+
     return SliverList(
       delegate: SliverChildListDelegate([
         Container(
@@ -810,13 +823,18 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
-                            child: Text('Sin Aire, add new')),
+                            child: Text(
+                              'Sin Aire, Agega uno nuevo',
+                              style: TextStyle(
+                                fontSize: size.width / 30,
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white54
+                                    : Colors.black54,
+                              ),
+                            )),
                       ); // image is ready
               } else {
-                return Container(
-                    height: 400.0,
-                    child: Center(
-                        child: CircularProgressIndicator())); // placeholder
+                return _buildLoadingWidget(); // placeholder
               }
             },
           ),
@@ -826,6 +844,9 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 
   SliverList makeListLight(context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+    final size = MediaQuery.of(context).size;
+
     return SliverList(
       delegate: SliverChildListDelegate([
         Container(
@@ -844,13 +865,18 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     : Center(
                         child: Container(
                             padding: EdgeInsets.all(50),
-                            child: Text('Sin Luces, add new')),
+                            child: Text(
+                              'Sin Luces, Agrega una!',
+                              style: TextStyle(
+                                fontSize: size.width / 30,
+                                color: (currentTheme.customTheme)
+                                    ? Colors.white54
+                                    : Colors.black54,
+                              ),
+                            )),
                       ); // image is ready
               } else {
-                return Container(
-                    height: 400.0,
-                    child: Center(
-                        child: CircularProgressIndicator())); // placeholder
+                return _buildLoadingWidget(); // placeholder
               }
             },
           ),
@@ -861,16 +887,19 @@ class _RoomDetailPageState extends State<RoomDetailPage>
 
   SliverPersistentHeader makeHeaderTabs(context) {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final size = MediaQuery.of(context).size;
 
     return SliverPersistentHeader(
       pinned: true,
       delegate: SliverAppBarDelegate(
-        minHeight: 50.0,
-        maxHeight: 50.0,
+        minHeight: size.height / 10.0,
+        maxHeight: size.height / 10.0,
         child: DefaultTabController(
           length: 3,
           child: Scaffold(
+            backgroundColor: currentTheme.scaffoldBackgroundColor,
             appBar: AppBar(
+              automaticallyImplyLeading: false,
               backgroundColor: currentTheme.scaffoldBackgroundColor,
               bottom: TabBar(
                   indicatorWeight: 3.0,
@@ -878,16 +907,19 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                   tabs: [
                     Tab(
                         icon: Icon(Icons.local_florist,
+                            size: 25,
                             color: (_tabController.index == 0)
                                 ? currentTheme.accentColor
                                 : Colors.grey)),
                     Tab(
                         icon: FaIcon(FontAwesomeIcons.wind,
+                            size: 25,
                             color: (_tabController.index == 1)
                                 ? currentTheme.accentColor
                                 : Colors.grey)),
                     Tab(
                         icon: FaIcon(FontAwesomeIcons.lightbulb,
+                            size: 25,
                             color: (_tabController.index == 2)
                                 ? currentTheme.accentColor
                                 : Colors.grey)),
@@ -907,7 +939,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
   }
 }
 
-Container buildCircleFavoritePlantDash(String quantity, context) {
+Container buildCircleQuantityPlantDash(String quantity, context) {
   final size = MediaQuery.of(context).size;
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
@@ -930,25 +962,36 @@ Container buildCircleFavoritePlantDash(String quantity, context) {
       ));
 }
 
-Container buildCircleFavoritePlant(String quantity, context) {
+Container buildCircleQuantityPlant(String quantity, context) {
   final size = MediaQuery.of(context).size;
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
   return Container(
-      alignment: Alignment.topLeft,
-      margin: EdgeInsets.only(left: size.width / 1.50, top: 0.0),
+      alignment: Alignment.topRight,
+      margin: EdgeInsets.only(left: size.width / 2.0, top: 0.0),
       width: 100,
       height: 100,
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        child: CircleAvatar(
-            child: Text('$quantity',
-                style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black)),
-            backgroundColor: currentTheme.accentColor),
-      ));
+      child: CircleAvatar(
+          child: Text('$quantity',
+              style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black)),
+          backgroundColor: currentTheme.accentColor));
+}
+
+Container buildCircleFavoriteProduct(context) {
+  final size = MediaQuery.of(context).size;
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+  return Container(
+      alignment: Alignment.topRight,
+      margin: EdgeInsets.only(left: size.width / 2.0, top: 0.0),
+      width: 100,
+      height: 100,
+      child: CircleAvatar(
+          child: FaIcon(FontAwesomeIcons.heart),
+          backgroundColor: currentTheme.accentColor));
 }
 
 Route createRouteProfile() {

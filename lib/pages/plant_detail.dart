@@ -82,12 +82,6 @@ class Options {
   const Options(this.id, this.name, this.code);
 }
 
-const List<Options> getOptions = <Options>[
-  Options(1, 'English', 'en'),
-  Options(2, 'فارسی', 'fa'),
-  Options(3, 'پشتو', 'ps'),
-];
-
 class _PlantDetailPageState extends State<PlantDetailPage>
     with TickerProviderStateMixin {
   List<Visit> visits = [];
@@ -166,203 +160,227 @@ class _PlantDetailPageState extends State<PlantDetailPage>
     return Scaffold(
         backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
         // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
-        body: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).requestFocus(new FocusNode());
-            },
-            child: CustomScrollView(
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-                controller: _scrollController,
-                slivers: <Widget>[
-                  SliverAppBar(
-                    stretch: true,
-                    stretchTriggerOffset: 250.0,
+        body: NotificationListener<ScrollEndNotification>(
+          onNotification: (_) {
+            if (visits.length == 0) _snapAppbar();
+            if (_scrollController.offset >= 250) {}
+            return false;
+          },
+          child: GestureDetector(
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+              },
+              child: CustomScrollView(
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  controller: _scrollController,
+                  slivers: <Widget>[
+                    SliverAppBar(
+                      stretch: true,
+                      stretchTriggerOffset: 250.0,
 
-                    backgroundColor: _showTitle
-                        ? (currentTheme.customTheme)
-                            ? Colors.black
-                            : Colors.white
-                        : currentTheme.currentTheme.scaffoldBackgroundColor,
-                    leading: Container(
-                        margin: EdgeInsets.only(left: 15),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          child: CircleAvatar(
-                              child: IconButton(
-                                  icon: Icon(Icons.arrow_back_ios,
-                                      size: size.width / 20,
-                                      color: (_showTitle)
-                                          ? currentTheme
-                                              .currentTheme.accentColor
-                                          : Colors.white),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  }),
-                              backgroundColor: _showTitle
-                                  ? (currentTheme.customTheme)
-                                      ? Colors.black54
-                                      : Colors.white54
-                                  : Colors.black54),
-                        )),
-
-                    actions: [
-                      Container(
-                          margin: EdgeInsets.only(left: 0, right: 0),
+                      backgroundColor: _showTitle
+                          ? (currentTheme.customTheme)
+                              ? Colors.black
+                              : Colors.white
+                          : currentTheme.currentTheme.scaffoldBackgroundColor,
+                      leading: Container(
+                          margin: EdgeInsets.only(left: 15),
                           child: ClipRRect(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20.0)),
                             child: CircleAvatar(
-                                child: PopupMenuButton<String>(
-                                  icon: FaIcon(FontAwesomeIcons.ellipsisV,
-                                      color: (_showTitle)
-                                          ? currentTheme
-                                              .currentTheme.accentColor
-                                          : Colors.white),
-                                  onSelected: (String result) {
-                                    switch (result) {
-                                      case '1':
-                                        aws.isUploadImagePlant = false;
-                                        visitService.visit = visit;
-                                        Navigator.of(context).push(
-                                            createRouteNewVisit(
-                                                visit, widget.plant.id, false));
-
-                                        break;
-                                      case '2':
-                                        aws.isUploadImagePlant = false;
-                                        plantService.plant = plant;
-                                        Navigator.of(context).push(
-                                            createRouteEditPlant(widget.plant));
-                                        break;
-                                      case '3':
-                                        confirmDelete(
-                                            context,
-                                            'Confirmar',
-                                            'Desea eliminar la Planta y todas sus visitas?',
-                                            plant.id);
-                                        break;
-                                      default:
-                                    }
-                                  },
-                                  itemBuilder: (BuildContext context) =>
-                                      <PopupMenuEntry<String>>[
-                                    PopupMenuItem<String>(
-                                        value: '1',
-                                        child: Row(
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.eye,
-                                                size: 20,
-                                                color: currentTheme
-                                                    .currentTheme.accentColor),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(
-                                              'Visitar',
-                                              style: TextStyle(
-                                                  color: currentTheme
-                                                      .currentTheme
-                                                      .accentColor),
-                                            ),
-                                          ],
-                                        )),
-                                    PopupMenuItem<String>(
-                                        value: '2',
-                                        child: Row(
-                                          children: [
-                                            FaIcon(
-                                              FontAwesomeIcons.edit,
-                                              color: currentTheme
-                                                  .currentTheme.accentColor,
-                                              size: 20,
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text('Editar',
-                                                style: TextStyle(
-                                                    color: currentTheme
-                                                        .currentTheme
-                                                        .accentColor)),
-                                          ],
-                                        )),
-                                    PopupMenuItem<String>(
-                                      value: '3',
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.delete,
-                                              color: Colors.grey),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text('Eliminar',
-                                              style: TextStyle(
-                                                  color: Colors.grey)),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                child: IconButton(
+                                    icon: Icon(Icons.arrow_back_ios,
+                                        size: 20,
+                                        color: (_showTitle)
+                                            ? currentTheme
+                                                .currentTheme.accentColor
+                                            : Colors.white),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    }),
                                 backgroundColor: _showTitle
                                     ? (currentTheme.customTheme)
                                         ? Colors.black54
                                         : Colors.white54
                                     : Colors.black54),
                           )),
-                      _buildCircleQuantityPlant(),
-                    ],
 
-                    centerTitle: true,
-                    pinned: true,
+                      actions: [
+                        Container(
+                            margin: EdgeInsets.only(left: 0, right: 0),
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              child: CircleAvatar(
+                                  child: PopupMenuButton<String>(
+                                    icon: FaIcon(FontAwesomeIcons.ellipsisV,
+                                        size: 20,
+                                        color: (_showTitle)
+                                            ? currentTheme
+                                                .currentTheme.accentColor
+                                            : Colors.white),
+                                    onSelected: (String result) {
+                                      switch (result) {
+                                        case '1':
+                                          aws.isUploadImagePlant = false;
+                                          visitService.visit = visit;
+                                          Navigator.of(context).push(
+                                              createRouteNewVisit(visit,
+                                                  widget.plant.id, false));
 
-                    expandedHeight: maxHeight,
-                    // collapsedHeight: 56.0001,
-                    flexibleSpace: FlexibleSpaceBar(
-                        stretchModes: [
-                          StretchMode.zoomBackground,
-                          StretchMode.fadeTitle,
-                          // StretchMode.blurBackground
-                        ],
-                        background: Material(
-                            type: MaterialType.transparency,
-                            child: FadeInImage(
-                              image: NetworkImage(plant.getCoverImg()),
-                              placeholder: AssetImage('assets/loading2.gif'),
-                              fit: BoxFit.cover,
-                              height: 100,
-                              width: double.infinity,
-                              alignment: Alignment.center,
+                                          break;
+                                        case '2':
+                                          aws.isUploadImagePlant = false;
+                                          plantService.plant = plant;
+                                          Navigator.of(context).push(
+                                              createRouteEditPlant(
+                                                  widget.plant));
+                                          break;
+                                        case '3':
+                                          confirmDelete(
+                                              context,
+                                              'Confirmar',
+                                              'Desea eliminar la Planta y todas sus visitas?',
+                                              plant.id);
+                                          break;
+                                        default:
+                                      }
+                                    },
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuEntry<String>>[
+                                      PopupMenuItem<String>(
+                                          value: '1',
+                                          child: Row(
+                                            children: [
+                                              FaIcon(FontAwesomeIcons.eye,
+                                                  size: 20,
+                                                  color: currentTheme
+                                                      .currentTheme
+                                                      .accentColor),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                'Visitar',
+                                                style: TextStyle(
+                                                    color: currentTheme
+                                                        .currentTheme
+                                                        .accentColor),
+                                              ),
+                                            ],
+                                          )),
+                                      PopupMenuItem<String>(
+                                          value: '2',
+                                          child: Row(
+                                            children: [
+                                              FaIcon(
+                                                FontAwesomeIcons.edit,
+                                                color: currentTheme
+                                                    .currentTheme.accentColor,
+                                                size: 20,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text('Editar',
+                                                  style: TextStyle(
+                                                      color: currentTheme
+                                                          .currentTheme
+                                                          .accentColor)),
+                                            ],
+                                          )),
+                                      PopupMenuItem<String>(
+                                        value: '3',
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.delete,
+                                                color: Colors.grey),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text('Eliminar',
+                                                style: TextStyle(
+                                                    color: Colors.grey)),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  backgroundColor: _showTitle
+                                      ? (currentTheme.customTheme)
+                                          ? Colors.black54
+                                          : Colors.white54
+                                      : Colors.black54),
                             )),
-                        centerTitle: true,
-                        title: Container(
-                            //  margin: EdgeInsets.only(left: 0),
-                            width: size.height / 5,
-                            height: 30,
-                            child: Container(
-                              child: Center(
-                                child: Text(
-                                  plant.name.capitalize(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: _showTitle
-                                          ? (currentTheme.customTheme)
-                                              ? Colors.white
-                                              : Colors.black
-                                          : Colors.white),
+                        _buildCircleQuantityPlant(),
+                      ],
+
+                      centerTitle: true,
+                      pinned: true,
+
+                      expandedHeight: maxHeight,
+                      // collapsedHeight: 56.0001,
+                      flexibleSpace: FlexibleSpaceBar(
+                          stretchModes: [
+                            StretchMode.zoomBackground,
+                            StretchMode.fadeTitle,
+                            // StretchMode.blurBackground
+                          ],
+                          background: Material(
+                              type: MaterialType.transparency,
+                              child: FadeInImage(
+                                image: NetworkImage(plant.getCoverImg()),
+                                placeholder: AssetImage('assets/loading2.gif'),
+                                fit: BoxFit.cover,
+                                height: 100,
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                              )),
+                          centerTitle: true,
+                          title: Container(
+                              //  margin: EdgeInsets.only(left: 0),
+                              width: size.height / 5,
+                              height: 30,
+                              child: Container(
+                                child: Center(
+                                  child: Text(
+                                    plant.name.capitalize(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: _showTitle
+                                            ? (currentTheme.customTheme)
+                                                ? Colors.white
+                                                : Colors.black
+                                            : Colors.white),
+                                  ),
                                 ),
-                              ),
-                            ))),
-                  ),
+                              ))),
+                    ),
 
-                  // makeHeaderSpacer(context),
-                  makeHeaderInfo(context),
-                  // makeHeaderSpacer(context),
+                    // makeHeaderSpacer(context),
+                    makeHeaderInfo(context),
+                    // makeHeaderSpacer(context),
 
-                  makeHeaderTabs(context),
+                    makeHeaderTabs(context),
 
-                  makeListVisits(context)
-                ])));
+                    makeListVisits(context)
+                  ])),
+        ));
+  }
+
+  void _snapAppbar() {
+    final scrollDistance = maxHeight - minHeight;
+
+    if (_scrollController.offset > 0 &&
+        _scrollController.offset < scrollDistance) {
+      final double snapOffset =
+          _scrollController.offset / scrollDistance > 0.5 ? scrollDistance : 0;
+
+      Future.microtask(() => _scrollController.animateTo(snapOffset,
+          duration: Duration(milliseconds: 200), curve: Curves.easeIn));
+    }
   }
 
   SliverPersistentHeader makeHeaderTabs(context) {
@@ -377,7 +395,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
         child: DefaultTabController(
           length: 1,
           child: Scaffold(
+            backgroundColor: currentTheme.scaffoldBackgroundColor,
             appBar: AppBar(
+              automaticallyImplyLeading: false,
               leading: null,
               backgroundColor: currentTheme.scaffoldBackgroundColor,
               bottom: TabBar(
@@ -414,9 +434,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                 visits = snapshot.data;
                 return (visits.length > 0)
                     ? Container(
-                        margin: EdgeInsets.only(
-                          left: 10,
-                        ),
+                        margin: EdgeInsets.only(left: 10, right: 10),
                         child: _buildWidgetVisits(visits))
                     : Center(
                         child: Container(
@@ -432,7 +450,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                 return Container(
                     height: 100.0,
                     child: Center(
-                        child: CircularProgressIndicator())); // placeholder
+                        child: CircularProgressIndicator(
+                      color: currentTheme.currentTheme.accentColor,
+                    ))); // placeholder
               }
             },
           ),
@@ -478,9 +498,7 @@ class _PlantDetailPageState extends State<PlantDetailPage>
                 visits = snapshot.data;
                 return (visits.length > 0)
                     ? Container(
-                        margin: EdgeInsets.only(
-                          left: 10,
-                        ),
+                        margin: EdgeInsets.only(left: 10, right: 10),
                         child:
                             _buildWidgetVisits(snapshot.data)) // image is ready
                     : Center(
@@ -513,60 +531,62 @@ class _PlantDetailPageState extends State<PlantDetailPage>
             itemBuilder: (BuildContext ctxt, int index) {
               final visit = visits[index];
 
-              return OpenContainer(
-                  closedColor: currentTheme.scaffoldBackgroundColor,
-                  openColor: currentTheme.scaffoldBackgroundColor,
-                  transitionType: ContainerTransitionType.fade,
-                  openShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  closedShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0)),
-                  openBuilder: (_, closeContainer) {
-                    return AddUpdateVisitPage(
-                      visit: visit,
-                      plant: visit.plant,
-                      isEdit: true,
-                    );
-                  },
-                  closedBuilder: (_, openContainer) {
-                    return FadeIn(
-                      child: Dismissible(
-                          child: CardVisit(visit: visit),
-                          key: UniqueKey(),
-                          direction: DismissDirection.endToStart,
-                          onDismissed: (direction) =>
-                              {_deleteVisit(visit.id, index)},
-                          background: Container(
-                            height: 170.0,
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                margin: EdgeInsets.only(
-                                    bottom: 20, left: 10, right: 20),
-                                alignment: Alignment.centerRight,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(right: 10),
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Colors.black,
-                                        size: 30,
+              return Container(
+                padding: EdgeInsets.only(bottom: 20),
+                child: OpenContainer(
+                    closedColor: currentTheme.scaffoldBackgroundColor,
+                    openColor: currentTheme.scaffoldBackgroundColor,
+                    transitionType: ContainerTransitionType.fade,
+                    openShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    closedShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    openBuilder: (_, closeContainer) {
+                      return AddUpdateVisitPage(
+                        visit: visit,
+                        plant: visit.plant,
+                        isEdit: true,
+                      );
+                    },
+                    closedBuilder: (_, openContainer) {
+                      return FadeIn(
+                        child: Dismissible(
+                            child: CardVisit(visit: visit),
+                            key: UniqueKey(),
+                            direction: DismissDirection.endToStart,
+                            onDismissed: (direction) =>
+                                {_deleteVisit(visit.id, index)},
+                            background: Container(
+                              height: 170.0,
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  alignment: Alignment.centerRight,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(right: 10),
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.black,
+                                          size: 30,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 12,
-                                    ),
-                                  ],
-                                )),
-                          )),
-                    );
-                  });
+                                      SizedBox(
+                                        width: 12,
+                                      ),
+                                    ],
+                                  )),
+                            )),
+                      );
+                    }),
+              );
             }),
       ),
     );
@@ -750,149 +770,149 @@ class _PlantDetailPageState extends State<PlantDetailPage>
       delegate: SliverChildListDelegate([
         Container(
           color: currentTheme.currentTheme.scaffoldBackgroundColor,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding:
-                    EdgeInsets.only(top: 10, left: size.width / 5, bottom: 5.0),
-                child: CbdthcRow(
-                  thc: thc,
-                  cbd: cbd,
-                  fontSize: 15,
+          child: Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  child: CbdthcRow(
+                    thc: thc,
+                    cbd: cbd,
+                    fontSize: size.height / 50,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: size.width / 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5.0),
-                        child: FaIcon(
-                          FontAwesomeIcons.seedling,
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.black54,
-                        )),
-                    Container(
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-                        child: Container(
-                          padding: EdgeInsets.all(2.5),
-                          child: Text(
-                            "Germinación :",
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: (currentTheme.customTheme)
-                                    ? Colors.white54
-                                    : Colors.black54),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: size.width / 10),
-                      child: Text(
-                        "$germina",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.black54,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.width / 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5.0),
-                        child: FaIcon(
-                          FontAwesomeIcons.cannabis,
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.black54,
-                        )),
-                    Container(
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
-                        child: Container(
-                          padding: EdgeInsets.all(2.5),
-                          child: Text(
-                            "Floración :",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: (currentTheme.customTheme)
-                                  ? Colors.white54
-                                  : Colors.black54,
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width / 7, vertical: 0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          alignment: Alignment.center,
+                          child: FaIcon(
+                            FontAwesomeIcons.seedling,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white54
+                                : Colors.black54,
+                          )),
+                      Container(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 5.0, vertical: 10.0),
+                          child: Container(
+                            padding: EdgeInsets.all(3.5),
+                            child: Text(
+                              "Germinación :",
+                              style: TextStyle(
+                                  fontSize: size.height / 50,
+                                  color: (currentTheme.customTheme)
+                                      ? Colors.white54
+                                      : Colors.black54),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 25,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: size.width / 10),
-                      child: Text(
-                        "$flora",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.black54,
+                      Container(
+                        padding: EdgeInsets.only(left: size.width / 13),
+                        child: Text(
+                          "$germina",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: size.height / 50,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white
+                                : Colors.black,
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: Text(
-                        "Semanas",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 10,
-                          color: (currentTheme.customTheme)
-                              ? Colors.white54
-                              : Colors.black54,
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                  width: size.width - 5,
-                  padding: EdgeInsets.only(left: size.width / 10.0, right: 30),
-                  //margin: EdgeInsets.only(left: size.width / 6, top: 10),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width / 7, vertical: 0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          alignment: Alignment.center,
+                          child: FaIcon(
+                            FontAwesomeIcons.cannabis,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white54
+                                : Colors.black54,
+                          )),
+                      Container(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 0.0),
+                          child: Container(
+                            padding: EdgeInsets.all(3.5),
+                            child: Text(
+                              "Floración :",
+                              style: TextStyle(
+                                  fontSize: size.height / 50,
+                                  color: (currentTheme.customTheme)
+                                      ? Colors.white54
+                                      : Colors.black54),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: size.width / 8),
+                        child: Text(
+                          "$flora",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: size.height / 50,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                          "Semanas",
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: size.height / 60,
+                            color: (currentTheme.customTheme)
+                                ? Colors.white54
+                                : Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Container(
+                    width: size.width - 10,
+                    padding:
+                        EdgeInsets.only(left: size.width / 10.0, right: 30),
+                    //margin: EdgeInsets.only(left: size.width / 6, top: 10),
 
-                  child: (about.length > 0)
-                      ? convertHashtag(about, context)
-                      : Container()),
-              SizedBox(
-                height: 20.0,
-              ),
-              Divider(
-                thickness: 2.0,
-                height: 1.0,
-              )
-            ],
+                    child: (about.length > 0)
+                        ? convertHashtag(about, context)
+                        : Container()),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Divider(
+                  thickness: 2.0,
+                  height: 1.0,
+                )
+              ],
+            ),
           ),
         )
       ]),
@@ -1087,68 +1107,9 @@ class _PlantDetailPageState extends State<PlantDetailPage>
   }
 }
 
-class SABT extends StatefulWidget {
-  final Widget child;
-  const SABT({
-    Key key,
-    @required this.child,
-  }) : super(key: key);
-  @override
-  _SABTState createState() {
-    return new _SABTState();
-  }
-}
-
-class _SABTState extends State<SABT> {
-  ScrollPosition _position;
-  bool _visible;
-
-  @override
-  void dispose() {
-    _removeListener();
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _removeListener();
-    _addListener();
-  }
-
-  void _addListener() {
-    _position = Scrollable.of(context)?.position;
-    _position?.addListener(_positionListener);
-    _positionListener();
-  }
-
-  void _removeListener() {
-    _position?.removeListener(_positionListener);
-  }
-
-  void _positionListener() {
-    final FlexibleSpaceBarSettings settings =
-        context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
-    bool visible =
-        settings == null || settings.currentExtent <= settings.minExtent;
-    if (_visible != visible) {
-      setState(() {
-        _visible = visible;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: _visible,
-      child: widget.child,
-    );
-  }
-}
-
 RichText convertHashtag(String text, context) {
   final currentTheme = Provider.of<ThemeChanger>(context);
+  final size = MediaQuery.of(context).size;
 
   List<String> split = text.split(RegExp("#"));
 
@@ -1170,14 +1131,14 @@ RichText convertHashtag(String text, context) {
             style: TextStyle(
                 color: (currentTheme.customTheme) ? Colors.white : Colors.black,
                 fontWeight: FontWeight.w400,
-                fontSize: 16))
+                fontSize: size.height / 45))
       ]..addAll(hashtags
           .map((text) => text.contains("#")
               ? TextSpan(
                   text: text,
                   style: TextStyle(
                       color: currentTheme.currentTheme.accentColor,
-                      fontSize: 16))
+                      fontSize: size.height / 45))
               : TextSpan(
                   text: text,
                   style: TextStyle(
@@ -1332,7 +1293,11 @@ class CbdthcRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
@@ -1353,7 +1318,7 @@ class CbdthcRow extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: 40,
+          width: size.width / 5,
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),

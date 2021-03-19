@@ -78,7 +78,7 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
                     FontAwesomeIcons.camera,
                     color: currentTheme.accentColor,
                   ),
-                  iconSize: 30,
+                  iconSize: 25,
                   onPressed: () async =>
                       (!widget.isEdit) ? _selectImage(true) : _editImage(true),
                   color: Colors.white,
@@ -90,13 +90,13 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
                     Icons.add_photo_alternate,
                     color: currentTheme.accentColor,
                   ),
-                  iconSize: 40,
+                  iconSize: 35,
                   onPressed: () async => (!widget.isEdit)
                       ? _selectImage(false)
                       : _editImage(false),
                   color: Colors.white,
                 )
-              : _buildLoadingWidget(),
+              : Container()
         ],
       ),
       backgroundColor: Colors.black,
@@ -116,10 +116,15 @@ class CoverImagePlantPageState extends State<CoverImagePlantPage> {
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
         padding: EdgeInsets.only(right: 10),
         height: 400.0,
-        child: Center(child: CircularProgressIndicator()));
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.accentColor,
+        )));
   }
 
   _selectImage(bool isCamera) async {

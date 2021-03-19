@@ -72,14 +72,13 @@ class CustomListItemTwoRoom extends StatelessWidget {
               ),
             ),
             SizedBox(
-                width: 50,
+                width: size.height / 10,
                 child: Center(
                     child: Container(
-                  margin: EdgeInsets.only(right: 10),
                   child: Icon(
                     Icons.format_list_bulleted,
                     color: currentTheme.accentColor,
-                    size: 30,
+                    size: size.height / 20,
                   ),
                 ))),
           ],
@@ -129,6 +128,8 @@ class _ArticleDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
+    final size = MediaQuery.of(context).size;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -142,7 +143,7 @@ class _ArticleDescription extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: size.height / 30,
                   color: currentTheme.currentTheme.accentColor),
             ),
             SizedBox(
@@ -154,7 +155,7 @@ class _ArticleDescription extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 15.0,
+                fontSize: size.height / 50,
                 color: (currentTheme.customTheme) ? Colors.white : Colors.black,
               ),
             ),
@@ -165,6 +166,7 @@ class _ArticleDescription extends StatelessWidget {
               children: [
                 Icon(
                   Icons.local_florist,
+                  size: size.height / 40,
                   color: (currentTheme.customTheme)
                       ? Colors.white54
                       : Colors.black54,
@@ -178,7 +180,7 @@ class _ArticleDescription extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 15.0,
+                    fontSize: size.height / 40,
                     color: (currentTheme.customTheme)
                         ? Colors.white
                         : Colors.black,
@@ -192,7 +194,7 @@ class _ArticleDescription extends StatelessWidget {
                   color: (currentTheme.customTheme)
                       ? Colors.white54
                       : Colors.black54,
-                  size: 20,
+                  size: size.height / 40,
                 ),
                 SizedBox(
                   width: 10,
@@ -203,7 +205,7 @@ class _ArticleDescription extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 15.0,
+                    fontSize: size.height / 40,
                     color: (currentTheme.customTheme)
                         ? Colors.white
                         : Colors.black,
@@ -217,7 +219,7 @@ class _ArticleDescription extends StatelessWidget {
                   color: (currentTheme.customTheme)
                       ? Colors.white54
                       : Colors.black54,
-                  size: 20,
+                  size: size.height / 40,
                 ),
                 SizedBox(
                   width: 10,
@@ -228,7 +230,7 @@ class _ArticleDescription extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 15.0,
+                    fontSize: size.height / 40,
                     color: (currentTheme.customTheme)
                         ? Colors.white
                         : Colors.black,
@@ -271,6 +273,7 @@ class RowTimeOnOffRoom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
+    final size = MediaQuery.of(context).size;
 
     return Row(
       mainAxisAlignment:
@@ -287,7 +290,7 @@ class RowTimeOnOffRoom extends StatelessWidget {
         Text(
           ' $timeOn',
           style: TextStyle(
-              fontSize: size,
+              fontSize: size.height / 40,
               color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
         SizedBox(
@@ -303,7 +306,7 @@ class RowTimeOnOffRoom extends StatelessWidget {
         Text(
           ' $timeOff',
           style: TextStyle(
-              fontSize: size,
+              fontSize: size.height / 40,
               color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
       ],
@@ -332,6 +335,7 @@ class RowMeassureRoom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
+    final size = MediaQuery.of(context).size;
 
     return Row(
       mainAxisAlignment:
@@ -347,14 +351,14 @@ class RowMeassureRoom extends StatelessWidget {
         Text(
           ' $wide',
           style: TextStyle(
-              fontSize: fontSize,
+              fontSize: size.height / 40,
               color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
 
         Text(
           (ismin) ? ' An' : ' Ancho',
           style: TextStyle(
-              fontSize: fontSize,
+              fontSize: size.height / 40,
               color:
                   (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
         ),
@@ -365,13 +369,13 @@ class RowMeassureRoom extends StatelessWidget {
         Text(
           ' $long',
           style: TextStyle(
-              fontSize: fontSize,
+              fontSize: size.height / 40,
               color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
         Text(
           (ismin) ? ' La' : ' Largo',
           style: TextStyle(
-              fontSize: fontSize,
+              fontSize: size.height / 40,
               color:
                   (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
         ),
@@ -382,13 +386,13 @@ class RowMeassureRoom extends StatelessWidget {
         Text(
           ' $tall',
           style: TextStyle(
-              fontSize: fontSize,
+              fontSize: size.height / 40,
               color: (currentTheme.customTheme) ? Colors.white : Colors.black),
         ),
         Text(
           (ismin) ? ' Al' : ' Alto',
           style: TextStyle(
-              fontSize: fontSize,
+              fontSize: size.height / 40,
               color:
                   (currentTheme.customTheme) ? Colors.white54 : Colors.black54),
         ),

@@ -45,6 +45,8 @@ class EmojiText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: RichText(
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
         text: TextSpan(children: generateTextSpans(text), style: style),
       ),
     );

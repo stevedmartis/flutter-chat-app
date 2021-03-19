@@ -91,10 +91,15 @@ class _HeaderImagePageState extends State<HeaderImagePage> {
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
         padding: EdgeInsets.only(right: 10),
         height: 400.0,
-        child: Center(child: CircularProgressIndicator()));
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.accentColor,
+        )));
   }
 
   _selectImage() async {

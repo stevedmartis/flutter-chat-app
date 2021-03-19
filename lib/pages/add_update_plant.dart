@@ -353,7 +353,7 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                             } else if (snapshot.hasError) {
                               return _buildErrorWidget(snapshot.error);
                             } else {
-                              return _buildLoadingWidget();
+                              return buildLoadingWidget();
                             }
                           },
                         ),
@@ -464,9 +464,15 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
     );
   }
 
-  Widget _buildLoadingWidget() {
+  Widget buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
+        height: 400.0,
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.accentColor,
+        )));
   }
 
   Widget _buildErrorWidget(String error) {
@@ -863,11 +869,11 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
               padding: const EdgeInsets.all(10.0),
               child: Center(
                 child: Text(
-                  'Done',
+                  (widget.isEdit) ? 'Guardar' : 'Crear',
                   style: TextStyle(
                       color: (isControllerChange && !errorRequired)
                           ? currentTheme.accentColor
-                          : Colors.grey.withOpacity(0.60),
+                          : Colors.grey,
                       fontSize: 18),
                 ),
               ),

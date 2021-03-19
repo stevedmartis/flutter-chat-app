@@ -240,9 +240,8 @@ class _ProfileCardState extends State<ProfileCard> {
                           color: (currentTheme.customTheme)
                               ? currentTheme
                                   .currentTheme.scaffoldBackgroundColor
-                                  .withOpacity(0.60)
-                              : Colors.black.withOpacity(0.60),
-                          textColor: Colors.white,
+                              : Colors.black54,
+                          textColor: Colors.white54,
                           text: 'Ver receta',
                           onPressed: () {
                             (widget.isUserAuth)
@@ -270,9 +269,8 @@ class _ProfileCardState extends State<ProfileCard> {
                           color: (currentTheme.customTheme)
                               ? currentTheme
                                   .currentTheme.scaffoldBackgroundColor
-                                  .withOpacity(0.60)
-                              : Colors.black.withOpacity(0.60),
-                          textColor: Colors.white.withOpacity(0.60),
+                              : Colors.black54,
+                          textColor: Colors.white54,
                           text: 'Editar perfil',
                           onPressed: () {
                             Navigator.of(context)
@@ -309,11 +307,8 @@ class _ProfileCardState extends State<ProfileCard> {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: ButtonSubEditProfile(
-                            color: (currentTheme.customTheme)
-                                ? currentTheme
-                                    .currentTheme.scaffoldBackgroundColor
-                                    .withOpacity(0.60)
-                                : Colors.black.withOpacity(0.60),
+                            isSub: true,
+                            color: currentTheme.currentTheme.accentColor,
                             textColor: currentTheme.currentTheme.accentColor,
                             text: 'SUSCRIBIRME',
                             onPressed: () {
@@ -350,8 +345,7 @@ class _ProfileCardState extends State<ProfileCard> {
                             color: (currentTheme.customTheme)
                                 ? currentTheme
                                     .currentTheme.scaffoldBackgroundColor
-                                    .withOpacity(0.60)
-                                : Colors.black.withOpacity(0.60),
+                                : Colors.black54,
                             textColor: Colors.white,
                             text: 'Pendiente',
                             onPressed: () {
@@ -385,11 +379,8 @@ class _ProfileCardState extends State<ProfileCard> {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: ButtonSubEditProfile(
-                            color: (currentTheme.customTheme)
-                                ? currentTheme
-                                    .currentTheme.scaffoldBackgroundColor
-                                    .withOpacity(0.60)
-                                : Colors.black.withOpacity(0.60),
+                            isSub: true,
+                            color: currentTheme.currentTheme.accentColor,
                             textColor: currentTheme.currentTheme.accentColor,
                             text: 'SUSCRIBIRME',
                             onPressed: () {
@@ -423,11 +414,8 @@ class _ProfileCardState extends State<ProfileCard> {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: ButtonSubEditProfile(
-                            color: (currentTheme.customTheme)
-                                ? currentTheme
-                                    .currentTheme.scaffoldBackgroundColor
-                                    .withOpacity(0.60)
-                                : Colors.black.withOpacity(0.60),
+                            isSub: true,
+                            color: currentTheme.currentTheme.accentColor,
                             textColor: currentTheme.currentTheme.accentColor,
                             text: 'SUSCRITO',
                             onPressed: () {

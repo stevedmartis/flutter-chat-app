@@ -101,10 +101,15 @@ class CoverImageProductPageState extends State<CoverImageProductPage> {
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
     return Container(
         padding: EdgeInsets.only(right: 10),
         height: 400.0,
-        child: Center(child: CircularProgressIndicator()));
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.accentColor,
+        )));
   }
 
   _selectImage() async {
@@ -129,12 +134,14 @@ class CoverImageProductPageState extends State<CoverImageProductPage> {
       setState(() {
         //  plantBloc.imageUpdate.add(true);
 
-        productBloc.imageUpdate.add(true);
-
-        productService.product.coverImage = resp;
+        (productService.productProfile != null)
+            ? productService.productProfile.product.coverImage = resp
+            : productService.product.coverImage = resp;
         // plantBloc.getPlantsByUser(profile.user.uid);
 
+        productBloc.imageUpdate.add(true);
         loadingImage = false;
+        productBloc.getProducts(profile.user.uid);
         // plantService.plant.coverImage = resp;
 
         // awsService.isUpload = true;
@@ -164,10 +171,14 @@ class CoverImageProductPageState extends State<CoverImageProductPage> {
           fileType[0], fileType[1], imageCover, widget.product.id);
 
       setState(() {
-        productBloc.imageUpdate.add(true);
         // plantBloc.getPlantsByUser(profile.user.uid);
 
-        productService.product.coverImage = resp;
+        (productService.productProfile != null)
+            ? productService.productProfile.product.coverImage = resp
+            : productService.product.coverImage = resp;
+
+        productBloc.imageUpdate.add(true);
+        productBloc.getProducts(profile.user.uid);
 
         loadingImage = false;
       });

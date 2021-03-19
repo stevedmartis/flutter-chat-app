@@ -1,35 +1,24 @@
-// To parse this JSON data, do
-//
-//     final usuariosResponse = usuariosResponseFromJson(jsonString);
-
 import 'dart:convert';
+import 'package:chat/models/profiles.dart';
 
-import 'package:chat/models/profile.dart';
-import 'package:chat/models/room.dart';
+LoginResponse profileResponseFromJson(String str) =>
+    LoginResponse.fromJson(json.decode(str));
 
-ProfileResponse profileResponseFromJson(String str) =>
-    ProfileResponse.fromJson(json.decode(str));
+String profileResponseToJson(LoginResponse data) => json.encode(data.toJson());
 
-String profileResponseToJson(ProfileResponse data) =>
-    json.encode(data.toJson());
-
-class ProfileResponse {
-  ProfileResponse({this.ok, this.rooms, this.profile});
+class LoginResponse {
+  LoginResponse({
+    this.ok,
+    this.profile,
+  });
 
   bool ok;
-  List<Room> rooms;
-  Profile profile;
+  Profiles profile;
 
-  factory ProfileResponse.fromJson(Map<String, dynamic> json) =>
-      ProfileResponse(
+  factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
         ok: json["ok"],
-        profile: Profile.fromJson(json["profile"]),
-        rooms: List<Room>.from(json["rooms"].map((x) => Room.fromJson(x))),
+        profile: Profiles.fromJson(json["profile"]),
       );
 
-  Map<String, dynamic> toJson() => {
-        "ok": ok,
-        "profile": profile.toJson(),
-        "rooms": List<dynamic>.from(rooms.map((x) => x.toJson())),
-      };
+  Map<String, dynamic> toJson() => {"ok": ok, "profile": profile.toJson()};
 }
