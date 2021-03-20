@@ -4,6 +4,7 @@ import 'package:chat/widgets/avatar_user_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/extension.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CardProductProfile extends StatefulWidget {
   final ProductProfile productProfile;
@@ -41,20 +42,13 @@ class _CardProductState extends State<CardProductProfile> {
                           bottomRight: Radius.circular(0.0),
                           bottomLeft: Radius.circular(10.0)),
                       child: Material(
-                        type: MaterialType.transparency,
-                        child: (widget.productProfile.product.coverImage != "")
-                            ? FadeInImage(
-                                image: NetworkImage(widget
-                                    .productProfile.product
-                                    .getCoverImg()),
-                                placeholder: AssetImage('assets/loading2.gif'),
-                                fit: BoxFit.cover)
-                            : FadeInImage(
-                                image:
-                                    AssetImage('assets/images/empty_image.png'),
-                                placeholder: AssetImage('assets/loading2.gif'),
-                                fit: BoxFit.cover),
-                      )),
+                          type: MaterialType.transparency,
+                          child: (widget.productProfile.product.coverImage !=
+                                  "")
+                              ? cachedNetworkImage(
+                                  widget.productProfile.product.getCoverImg())
+                              : cachedNetworkImage(
+                                  'assets/images/empty_image.png'))),
                 ),
               ],
             ),
@@ -356,6 +350,29 @@ class _CardProductState extends State<CardProductProfile> {
       ),
     );
   }
+}
+
+Widget cachedNetworkImage(String image) {
+  return CachedNetworkImage(
+    imageUrl: image,
+    imageBuilder: (context, imageProvider) => Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.cover,
+            colorFilter:
+                ColorFilter.mode(Colors.transparent, BlendMode.colorBurn)),
+      ),
+    ),
+    placeholder: (context, url) => Container(
+      child: Image(
+        image: AssetImage('assets/loading2.gif'),
+        fit: BoxFit.cover,
+        width: double.maxFinite,
+      ),
+    ),
+    errorWidget: (context, url, error) => Icon(Icons.error),
+  );
 }
 
 class CbdthcRow extends StatelessWidget {

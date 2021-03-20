@@ -1,6 +1,7 @@
 import 'package:chat/models/plant.dart';
 import 'package:chat/models/visit.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -41,13 +42,9 @@ class _CardVisitState extends State<CardVisit> {
               width: size.width,
               height: size.height / 4.5,
               child: ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.50), BlendMode.dstATop),
-                child: FadeInImage(
-                    image: NetworkImage(widget.visit.getCoverImg()),
-                    placeholder: AssetImage('assets/loading2.gif'),
-                    fit: BoxFit.cover),
-              )),
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.50), BlendMode.dstATop),
+                  child: cachedNetworkImage(widget.visit.getCoverImg()))),
           Positioned(
               width: size.width,
               top:

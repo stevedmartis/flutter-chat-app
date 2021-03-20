@@ -78,7 +78,7 @@ class PlantBloc with Validators {
   Stream<String> get tchStream => _thcController.stream;
 
   Stream<bool> get formValidStream =>
-      Observable.combineLatest2(nameStream, quantityStream, (a, b) => true);
+      Rx.combineLatest2(nameStream, quantityStream, (a, b) => true);
 
   Stream<List<Plant>> get plants => _plantsController.stream;
   // Insertar valores al Stream

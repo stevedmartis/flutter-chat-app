@@ -44,7 +44,7 @@ class ProductBloc with Validators {
   Stream<String> get cbdStream => _cbdController.stream;
 
   Stream<bool> get formValidStream =>
-      Observable.combineLatest2(nameStream, descriptionStream, (e, p) => true);
+      Rx.combineLatest2(nameStream, descriptionStream, (e, p) => true);
 
   Stream<List<Product>> get products => _productsController.stream;
 

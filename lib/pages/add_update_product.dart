@@ -14,6 +14,7 @@ import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/product_services.dart';
 
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 
 import 'package:flutter/material.dart';
 
@@ -250,14 +251,8 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                                 },
                                 child: Hero(
                                   tag: widget.product.coverImage,
-                                  child: Image(
-                                    image: NetworkImage(
-                                      this.product.getCoverImg(),
-                                    ),
-                                    fit: BoxFit.cover,
-                                    height: double.infinity,
-                                    width: double.infinity,
-                                    alignment: Alignment.center,
+                                  child: cachedNetworkImage(
+                                    this.product.getCoverImg(),
                                   ),
                                 ),
                               );

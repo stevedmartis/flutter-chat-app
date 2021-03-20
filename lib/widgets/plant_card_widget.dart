@@ -1,6 +1,6 @@
 import 'package:chat/models/plant.dart';
 import 'package:chat/theme/theme.dart';
-import 'package:chat/widgets/plant_card.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -36,17 +36,11 @@ class _CardPlantState extends State<CardPlant> {
                       topRight: Radius.circular(20.0),
                       bottomRight: Radius.circular(15.0)),
                   child: Material(
-                    type: MaterialType.transparency,
-                    child: (widget.plant.coverImage != "")
-                        ? FadeInImage(
-                            image: NetworkImage(widget.plant.getCoverImg()),
-                            placeholder: AssetImage('assets/loading2.gif'),
-                            fit: BoxFit.cover)
-                        : FadeInImage(
-                            image: AssetImage('assets/images/empty_image.png'),
-                            placeholder: AssetImage('assets/loading2.gif'),
-                            fit: BoxFit.cover),
-                  )),
+                      type: MaterialType.transparency,
+                      child: (widget.plant.coverImage != "")
+                          ? cachedNetworkImage(widget.plant.getCoverImg())
+                          : cachedNetworkImage(
+                              'assets/images/empty_image.png'))),
             ),
           ],
         ),
@@ -216,6 +210,70 @@ class SexLtRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class CbdthcRow extends StatelessWidget {
+  const CbdthcRow(
+      {Key key, @required this.thc, @required this.cbd, this.fontSize = 10})
+      : super(key: key);
+
+  final String thc;
+  final String cbd;
+  final double fontSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+          child: Container(
+            padding: EdgeInsets.all(5.0),
+            decoration: BoxDecoration(
+              color: Color(0xffF12937E),
+              //color: Theme.of(context).accentColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              "THC: $thc %",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: fontSize,
+                  color: Colors.white),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: size.width / 5,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5.0),
+          child: Container(
+            padding: EdgeInsets.all(5.0),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              //color: Theme.of(context).accentColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              "CBD: $cbd %",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: fontSize,
+                  color: Colors.white),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+      ],
     );
   }
 }

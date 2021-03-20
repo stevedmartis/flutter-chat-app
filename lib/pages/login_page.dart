@@ -118,15 +118,15 @@ class _LoginPageState extends State<LoginPage> {
 
     return Container(
       margin: EdgeInsets.only(right: 20, top: 0),
-      width: size.width / 6,
-      height: size.height / 6,
+      width: size.width / 8,
+      height: size.height / 8,
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
         child: CircleAvatar(
             child: Container(
-                width: 50,
-                height: 50,
-                child: Image.asset('assets/google_logo_icon.png')),
+                width: 40,
+                height: 40,
+                child: Image.asset('assets/google-icon.png')),
             backgroundColor: Colors.white),
       ),
     );
@@ -138,8 +138,8 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       padding: EdgeInsets.all(0.0),
       margin: EdgeInsets.only(right: 0, top: 0),
-      width: size.width / 6,
-      height: size.height / 6,
+      width: size.width / 8,
+      height: size.height / 8,
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
         child: CircleAvatar(
@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
               child: FaIcon(
                 FontAwesomeIcons.apple,
                 color: Colors.black,
-                size: 60,
+                size: 30,
               ),
             ),
             backgroundColor: Colors.white),

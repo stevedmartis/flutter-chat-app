@@ -81,7 +81,7 @@ class RoomBloc with Validators {
   Stream<String> get timeOffStream =>
       _timeOffController.stream.transform(validationTimeOffRequired);
 
-  Stream<bool> get formValidStream => Observable.combineLatest4(
+  Stream<bool> get formValidStream => Rx.combineLatest4(
       nameStream,
       wideStream,
       longStream,

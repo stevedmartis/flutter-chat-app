@@ -1,5 +1,6 @@
 import 'package:chat/models/profiles.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -43,10 +44,7 @@ class _ImageUserChatState extends State<ImageUserChat> {
                   color: Colors.white,
                   width: widget.width,
                   height: widget.height,
-                  child: FadeInImage(
-                      image: NetworkImage(widget.profile.getAvatarImg()),
-                      placeholder: AssetImage('assets/loading2.gif'),
-                      fit: BoxFit.cover),
+                  child: cachedNetworkImage(widget.profile.getAvatarImg()),
                 ),
               )
             : CircleAvatar(
@@ -110,16 +108,11 @@ class _ImageAvatarExpandedState extends State<ImageAvatarExpanded> {
                 borderRadius: BorderRadius.circular(8.0),
                 clipBehavior: Clip.antiAlias,
                 child: InteractiveViewer(
-                  panEnabled: false, // Set it to false to prevent panning.
-                  boundaryMargin: EdgeInsets.all(80),
-                  minScale: 0.5,
-                  maxScale: 10,
-                  child: Image(
-                    image: NetworkImage(widget.profile.getAvatarImg()),
-                    fit: BoxFit.cover,
-                    width: double.maxFinite,
-                  ),
-                )),
+                    panEnabled: false, // Set it to false to prevent panning.
+                    boundaryMargin: EdgeInsets.all(80),
+                    minScale: 0.5,
+                    maxScale: 10,
+                    child: cachedNetworkImage(widget.profile.getAvatarImg()))),
           )
         : Container(
             margin: EdgeInsets.only(bottom: 300),

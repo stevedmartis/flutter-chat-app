@@ -1,5 +1,6 @@
 import 'package:chat/models/plant.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -37,17 +38,13 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
                       bottomRight: Radius.circular(10.0),
                       bottomLeft: Radius.circular(10.0)),
                   child: Material(
-                    type: MaterialType.transparency,
-                    child: (widget.plant.coverImage != "")
-                        ? FadeInImage(
-                            image: NetworkImage(widget.plant.getCoverImg()),
-                            placeholder: AssetImage('assets/loading2.gif'),
-                            fit: BoxFit.cover)
-                        : FadeInImage(
-                            image: AssetImage('assets/images/empty_image.png'),
-                            placeholder: AssetImage('assets/loading2.gif'),
-                            fit: BoxFit.cover),
-                  )),
+                      type: MaterialType.transparency,
+                      child: (widget.plant.coverImage != "")
+                          ? cachedNetworkImage(
+                              widget.plant.getCoverImg(),
+                            )
+                          : cachedNetworkImage(
+                              'assets/images/empty_image.png'))),
             ),
           ],
         ),

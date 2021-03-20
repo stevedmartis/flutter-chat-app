@@ -13,6 +13,7 @@ import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/subscription_service.dart';
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/button_gold.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 import 'package:chat/widgets/sliver_header.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -105,15 +106,9 @@ class _ProfileCardState extends State<ProfileCard> {
     return Stack(
       children: [
         Hero(
-            tag: profileUser.imageHeader,
-            child: FadeInImage(
-              image: NetworkImage(profileUser.getHeaderImg()),
-              placeholder: AssetImage('assets/loading2.gif'),
-              fit: BoxFit.cover,
-              height: size.height,
-              width: double.infinity,
-              alignment: Alignment.center,
-            )),
+          tag: profileUser.imageHeader,
+          child: cachedNetworkImage(profileUser.getHeaderImg()),
+        ),
         Positioned(
             child: Container(
                 margin: EdgeInsets.only(
@@ -186,19 +181,13 @@ class _ProfileCardState extends State<ProfileCard> {
                                                           (_, openContainer) {
                                                         return CircleAvatar(
                                                           child: Container(
-                                                            color: Colors.white,
-                                                            width: 100,
-                                                            height: 100,
-                                                            child: FadeInImage(
-                                                                image: NetworkImage(
-                                                                    profileUser
-                                                                        .getAvatarImg()),
-                                                                placeholder:
-                                                                    AssetImage(
-                                                                        'assets/loading2.gif'),
-                                                                fit: BoxFit
-                                                                    .cover),
-                                                          ),
+                                                              color:
+                                                                  Colors.white,
+                                                              width: 100,
+                                                              height: 100,
+                                                              child: cachedNetworkImage(
+                                                                  profileUser
+                                                                      .getAvatarImg())),
                                                         );
                                                       })
                                                   : CircleAvatar(

@@ -1,6 +1,7 @@
 import 'package:chat/models/plant.dart';
 import 'package:chat/pages/chat_page.dart';
 import 'package:chat/services/plant_services.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -47,15 +48,11 @@ class _PlantCardState extends State<PlantCard> {
       child: Hero(
         tag: widget.plant.id,
         child: Material(
-            type: MaterialType.transparency,
-            child: FadeInImage(
-              image: NetworkImage(plant.getCoverImg()),
-              placeholder: AssetImage('assets/loading2.gif'),
-              fit: BoxFit.cover,
-              height: 100,
-              width: double.infinity,
-              alignment: Alignment.center,
-            )),
+          type: MaterialType.transparency,
+          child: cachedNetworkImage(
+            plant.getCoverImg(),
+          ),
+        ),
       ),
     );
   }

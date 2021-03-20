@@ -15,6 +15,7 @@ import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/plant_services.dart';
 
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 
 import 'package:flutter/material.dart';
 
@@ -338,17 +339,10 @@ class AddUpdatePlantPageState extends State<AddUpdatePlantPage> {
                                               isEdit: widget.isEdit)));
                                 },
                                 child: Hero(
-                                  tag: widget.plant.coverImage,
-                                  child: Image(
-                                    image: NetworkImage(
+                                    tag: widget.plant.coverImage,
+                                    child: cachedNetworkImage(
                                       this.plant.getCoverImg(),
-                                    ),
-                                    fit: BoxFit.cover,
-                                    height: double.infinity,
-                                    width: double.infinity,
-                                    alignment: Alignment.center,
-                                  ),
-                                ),
+                                    )),
                               );
                             } else if (snapshot.hasError) {
                               return _buildErrorWidget(snapshot.error);

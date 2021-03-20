@@ -48,7 +48,7 @@ class AirBloc with Validators {
   Stream<String> get kelvinStream =>
       _kelvinController.stream.transform(validationKelvinRequired);
 
-  Stream<bool> get formValidStream => Observable.combineLatest2(
+  Stream<bool> get formValidStream => Rx.combineLatest2(
       nameStream,
       wattsStream,
 

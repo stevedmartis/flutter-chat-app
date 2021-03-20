@@ -48,7 +48,7 @@ class LightBloc with Validators {
   Stream<String> get kelvinStream =>
       _kelvinController.stream.transform(validationKelvinRequired);
 
-  Stream<bool> get formValidStream => Observable.combineLatest3(
+  Stream<bool> get formValidStream => Rx.combineLatest3(
       nameStream,
       wattsStream,
       kelvinStream,

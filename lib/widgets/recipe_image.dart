@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:chat/models/profiles.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 import 'package:flutter/material.dart';
 
 class RecipeImageExpanded extends StatefulWidget {
@@ -43,11 +44,6 @@ class _RecipeImageExpandedState extends State<RecipeImageExpanded> {
 
             minScale: 0.5,
             maxScale: 4,
-            child: FadeInImage(
-              image: NetworkImage(widget.profile.getRecipeImg()),
-              placeholder: AssetImage('assets/loading2.gif'),
-              fit: BoxFit.cover,
-              width: double.maxFinite,
-            )));
+            child: cachedNetworkImage(widget.profile.getRecipeImg())));
   }
 }

@@ -12,6 +12,7 @@ import 'package:chat/services/aws_service.dart';
 import 'package:chat/services/visit_service.dart';
 
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 
 import 'package:flutter/material.dart';
 
@@ -297,17 +298,8 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                                                         isEdit:
                                                             widget.isEdit)));
                                       },
-                                      child: Hero(
-                                        tag: visitService.visit.coverImage,
-                                        child: Image(
-                                          image: NetworkImage(
-                                            visitService.visit.getCoverImg(),
-                                          ),
-                                          fit: BoxFit.cover,
-                                          height: double.infinity,
-                                          width: double.infinity,
-                                          alignment: Alignment.center,
-                                        ),
+                                      child: cachedNetworkImage(
+                                        visitService.visit.getCoverImg(),
                                       ),
                                     )
                                   : GestureDetector(
@@ -324,17 +316,8 @@ class AddUpdateVisitPageState extends State<AddUpdateVisitPage> {
                                                         isEdit:
                                                             widget.isEdit)));
                                       },
-                                      child: Hero(
-                                        tag: widget.visit.coverImage,
-                                        child: Image(
-                                          image: NetworkImage(
-                                            widget.visit.getCoverImg(),
-                                          ),
-                                          fit: BoxFit.cover,
-                                          height: double.infinity,
-                                          width: double.infinity,
-                                          alignment: Alignment.center,
-                                        ),
+                                      child: cachedNetworkImage(
+                                        widget.visit.getCoverImg(),
                                       ),
                                     );
                             } else if (snapshot.hasError) {

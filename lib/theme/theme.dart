@@ -78,7 +78,7 @@ class ThemeChanger with ChangeNotifier {
         cardColor: Color(0xff151518),
         brightness: Brightness.dark,
         primaryColorLight: Colors.white,
-        scaffoldBackgroundColor: Color(0xff1A1A1A), // gummetal
+        scaffoldBackgroundColor: Color(0xff000000), // gummetal
         textTheme: TextTheme(bodyText1: TextStyle(color: Colors.white)),
       );
     } else {
@@ -87,7 +87,7 @@ class ThemeChanger with ChangeNotifier {
           brightness: Brightness.light,
           scaffoldBackgroundColor: Color(0xffEDE9EC),
           primaryColor: Color(0xffCBC3C5),
-          cardColor: Color(0xffEDE9EC));
+          cardColor: Color(0xff151517));
     }
 
     //notifyListeners();

@@ -10,6 +10,7 @@ import 'package:chat/services/auth_service.dart';
 
 import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/avatar_user_chat.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -195,17 +196,9 @@ class EditProfilePageState extends State<EditProfilePage> {
                                           )));
                                 },
                                 child: Hero(
-                                  tag: profile.imageHeader,
-                                  child: Image(
-                                    image: NetworkImage(
-                                      profile.getHeaderImg(),
-                                    ),
-                                    fit: BoxFit.cover,
-                                    height: double.infinity,
-                                    width: double.infinity,
-                                    alignment: Alignment.center,
-                                  ),
-                                ),
+                                    tag: profile.imageHeader,
+                                    child: cachedNetworkImage(
+                                        profile.getHeaderImg())),
                               );
                             } else if (snapshot.hasError) {
                               return _buildErrorWidget(snapshot.error);

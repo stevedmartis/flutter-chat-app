@@ -45,8 +45,9 @@ class _RecipeImagePageState extends State<RecipeImagePage> {
         : widget.profile.name;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.black,
-        title: Text(nameSub),
+        title: (widget.isUserAuth) ? Text('Mi Receta') : Text(nameSub),
         leading: IconButton(
           icon: Icon(
             Icons.chevron_left,
