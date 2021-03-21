@@ -75,7 +75,7 @@ class ThemeChanger with ChangeNotifier {
       _currentTheme = ThemeData.dark().copyWith(
         accentColor: Color(0xff34EC9C), // Sea green Crayon
         primaryColor: Color(0xffA39FA2).withOpacity(0.50),
-        cardColor: Color(0xff151518),
+        cardColor: Color(0xff241F22),
         brightness: Brightness.dark,
         primaryColorLight: Colors.white,
         scaffoldBackgroundColor: Color(0xff000000), // gummetal
@@ -85,9 +85,9 @@ class ThemeChanger with ChangeNotifier {
       _currentTheme = ThemeData.light().copyWith(
           accentColor: Color(0xff34EC9C),
           brightness: Brightness.light,
-          scaffoldBackgroundColor: Color(0xffEDE9EC),
+          scaffoldBackgroundColor: Color(0xffEFEEF6),
           primaryColor: Color(0xffCBC3C5),
-          cardColor: Color(0xff151517));
+          cardColor: Colors.white);
     }
 
     //notifyListeners();

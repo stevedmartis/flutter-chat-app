@@ -44,44 +44,46 @@ class CustomListItemTwoRoom extends StatelessWidget {
     final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
     final size = MediaQuery.of(context).size;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: SizedBox(
-        height: size.height / 4,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
-                child: _ArticleDescription(
-                  title: title,
-                  subtitle: subtitle,
-                  wide: wide,
-                  long: long,
-                  tall: tall,
-                  timeOn: timeOn,
-                  timeOff: timeOff,
-                  publishDate: publishDate,
-                  readDuration: readDuration,
-                  totalPlants: totalPlants,
-                  totalAirs: totalAirs,
-                  totalLights: totalLigths,
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        child: SizedBox(
+          height: size.height / 4,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
+                  child: _ArticleDescription(
+                    title: title,
+                    subtitle: subtitle,
+                    wide: wide,
+                    long: long,
+                    tall: tall,
+                    timeOn: timeOn,
+                    timeOff: timeOff,
+                    publishDate: publishDate,
+                    readDuration: readDuration,
+                    totalPlants: totalPlants,
+                    totalAirs: totalAirs,
+                    totalLights: totalLigths,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-                width: size.height / 10,
-                child: Center(
-                    child: Container(
-                  child: Icon(
-                    Icons.format_list_bulleted,
-                    color: currentTheme.accentColor,
-                    size: size.height / 20,
-                  ),
-                ))),
-          ],
+              SizedBox(
+                  width: size.height / 10,
+                  child: Center(
+                      child: Container(
+                    child: Icon(
+                      Icons.format_list_bulleted,
+                      color: currentTheme.accentColor,
+                      size: size.height / 25,
+                    ),
+                  ))),
+            ],
+          ),
         ),
       ),
     );
@@ -143,7 +145,7 @@ class _ArticleDescription extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: size.height / 30,
+                  fontSize: size.height / 40,
                   color: currentTheme.currentTheme.accentColor),
             ),
             SizedBox(

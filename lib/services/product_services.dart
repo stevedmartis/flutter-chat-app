@@ -13,11 +13,20 @@ class ProductService with ChangeNotifier {
 
   Product _product;
 
+  int _countLikes = 0;
+
   ProductProfile _productProfile;
   Product get product => this._product;
 
   set product(Product valor) {
     this._product = valor;
+    //notifyListeners();
+  }
+
+  int get countLikes => this._countLikes;
+
+  set countLikes(int valor) {
+    this._countLikes = valor;
     //notifyListeners();
   }
 

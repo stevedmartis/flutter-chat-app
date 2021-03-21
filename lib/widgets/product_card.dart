@@ -1,5 +1,6 @@
 import 'package:chat/models/products.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/extension.dart';
@@ -42,16 +43,9 @@ class _CardProductState extends State<CardProduct> {
                       child: Material(
                         type: MaterialType.transparency,
                         child: (widget.product.coverImage != "")
-                            ? FadeInImage(
-                                image:
-                                    NetworkImage(widget.product.getCoverImg()),
-                                placeholder: AssetImage('assets/loading2.gif'),
-                                fit: BoxFit.cover)
-                            : FadeInImage(
-                                image:
-                                    AssetImage('assets/images/empty_image.png'),
-                                placeholder: AssetImage('assets/loading2.gif'),
-                                fit: BoxFit.cover),
+                            ? cachedNetworkImage(widget.product.getCoverImg())
+                            : cachedNetworkImage(
+                                'assets/images/empty_image.png'),
                       )),
                 ),
               ],

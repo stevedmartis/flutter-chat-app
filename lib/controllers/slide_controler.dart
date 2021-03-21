@@ -68,8 +68,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
           padding: EdgeInsets.only(
               top: _size.height * 0.82, bottom: _size.height * 0.1),
           child: GestureDetector(
-              child:
-                  roundedRectButton("Entrar!", orangeGradients, false, false),
+              child: roundedRectButton("Entrar!", orangeGradients, false, true),
               onTap: () => {Navigator.push(context, _createRuteLogIn())}),
         ),
         Container(
@@ -78,7 +77,7 @@ class _OnBoardingSelectorState extends State<OnBoardingSelector> {
               EdgeInsets.only(top: _size.height * 0.9, left: 60, right: 60),
           child: GestureDetector(
               child: roundedRectButton(
-                  "Registrarme!", blackGradients, false, true),
+                  "Registrarme!", blackGradients, false, false),
               onTap: () => {Navigator.push(context, _createRuteSignUp())}),
         ),
       ],

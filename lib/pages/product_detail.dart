@@ -21,6 +21,7 @@ import 'package:chat/theme/theme.dart';
 import 'package:chat/widgets/card_product.dart';
 import 'package:chat/widgets/carousel_tabs.dart';
 import 'package:chat/widgets/myprofile.dart';
+import 'package:chat/widgets/productProfile_card.dart';
 import 'package:chat/widgets/sliver_appBar_snap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -328,14 +329,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                         ],
                         background: Material(
                             type: MaterialType.transparency,
-                            child: FadeInImage(
-                              image: NetworkImage(product.getCoverImg()),
-                              placeholder: AssetImage('assets/loading2.gif'),
-                              fit: BoxFit.cover,
-                              height: 100,
-                              width: double.infinity,
-                              alignment: Alignment.center,
-                            )),
+                            child: cachedNetworkImage(product.getCoverImg())),
                         centerTitle: true,
                         title: Container(
                             //  margin: EdgeInsets.only(left: 0),

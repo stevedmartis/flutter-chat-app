@@ -121,7 +121,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
           title: Text(
             nameFinal,
             style: TextStyle(
-                fontSize: size.height / 30,
+                fontSize: size.height / 40,
                 color:
                     (currentTheme.customTheme) ? Colors.white : Colors.black),
           ),
@@ -144,7 +144,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
               Icons.chevron_left,
               color: currentTheme.currentTheme.accentColor,
             ),
-            iconSize: size.height / 20,
+            iconSize: size.height / 30,
             onPressed: () => Navigator.pop(context),
             color: Colors.white,
           )),
@@ -333,7 +333,7 @@ class _RoomDetailPageState extends State<RoomDetailPage>
                     child: ButtonSubEditProfile(
                         isSecond: true,
                         color: currentTheme.currentTheme.accentColor,
-                        textColor: Colors.black,
+                        textColor: Colors.white,
                         text: 'Editar',
                         onPressed: () {
                           Navigator.of(context)

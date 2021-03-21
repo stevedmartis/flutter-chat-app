@@ -128,6 +128,9 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
   }
 
   bool isLikedSave = false;
+  int countLikes = 0;
+  int countLikesInit = 0;
+  bool isCountChange = false;
 
   @override
   Widget build(BuildContext context) {
@@ -138,10 +141,15 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
 
     final productService = Provider.of<ProductService>(context, listen: false);
 
+    final countInit = widget.productProfile.product.countLikes;
+
     setState(() {
       productProfile = (productService.productProfile != null)
           ? productService.productProfile
           : widget.productProfile;
+
+      isLikedSave = productProfile.product.isLike;
+      countLikes = (isCountChange) ? countLikes : countInit;
     });
 
     return Scaffold(
@@ -205,6 +213,9 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                       onSelected: (String result) {
                                         switch (result) {
                                           case '1':
+                                            break;
+
+                                          case '2':
                                             aws.isUploadImagePlant = false;
                                             productService.productProfile =
                                                 productProfile;
@@ -213,7 +224,7 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                                 createRouteEditProduct(widget
                                                     .productProfile.product));
                                             break;
-                                          case '2':
+                                          case '3':
                                             confirmDelete(
                                                 context,
                                                 'Confirmar',
@@ -230,36 +241,103 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                         PopupMenuItem<String>(
                                             value: '1',
                                             child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
-                                                FaIcon(
-                                                  FontAwesomeIcons.edit,
-                                                  color: currentTheme
-                                                      .currentTheme.accentColor,
-                                                  size: 20,
+                                                LikeButton(
+                                                  isLiked: isLikedSave,
+                                                  onTap: onLikeButtonTapped,
+                                                  bubblesColor: BubblesColor(
+                                                    dotPrimaryColor:
+                                                        currentTheme
+                                                            .currentTheme
+                                                            .accentColor,
+                                                    dotSecondaryColor:
+                                                        currentTheme
+                                                            .currentTheme
+                                                            .accentColor,
+                                                  ),
+                                                  likeBuilder: (
+                                                    bool isLiked,
+                                                  ) {
+                                                    return Icon(
+                                                      Icons.favorite,
+                                                      color: isLikedSave
+                                                          ? currentTheme
+                                                              .currentTheme
+                                                              .accentColor
+                                                          : Colors.white54,
+                                                      size:
+                                                          isLikedSave ? 28 : 25,
+                                                    );
+                                                  },
+                                                  likeCount: countLikes,
+                                                  countBuilder: (int count,
+                                                      bool isLiked,
+                                                      String text) {
+                                                    print(count);
+
+                                                    return Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 10),
+                                                        child: Text(
+                                                            '$countLikes'));
+                                                  },
                                                 ),
                                                 SizedBox(
-                                                  width: 10,
+                                                  width: 5.0,
                                                 ),
-                                                Text('Editar',
+                                                /* Text('$countLikes',
                                                     style: TextStyle(
                                                         color: currentTheme
                                                             .currentTheme
-                                                            .accentColor)),
+                                                            .accentColor)), */
                                               ],
                                             )),
                                         PopupMenuItem<String>(
-                                          value: '2',
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.delete,
-                                                  color: Colors.grey),
-                                              SizedBox(
-                                                width: 10,
+                                            value: '2',
+                                            child: Container(
+                                              padding:
+                                                  EdgeInsets.only(left: 10),
+                                              child: Row(
+                                                children: [
+                                                  FaIcon(
+                                                    FontAwesomeIcons.edit,
+                                                    color: currentTheme
+                                                        .currentTheme
+                                                        .accentColor,
+                                                    size: 20,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text('Editar',
+                                                      style: TextStyle(
+                                                          color: currentTheme
+                                                              .currentTheme
+                                                              .accentColor)),
+                                                ],
                                               ),
-                                              Text('Eliminar',
-                                                  style: TextStyle(
-                                                      color: Colors.grey)),
-                                            ],
+                                            )),
+                                        PopupMenuItem<String>(
+                                          value: '3',
+                                          child: Container(
+                                            padding: EdgeInsets.only(left: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.delete,
+                                                    color: Colors.grey),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text('Eliminar',
+                                                    style: TextStyle(
+                                                        color: Colors.grey)),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -293,7 +371,7 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                             ? currentTheme
                                                 .currentTheme.accentColor
                                             : Colors.white54,
-                                        size: isLikedSave ? 25 : 22,
+                                        size: isLikedSave ? 28 : 25,
                                       );
                                     },
                                   ),
@@ -356,6 +434,11 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
     /// if failed, you can do nothing
 
     isLikedSave = success.favorite.isLike;
+    productBloc.getProducts(profile.user.uid);
+
+    isCountChange = true;
+
+    (isLikedSave) ? countLikes++ : countLikes--;
 
     return isLikedSave;
   }

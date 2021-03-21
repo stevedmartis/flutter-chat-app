@@ -16,18 +16,19 @@ class _CardAirState extends State<CardAir> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Column(
       children: <Widget>[
         Container(
-          color: currentTheme.scaffoldBackgroundColor,
           padding: EdgeInsets.only(top: 10, left: 0, right: 10, bottom: 5.0),
           width: size.height / 1.5,
           child: FittedBox(
             child: Card(
               shadowColor: Colors.black,
-              color: currentTheme.scaffoldBackgroundColor,
+              color: (currentTheme.customTheme)
+                  ? currentTheme.currentTheme.cardColor
+                  : Colors.white,
               // color: Colors.red,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),

@@ -55,6 +55,8 @@ class ProfileCard extends StatefulWidget {
 class _ProfileCardState extends State<ProfileCard> {
   Profiles profileMyUser;
 
+  Profiles profileUser;
+
   Subscription subscription;
 
   Stream streamSubscription;
@@ -100,8 +102,7 @@ class _ProfileCardState extends State<ProfileCard> {
     // final bloc = CustomProvider.subscribeBlocIn(context);
 
     final chatService = Provider.of<ChatService>(context, listen: false);
-    final profileUser =
-        (widget.isUserAuth) ? widget.profile : chatService.userFor;
+    profileUser = (widget.isUserAuth) ? widget.profile : chatService.userFor;
 
     return Stack(
       children: [
@@ -139,78 +140,101 @@ class _ProfileCardState extends State<ProfileCard> {
                                                   Radius.circular(100)),
                                             ),
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(100.0)),
-                                              child: (profileUser.imageAvatar !=
-                                                      "")
-                                                  ? OpenContainer(
-                                                      closedColor: (currentTheme
-                                                              .customTheme)
-                                                          ? Colors.black
-                                                          : Colors.white,
-                                                      openColor: (currentTheme
-                                                              .customTheme)
-                                                          ? Colors.black
-                                                          : Colors.white,
-                                                      transitionType:
-                                                          ContainerTransitionType
-                                                              .fade,
-                                                      openShape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(100),
-                                                      ),
-                                                      closedShape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          100)),
-                                                      openBuilder:
-                                                          (_, closeContainer) {
-                                                        return AvatarImagePage(
-                                                          profile: this
-                                                              .widget
-                                                              .profile,
-                                                          isUserAuth:
-                                                              widget.isUserAuth,
-                                                        );
-                                                      },
-                                                      closedBuilder:
-                                                          (_, openContainer) {
-                                                        return CircleAvatar(
-                                                          child: Container(
-                                                              color:
-                                                                  Colors.white,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(100.0)),
+                                                child: (profileUser.imageAvatar !=
+                                                        "")
+                                                    ? OpenContainer(
+                                                        closedColor:
+                                                            (currentTheme.customTheme)
+                                                                ? Colors.black
+                                                                : Colors.white,
+                                                        openColor: (currentTheme
+                                                                .customTheme)
+                                                            ? Colors.black
+                                                            : Colors.white,
+                                                        transitionType:
+                                                            ContainerTransitionType
+                                                                .fade,
+                                                        openShape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      100),
+                                                        ),
+                                                        closedShape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                    100)),
+                                                        openBuilder: (_,
+                                                            closeContainer) {
+                                                          return AvatarImagePage(
+                                                            profile: this
+                                                                .widget
+                                                                .profile,
+                                                            isUserAuth: widget
+                                                                .isUserAuth,
+                                                          );
+                                                        },
+                                                        closedBuilder:
+                                                            (_, openContainer) {
+                                                          return CircleAvatar(
+                                                            child: Container(
+                                                                color: Colors
+                                                                    .white,
+                                                                width: 100,
+                                                                height: 100,
+                                                                child: cachedNetworkImage(
+                                                                    profileUser
+                                                                        .getAvatarImg())),
+                                                          );
+                                                        })
+                                                    : OpenContainer(
+                                                        closedColor: (currentTheme.customTheme) ? Colors.black : Colors.white,
+                                                        openColor: (currentTheme.customTheme) ? Colors.black : Colors.white,
+                                                        transitionType: ContainerTransitionType.fade,
+                                                        openShape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      100),
+                                                        ),
+                                                        closedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                                        openBuilder: (_, closeContainer) {
+                                                          return AvatarImagePage(
+                                                            profile: this
+                                                                .widget
+                                                                .profile,
+                                                            isUserAuth: widget
+                                                                .isUserAuth,
+                                                          );
+                                                        },
+                                                        closedBuilder: (_, openContainer) {
+                                                          return CircleAvatar(
+                                                            child: Container(
                                                               width: 100,
                                                               height: 100,
-                                                              child: cachedNetworkImage(
+                                                              child: Center(
+                                                                child: Text(
                                                                   profileUser
-                                                                      .getAvatarImg())),
-                                                        );
-                                                      })
-                                                  : CircleAvatar(
-                                                      child: Container(
-                                                        width: 100,
-                                                        height: 100,
-                                                        child: Center(
-                                                          child: Text(
-                                                            profileUser
-                                                                .user.username
-                                                                .substring(0, 2)
-                                                                .toUpperCase(),
-                                                            style: TextStyle(
-                                                                fontSize: 15),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      backgroundColor:
-                                                          currentTheme
-                                                              .currentTheme
-                                                              .accentColor,
-                                                    ),
-                                            ),
+                                                                      .user
+                                                                      .username
+                                                                      .substring(
+                                                                          0, 2)
+                                                                      .toUpperCase(),
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            backgroundColor:
+                                                                currentTheme
+                                                                    .currentTheme
+                                                                    .accentColor,
+                                                          );
+                                                        })),
                                           )),
                                     )))))))),
         (!widget.isUserAuth && profileMyUser.isClub)
@@ -308,7 +332,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                       context,
                                       currentTheme.currentTheme.accentColor,
                                       subscription,
-                                    );
+                                      size);
                             }),
                       ),
                     ),
@@ -379,6 +403,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                       context,
                                       currentTheme.currentTheme.accentColor,
                                       subscription,
+                                      size,
                                     );
                             }),
                       ),
@@ -448,7 +473,12 @@ class _ProfileCardState extends State<ProfileCard> {
     );
   }
 
-  updateFieldToSubscribe(context, color, Subscription subscription) {
+  updateFieldToSubscribe(
+    context,
+    color,
+    Subscription subscription,
+    Size size,
+  ) {
     const List<Color> orangeGradients = [
       Color(0xff1C3041),
       Color(0xff1C3041),
@@ -510,8 +540,8 @@ class _ProfileCardState extends State<ProfileCard> {
         context: context,
         builder: (_) => CupertinoAlertDialog(
               title: Text(
-                'Subir receta',
-                style: TextStyle(color: Colors.white54, fontSize: 15),
+                'Suscribirme',
+                style: TextStyle(color: Colors.white54, fontSize: 20),
               ),
               content: StreamBuilder(
                   stream: subscriptionBloc.subscription.stream,
@@ -528,6 +558,11 @@ class _ProfileCardState extends State<ProfileCard> {
                           !snapshot.data.subscribeActive) {
                         return Column(
                           children: [
+                            Text(
+                              'Subir mi receta',
+                              style: TextStyle(
+                                  color: Colors.white54, fontSize: 15),
+                            ),
                             GestureDetector(
                                 child: roundedRectButtonIcon(
                                     "Desde mis fotos",
@@ -548,26 +583,60 @@ class _ProfileCardState extends State<ProfileCard> {
                           imageRecipe &&
                           !snapshot.data.subscribeApproved &&
                           !snapshot.data.subscribeActive) {
-                        return GestureDetector(
-                          onTap: () => {_selectImage(false)},
-                          child: Container(
-                            padding: EdgeInsets.only(top: 10.0),
-                            child: ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                child: Container(
-                                  child: FadeInImage(
-                                    image:
-                                        NetworkImage(snapshot.data.imageRecipe),
-                                    placeholder:
-                                        AssetImage('assets/loading2.gif'),
-                                    fit: BoxFit.cover,
-                                    height: 120,
-                                    width: double.infinity,
-                                    alignment: Alignment.center,
-                                  ),
-                                )),
-                          ),
+                        return Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () => {
+                                Navigator.push(context,
+                                    createRouteRecipeViewImage(profileMyUser))
+                                //_selectImage(false)
+                              },
+                              child: Container(
+                                padding: EdgeInsets.only(top: 10.0),
+                                child: ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    child: Container(
+                                        child: Container(
+                                      padding: EdgeInsets.only(
+                                          left: size.width / 20, top: 10),
+                                      child: Container(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            FaIcon(
+                                              FontAwesomeIcons.notesMedical,
+                                              size: 20,
+                                              color: color,
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              'Mi receta',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: color),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ) /* FadeInImage(
+
+                                      image:
+                                          NetworkImage(snapshot.data.imageRecipe),
+                                      placeholder:
+                                          AssetImage('assets/loading2.gif'),
+                                      fit: BoxFit.cover,
+                                      height: 120,
+                                      width: double.infinity,
+                                      alignment: Alignment.center,
+                                    ), */
+                                        )),
+                              ),
+                            ),
+                          ],
                         );
                       }
                     } else {

@@ -3,6 +3,7 @@ import 'package:chat/bloc/register_bloc.dart';
 import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/theme/theme.dart';
+import 'package:chat/widgets/clip_oval.dart';
 import 'package:chat/widgets/header_curve_signin.dart';
 import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/myprofile.dart';
@@ -77,16 +78,8 @@ class RegisterPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            GestureDetector(
-                                onTap: () {
-                                  _signInGoogle(context);
-                                },
-                                child: _buildCircleGoogle(context)),
-                            GestureDetector(
-                                onTap: () async {
-                                  await _signIApple(context);
-                                },
-                                child: _buildCircleApple(context)),
+                            _buildCircleGoogle(context),
+                            _buildCircleApple(context),
                           ])),
                   Center(
                     child: Container(
@@ -109,43 +102,79 @@ class RegisterPage extends StatelessWidget {
 }
 
 Container _buildCircleGoogle(context) {
-  final size = MediaQuery.of(context).size;
+  final currentTheme = Provider.of<ThemeChanger>(context);
 
   return Container(
+    width: 50,
+    height: 50,
     margin: EdgeInsets.only(right: 20, top: 0),
-    width: size.width / 8,
-    height: size.height / 8,
-    child: ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-      child: CircleAvatar(
-          child: Container(
-              width: 40,
-              height: 40,
-              child: Image.asset('assets/google-icon.png')),
-          backgroundColor: Colors.white),
+    child: ClipOvalShadow(
+      shadow: Shadow(
+        color: currentTheme.currentTheme.accentColor,
+        offset: Offset(1.0, 1.0),
+        blurRadius: 2,
+      ),
+      clipper: CustomClipperOval(),
+      child: ClipOval(
+        child: Material(
+          // button color
+          child: InkWell(
+            onTap: () {
+              _signInGoogle(context);
+            },
+            splashColor: Colors.white, // inkwell color
+            child: CircleAvatar(
+              backgroundColor:
+                  currentTheme.currentTheme.scaffoldBackgroundColor,
+              child: Container(
+                  width: 40,
+                  height: 40,
+                  child: Image.asset('assets/google-icon.png')),
+            ),
+          ),
+        ),
+      ),
     ),
   );
 }
 
 Container _buildCircleApple(context) {
-  final size = MediaQuery.of(context).size;
+  final currentTheme = Provider.of<ThemeChanger>(context);
 
   return Container(
-    padding: EdgeInsets.all(0.0),
-    margin: EdgeInsets.only(right: 0, top: 0),
-    width: size.width / 8,
-    height: size.height / 8,
-    child: ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      child: CircleAvatar(
-          child: Container(
-            child: FaIcon(
-              FontAwesomeIcons.apple,
-              color: Colors.black,
-              size: 30,
+    width: 50,
+    height: 50,
+    margin: EdgeInsets.only(right: 20, top: 0),
+    child: ClipOvalShadow(
+      shadow: Shadow(
+        color: currentTheme.currentTheme.accentColor,
+        offset: Offset(1.0, 1.0),
+        blurRadius: 2,
+      ),
+      clipper: CustomClipperOval(),
+      child: ClipOval(
+        child: Material(
+          color: Colors.black, // button color
+          child: InkWell(
+            // splashColor: Colors.red, // inkwell color
+            child: CircleAvatar(
+              backgroundColor:
+                  currentTheme.currentTheme.scaffoldBackgroundColor,
+              child: Container(
+                child: FaIcon(
+                  FontAwesomeIcons.apple,
+                  color:
+                      (currentTheme.customTheme) ? Colors.white : Colors.black,
+                  size: 30,
+                ),
+              ),
             ),
+            onTap: () async {
+              await _signIApple(context);
+            },
           ),
-          backgroundColor: Colors.white),
+        ),
+      ),
     ),
   );
 }
@@ -230,7 +259,7 @@ Widget roundedRectButton(
             ),
             child: Text(title,
                 style: TextStyle(
-                    color: (!isBlack) ? Colors.black : Colors.white,
+                    color: (isBlack) ? Colors.black : Colors.white,
                     fontSize: _size.height / 40,
                     fontWeight: FontWeight.w500)),
             padding: EdgeInsets.only(top: 16, bottom: 16),
@@ -353,8 +382,7 @@ Widget _createButton(RegisterBloc bloc) {
       return Container(
         padding: EdgeInsets.only(left: 30, right: 30, top: 20),
         child: GestureDetector(
-            child:
-                roundedRectButton("Comenzar!", orangeGradients, false, false),
+            child: roundedRectButton("Comenzar!", orangeGradients, false, true),
             onTap: authService.authenticated
                 ? null
                 : snapshot.hasData

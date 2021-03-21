@@ -9,22 +9,24 @@ Product productFromJson(String str) => Product.fromJson(json.decode(str));
 String productToJson(Product data) => json.encode(data.toJson());
 
 class Product {
-  Product({
-    this.id,
-    this.user,
-    this.name = "",
-    this.description = "",
-    this.createdAt,
-    //this.products,
-    this.updatedAt,
-    this.price = 0,
-    this.coverImage = "",
-    this.catalogo,
-    this.ratingInit,
-    this.cbd = "",
-    this.thc = "",
-    //this.products
-  });
+  Product(
+      {this.id,
+      this.user,
+      this.name = "",
+      this.description = "",
+      this.createdAt,
+      //this.products,
+      this.updatedAt,
+      this.price = 0,
+      this.coverImage = "",
+      this.catalogo,
+      this.ratingInit,
+      this.cbd = "",
+      this.thc = "",
+      this.isLike = false,
+      this.countLikes = 0
+      //this.products
+      });
   String id;
   String user;
   String name;
@@ -38,6 +40,8 @@ class Product {
 
   String cbd;
   String thc;
+  bool isLike;
+  int countLikes;
 
   String coverImage;
 
@@ -54,7 +58,9 @@ class Product {
       ratingInit: json["ratingInit"],
       cbd: json["cbd"],
       thc: json["thc"],
-      price: json["price"]);
+      price: json["price"],
+      isLike: json["isLike"],
+      countLikes: json["countLikes"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -68,7 +74,9 @@ class Product {
         "ratingInit": ratingInit,
         "cbd": cbd,
         "thc": thc,
-        "price": price
+        "price": price,
+        "isLike": isLike,
+        "countLikes": countLikes
 
         // "products": List<dynamic>.from(products.map((x) => x)),
       };

@@ -23,7 +23,9 @@ class _CardPlantState extends State<CardPlant> {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
     return Container(
-      color: (currentTheme.customTheme) ? Color(0xff151518) : Colors.white,
+      color: (currentTheme.customTheme)
+          ? currentTheme.currentTheme.cardColor
+          : Colors.white,
       child: FittedBox(
         child: Row(
           children: <Widget>[

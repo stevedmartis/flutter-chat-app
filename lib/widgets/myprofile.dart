@@ -440,19 +440,20 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
                 makePrivateAccountMessage(context),
 
-                SliverAppBar(
-                    pinned: true,
-                    backgroundColor:
-                        currentTheme.currentTheme.scaffoldBackgroundColor,
-                    automaticallyImplyLeading: false,
-                    actions: [Container()],
-                    title: Container(
-                      alignment: Alignment.centerLeft,
-                      child: (itemCount != null)
-                          ? FadeInLeft(
+                (itemCount != null)
+                    ? SliverAppBar(
+                        toolbarHeight: 50,
+                        pinned: true,
+                        backgroundColor:
+                            currentTheme.currentTheme.scaffoldBackgroundColor,
+                        automaticallyImplyLeading: false,
+                        actions: [Container()],
+                        title: Container(
+                            alignment: Alignment.centerLeft,
+                            child: FadeInLeft(
                               child: TabBar(
                                   controller: controller,
-                                  indicatorWeight: 3,
+                                  indicatorWeight: 5,
                                   isScrollable: true,
                                   labelColor:
                                       currentTheme.currentTheme.accentColor,
@@ -467,7 +468,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                       bottom: BorderSide(
                                         color: currentTheme
                                             .currentTheme.accentColor,
-                                        width: 2,
+                                        width: 4,
                                       ),
                                     ),
                                   ),
@@ -475,11 +476,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                     itemCount,
                                     (index) => tabBuilder(context, index),
                                   )),
-                            )
-                          : Container(
-                              margin: EdgeInsets.only(top: 10),
-                              child: Container()),
-                    )),
+                            )))
+                    : makeHeaderSpacerShort(context),
               ];
             },
 
@@ -714,6 +712,19 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     );
   }
 
+  SliverPersistentHeader makeHeaderSpacerShort(context) {
+    //   final roomModel = Provider.of<Room>(context);
+
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+          minHeight: 150,
+          maxHeight: 150,
+          child: Container(
+              margin: EdgeInsets.only(top: 10), child: _buildLoadingWidget())),
+    );
+  }
+
   createSelectionNvigator() {
     final currentTheme =
         Provider.of<ThemeChanger>(context, listen: false).currentTheme;
@@ -857,7 +868,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     final currentTheme = Provider.of<ThemeChanger>(context);
 
     final username = profile.user.username.toLowerCase();
-    final about = profile.about;
+
+    final about = (profile.about == null) ? "" : profile.about;
     final size = MediaQuery.of(context).size;
     final isClub = profile.isClub;
 
@@ -866,7 +878,21 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     final nameFinal = name.isEmpty ? "" : name.capitalize();
 
     return SliverFixedExtentList(
-        itemExtent: 160,
+        itemExtent: (about != null)
+            ? (about.length == 0 && widget.isUserAuth)
+                ? 120
+                : (about.length == 0 && !widget.isUserAuth)
+                    ? 80
+                    : (about.length > 10 && about.length < 40)
+                        ? 150
+                        : (about.length > 40 && about.length < 80)
+                            ? 160
+                            : (about.length > 80 && !widget.isUserAuth)
+                                ? 160
+                                : (about.length > 80 && widget.isUserAuth)
+                                    ? 190
+                                    : 0
+            : 0,
         delegate: SliverChildListDelegate([
           //var imageRecipe = profile.imageRecipe;
           // var parts = imageRecipe.split('image_picker');
@@ -981,8 +1007,12 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                           flex: 0,
                           child: GestureDetector(
                             onTap: () => {
-                              Navigator.push(context,
-                                  createRouteRecipeViewImage(widget.profile))
+                              Navigator.of(context).push(PageRouteBuilder(
+                                transitionDuration: Duration(milliseconds: 200),
+                                pageBuilder: (context, animation,
+                                        secondaryAnimation) =>
+                                    RecipeImagePage(profile: widget.profile),
+                              ))
                             },
                             child: Container(
                               padding: EdgeInsets.only(
@@ -1030,7 +1060,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
         !widget.isUserAuth && !widget.profile.subscribeApproved;
 
     return SliverFixedExtentList(
-        itemExtent: 160,
+        itemExtent: 100,
         delegate: SliverChildListDelegate([
           //var imageRecipe = profile.imageRecipe;
           // var parts = imageRecipe.split('image_picker');

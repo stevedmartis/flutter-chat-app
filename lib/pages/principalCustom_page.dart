@@ -32,6 +32,7 @@ import 'package:chat/widgets/visit_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'add_update_visit.dart';
@@ -744,9 +745,17 @@ Widget _buildWidgetProducts(
                       },
                       closedBuilder: (_, openContainer) {
                         return FadeInLeft(
-                            delay: Duration(milliseconds: 300 * index),
-                            child: CardProductProfile(
-                                productProfile: productProfiles));
+                          delay: Duration(milliseconds: 300 * index),
+                          child: Stack(
+                            children: [
+                              Container(
+                                  child: CardProductProfile(
+                                      productProfile: productProfiles)),
+                              buildCircleFavoriteProductProfile(
+                                  context, productProfiles.product.isLike),
+                            ],
+                          ),
+                        );
                       }),
                 ),
               ],
@@ -754,6 +763,22 @@ Widget _buildWidgetProducts(
           }),
     ),
   );
+}
+
+Container buildCircleFavoriteProductProfile(context, bool isLike) {
+  final size = MediaQuery.of(context).size;
+  final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
+
+  return Container(
+      alignment: Alignment.topRight,
+      margin: EdgeInsets.only(left: size.width / 1.4, top: 0.0),
+      width: 100,
+      height: 100,
+      child: CircleAvatar(
+          child: Icon((!isLike) ? Icons.favorite_border : Icons.favorite,
+              size: 25,
+              color: (isLike) ? currentTheme.accentColor : Colors.grey),
+          backgroundColor: currentTheme.cardColor));
 }
 
 class Banners {

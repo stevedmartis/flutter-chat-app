@@ -22,7 +22,9 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
     return Container(
       width: size.width,
       height: size.height,
-      color: (currentTheme.customTheme) ? Color(0xff151518) : Colors.white,
+      color: (currentTheme.customTheme)
+          ? currentTheme.currentTheme.cardColor
+          : Colors.white,
       child: FittedBox(
         fit: BoxFit.fill,
         child: Row(
@@ -69,7 +71,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
               widget.plant.name.capitalize(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: size.height / 30,
+                  fontSize: size.height / 40,
                   color: currentTheme.currentTheme.accentColor),
             ),
           ),
@@ -101,7 +103,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
                   FontAwesomeIcons.seedling,
                   color:
                       (currentTheme.customTheme) ? Colors.white54 : Colors.grey,
-                  size: size.height / 30,
+                  size: size.height / 40,
                 )),
                 SizedBox(
                   width: 5.0,
@@ -112,7 +114,7 @@ class _CardPlantPrincipalState extends State<CardPlantPrincipal> {
                     widget.plant.germinated,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: size.height / 40,
+                        fontSize: size.height / 50,
                         color: (currentTheme.customTheme)
                             ? Colors.white54
                             : Colors.grey),

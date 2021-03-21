@@ -248,7 +248,7 @@ class CustomSliverAppBarHeader extends StatelessWidget {
               width: size.height / 3,
               height: 40,
               decoration: BoxDecoration(
-                color: currentTheme.scaffoldBackgroundColor.withOpacity(0.30),
+                color: currentTheme.scaffoldBackgroundColor.withOpacity(0.90),
                 borderRadius: BorderRadius.all(Radius.circular(30)),
                 boxShadow: [
                   BoxShadow(
