@@ -497,8 +497,15 @@ class _NotificationsPageState extends State<NotificationsPage>
   }
 
   Widget _buildLoadingWidget() {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+
     return Container(
-        height: 400.0, child: Center(child: CircularProgressIndicator()));
+        padding: EdgeInsets.all(10),
+        height: 200.0,
+        child: Center(
+            child: CircularProgressIndicator(
+          color: currentTheme.currentTheme.accentColor,
+        )));
   }
 
   Route createRouteRecipeViewImage(Profiles item) {

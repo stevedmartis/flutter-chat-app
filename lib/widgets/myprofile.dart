@@ -243,6 +243,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     return _scrollController.hasClients && _scrollController.offset >= 200;
   }
 
+  bool isSuscribeApprove = false;
+
   GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -1056,24 +1058,22 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
     final size = MediaQuery.of(context).size;
 
-    final isSuscribeApprove =
-        !widget.isUserAuth && !widget.profile.subscribeApproved;
+    isSuscribeApprove = !widget.isUserAuth && !widget.profile.subscribeApproved;
 
     return SliverFixedExtentList(
-        itemExtent: 100,
+        itemExtent: (isSuscribeApprove) ? 60 : 0,
         delegate: SliverChildListDelegate([
           //var imageRecipe = profile.imageRecipe;
           // var parts = imageRecipe.split('image_picker');
           //var nameImageRecipe = parts.sublist(1).join('image_picker').trim();
-
+          Divider(height: 1, color: Colors.grey),
           FadeIn(
             child: Container(
-                padding: EdgeInsets.only(top: 10.0),
+                padding: EdgeInsets.only(top: 0.0),
                 color: currentTheme.currentTheme.scaffoldBackgroundColor,
                 child: (isSuscribeApprove)
                     ? Container(
-                        padding:
-                            EdgeInsets.only(left: size.width / 20, top: 20),
+                        padding: EdgeInsets.only(left: size.width / 20, top: 0),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
