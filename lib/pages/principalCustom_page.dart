@@ -712,41 +712,41 @@ Widget _buildWidgetProducts(
 
             return Stack(
               children: [
-                Container(
-                  padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: size.height / 30,
-                  ),
-                  child: OpenContainer(
-                      closedElevation: 5,
-                      openElevation: 5,
-                      closedColor: currentTheme.scaffoldBackgroundColor,
-                      openColor: currentTheme.scaffoldBackgroundColor,
-                      transitionType: ContainerTransitionType.fade,
-                      openShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20.0),
-                            topLeft: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0),
-                            bottomLeft: Radius.circular(10.0)),
-                      ),
-                      closedShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20.0),
-                            topLeft: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0),
-                            bottomLeft: Radius.circular(10.0)),
-                      ),
-                      openBuilder: (_, closeContainer) {
-                        return ProductProfileDetailPage(
-                            productProfile: productProfiles,
-                            isUserAuth: isUserAuth);
-                      },
-                      closedBuilder: (_, openContainer) {
-                        return FadeInLeft(
-                          delay: Duration(milliseconds: 300 * index),
-                          child: Stack(
+                FadeInLeft(
+                  delay: Duration(milliseconds: 300 * index),
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      top: size.height / 30,
+                    ),
+                    child: OpenContainer(
+                        closedElevation: 5,
+                        openElevation: 5,
+                        closedColor: currentTheme.scaffoldBackgroundColor,
+                        openColor: currentTheme.scaffoldBackgroundColor,
+                        transitionType: ContainerTransitionType.fade,
+                        openShape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20.0),
+                              topLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0)),
+                        ),
+                        closedShape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20.0),
+                              topLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0)),
+                        ),
+                        openBuilder: (_, closeContainer) {
+                          return ProductProfileDetailPage(
+                              productProfile: productProfiles,
+                              isUserAuth: isUserAuth);
+                        },
+                        closedBuilder: (_, openContainer) {
+                          return Stack(
                             children: [
                               Container(
                                   child: CardProductProfile(
@@ -754,9 +754,9 @@ Widget _buildWidgetProducts(
                               buildCircleFavoriteProductProfile(
                                   context, productProfiles.product.isLike),
                             ],
-                          ),
-                        );
-                      }),
+                          );
+                        }),
+                  ),
                 ),
               ],
             );

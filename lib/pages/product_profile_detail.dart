@@ -434,11 +434,11 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
     /// if failed, you can do nothing
 
     isLikedSave = success.favorite.isLike;
-    productBloc.getProducts(profile.user.uid);
 
     isCountChange = true;
 
     (isLikedSave) ? countLikes++ : countLikes--;
+    productBloc.getProducts(profile.user.uid);
 
     return isLikedSave;
   }

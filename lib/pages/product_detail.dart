@@ -125,6 +125,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
   bool isLikedSave = false;
 
+  int countLikes = 0;
+  int countLikesInit = 0;
+  bool isCountChange = false;
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
@@ -132,10 +136,15 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
     final productService = Provider.of<ProductService>(context, listen: false);
 
+    final countInit = widget.product.countLikes;
+
     setState(() {
       product = (productService.product != null)
           ? productService.product
           : widget.product;
+
+      isLikedSave = product.isLike;
+      countLikes = (isCountChange) ? countLikes : countInit;
     });
 
     return Scaffold(
@@ -199,12 +208,15 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                       onSelected: (String result) {
                                         switch (result) {
                                           case '1':
+                                            break;
+
+                                          case '2':
                                             productService.product = product;
                                             Navigator.of(context).push(
                                                 createRouteEditProduct(
                                                     widget.product));
                                             break;
-                                          case '2':
+                                          case '3':
                                             confirmDelete(
                                                 context,
                                                 'Confirmar',
@@ -219,6 +231,65 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                           <PopupMenuEntry<String>>[
                                         PopupMenuItem<String>(
                                             value: '1',
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                LikeButton(
+                                                  isLiked: isLikedSave,
+                                                  onTap: onLikeButtonTapped,
+                                                  bubblesColor: BubblesColor(
+                                                    dotPrimaryColor:
+                                                        currentTheme
+                                                            .currentTheme
+                                                            .accentColor,
+                                                    dotSecondaryColor:
+                                                        currentTheme
+                                                            .currentTheme
+                                                            .accentColor,
+                                                  ),
+                                                  likeBuilder: (
+                                                    bool isLiked,
+                                                  ) {
+                                                    return Icon(
+                                                      Icons.favorite,
+                                                      color: isLikedSave
+                                                          ? currentTheme
+                                                              .currentTheme
+                                                              .accentColor
+                                                          : Colors.white54,
+                                                      size:
+                                                          isLikedSave ? 28 : 25,
+                                                    );
+                                                  },
+                                                  likeCount: countLikes,
+                                                  countBuilder: (int count,
+                                                      bool isLiked,
+                                                      String text) {
+                                                    print(count);
+
+                                                    return Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 10),
+                                                        child: Text(
+                                                            '$countLikes'));
+                                                  },
+                                                ),
+                                                SizedBox(
+                                                  width: 5.0,
+                                                ),
+                                                /* Text('$countLikes',
+                                                    style: TextStyle(
+                                                        color: currentTheme
+                                                            .currentTheme
+                                                            .accentColor)), */
+                                              ],
+                                            )),
+                                        PopupMenuItem<String>(
+                                            value: '2',
                                             child: Row(
                                               children: [
                                                 FaIcon(
@@ -238,7 +309,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                               ],
                                             )),
                                         PopupMenuItem<String>(
-                                          value: '2',
+                                          value: '3',
                                           child: Row(
                                             children: [
                                               Icon(Icons.delete,
@@ -370,9 +441,12 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     final success = await productApiProvider.addUpdateFavorite(
         product.id, profile.user.uid);
 
-    /// if failed, you can do nothing
-
     isLikedSave = success.favorite.isLike;
+    isCountChange = true;
+
+    (isLikedSave) ? countLikes++ : countLikes--;
+
+    productBloc.getProducts(profile.user.uid);
 
     return isLikedSave;
   }

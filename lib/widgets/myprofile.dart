@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
 import 'package:chat/bloc/catalogo_bloc.dart';
+import 'package:chat/bloc/product_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/catalogos_response.dart';
@@ -11,6 +12,7 @@ import 'package:chat/models/profiles.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/models/rooms_response.dart';
 import 'package:chat/pages/chat_page.dart';
+import 'package:chat/pages/principalCustom_page.dart';
 import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/product_detail.dart';
 import 'package:chat/pages/profile_page2.dart';
@@ -139,7 +141,12 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
     profile = authService.profile;
 
+    /*  productBloc.produtsProfiles.listen((data) async {
+     
+    });
+ */
     fetchMyCatalogos();
+
     super.initState();
   }
 
@@ -212,15 +219,16 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
         : result = await catalogoService.getCatalogosProductsUser(
             widget.profile.user.uid, profile.user.uid);
 
-    setState(() {});
+    print(result);
 
     setState(() {
       itemCount = result.catalogosProducts.length;
       tabBuilder =
           (context, index) => Tab(text: result.catalogosProducts[index].name);
 
-      pageBuilder = (context, index) =>
-          _buildWidgetProducts(result.catalogosProducts[index].products);
+      pageBuilder = (context, index) => _buildWidgetProducts(
+            result.catalogosProducts[index].products,
+          );
     });
 
     _currentPosition = initPosition ?? 0;
@@ -598,42 +606,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
     );
   }
 
-  SliverList makeListProducts(context) {
-    final currentTheme = Provider.of<ThemeChanger>(context);
-
-    return SliverList(
-      delegate: SliverChildListDelegate([
-        Container(
-          child: FutureBuilder(
-            future: this.productService.getProductCatalogo(catalogo.id),
-            initialData: null,
-            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-              if (snapshot.hasData) {
-                products = snapshot.data;
-                return (products.length > 0)
-                    ? Container(child: _buildWidgetProducts(products))
-                    : Center(
-                        child: Container(
-                            padding: EdgeInsets.all(50),
-                            child: Text(
-                              'Sin Tratamientos, crea una nueva!',
-                              style: TextStyle(
-                                color: (currentTheme.customTheme)
-                                    ? Colors.white54
-                                    : Colors.black54,
-                              ),
-                            )),
-                      ); // image is ready
-              } else {
-                return _buildLoadingWidget(); // placeholder
-              }
-            },
-          ),
-        ),
-      ]),
-    );
-  }
-
   SliverList makeListCatalogos(context) {
     return SliverList(
       delegate: SliverChildListDelegate([
@@ -672,40 +644,44 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
               return Stack(
                 children: [
-                  Container(
-                    padding: EdgeInsets.only(
-                        top: 0, left: 20, right: 20, bottom: 0.0),
-                    child: OpenContainer(
-                        closedElevation: 5,
-                        openElevation: 5,
-                        closedColor: currentTheme.scaffoldBackgroundColor,
-                        openColor: currentTheme.scaffoldBackgroundColor,
-                        transitionType: ContainerTransitionType.fade,
-                        openShape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(20.0),
-                              topLeft: Radius.circular(10.0),
-                              bottomRight: Radius.circular(10.0),
-                              bottomLeft: Radius.circular(10.0)),
-                        ),
-                        closedShape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(20.0),
-                              topLeft: Radius.circular(10.0),
-                              bottomRight: Radius.circular(10.0),
-                              bottomLeft: Radius.circular(10.0)),
-                        ),
-                        openBuilder: (_, closeContainer) {
-                          return ProductDetailPage(
-                              product: product, isUserAuth: widget.isUserAuth);
-                        },
-                        closedBuilder: (_, openContainer) {
-                          return Stack(children: [
-                            FadeIn(
-                                delay: Duration(milliseconds: 100 * index),
-                                child: CardProduct(product: product)),
-                          ]);
-                        }),
+                  FadeIn(
+                    delay: Duration(milliseconds: 100 * index),
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          top: 0, left: 20, right: 20, bottom: 0.0),
+                      child: OpenContainer(
+                          closedElevation: 5,
+                          openElevation: 5,
+                          closedColor: currentTheme.scaffoldBackgroundColor,
+                          openColor: currentTheme.scaffoldBackgroundColor,
+                          transitionType: ContainerTransitionType.fade,
+                          openShape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20.0),
+                                topLeft: Radius.circular(10.0),
+                                bottomRight: Radius.circular(10.0),
+                                bottomLeft: Radius.circular(10.0)),
+                          ),
+                          closedShape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20.0),
+                                topLeft: Radius.circular(10.0),
+                                bottomRight: Radius.circular(10.0),
+                                bottomLeft: Radius.circular(10.0)),
+                          ),
+                          openBuilder: (_, closeContainer) {
+                            return ProductDetailPage(
+                                product: product,
+                                isUserAuth: widget.isUserAuth);
+                          },
+                          closedBuilder: (_, openContainer) {
+                            return Stack(children: [
+                              CardProduct(product: product),
+                              buildCircleFavoriteProductProfile(
+                                  context, product.isLike),
+                            ]);
+                          }),
+                    ),
                   ),
                 ],
               );

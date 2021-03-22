@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:chat/bloc/validators.dart';
+import 'package:chat/models/catalogos_products_response.dart';
 import 'package:chat/models/products.dart';
 import 'package:chat/models/products_profiles_response.dart';
+import 'package:chat/providers/catalogos_provider.dart';
 import 'package:chat/repository/products_repository.dart';
 
 import 'package:rxdart/rxdart.dart';
@@ -15,9 +17,13 @@ class ProductBloc with Validators {
   final _cbdController = BehaviorSubject<String>();
   final _thcController = BehaviorSubject<String>();
   final ProductsRepository _repository = ProductsRepository();
+  final CatalogosApiProvider _service = CatalogosApiProvider();
 
   final BehaviorSubject<ProductsProfilesResponse> _produtsProfiles =
       BehaviorSubject<ProductsProfilesResponse>();
+
+  final BehaviorSubject<CatalogosProductsResponse> _catalogosProducts =
+      BehaviorSubject<CatalogosProductsResponse>();
 
   final BehaviorSubject<Product> _productSelect = BehaviorSubject<Product>();
 
@@ -27,6 +33,12 @@ class ProductBloc with Validators {
     _produtsProfiles.sink.add(response);
   }
 
+  getCatalogosProducts(String uid) async {
+    CatalogosProductsResponse response =
+        await _service.getMyCatalogosProducts(uid);
+    _catalogosProducts.sink.add(response);
+  }
+
   getProduct(Product product) async {
     Product response = await _repository.getProduct(product.id);
     _productSelect.sink.add(response);
@@ -34,6 +46,9 @@ class ProductBloc with Validators {
 
   BehaviorSubject<ProductsProfilesResponse> get produtsProfiles =>
       _produtsProfiles;
+
+  BehaviorSubject<CatalogosProductsResponse> get catalogosProducts =>
+      _catalogosProducts;
   // Recuperar los datos del Stream
   Stream<String> get nameStream =>
       _nameController.stream.transform(validationNameRequired);
@@ -68,6 +83,7 @@ class ProductBloc with Validators {
   BehaviorSubject<Product> get productSelect => _productSelect;
 
   dispose() {
+    _catalogosProducts?.close();
     _produtsProfiles.close();
     _imageUpdateCtrl.close();
     _productSelect?.close();
