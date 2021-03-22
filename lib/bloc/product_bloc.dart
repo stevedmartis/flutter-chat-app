@@ -25,9 +25,12 @@ class ProductBloc with Validators {
   final BehaviorSubject<CatalogosProductsResponse> _catalogosProducts =
       BehaviorSubject<CatalogosProductsResponse>();
 
+  final BehaviorSubject<CatalogosProductsResponse> _catalogosUserProducts =
+      BehaviorSubject<CatalogosProductsResponse>();
+
   final BehaviorSubject<Product> _productSelect = BehaviorSubject<Product>();
 
-  getProducts(String uid) async {
+  getProductsPrincipal(String uid) async {
     ProductsProfilesResponse response =
         await _repository.getProductsProfiles(uid);
     _produtsProfiles.sink.add(response);
@@ -37,6 +40,12 @@ class ProductBloc with Validators {
     CatalogosProductsResponse response =
         await _service.getMyCatalogosProducts(uid);
     _catalogosProducts.sink.add(response);
+  }
+
+  getCatalogosUserProducts(String uidUser, String uid) async {
+    CatalogosProductsResponse response =
+        await _service.getCatalogosProductsUser(uidUser, uid);
+    _catalogosUserProducts.sink.add(response);
   }
 
   getProduct(Product product) async {
@@ -49,6 +58,9 @@ class ProductBloc with Validators {
 
   BehaviorSubject<CatalogosProductsResponse> get catalogosProducts =>
       _catalogosProducts;
+
+  BehaviorSubject<CatalogosProductsResponse> get catalogosProductsUser =>
+      _catalogosUserProducts;
   // Recuperar los datos del Stream
   Stream<String> get nameStream =>
       _nameController.stream.transform(validationNameRequired);
@@ -83,6 +95,7 @@ class ProductBloc with Validators {
   BehaviorSubject<Product> get productSelect => _productSelect;
 
   dispose() {
+    _catalogosUserProducts.close();
     _catalogosProducts?.close();
     _produtsProfiles.close();
     _imageUpdateCtrl.close();

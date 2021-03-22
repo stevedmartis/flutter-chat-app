@@ -59,10 +59,6 @@ class CatalogosApiProvider {
       final resp = await http.get(urlFinal,
           headers: {'Content-Type': 'application/json', 'x-token': token});
 
-      final jsonResponse = json.decode(resp.body);
-
-      print(jsonResponse);
-
       final catalogosResponse = catalogosProductsResponseFromJson(resp.body);
 
       print(catalogosResponse);

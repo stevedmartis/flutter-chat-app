@@ -145,7 +145,8 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
      
     });
  */
-    fetchMyCatalogos();
+
+    (widget.isUserAuth) ? fetchMyCatalogos() : fetchUserCatalogos();
 
     super.initState();
   }
@@ -213,15 +214,11 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   void fetchMyCatalogos() async {
     var result;
 
-    (widget.isUserAuth)
-        ? result =
-            await catalogoService.getMyCatalogosProducts(profile.user.uid)
-        : result = await catalogoService.getCatalogosProductsUser(
-            widget.profile.user.uid, profile.user.uid);
+    productBloc.getCatalogosProducts(profile.user.uid);
 
-    print(result);
+    productBloc.catalogosProducts.listen((data) {
+      result = data;
 
-    setState(() {
       itemCount = result.catalogosProducts.length;
       tabBuilder =
           (context, index) => Tab(text: result.catalogosProducts[index].name);
@@ -229,18 +226,52 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
       pageBuilder = (context, index) => _buildWidgetProducts(
             result.catalogosProducts[index].products,
           );
+
+      if (mounted) setState(() {});
+
+      _currentPosition = initPosition ?? 0;
+      controller = TabController(
+        length: itemCount,
+        vsync: this,
+        initialIndex: _currentPosition,
+      );
+      controller.addListener(onPositionChangeF);
+      controller.animation.addListener(onScrollF);
+
+      _currentCount = itemCount;
     });
+  }
 
-    _currentPosition = initPosition ?? 0;
-    controller = TabController(
-      length: itemCount,
-      vsync: this,
-      initialIndex: _currentPosition,
-    );
-    controller.addListener(onPositionChangeF);
-    controller.animation.addListener(onScrollF);
+  void fetchUserCatalogos() async {
+    var result;
 
-    _currentCount = itemCount;
+    productBloc.getCatalogosUserProducts(
+        widget.profile.user.uid, profile.user.uid);
+
+    productBloc.catalogosProductsUser.listen((data) {
+      result = data;
+
+      setState(() {
+        itemCount = result.catalogosProducts.length;
+        tabBuilder =
+            (context, index) => Tab(text: result.catalogosProducts[index].name);
+
+        pageBuilder = (context, index) => _buildWidgetProducts(
+              result.catalogosProducts[index].products,
+            );
+      });
+
+      _currentPosition = initPosition ?? 0;
+      controller = TabController(
+        length: itemCount,
+        vsync: this,
+        initialIndex: _currentPosition,
+      );
+      controller.addListener(onPositionChangeF);
+      controller.animation.addListener(onScrollF);
+
+      _currentCount = itemCount;
+    });
   }
 
   bool get _showTitle {
@@ -450,44 +481,42 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
                 makePrivateAccountMessage(context),
 
-                (itemCount != null)
-                    ? SliverAppBar(
-                        toolbarHeight: 50,
-                        pinned: true,
-                        backgroundColor:
-                            currentTheme.currentTheme.scaffoldBackgroundColor,
-                        automaticallyImplyLeading: false,
-                        actions: [Container()],
-                        title: Container(
+                SliverAppBar(
+                    toolbarHeight: 50,
+                    pinned: true,
+                    backgroundColor:
+                        currentTheme.currentTheme.scaffoldBackgroundColor,
+                    automaticallyImplyLeading: false,
+                    actions: [Container()],
+                    title: (itemCount != null)
+                        ? Container(
                             alignment: Alignment.centerLeft,
-                            child: FadeInLeft(
-                              child: TabBar(
-                                  controller: controller,
-                                  indicatorWeight: 5,
-                                  isScrollable: true,
-                                  labelColor:
-                                      currentTheme.currentTheme.accentColor,
-                                  unselectedLabelColor: (currentTheme
-                                          .customTheme)
-                                      ? Colors.white54.withOpacity(0.30)
-                                      : currentTheme.currentTheme.primaryColor,
-                                  indicatorColor:
-                                      currentTheme.currentTheme.accentColor,
-                                  indicator: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: currentTheme
-                                            .currentTheme.accentColor,
-                                        width: 4,
-                                      ),
+                            child: TabBar(
+                                controller: controller,
+                                indicatorWeight: 5,
+                                isScrollable: true,
+                                labelColor:
+                                    currentTheme.currentTheme.accentColor,
+                                unselectedLabelColor: (currentTheme.customTheme)
+                                    ? Colors.white54.withOpacity(0.30)
+                                    : currentTheme.currentTheme.primaryColor,
+                                indicatorColor:
+                                    currentTheme.currentTheme.accentColor,
+                                indicator: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color:
+                                          currentTheme.currentTheme.accentColor,
+                                      width: 4,
                                     ),
                                   ),
-                                  tabs: List.generate(
-                                    itemCount,
-                                    (index) => tabBuilder(context, index),
-                                  )),
-                            )))
-                    : makeHeaderSpacerShort(context),
+                                ),
+                                tabs: List.generate(
+                                  itemCount,
+                                  (index) => FadeInLeft(
+                                      child: tabBuilder(context, index)),
+                                )))
+                        : Container())
               ];
             },
 
@@ -501,6 +530,17 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                     ),
                   )
                 : Container()));
+
+    /*   (itemCount != null)
+                ? TabBarView(
+                    controller: controller,
+                    children: List.generate(
+                      itemCount,
+                      (index) => pageBuilder(context, index),
+                    ),
+                  )
+                :  
+                Container())); */
   }
 
   SliverList makeListTabs(context) {

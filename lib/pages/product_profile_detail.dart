@@ -263,22 +263,23 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                                     bool isLiked,
                                                   ) {
                                                     return Icon(
-                                                      Icons.favorite,
+                                                      (!isLikedSave)
+                                                          ? Icons
+                                                              .favorite_border
+                                                          : Icons.favorite,
                                                       color: isLikedSave
                                                           ? currentTheme
                                                               .currentTheme
                                                               .accentColor
                                                           : Colors.white54,
                                                       size:
-                                                          isLikedSave ? 28 : 25,
+                                                          isLikedSave ? 28 : 28,
                                                     );
                                                   },
                                                   likeCount: countLikes,
                                                   countBuilder: (int count,
                                                       bool isLiked,
                                                       String text) {
-                                                    print(count);
-
                                                     return Container(
                                                         padding:
                                                             EdgeInsets.only(
@@ -366,12 +367,14 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                                     ),
                                     likeBuilder: (bool isLiked) {
                                       return Icon(
-                                        Icons.favorite,
+                                        (!isLikedSave)
+                                            ? Icons.favorite_border
+                                            : Icons.favorite,
                                         color: isLikedSave
                                             ? currentTheme
                                                 .currentTheme.accentColor
                                             : Colors.white54,
-                                        size: isLikedSave ? 28 : 25,
+                                        size: isLikedSave ? 28 : 28,
                                       );
                                     },
                                   ),
@@ -438,7 +441,7 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
     isCountChange = true;
 
     (isLikedSave) ? countLikes++ : countLikes--;
-    productBloc.getProducts(profile.user.uid);
+    productBloc.getProductsPrincipal(profile.user.uid);
 
     return isLikedSave;
   }
@@ -486,7 +489,7 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
       setState(() {
         //    widget.plants.removeAt(index);
 
-        productBloc.getProducts(profile.user.uid);
+        productBloc.getProductsPrincipal(profile.user.uid);
 
         Navigator.pop(context);
         Navigator.pop(context);

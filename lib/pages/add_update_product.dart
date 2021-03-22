@@ -695,7 +695,8 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
           loading = false;
 
           // plantBloc.getPlantsByUser(profile.user.uid);
-          productBloc.getProducts(uid);
+          productBloc.getProductsPrincipal(uid);
+          productBloc.getCatalogosProducts(profile.user.uid);
 
           awsService.isUploadImagePlant = true;
         });
@@ -751,7 +752,8 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
         if (editProductRes.ok) {
           // widget.rooms.removeWhere((element) => element.id == editRoomRes.room.id)
 
-          productBloc.getProducts(uid);
+          productBloc.getProductsPrincipal(uid);
+          productBloc.getCatalogosProducts(profile.user.uid);
 
           setState(() {
             loading = false;

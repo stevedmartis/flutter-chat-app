@@ -15,6 +15,7 @@ import 'package:chat/pages/principal_page.dart';
 import 'package:chat/pages/room_list_page.dart';
 import 'package:chat/providers/products_provider.dart';
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/product_services.dart';
 import 'package:chat/services/room_services.dart';
 import 'package:chat/theme/theme.dart';
@@ -87,6 +88,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   Product product;
 
   Profiles profile;
+  Profiles profileFor;
 
   final roomService = new RoomService();
   double get maxHeight => 200 + MediaQuery.of(context).padding.top;
@@ -105,6 +107,9 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
     final authService = Provider.of<AuthService>(context, listen: false);
 
+    final chatService = Provider.of<ChatService>(context, listen: false);
+
+    profileFor = chatService.userFor;
     final productService = Provider.of<ProductService>(context, listen: false);
 
     productService.product = null;
@@ -254,22 +259,23 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                                     bool isLiked,
                                                   ) {
                                                     return Icon(
-                                                      Icons.favorite,
+                                                      (!isLikedSave)
+                                                          ? Icons
+                                                              .favorite_border
+                                                          : Icons.favorite,
                                                       color: isLikedSave
                                                           ? currentTheme
                                                               .currentTheme
                                                               .accentColor
                                                           : Colors.white54,
                                                       size:
-                                                          isLikedSave ? 28 : 25,
+                                                          isLikedSave ? 28 : 28,
                                                     );
                                                   },
                                                   likeCount: countLikes,
                                                   countBuilder: (int count,
                                                       bool isLiked,
                                                       String text) {
-                                                    print(count);
-
                                                     return Container(
                                                         padding:
                                                             EdgeInsets.only(
@@ -350,12 +356,14 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                     ),
                                     likeBuilder: (bool isLiked) {
                                       return Icon(
-                                        Icons.favorite,
+                                        (!isLikedSave)
+                                            ? Icons.favorite_border
+                                            : Icons.favorite,
                                         color: isLikedSave
                                             ? currentTheme
                                                 .currentTheme.accentColor
                                             : Colors.white,
-                                        size: isLikedSave ? 25 : 22,
+                                        size: isLikedSave ? 28 : 28,
                                       );
                                     },
                                     // likeCount: 665,
@@ -446,7 +454,15 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
     (isLikedSave) ? countLikes++ : countLikes--;
 
-    productBloc.getProducts(profile.user.uid);
+    productBloc.getProductsPrincipal(profile.user.uid);
+
+    (widget.isUserAuth)
+        ? productBloc.getCatalogosProducts(profile.user.uid)
+        : productBloc.getCatalogosUserProducts(
+            profileFor.user.uid, profile.user.uid);
+
+    /*  productBloc.getCatalogosUserProducts(
+        widget.products.profile.user.uid, profile.user.uid); */
 
     return isLikedSave;
   }
@@ -494,7 +510,9 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       setState(() {
         //    widget.plants.removeAt(index);
 
-        productBloc.getProducts(profile.user.uid);
+        productBloc.getProductsPrincipal(profile.user.uid);
+
+        productBloc.getCatalogosProducts(profile.user.uid);
 
         Navigator.pop(context);
         Navigator.pop(context);

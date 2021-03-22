@@ -32,7 +32,6 @@ import 'package:chat/widgets/visit_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'add_update_visit.dart';
@@ -138,7 +137,7 @@ class _CollapsingListState extends State<CollapsingList>
   _chargeLastProducts() async {
     // this.visits = await visitService.getLastVisitsByUser(profile.user.uid);
 
-    productBloc.getProducts(profile.user.uid);
+    productBloc.getProductsPrincipal(profile.user.uid);
   }
 
   pullToRefreshData() async {
@@ -769,16 +768,18 @@ Container buildCircleFavoriteProductProfile(context, bool isLike) {
   final size = MediaQuery.of(context).size;
   final currentTheme = Provider.of<ThemeChanger>(context).currentTheme;
 
-  return Container(
-      alignment: Alignment.topRight,
-      margin: EdgeInsets.only(left: size.width / 1.4, top: 0.0),
-      width: 100,
-      height: 100,
-      child: CircleAvatar(
-          child: Icon((!isLike) ? Icons.favorite_border : Icons.favorite,
-              size: 25,
-              color: (isLike) ? currentTheme.accentColor : Colors.grey),
-          backgroundColor: currentTheme.cardColor));
+  return (isLike != null)
+      ? Container(
+          alignment: Alignment.topRight,
+          margin: EdgeInsets.only(left: size.width / 1.4, top: 0.0),
+          width: 100,
+          height: 100,
+          child: CircleAvatar(
+              child: Icon((!isLike) ? Icons.favorite_border : Icons.favorite,
+                  size: 25,
+                  color: (isLike) ? currentTheme.accentColor : Colors.grey),
+              backgroundColor: currentTheme.cardColor))
+      : Container();
 }
 
 class Banners {

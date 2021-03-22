@@ -141,7 +141,7 @@ class CoverImageProductPageState extends State<CoverImageProductPage> {
 
         productBloc.imageUpdate.add(true);
         loadingImage = false;
-        productBloc.getProducts(profile.user.uid);
+        productBloc.getProductsPrincipal(profile.user.uid);
         // plantService.plant.coverImage = resp;
 
         // awsService.isUpload = true;
@@ -178,7 +178,7 @@ class CoverImageProductPageState extends State<CoverImageProductPage> {
             : productService.product.coverImage = resp;
 
         productBloc.imageUpdate.add(true);
-        productBloc.getProducts(profile.user.uid);
+        productBloc.getProductsPrincipal(profile.user.uid);
 
         loadingImage = false;
       });
