@@ -39,13 +39,14 @@ class ProductBloc with Validators {
   getCatalogosProducts(String uid) async {
     CatalogosProductsResponse response =
         await _service.getMyCatalogosProducts(uid);
-    _catalogosProducts.sink.add(response);
+    if (!_catalogosProducts.isClosed) _catalogosProducts.sink.add(response);
   }
 
   getCatalogosUserProducts(String uidUser, String uid) async {
     CatalogosProductsResponse response =
         await _service.getCatalogosProductsUser(uidUser, uid);
-    _catalogosUserProducts.sink.add(response);
+    if (!_catalogosUserProducts.isClosed)
+      _catalogosUserProducts.sink.add(response);
   }
 
   getProduct(Product product) async {
@@ -95,7 +96,6 @@ class ProductBloc with Validators {
   BehaviorSubject<Product> get productSelect => _productSelect;
 
   dispose() {
-    _catalogosUserProducts.close();
     _catalogosProducts?.close();
     _produtsProfiles.close();
     _imageUpdateCtrl.close();
@@ -105,6 +105,10 @@ class ProductBloc with Validators {
     _productsController?.close();
     _cbdController?.close();
     _thcController?.close();
+  }
+
+  disposeProductsUser() {
+    _catalogosUserProducts.close();
   }
 }
 

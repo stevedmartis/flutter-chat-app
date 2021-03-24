@@ -148,7 +148,8 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
           ? productService.productProfile
           : widget.productProfile;
 
-      isLikedSave = productProfile.product.isLike;
+      isLikedSave =
+          (isCountChange) ? isLikedSave : productProfile.product.isLike;
       countLikes = (isCountChange) ? countLikes : countInit;
     });
 
@@ -399,13 +400,43 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
                         ],
                         background: Material(
                             type: MaterialType.transparency,
-                            child: cachedNetworkImage(
-                                widget.productProfile.product.getCoverImg())),
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(0.0),
+                                        topRight: Radius.circular(0.0),
+                                        bottomRight: Radius.circular(30.0),
+                                        bottomLeft: Radius.circular(30.0)),
+                                    child: cachedNetworkImage(
+                                        productProfile.product.getCoverImg())),
+                                Positioned(
+                                  bottom: 0.0,
+                                  left: 0.0,
+                                  right: 0.0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color.fromARGB(170, 0, 0, 0),
+                                          Color.fromARGB(0, 0, 0, 0)
+                                        ],
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 30.0, horizontal: 20.0),
+                                  ),
+                                ),
+                              ],
+                            )),
                         centerTitle: true,
                         title: Container(
                             //  margin: EdgeInsets.only(left: 0),
                             width: size.height / 2,
-                            height: 30,
+                            height: 25,
                             child: Container(
                               child: Center(
                                 child: Text(
@@ -443,7 +474,7 @@ class _ProductDetailPageState extends State<ProductProfileDetailPage>
     (isLikedSave) ? countLikes++ : countLikes--;
     productBloc.getProductsPrincipal(profile.user.uid);
 
-    return isLikedSave;
+    return isLiked;
   }
 
   SliverPersistentHeader makeHeaderTabs(context) {

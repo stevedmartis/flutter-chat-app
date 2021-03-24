@@ -1,5 +1,4 @@
 import 'package:chat/controllers/slide_controler.dart';
-import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/widgets/onboarding_message.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +12,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
 
-    changeStatusLight();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(

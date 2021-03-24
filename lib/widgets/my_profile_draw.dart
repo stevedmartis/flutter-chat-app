@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
 import 'package:chat/bloc/catalogo_bloc.dart';
-import 'package:chat/bloc/product_bloc.dart';
 import 'package:chat/bloc/room_bloc.dart';
 import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/catalogos_response.dart';
@@ -145,8 +144,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
      
     });
  */
-
-    (widget.isUserAuth) ? fetchMyCatalogos() : fetchUserCatalogos();
+    fetchMyCatalogos();
 
     super.initState();
   }
@@ -214,11 +212,15 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
   void fetchMyCatalogos() async {
     var result;
 
-    productBloc.getCatalogosProducts(profile.user.uid);
+    (widget.isUserAuth)
+        ? result =
+            await catalogoService.getMyCatalogosProducts(profile.user.uid)
+        : result = await catalogoService.getCatalogosProductsUser(
+            widget.profile.user.uid, profile.user.uid);
 
-    productBloc.catalogosProducts.listen((data) {
-      result = data;
+    print(result);
 
+    setState(() {
       itemCount = result.catalogosProducts.length;
       tabBuilder =
           (context, index) => Tab(text: result.catalogosProducts[index].name);
@@ -226,52 +228,18 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
       pageBuilder = (context, index) => _buildWidgetProducts(
             result.catalogosProducts[index].products,
           );
-
-      if (mounted) setState(() {});
-
-      _currentPosition = initPosition ?? 0;
-      controller = TabController(
-        length: itemCount,
-        vsync: this,
-        initialIndex: _currentPosition,
-      );
-      controller.addListener(onPositionChangeF);
-      controller.animation.addListener(onScrollF);
-
-      _currentCount = itemCount;
     });
-  }
 
-  void fetchUserCatalogos() async {
-    var result;
+    _currentPosition = initPosition ?? 0;
+    controller = TabController(
+      length: itemCount,
+      vsync: this,
+      initialIndex: _currentPosition,
+    );
+    controller.addListener(onPositionChangeF);
+    controller.animation.addListener(onScrollF);
 
-    productBloc.getCatalogosUserProducts(
-        widget.profile.user.uid, profile.user.uid);
-
-    productBloc.catalogosProductsUser.listen((data) {
-      result = data;
-
-      itemCount = result.catalogosProducts.length;
-      tabBuilder =
-          (context, index) => Tab(text: result.catalogosProducts[index].name);
-
-      pageBuilder = (context, index) => _buildWidgetProducts(
-            result.catalogosProducts[index].products,
-          );
-
-      if (mounted) setState(() {});
-
-      _currentPosition = initPosition ?? 0;
-      controller = TabController(
-        length: itemCount,
-        vsync: this,
-        initialIndex: _currentPosition,
-      );
-      controller.addListener(onPositionChangeF);
-      controller.animation.addListener(onScrollF);
-
-      _currentCount = itemCount;
-    });
+    _currentCount = itemCount;
   }
 
   bool get _showTitle {
@@ -310,191 +278,188 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
     //final username = widget.profile.user.username.toLowerCase();
 
-    return SafeArea(
-      child: Scaffold(
-          backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
-          endDrawer: PrincipalMenu(),
-          key: scaffolKey,
-          // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
-          body: NestedScrollView(
-              controller: _scrollController,
-              headerSliverBuilder: (context, value) {
-                return [
-                  // header
+    return Scaffold(
+        backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
+        endDrawer: PrincipalMenu(),
+        key: scaffolKey,
+        // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
+        body: NestedScrollView(
+            physics:
+                BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+            controller: _scrollController,
+            headerSliverBuilder: (context, value) {
+              return [
+                // header
 
-                  SliverAppBar(
-                    stretch: true,
-                    stretchTriggerOffset: 250.0,
+                SliverAppBar(
+                  stretch: true,
+                  stretchTriggerOffset: 250.0,
 
-                    backgroundColor: _showTitle
-                        ? (currentTheme.customTheme
-                            ? Colors.black
-                            : Colors.white)
-                        : currentTheme.currentTheme.scaffoldBackgroundColor,
-                    leading: Container(
-                        margin: EdgeInsets.only(left: 15),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          child: CircleAvatar(
-                              child: IconButton(
-                                  icon: Icon(Icons.arrow_back_ios,
-                                      size: 20,
-                                      color: (_showTitle)
-                                          ? currentTheme
-                                              .currentTheme.accentColor
-                                          : (currentTheme.customTheme
-                                              ? Colors.white
-                                              : Colors.black)),
-                                  onPressed: () => {
-                                        {},
-                                        Navigator.pop(context),
-                                      }),
-                              backgroundColor: (currentTheme.customTheme
-                                  ? Colors.black.withOpacity(0.60)
-                                  : Colors.white.withOpacity(0.60))),
-                        )),
+                  backgroundColor: _showTitle
+                      ? (currentTheme.customTheme ? Colors.black : Colors.white)
+                      : currentTheme.currentTheme.scaffoldBackgroundColor,
+                  leading: Container(
+                      margin: EdgeInsets.only(left: 15),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        child: CircleAvatar(
+                            child: IconButton(
+                                icon: Icon(Icons.arrow_back_ios,
+                                    size: 20,
+                                    color: (_showTitle)
+                                        ? currentTheme.currentTheme.accentColor
+                                        : (currentTheme.customTheme
+                                            ? Colors.white
+                                            : Colors.black)),
+                                onPressed: () => {
+                                      {},
+                                      Navigator.pop(context),
+                                    }),
+                            backgroundColor: (currentTheme.customTheme
+                                ? Colors.black.withOpacity(0.60)
+                                : Colors.white.withOpacity(0.60))),
+                      )),
 
-                    actions: [
-                      (!widget.isUserAuth)
-                          ? Container(
-                              width: 40,
-                              height: 40,
-                              margin: EdgeInsets.only(right: 20),
-                              child: ClipRRect(
+                  actions: [
+                    (!widget.isUserAuth)
+                        ? Container(
+                            width: 40,
+                            height: 40,
+                            margin: EdgeInsets.only(right: 20),
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              child: CircleAvatar(
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: FaIcon(FontAwesomeIcons.commentDots,
+                                          size: 25,
+                                          color: (_showTitle)
+                                              ? currentTheme
+                                                  .currentTheme.accentColor
+                                              : (currentTheme.customTheme
+                                                  ? Colors.white
+                                                  : Colors.black)),
+                                      onPressed: () => Navigator.push(
+                                          context, createRouteChat()),
+                                    ),
+                                  ),
+                                  backgroundColor: (currentTheme.customTheme
+                                      ? Colors.black.withOpacity(0.60)
+                                      : Colors.white.withOpacity(0.60))),
+                            ))
+                        : Container(
+                            width: 40,
+                            height: 40,
+                            margin: EdgeInsets.only(right: 20),
+                            child: ClipRRect(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20.0)),
                                 child: CircleAvatar(
                                     child: Center(
                                       child: IconButton(
-                                        icon: FaIcon(
-                                            FontAwesomeIcons.commentDots,
-                                            size: 25,
+                                        icon: FaIcon(FontAwesomeIcons.ellipsisV,
+                                            size: 20,
                                             color: (_showTitle)
                                                 ? currentTheme
                                                     .currentTheme.accentColor
                                                 : (currentTheme.customTheme
                                                     ? Colors.white
                                                     : Colors.black)),
-                                        onPressed: () => Navigator.push(
-                                            context, createRouteChat()),
+                                        onPressed: () => {
+                                          scaffolKey.currentState
+                                              .openEndDrawer()
+                                        },
                                       ),
                                     ),
                                     backgroundColor: (currentTheme.customTheme
                                         ? Colors.black.withOpacity(0.60)
-                                        : Colors.white.withOpacity(0.60))),
-                              ))
-                          : Container(
-                              width: 40,
-                              height: 40,
-                              margin: EdgeInsets.only(right: 20),
-                              child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0)),
-                                  child: CircleAvatar(
-                                      child: Center(
-                                        child: IconButton(
-                                          icon: FaIcon(
-                                              FontAwesomeIcons.ellipsisV,
-                                              size: 20,
-                                              color: (_showTitle)
-                                                  ? currentTheme
-                                                      .currentTheme.accentColor
-                                                  : (currentTheme.customTheme
-                                                      ? Colors.white
-                                                      : Colors.black)),
-                                          onPressed: () => {
-                                            scaffolKey.currentState
-                                                .openEndDrawer()
-                                          },
-                                        ),
+                                        : Colors.white.withOpacity(0.60))))),
+                  ],
+
+                  centerTitle: false,
+                  pinned: true,
+
+                  expandedHeight: maxHeight,
+                  shadowColor:
+                      currentTheme.currentTheme.scaffoldBackgroundColor,
+
+                  // collapsedHeight: 56.0001,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          (_showName)
+                              ? FadeIn(
+                                  child: Text(profile.name,
+                                      style: TextStyle(
+                                        color: (currentTheme.customTheme)
+                                            ? Colors.white
+                                            : Colors.black,
+                                      )))
+                              : Container(),
+                          (_showName && profile.isClub)
+                              ? FadeIn(
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Stack(children: [
+                                      FaIcon(
+                                        FontAwesomeIcons.certificate,
+                                        color: currentTheme
+                                            .currentTheme.accentColor,
+                                        size: 20,
                                       ),
-                                      backgroundColor: (currentTheme.customTheme
-                                          ? Colors.black.withOpacity(0.60)
-                                          : Colors.white.withOpacity(0.60))))),
-                    ],
-
-                    centerTitle: false,
-                    pinned: true,
-
-                    expandedHeight: maxHeight,
-                    shadowColor:
-                        currentTheme.currentTheme.scaffoldBackgroundColor,
-
-                    // collapsedHeight: 56.0001,
-                    flexibleSpace: FlexibleSpaceBar(
-                      title: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            (_showName)
-                                ? FadeIn(
-                                    child: Text(profile.name,
-                                        style: TextStyle(
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 4.5, top: 4.5),
+                                        child: FaIcon(
+                                          FontAwesomeIcons.check,
                                           color: (currentTheme.customTheme)
-                                              ? Colors.white
-                                              : Colors.black,
-                                        )))
-                                : Container(),
-                            (_showName && profile.isClub)
-                                ? FadeIn(
-                                    child: Container(
-                                      margin: EdgeInsets.only(left: 10),
-                                      child: Stack(children: [
-                                        FaIcon(
-                                          FontAwesomeIcons.certificate,
-                                          color: currentTheme
-                                              .currentTheme.accentColor,
-                                          size: 20,
+                                              ? Colors.black
+                                              : Colors.white,
+                                          size: 11,
                                         ),
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              left: 4.5, top: 4.5),
-                                          child: FaIcon(
-                                            FontAwesomeIcons.check,
-                                            color: (currentTheme.customTheme)
-                                                ? Colors.black
-                                                : Colors.white,
-                                            size: 11,
-                                          ),
-                                        )
-                                      ]),
-                                    ),
-                                  )
-                                : Container(),
-                          ]),
-                      stretchModes: [
-                        StretchMode.zoomBackground,
-                        StretchMode.fadeTitle,
-                        // StretchMode.blurBackground
-                      ],
-                      background: ProfilePage(
-                        isEmpty: false,
-                        loading: false,
-                        //image: snapshot.data,
-                        isUserAuth: widget.isUserAuth,
-                        isUserEdit: widget.isUserEdit,
-                        profile: profile,
-                      ),
-                      centerTitle: true,
+                                      )
+                                    ]),
+                                  ),
+                                )
+                              : Container(),
+                        ]),
+                    stretchModes: [
+                      StretchMode.zoomBackground,
+                      StretchMode.fadeTitle,
+                      // StretchMode.blurBackground
+                    ],
+                    background: ProfilePage(
+                      isEmpty: false,
+                      loading: false,
+                      //image: snapshot.data,
+                      isUserAuth: widget.isUserAuth,
+                      isUserEdit: widget.isUserEdit,
+                      profile: profile,
                     ),
+                    centerTitle: true,
                   ),
+                ),
 
-                  (!this.widget.isUserEdit)
-                      ? makeInfoProfile(context)
-                      : makeHeaderSpacer(context),
+                (!this.widget.isUserEdit)
+                    ? makeInfoProfile(context)
+                    : makeHeaderSpacer(context),
 
-                  makePrivateAccountMessage(context),
+                makePrivateAccountMessage(context),
 
-                  SliverAppBar(
-                      toolbarHeight: 50,
-                      pinned: true,
-                      backgroundColor:
-                          currentTheme.currentTheme.scaffoldBackgroundColor,
-                      automaticallyImplyLeading: false,
-                      actions: [Container()],
-                      title: (itemCount != null)
-                          ? Container(
-                              alignment: Alignment.centerLeft,
+                (itemCount != null)
+                    ? SliverAppBar(
+                        toolbarHeight: 50,
+                        pinned: true,
+                        backgroundColor:
+                            currentTheme.currentTheme.scaffoldBackgroundColor,
+                        automaticallyImplyLeading: false,
+                        actions: [Container()],
+                        title: Container(
+                            alignment: Alignment.centerLeft,
+                            child: FadeInLeft(
                               child: TabBar(
                                   controller: controller,
                                   indicatorWeight: 5,
@@ -518,26 +483,15 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                                   ),
                                   tabs: List.generate(
                                     itemCount,
-                                    (index) => FadeInLeft(
-                                        child: tabBuilder(context, index)),
-                                  )))
-                          : Container())
-                ];
-              },
+                                    (index) => tabBuilder(context, index),
+                                  )),
+                            )))
+                    : makeHeaderSpacerShort(context),
+              ];
+            },
 
-              // tab bar view
-              body: (itemCount != null)
-                  ? TabBarView(
-                      controller: controller,
-                      children: List.generate(
-                        itemCount,
-                        (index) => pageBuilder(context, index),
-                      ),
-                    )
-                  : Container())),
-    );
-
-    /*   (itemCount != null)
+            // tab bar view
+            body: (itemCount != null)
                 ? TabBarView(
                     controller: controller,
                     children: List.generate(
@@ -545,8 +499,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                       (index) => pageBuilder(context, index),
                     ),
                   )
-                :  
-                Container())); */
+                : Container()));
   }
 
   SliverList makeListTabs(context) {
@@ -686,8 +639,6 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
             shrinkWrap: true,
             itemCount: products.length,
             itemBuilder: (BuildContext ctxt, int index) {
-              products.sort((a, b) => a.name.compareTo(b.name));
-
               final product = products[index];
 
               return Stack(
@@ -696,7 +647,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
                     delay: Duration(milliseconds: 100 * index),
                     child: Container(
                       padding: EdgeInsets.only(
-                          top: 20, left: 20, right: 20, bottom: 0.0),
+                          top: 0, left: 20, right: 20, bottom: 0.0),
                       child: OpenContainer(
                           closedElevation: 5,
                           openElevation: 5,
@@ -1082,10 +1033,7 @@ class _MyProfileState extends State<MyProfile> with TickerProviderStateMixin {
 
     final size = MediaQuery.of(context).size;
 
-    isSuscribeApprove =
-        !widget.isUserAuth && (widget.profile.subscribeApproved != null)
-            ? !widget.profile.subscribeApproved
-            : false;
+    isSuscribeApprove = !widget.isUserAuth && !widget.profile.subscribeApproved;
 
     return SliverFixedExtentList(
         itemExtent: (isSuscribeApprove) ? 60 : 0,

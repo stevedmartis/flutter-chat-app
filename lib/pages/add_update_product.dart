@@ -249,11 +249,8 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                                               product: this.product,
                                               isEdit: widget.isEdit)));
                                 },
-                                child: Hero(
-                                  tag: widget.product.coverImage,
-                                  child: cachedNetworkImage(
-                                    this.product.getCoverImg(),
-                                  ),
+                                child: cachedNetworkImage(
+                                  this.product.getCoverImg(),
                                 ),
                               );
                             } else if (snapshot.hasError) {
@@ -401,7 +398,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
             ),
             controller: nameCtrl,
             inputFormatters: <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(30),
+              LengthLimitingTextInputFormatter(25),
             ],
             //  keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:chat/global/environment.dart';
 import 'package:chat/models/catalogo.dart';
 import 'package:chat/models/catalogo_response.dart';

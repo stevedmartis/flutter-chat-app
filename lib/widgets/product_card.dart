@@ -44,8 +44,11 @@ class _CardProductState extends State<CardProduct> {
                         type: MaterialType.transparency,
                         child: (widget.product.coverImage != "")
                             ? cachedNetworkImage(widget.product.getCoverImg())
-                            : cachedNetworkImage(
-                                'assets/images/empty_image.png'),
+                            : FadeInImage(
+                                image:
+                                    AssetImage('assets/images/empty_image.png'),
+                                placeholder: AssetImage('assets/loading2.gif'),
+                                fit: BoxFit.cover),
                       )),
                 ),
               ],

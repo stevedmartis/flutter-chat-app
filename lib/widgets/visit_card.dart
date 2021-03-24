@@ -71,7 +71,8 @@ class _CardVisitState extends State<CardVisit> {
               child: Container(
                 width: 10,
                 padding: EdgeInsets.only(
-                  left: size.width / 10.0,
+                  top: 20,
+                  left: size.width / 30.0,
                   right: 90.0,
                 ),
                 margin: EdgeInsets.all(16.0),

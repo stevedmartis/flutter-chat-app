@@ -365,10 +365,12 @@ Widget cachedNetworkImage(String image) {
       ),
     ),
     placeholder: (context, url) => Container(
-      child: Image(
-        image: AssetImage('assets/loading2.gif'),
-        fit: BoxFit.cover,
-        width: double.maxFinite,
+      child: Container(
+        child: Image(
+          image: AssetImage('assets/loading2.gif'),
+          fit: BoxFit.cover,
+          width: double.maxFinite,
+        ),
       ),
     ),
     errorWidget: (context, url, error) => Icon(Icons.error),

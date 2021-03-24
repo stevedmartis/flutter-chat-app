@@ -35,6 +35,9 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'add_update_visit.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+const _url = 'https://leafety.com';
 
 class CollapsingList extends StatefulWidget {
   @override
@@ -641,7 +644,7 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
   return (visits.length > 0)
       ? CarouselSlider.builder(
           options: CarouselOptions(
-            height: size.height / 3,
+            height: size.height / 3.5,
             viewportFraction: 0.80,
             initialPage: 0,
             enableInfiniteScroll: false,
@@ -657,34 +660,29 @@ Widget _buildWidgetVisits(List<Visit> visits, context) {
           itemBuilder: (BuildContext context, int index) {
             final visit = visits[index];
 
-            return Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(right: 10, top: size.height / 12),
-                  child: OpenContainer(
-                      closedElevation: 5,
-                      openElevation: 5,
-                      closedColor: currentTheme.scaffoldBackgroundColor,
-                      openColor: currentTheme.scaffoldBackgroundColor,
-                      transitionType: ContainerTransitionType.fade,
-                      openShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      closedShape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      openBuilder: (_, closeContainer) {
-                        return AddUpdateVisitPage(
-                          visit: visit,
-                          plant: visit.plant,
-                          isEdit: true,
-                        );
-                      },
-                      closedBuilder: (_, openContainer) {
-                        return Container(
-                            child: CardVisit(visit: visits[index]));
-                      }),
-                ),
-              ],
+            return Container(
+              padding: EdgeInsets.only(right: 10, top: size.height / 12),
+              child: OpenContainer(
+                  closedElevation: 5,
+                  openElevation: 5,
+                  closedColor: currentTheme.scaffoldBackgroundColor,
+                  openColor: currentTheme.scaffoldBackgroundColor,
+                  transitionType: ContainerTransitionType.fade,
+                  openShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  closedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  openBuilder: (_, closeContainer) {
+                    return AddUpdateVisitPage(
+                      visit: visit,
+                      plant: visit.plant,
+                      isEdit: true,
+                    );
+                  },
+                  closedBuilder: (_, openContainer) {
+                    return Container(child: CardVisit(visit: visits[index]));
+                  }),
             );
           })
       : Container();
@@ -809,49 +807,55 @@ const List<Banners> getBanners = <Banners>[
       'Suscripciones en línea para pacientes con receta médica'),
 ];
 
+void _launchURL() async =>
+    await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
+
 final List<Widget> imageSliders = getBanners
     .map((item) => Container(
-          child: Container(
-            margin: EdgeInsets.all(5.0),
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                child: Stack(
-                  children: <Widget>[
-                    Image.asset(
-                      item.url,
-                      height: 1000.0,
-                      width: 1000.0,
-                      fit: BoxFit.cover,
-                    ),
-                    Positioned(
-                      bottom: 0.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color.fromARGB(200, 0, 0, 0),
-                              Color.fromARGB(0, 0, 0, 0)
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
+          child: GestureDetector(
+            onTap: () => {_launchURL()},
+            child: Container(
+              margin: EdgeInsets.all(5.0),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  child: Stack(
+                    children: <Widget>[
+                      Image.asset(
+                        item.url,
+                        height: 1000.0,
+                        width: 1000.0,
+                        fit: BoxFit.cover,
+                      ),
+                      Positioned(
+                        bottom: 0.0,
+                        left: 0.0,
+                        right: 0.0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromARGB(200, 0, 0, 0),
+                                Color.fromARGB(0, 0, 0, 0)
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
                           ),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 20.0),
-                        child: Text(
-                          item.title,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 20.0),
+                          child: Text(
+                            item.title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                )),
+                    ],
+                  )),
+            ),
           ),
         ))
     .toList();

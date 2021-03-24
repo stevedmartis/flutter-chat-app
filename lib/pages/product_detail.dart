@@ -148,298 +148,314 @@ class _ProductDetailPageState extends State<ProductDetailPage>
           ? productService.product
           : widget.product;
 
-      isLikedSave = product.isLike;
+      isLikedSave = (isCountChange) ? isLikedSave : product.isLike;
       countLikes = (isCountChange) ? countLikes : countInit;
     });
 
     return Scaffold(
         backgroundColor: currentTheme.currentTheme.scaffoldBackgroundColor,
         // bottomNavigationBar: BottomNavigation(isVisible: _isVisible),
-        body: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).requestFocus(new FocusNode());
-            },
-            child: CustomScrollView(
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-                controller: _scrollController,
-                slivers: <Widget>[
-                  SliverAppBar(
-                    stretch: true,
-                    stretchTriggerOffset: 250.0,
+        body: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
+            controller: _scrollController,
+            slivers: <Widget>[
+              SliverAppBar(
+                stretch: true,
+                stretchTriggerOffset: 250.0,
 
-                    backgroundColor: _showTitle
-                        ? (currentTheme.customTheme)
-                            ? Colors.black
-                            : Colors.white
-                        : currentTheme.currentTheme.scaffoldBackgroundColor,
-                    leading: Container(
-                        margin: EdgeInsets.only(left: 15),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          child: CircleAvatar(
-                              child: IconButton(
-                                  icon: Icon(Icons.arrow_back_ios,
-                                      size: size.width / 20,
+                backgroundColor: _showTitle
+                    ? (currentTheme.customTheme)
+                        ? Colors.black
+                        : Colors.white
+                    : currentTheme.currentTheme.scaffoldBackgroundColor,
+                leading: Container(
+                    margin: EdgeInsets.only(left: 15),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      child: CircleAvatar(
+                          child: IconButton(
+                              icon: Icon(Icons.arrow_back_ios,
+                                  size: size.width / 20,
+                                  color: (_showTitle)
+                                      ? currentTheme.currentTheme.accentColor
+                                      : Colors.white),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              }),
+                          backgroundColor: _showTitle
+                              ? (currentTheme.customTheme)
+                                  ? Colors.black54
+                                  : Colors.white54
+                              : Colors.black54),
+                    )),
+
+                actions: [
+                  (widget.isUserAuth)
+                      ? Container(
+                          margin: EdgeInsets.only(left: 0, right: 10),
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                            child: CircleAvatar(
+                                child: PopupMenuButton<String>(
+                                  icon: FaIcon(FontAwesomeIcons.ellipsisV,
+                                      size: 20,
                                       color: (_showTitle)
                                           ? currentTheme
                                               .currentTheme.accentColor
                                           : Colors.white),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  }),
+                                  onSelected: (String result) {
+                                    switch (result) {
+                                      case '1':
+                                        break;
+
+                                      case '2':
+                                        productService.product = product;
+                                        Navigator.of(context).push(
+                                            createRouteEditProduct(
+                                                widget.product));
+                                        break;
+                                      case '3':
+                                        confirmDelete(
+                                            context,
+                                            'Confirmar',
+                                            'Desea eliminar el tratamiento?',
+                                            product.id);
+                                        break;
+
+                                      default:
+                                    }
+                                  },
+                                  itemBuilder: (BuildContext context) =>
+                                      <PopupMenuEntry<String>>[
+                                    PopupMenuItem<String>(
+                                        value: '1',
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            LikeButton(
+                                              isLiked: isLikedSave,
+                                              onTap: onLikeButtonTapped,
+                                              bubblesColor: BubblesColor(
+                                                dotPrimaryColor: currentTheme
+                                                    .currentTheme.accentColor,
+                                                dotSecondaryColor: currentTheme
+                                                    .currentTheme.accentColor,
+                                              ),
+                                              likeBuilder: (
+                                                bool isLiked,
+                                              ) {
+                                                return Icon(
+                                                  (!isLikedSave)
+                                                      ? Icons.favorite_border
+                                                      : Icons.favorite,
+                                                  color: isLikedSave
+                                                      ? currentTheme
+                                                          .currentTheme
+                                                          .accentColor
+                                                      : Colors.white54,
+                                                  size: isLikedSave ? 28 : 28,
+                                                );
+                                              },
+                                              likeCount: countLikes,
+                                              countBuilder: (int count,
+                                                  bool isLiked, String text) {
+                                                return Container(
+                                                    padding: EdgeInsets.only(
+                                                        left: 10),
+                                                    child: Text('$countLikes'));
+                                              },
+                                            ),
+                                            SizedBox(
+                                              width: 5.0,
+                                            ),
+                                            /* Text('$countLikes',
+                                                style: TextStyle(
+                                                    color: currentTheme
+                                                        .currentTheme
+                                                        .accentColor)), */
+                                          ],
+                                        )),
+                                    PopupMenuItem<String>(
+                                        value: '2',
+                                        child: Row(
+                                          children: [
+                                            FaIcon(
+                                              FontAwesomeIcons.edit,
+                                              color: currentTheme
+                                                  .currentTheme.accentColor,
+                                              size: 20,
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text('Editar',
+                                                style: TextStyle(
+                                                    color: currentTheme
+                                                        .currentTheme
+                                                        .accentColor)),
+                                          ],
+                                        )),
+                                    PopupMenuItem<String>(
+                                      value: '3',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.delete,
+                                              color: Colors.grey),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text('Eliminar',
+                                              style: TextStyle(
+                                                  color: Colors.grey)),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                backgroundColor: _showTitle
+                                    ? (currentTheme.customTheme)
+                                        ? Colors.black54
+                                        : Colors.white54
+                                    : Colors.black54),
+                          ))
+                      : Container(
+                          margin: EdgeInsets.only(right: 10),
+                          child: CircleAvatar(
+                              child: LikeButton(
+                                isLiked: isLikedSave,
+                                onTap: onLikeButtonTapped,
+
+                                circleColor: CircleColor(
+                                    start: Colors.white,
+                                    end: currentTheme.currentTheme.accentColor),
+                                bubblesColor: BubblesColor(
+                                  dotPrimaryColor:
+                                      currentTheme.currentTheme.accentColor,
+                                  dotSecondaryColor:
+                                      currentTheme.currentTheme.accentColor,
+                                ),
+                                likeBuilder: (bool isLiked) {
+                                  return Icon(
+                                    (!isLikedSave)
+                                        ? Icons.favorite_border
+                                        : Icons.favorite,
+                                    color: isLikedSave
+                                        ? currentTheme.currentTheme.accentColor
+                                        : Colors.white,
+                                    size: isLikedSave ? 28 : 28,
+                                  );
+                                },
+                                // likeCount: 665,
+                                /* countBuilder:
+                                    (int count, bool isLiked, String text) {
+                                  var color = isLiked
+                                      ? Colors.deepPurpleAccent
+                                      : Colors.grey;
+                                  Widget result;
+                                  if (count == 0) {
+                                    result = Text(
+                                      "love",
+                                      style: TextStyle(color: color),
+                                    );
+                                  } else
+                                    result = Text(
+                                      text,
+                                      style: TextStyle(color: color),
+                                    );
+                                  return result;
+                                }, */
+                              ),
                               backgroundColor: _showTitle
                                   ? (currentTheme.customTheme)
                                       ? Colors.black54
                                       : Colors.white54
-                                  : Colors.black54),
-                        )),
+                                  : Colors.black54))
 
-                    actions: [
-                      (widget.isUserAuth)
-                          ? Container(
-                              margin: EdgeInsets.only(left: 0, right: 10),
-                              child: ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                child: CircleAvatar(
-                                    child: PopupMenuButton<String>(
-                                      icon: FaIcon(FontAwesomeIcons.ellipsisV,
-                                          size: 20,
-                                          color: (_showTitle)
-                                              ? currentTheme
-                                                  .currentTheme.accentColor
-                                              : Colors.white),
-                                      onSelected: (String result) {
-                                        switch (result) {
-                                          case '1':
-                                            break;
+                  //  _buildCircleQuantityPlant(),
+                ],
 
-                                          case '2':
-                                            productService.product = product;
-                                            Navigator.of(context).push(
-                                                createRouteEditProduct(
-                                                    widget.product));
-                                            break;
-                                          case '3':
-                                            confirmDelete(
-                                                context,
-                                                'Confirmar',
-                                                'Desea eliminar el tratamiento?',
-                                                product.id);
-                                            break;
+                centerTitle: true,
+                pinned: true,
 
-                                          default:
-                                        }
-                                      },
-                                      itemBuilder: (BuildContext context) =>
-                                          <PopupMenuEntry<String>>[
-                                        PopupMenuItem<String>(
-                                            value: '1',
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                LikeButton(
-                                                  isLiked: isLikedSave,
-                                                  onTap: onLikeButtonTapped,
-                                                  bubblesColor: BubblesColor(
-                                                    dotPrimaryColor:
-                                                        currentTheme
-                                                            .currentTheme
-                                                            .accentColor,
-                                                    dotSecondaryColor:
-                                                        currentTheme
-                                                            .currentTheme
-                                                            .accentColor,
-                                                  ),
-                                                  likeBuilder: (
-                                                    bool isLiked,
-                                                  ) {
-                                                    return Icon(
-                                                      (!isLikedSave)
-                                                          ? Icons
-                                                              .favorite_border
-                                                          : Icons.favorite,
-                                                      color: isLikedSave
-                                                          ? currentTheme
-                                                              .currentTheme
-                                                              .accentColor
-                                                          : Colors.white54,
-                                                      size:
-                                                          isLikedSave ? 28 : 28,
-                                                    );
-                                                  },
-                                                  likeCount: countLikes,
-                                                  countBuilder: (int count,
-                                                      bool isLiked,
-                                                      String text) {
-                                                    return Container(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 10),
-                                                        child: Text(
-                                                            '$countLikes'));
-                                                  },
-                                                ),
-                                                SizedBox(
-                                                  width: 5.0,
-                                                ),
-                                                /* Text('$countLikes',
-                                                    style: TextStyle(
-                                                        color: currentTheme
-                                                            .currentTheme
-                                                            .accentColor)), */
-                                              ],
-                                            )),
-                                        PopupMenuItem<String>(
-                                            value: '2',
-                                            child: Row(
-                                              children: [
-                                                FaIcon(
-                                                  FontAwesomeIcons.edit,
-                                                  color: currentTheme
-                                                      .currentTheme.accentColor,
-                                                  size: 20,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text('Editar',
-                                                    style: TextStyle(
-                                                        color: currentTheme
-                                                            .currentTheme
-                                                            .accentColor)),
-                                              ],
-                                            )),
-                                        PopupMenuItem<String>(
-                                          value: '3',
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.delete,
-                                                  color: Colors.grey),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text('Eliminar',
-                                                  style: TextStyle(
-                                                      color: Colors.grey)),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    backgroundColor: _showTitle
-                                        ? (currentTheme.customTheme)
-                                            ? Colors.black54
-                                            : Colors.white54
-                                        : Colors.black54),
-                              ))
-                          : Container(
-                              margin: EdgeInsets.only(right: 10),
-                              child: CircleAvatar(
-                                  child: LikeButton(
-                                    isLiked: isLikedSave,
-                                    onTap: onLikeButtonTapped,
-
-                                    circleColor: CircleColor(
-                                        start: Colors.white,
-                                        end: currentTheme
-                                            .currentTheme.accentColor),
-                                    bubblesColor: BubblesColor(
-                                      dotPrimaryColor:
-                                          currentTheme.currentTheme.accentColor,
-                                      dotSecondaryColor:
-                                          currentTheme.currentTheme.accentColor,
-                                    ),
-                                    likeBuilder: (bool isLiked) {
-                                      return Icon(
-                                        (!isLikedSave)
-                                            ? Icons.favorite_border
-                                            : Icons.favorite,
-                                        color: isLikedSave
-                                            ? currentTheme
-                                                .currentTheme.accentColor
-                                            : Colors.white,
-                                        size: isLikedSave ? 28 : 28,
-                                      );
-                                    },
-                                    // likeCount: 665,
-                                    /* countBuilder:
-                                        (int count, bool isLiked, String text) {
-                                      var color = isLiked
-                                          ? Colors.deepPurpleAccent
-                                          : Colors.grey;
-                                      Widget result;
-                                      if (count == 0) {
-                                        result = Text(
-                                          "love",
-                                          style: TextStyle(color: color),
-                                        );
-                                      } else
-                                        result = Text(
-                                          text,
-                                          style: TextStyle(color: color),
-                                        );
-                                      return result;
-                                    }, */
-                                  ),
-                                  backgroundColor: _showTitle
-                                      ? (currentTheme.customTheme)
-                                          ? Colors.black54
-                                          : Colors.white54
-                                      : Colors.black54))
-
-                      //  _buildCircleQuantityPlant(),
+                expandedHeight: maxHeight,
+                // collapsedHeight: 56.0001,
+                flexibleSpace: FlexibleSpaceBar(
+                    stretchModes: [
+                      StretchMode.zoomBackground,
+                      StretchMode.fadeTitle,
+                      // StretchMode.blurBackground
                     ],
-
-                    centerTitle: true,
-                    pinned: true,
-
-                    expandedHeight: maxHeight,
-                    // collapsedHeight: 56.0001,
-                    flexibleSpace: FlexibleSpaceBar(
-                        stretchModes: [
-                          StretchMode.zoomBackground,
-                          StretchMode.fadeTitle,
-                          // StretchMode.blurBackground
-                        ],
-                        background: Material(
-                            type: MaterialType.transparency,
-                            child: cachedNetworkImage(product.getCoverImg())),
-                        centerTitle: true,
-                        title: Container(
-                            //  margin: EdgeInsets.only(left: 0),
-                            width: size.height / 2,
-                            height: 30,
-                            child: Container(
-                              child: Center(
-                                child: Text(
-                                  (product.name.isNotEmpty)
-                                      ? product.name.capitalize()
-                                      : '',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: _showTitle
-                                          ? (currentTheme.customTheme)
-                                              ? Colors.white
-                                              : Colors.black
-                                          : Colors.white),
+                    background: Material(
+                        color: Colors.black,
+                        type: MaterialType.transparency,
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(0.0),
+                                    topRight: Radius.circular(0.0),
+                                    bottomRight: Radius.circular(30.0),
+                                    bottomLeft: Radius.circular(30.0)),
+                                child:
+                                    cachedNetworkImage(product.getCoverImg())),
+                            Positioned(
+                              bottom: 0.0,
+                              left: 0.0,
+                              right: 0.0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color.fromARGB(170, 0, 0, 0),
+                                      Color.fromARGB(0, 0, 0, 0)
+                                    ],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                  ),
                                 ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 30.0, horizontal: 20.0),
                               ),
-                            ))),
-                  ),
+                            ),
+                          ],
+                        )),
+                    centerTitle: true,
+                    title: Container(
+                        //  margin: EdgeInsets.only(left: 0),
+                        width: size.height / 2.5,
+                        height: 25,
+                        child: Container(
+                          child: Center(
+                            child: Text(
+                              (product.name.isNotEmpty)
+                                  ? product.name.capitalize()
+                                  : '',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: _showTitle
+                                      ? (currentTheme.customTheme)
+                                          ? Colors.white
+                                          : Colors.black
+                                      : Colors.white),
+                            ),
+                          ),
+                        ))),
+              ),
 
-                  // makeHeaderSpacer(context),
-                  makeHeaderInfo(context),
-                  // makeHeaderSpacer(context),
+              // makeHeaderSpacer(context),
+              makeHeaderInfo(context),
+              // makeHeaderSpacer(context),
 
-                  //   makeHeaderTabs(context),
+              //   makeHeaderTabs(context),
 
-                  //   makeListVisits(context)
-                ])));
+              //   makeListVisits(context)
+            ]));
   }
 
   Future<bool> onLikeButtonTapped(bool isLiked) async {

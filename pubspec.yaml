@@ -50,7 +50,7 @@ dependencies:
   flutter_rating_bar: ^3.2.0+1
   like_button: ^2.0.1
   cached_network_image: ^2.1.0
-  rxdart_codemod: ^0.1.5
+  url_launcher: ^6.0.2
   
 
 dev_dependencies:

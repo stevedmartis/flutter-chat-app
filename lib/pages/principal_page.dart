@@ -1,6 +1,5 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
-import 'package:chat/helpers/ui_overlay_style.dart';
 import 'package:chat/models/notification.dart';
 import 'package:chat/models/profiles.dart';
 
@@ -104,7 +103,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
 
     final _onFirstPage = (currentPage == 0) ? true : false;
 
-    changeStatusLight();
     return SafeArea(
         child: Scaffold(
       endDrawer: PrincipalMenu(),
@@ -166,10 +164,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
     final currentTheme = Provider.of<ThemeChanger>(context);
     final currentPage = Provider.of<MenuModel>(context).currentPage;
     final int number = Provider.of<NotificationModel>(context).numberNotifiBell;
+    final size = MediaQuery.of(context).size;
 
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
-      height: widget._isVisible ? 60.0 : 0.0,
+      height: widget._isVisible ? size.height / 12 : 0.0,
       child: Wrap(
         children: <Widget>[
           BottomNavigationBar(
@@ -240,8 +239,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
                       (number > 0)
                           ? Positioned(
                               top: 0.0,
-                              right: 10.0,
-                              bottom: 15.0,
+                              right: 0.0,
+                              bottom: 10.0,
                               child: BounceInDown(
                                 from: 5,
                                 animate: (number > 0) ? true : false,

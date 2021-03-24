@@ -101,14 +101,26 @@ class _CustomAppBarHeaderState extends State<CustomAppBarHeaderPages> {
                           width: size.height / 3.2,
                           height: 40,
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  currentTheme.currentTheme.cardColor,
-                                  currentTheme.currentTheme.cardColor,
-                                  currentTheme.currentTheme.cardColor
-                                ]),
+                            gradient: (currentTheme.customTheme)
+                                ? LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                        currentTheme.currentTheme.cardColor,
+                                        currentTheme.currentTheme.cardColor,
+                                        currentTheme.currentTheme.cardColor
+                                      ])
+                                : LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                        currentTheme.currentTheme
+                                            .scaffoldBackgroundColor,
+                                        currentTheme.currentTheme
+                                            .scaffoldBackgroundColor,
+                                        currentTheme.currentTheme
+                                            .scaffoldBackgroundColor
+                                      ]),
                             borderRadius: BorderRadius.all(Radius.circular(30)),
                             boxShadow: [
                               BoxShadow(
